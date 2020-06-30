@@ -400,7 +400,7 @@ export class SettingsComponent implements OnInit {
       });
       this.getAllSettings();
     });
-    this.settingsService.postNetSuiteSubsidiaries(this.workspaceId).subscribe(response => {
+    this.settingsService.getNetSuiteSubsidiaries(this.workspaceId).subscribe(response => {
       this.netsuiteSubsidiaries = response
       this.isLoading = false;
     });
