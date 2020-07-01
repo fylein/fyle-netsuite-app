@@ -78,9 +78,6 @@ export class GeneralComponent implements OnInit {
         netsuiteLocations: [this.generalMappings? this.generalMappings.location_id: ''],
         accountsPayableAccounts: [this.generalMappings? this.generalMappings.accounts_payable_id: '']
       });
-      if(this.generalMappings) {
-        this.form.controls.netsuiteLocations.disable();
-      }
     }, error => {
       if(error.status == 400) {
         this.generalMappings = {};

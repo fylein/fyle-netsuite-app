@@ -35,35 +35,8 @@
             </div>
 
             <div class="save-schedule">
-                <button class="main-btn btn save-btn" type="submit" (click)="open(content)">Save</button>
+                <button class="main-btn btn save-btn" type="submit" (click)="submit()">Save</button>
             </div>
-
-            <div class="save-schedule">
-                <p>
-                    To change your settings, Please send us a note at 
-                    <a class="support" href="mailto:support@fyle.in">support@fyle.in</a>
-                </p>
-            </div>
-
-            <ng-template #content let-modal>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="generalSettingModalTitle">Save Settings</h5>
-                    <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p class="md-caption text-danger mt-0">
-                        Location cannot be modified once saved.
-                        Are you sure you want to continue ? 
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancel-btn" class="btn btnInline cancelBtn" type="button" data-dismiss="modal"
-                        (click)="closeModal()">Cancel</button>
-                    <button id="submit-btn" class="btn btnInline saveBtn" type="submit" name="method" (click)="submit()">Save</button>
-                </div>
-            </ng-template>
 
         </form>
     </div>
