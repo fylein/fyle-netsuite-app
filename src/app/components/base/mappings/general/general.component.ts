@@ -36,10 +36,6 @@ export class GeneralComponent implements OnInit {
     });
   }
 
-  closeModal() {
-    this.modalRef.close();
-  }
-
   submit() {
     this.locationIsValid = false;
     this.accountsPayableIsValid = false;
@@ -49,12 +45,20 @@ export class GeneralComponent implements OnInit {
     let locationId = formValues? formValues.netsuiteLocations: this.form.value.netsuiteLocations;
     let netsuiteLocation = this.netsuiteLocations.filter(filteredLocation => filteredLocation.destination_id === locationId)[0];
 
-    let accountId = formValues? formValues.accountsPayableAccounts: this.form.value.accountsPayableAccounts;
-    let accountsPayableAccount = this.accountsPayableAccounts.filter(filteredAccount => filteredAccount.destination_id === accountId)[0];
-
     if (locationId != null) {
       this.locationIsValid = true;
     }
+
+    if (locationId === null) {
+      this.locationIsValid = true;
+      netsuiteLocation = {
+        'value' : null,
+        'destination_id': null
+      }
+    }
+    
+    let accountId = formValues? formValues.accountsPayableAccounts: this.form.value.accountsPayableAccounts;
+    let accountsPayableAccount = this.accountsPayableAccounts.filter(filteredAccount => filteredAccount.destination_id === accountId)[0];
 
     if (accountId != null) {
       this.accountsPayableIsValid = true;
@@ -64,7 +68,6 @@ export class GeneralComponent implements OnInit {
       this.isLoading = true;
       this.mappingsService.postGeneralMappings(this.workspaceId, netsuiteLocation.value, netsuiteLocation.destination_id, accountsPayableAccount.value, accountsPayableAccount.destination_id).subscribe(response => {
         this.getGeneralMappings();
-        this.closeModal();
       });
     }
   }
