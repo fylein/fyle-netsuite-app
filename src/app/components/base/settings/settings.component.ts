@@ -291,14 +291,14 @@ export class SettingsComponent implements OnInit {
       });
     }
 
-    if (projectMappingObject) {
+    if (projectMappingObject != null) {
       mappingsSettingsPayload.push({
         source_field: 'PROJECT',
         destination_field: projectMappingObject
       });
     }
 
-    if (costCenterMappingObject) {
+    if (costCenterMappingObject != null) {
       mappingsSettingsPayload.push({
         source_field: 'COST_CENTER',
         destination_field: costCenterMappingObject

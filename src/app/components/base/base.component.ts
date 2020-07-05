@@ -27,7 +27,6 @@ export class BaseComponent implements OnInit {
         {'workspace_id': this.workspace.id}
       ]
       this.mappingSettings = response['results'];
-      localStorage.setItem('workspace_id', JSON.stringify(this.workspace.id));
 
       let projectFieldMapping = this.mappingSettings.filter(
         settings => settings.source_field === 'PROJECT'

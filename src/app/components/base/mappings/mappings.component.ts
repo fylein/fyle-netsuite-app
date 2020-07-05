@@ -10,7 +10,8 @@ import { concat, forkJoin } from 'rxjs';
 })
 export class MappingsComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private mappingService: MappingsService) {}
-
+  
+  workspaceId: number;
   generalSettings: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
@@ -39,18 +40,21 @@ export class MappingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectFieldMapping = JSON.parse(localStorage.getItem('project_field_mapping'));
-    this.costCenterFieldMapping = JSON.parse(localStorage.getItem('cost_center_field_mapping'));
-    let workspace_id = JSON.parse(localStorage.getItem('workspace_id'));
+    this.route.params.subscribe(params => {
+      this.workspaceId = +params['workspace_id'];
+      this.projectFieldMapping = JSON.parse(localStorage.getItem('project_field_mapping'));
+      this.costCenterFieldMapping = JSON.parse(localStorage.getItem('cost_center_field_mapping'));
 
-    if (this.projectFieldMapping) {
-      this.projectsEnabled = true;
-    }
+      if (this.projectFieldMapping) {
+        this.projectsEnabled = true;
+      }
 
-    this.updateDimensionTables(workspace_id);
+      if (this.costCenterFieldMapping) {
+        this.costCentersEnabled = true;
+      }
+      
+      this.updateDimensionTables(this.workspaceId);
 
-    if (this.costCenterFieldMapping) {
-      this.costCentersEnabled = true;
-    }
+  });
   }
 }

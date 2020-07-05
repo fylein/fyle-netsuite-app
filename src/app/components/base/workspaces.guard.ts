@@ -10,20 +10,13 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class WorkspacesGuard implements CanActivate {
 
+  generalSettings: any;
+
   constructor(private settingsService: SettingsService, private mappingsService: MappingsService, private router: Router) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let params = next.params;
     let workspaceId = +params['workspace_id']
-
-    this.settingsService.getMappingSettings(workspaceId).subscribe(mappings => {
-      let state: string
-      if(mappings['count'] < 4) {
-        state = 'settings'
-        let error = 'General Setting not found'
-        return this.router.navigateByUrl(`workspaces/${workspaceId}/settings?state=${state}&error=${error}`);
-      }
-    });
 
     return forkJoin(
       [
@@ -36,11 +29,18 @@ export class WorkspacesGuard implements CanActivate {
       catchError(error => {
         let state: string
         if (error.status == 400) {
+
+          this.settingsService.getMappingSettings(workspaceId).subscribe(mappings => {
+            this.generalSettings = mappings;
+          });
+
           if(error.error.message === 'NetSuite Credentials not found in this workspace') {
             state = 'destination';
-          }else if(error.error.message === 'Subsidiary mappings do not exist for the workspace') {
+          } else if(this.generalSettings['count'] < 2) {
+            state = 'settings';
+          } else if(error.error.message === 'Subsidiary mappings do not exist for the workspace') {
             state = 'subsidiary';
-          }else {
+          } else {
             state = 'source';
           }
         }

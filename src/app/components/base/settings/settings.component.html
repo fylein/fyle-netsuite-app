@@ -122,6 +122,7 @@
             <div class="settings-object">
                 <label for="projectFieldOptions" class="d-flex">Map Fyle projects to</label>
                 <select formControlName="projectFieldOptions" id="projectFieldOptions" class="form-control selectpicker col-4">
+                    <option [ngValue]="null">None</option>
                     <option *ngFor="let option of projectFieldOptions; let i = index"
                         [selected]="projectFieldOptions[i].name === projectFieldMapping.destination_field" [value]="projectFieldOptions[i].name">
                         {{ option.name }}
@@ -132,6 +133,7 @@
             <div class="settings-object">
                 <label for="costCenterFieldOptions" class="d-flex">Map Fyle cost centers to</label>
                 <select formControlName="costCenterFieldOptions" id="costCenterFieldOptions" class="form-control selectpicker col-4">
+                    <option [ngValue]="null">None</option>
                     <option *ngFor="let option of costCenterFieldOptions; let i = index"
                         [selected]="costCenterFieldOptions[i].name === costCenterFieldMapping.destination_field" [value]="costCenterFieldOptions[i].name">
                         {{ option.name }}
