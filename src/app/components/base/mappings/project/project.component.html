@@ -1,0 +1,71 @@
+<div class="content" *ngIf="!isLoading">
+    <div class="d-flex content-header">
+        <button class="btn main-btn" type="button" (click)="open(content)">New Project
+            Mapping
+        </button>
+    </div>
+    <div class="alert alert-light mx-auto warning" *ngIf="!projectMappings.length">
+        <p>Looks like you don't have any project mappings</p>
+    </div>
+    <div class="table-layout" *ngIf="projectMappings.length">
+        <div class="table-responsive">
+            <table class="table expense-groups-table">
+                <thead class="table-head">
+                    <tr class="colHeadings">
+                        <th>Project</th>
+                        <th>{{ projectSetting | titlecase}}</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let projectMapping of projectMappings;">
+                    <tr class="expense-groups-row">
+                        <td>
+                            {{ projectMapping.source.value }}
+                        </td>
+                        <td>{{ projectMapping.destination.value }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="projectMappingModalTitle">Create New Mapping</h5>
+        <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close"
+            (click)="clearModalValues()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="modal-body">
+            <div class="floating-label">
+                <input formControlName="fyleProject" class="form-control" type="text" [ngbTypeahead]="projectSearch"
+                    [inputFormatter]="projectFormatter" [resultFormatter]="projectFormatter" [editable]='false' />
+                <label for="fyleProjects" class="input-label">Project</label>
+                <div class="text-danger mb-2" *ngIf="!projectIsValid">
+                    <small>
+                        project not found in Fyle
+                    </small>
+                </div>
+            </div>
+            <div class="floating-label">
+                <input formControlName="netsuiteObject" type="text" class="form-control" [ngbTypeahead]="objectSearch"
+                    [inputFormatter]="objectFormatter" [resultFormatter]="objectFormatter" [editable]='false' />
+                <label for="netsuiteObjects" class="input-label">{{ projectSetting | titlecase }}</label>
+                <div class="text-danger mb-2" *ngIf="!objectIsValid">
+                    <small>
+                        {{ projectSetting | titlecase }} not found in NetSuite
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-btn" class="btn btnInline cancelBtn" type="button" data-dismiss="modal"
+                (click)="clearModalValues()">Cancel</button>
+            <button id="submit-btn" class="btn btnInline saveBtn" type="submit" name="method">Create</button>
+        </div>
+    </form>
+</ng-template>
+
+<app-loader *ngIf="isLoading"></app-loader>

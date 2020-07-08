@@ -1,0 +1,36 @@
+.invoice-info {
+    padding: 0 10px;
+}
+
+.invoice-id-date {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.invoice-info p {
+    display: flex;
+}
+
+.invoice-info p span:nth-child(1) {
+    width: 140px;
+}
+
+.invoice-info .invoice-id-date
+p:nth-child(2) span:nth-child(1) {
+    width: 50px;
+}
+
+.sub-nav-tabs .sub-nav-item.show .sub-nav-link, .sub-nav-tabs .sub-nav-link.active {
+    border: none;
+    border-bottom: 2px solid #ff3366 !important;
+    color: #ff3366 !important;
+    font-size: 16px;
+    background-color: #ffffff;
+}
+.sub-nav-tabs .sub-nav-link:focus, .sub-nav-tabs .sub-nav-link:hover {
+    font-size: 16px;
+    color: #ff3366 !important;
+    text-decoration: none;
+    border-color: transparent;
+}

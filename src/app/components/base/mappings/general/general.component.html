@@ -1,0 +1,39 @@
+<div class="content" *ngIf="!isLoading">
+    <div class="schedule-content">
+        <form [formGroup]="form">
+
+            <div class="bank-account">
+                <label for="netsuiteLocations" class="d-flex">NetSuite Location</label>
+                <select formControlName="netsuiteLocations" id="netsuiteLocations" class="form-control selectpicker col-4">
+                    <option [ngValue]="null">None</option>
+                    <option *ngFor="let bankAccount of netsuiteLocations; let i = index"
+                        [selected]="netsuiteLocations[i].destination_id === generalMappings.location_id" [value]="netsuiteLocations[i].destination_id">
+                        {{netsuiteLocations[i].value}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="bank-account">
+                <label for="accountsPayableAccounts" class="d-flex">Accounts Payable Account</label>
+                <select formControlName="accountsPayableAccounts" id="accountsPayableAccounts" class="form-control selectpicker col-4">
+                    <option *ngFor="let bankAccount of accountsPayableAccounts; let i = index"
+                        [selected]="accountsPayableAccounts[i].destination_id === generalMappings.accounts_payable_id" [value]="accountsPayableAccounts[i].destination_id">
+                        {{accountsPayableAccounts[i].value}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="text-danger mb-2" *ngIf="!accountsPayableIsValid">
+                <small>
+                    Account should not be empty
+                </small>
+            </div>
+
+            <div class="save-schedule">
+                <button class="main-btn btn save-btn" type="submit" (click)="submit()">Save</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+<app-loader *ngIf="isLoading"></app-loader>

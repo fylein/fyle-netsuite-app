@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <div *ngIf="!isLoading" class="main-layout sidebar">
+    <ul class="nav nav-pills navTabsUl flex-column">
+      <header class="sidenav-header">
+        <div class="site-logo">
+          <img src="../../assets/fyle_logo_white_new.png" class="fyle-logo" />
+        </div>
+      </header>
+      <li class="nav-item">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/tasks/"
+          routerLinkActive="active">Tasks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/expense_groups/"
+          routerLinkActive="active">Expense Groups</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/bills/"
+          routerLinkActive="active">Bills</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/mappings/general/"
+          routerLinkActive="active">Mappings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/settings/"
+          routerLinkActive="active">Settings</a>
+      </li>
+    </ul>
+    <div class="workspace-content">
+      <nav class="navbar fixed-top navbar-light">
+        <h1 class="navbar-brand">{{workspace.name}}</h1>
+        <div class="msg">
+
+        </div>
+        <div class="dropdown">
+          <button class="user-profile" type="button" id="profileBtn" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="d-flex flex-row user-details">
+              <i class="material-icons user-icon">account_circle</i>
+              <div>
+                <strong class="user-name">{{user.full_name}}</strong>
+              </div>
+              <i class="material-icons arrow-down">keyboard_arrow_down</i>
+            </div>
+          </button>
+          <div class="dropdown-menu profile-content" aria-labelledby="profileBtn">
+            <div>
+              <button class="btn-block signoutBtn" [routerLink]="['../auth/logout']" type="submit">
+                <div class="d-flex signout-layout">
+                  <i class="material-icons icon">power_settings_new</i>
+                  <strong>
+                    <p class="signout-text">Signout</p>
+                  </strong>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<app-loader *ngIf="isLoading"></app-loader>

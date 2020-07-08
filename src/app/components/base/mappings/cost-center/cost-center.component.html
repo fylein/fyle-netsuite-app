@@ -1,0 +1,71 @@
+<div class="content" *ngIf="!isLoading">
+    <div class="d-flex content-header">
+        <button class="btn main-btn" type="button" (click)="open(content)">New Cost Center
+            Mapping
+        </button>
+    </div>
+    <div class="alert alert-light mx-auto warning" *ngIf="!costCenterMappings.length">
+        <p>Looks like you don't have any cost center mappings</p>
+    </div>
+    <div class="table-layout" *ngIf="costCenterMappings.length">
+        <div class="table-responsive">
+            <table class="table expense-groups-table">
+                <thead class="table-head">
+                    <tr class="colHeadings">
+                        <th>Cost Center</th>
+                        <th>{{ costCenterSetting | titlecase }}</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let costCenterMapping of costCenterMappings;">
+                    <tr class="expense-groups-row">
+                        <td>
+                            {{ costCenterMapping.source.value }}
+                        </td>
+                        <td>{{ costCenterMapping.destination.value }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="costCenterMappingModalTitle">Create New Mapping</h5>
+        <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close"
+            (click)="clearModalValues()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="modal-body">
+            <div class="floating-label">
+                <input formControlName="fyleCostCenter" class="form-control" type="text" [ngbTypeahead]="costCenterSearch"
+                    [inputFormatter]="costCenterFormatter" [resultFormatter]="costCenterFormatter" [editable]='false' />
+                <label for="fyleCostCenters" class="input-label">Cost Center</label>
+                <div class="text-danger mb-2" *ngIf="!costCenterIsValid">
+                    <small>
+                        cost center not found in Fyle
+                    </small>
+                </div>
+            </div>
+            <div class="floating-label">
+                <input formControlName="netsuiteObject" type="text" class="form-control" [ngbTypeahead]="objectSearch"
+                    [inputFormatter]="objectFormatter" [resultFormatter]="objectFormatter" [editable]='false' />
+                <label for="netsuiteObjects" class="input-label">{{ costCenterSetting | titlecase }}</label>
+                <div class="text-danger mb-2" *ngIf="!objectIsValid">
+                    <small>
+                        {{ costCenterSetting | titlecase }} not found in NetSuite
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-btn" class="btn btnInline cancelBtn" type="button" data-dismiss="modal"
+                (click)="clearModalValues()">Cancel</button>
+            <button id="submit-btn" class="btn btnInline saveBtn" type="submit" name="method">Create</button>
+        </div>
+    </form>
+</ng-template>
+
+<app-loader *ngIf="isLoading"></app-loader>

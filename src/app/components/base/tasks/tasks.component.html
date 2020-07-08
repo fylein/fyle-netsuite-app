@@ -1,0 +1,84 @@
+<nav class="sub-navbar navbar fixed-top navbar-light d-flex flex-column">
+    <div class="sub-navbar-heading">
+        <h1 class="navbar-brand">Tasks</h1>
+    </div>
+    <ul class="nav sub-nav-tabs d-flex flex-row tabSection">
+        <li class="sub-nav-item">
+            <a class="sub-nav-link {{inProgress}}" (click)="changeState('ALL')">All</a>
+        </li>
+        <li class="sub-nav-item">
+            <a class="sub-nav-link {{complete}}" (click)="changeState('COMPLETE')">Complete</a>
+        </li>
+        <li class="sub-nav-item">
+            <a class="sub-nav-link {{failed}}" (click)="changeState('FAILED')">Failed</a>
+        </li>
+    </ul>
+</nav>
+<app-loader *ngIf="isLoading"></app-loader>
+<div class="tabitem-content" *ngIf="!isLoading">
+    <div class="d-flex content-header">
+    </div>
+    <div class="content">
+        <div class="alert alert-light mx-auto warning" *ngIf="!tasks.length">
+            <p>Looks like you don't have any Tasks</p>
+        </div>
+        <div class="table-layout" *ngIf="tasks.length">
+            <div class="table-responsive">
+                <table class="table expense-groups-table">
+                    <thead class="table-head">
+                        <tr class="colHeadings">
+                            <th style="width: 30%">Type</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                            <th *ngIf="state === 'FAILED' || state === 'ALL'">Issues</th>
+                            <th>Expense Group</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let task of tasks;">
+                        <tr class="expense-groups-row">
+                            <td *ngIf="task.type === 'FETCHING_EXPENSES'">
+                                {{task.type === 'FETCHING_EXPENSES'? 'Fetching Expenses': ''}}
+                            </td>
+                            <td *ngIf="task.type === 'CREATING_BILL'">
+                                {{task.type === 'CREATING_BILL'? 'Creating Bill': ''}}
+                            </td>
+                            <td *ngIf="task.status === 'COMPLETE'">Complete</td>
+                            <td *ngIf="task.status === 'IN_PROGRESS'">
+                                <div class="spinner-border spinner-color" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                  </div>
+                            </td>
+                            <td *ngIf="task.status === 'FAILED'">Failed</td>
+                            <td>{{task.created_at | date}}</td>
+                            <td *ngIf="(state === 'FAILED' || state === 'ALL')">
+                                <button class="btn" *ngIf="task.status == 'FAILED'" (click)="showErrors(task.id, task.detail)">
+                                    <i class="material-icons">info</i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn" (click)="goToExpenseGroup(task.expense_group)" *ngIf="task.type!=='FETCHING_EXPENSES'">
+                                    <i class="material-icons">open_in_new</i>
+                                </button>          
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="nav-pagination" *ngIf="tasks.length">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" *ngIf="previousPageLink">
+                        <a class="page-link" (click)="previousPage()">&laquo;</a>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link">{{offset + 1}} - {{offset + tasks.length}} of {{count}}</a>
+                    </li>
+                    <li class="page-item" *ngIf="nextPageLink">
+                        <a class="page-link" (click)="nextPage()">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

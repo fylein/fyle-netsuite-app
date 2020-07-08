@@ -1,0 +1,38 @@
+<nav class="sub-navbar navbar fixed-top navbar-light d-flex flex-column">
+    <div class="sub-navbar-heading">
+        <h1 class="navbar-brand">Mapping Errors</h1>
+    </div>
+</nav>
+<app-loader *ngIf="isLoading"></app-loader>
+<div class="tabitem-content" *ngIf="!isLoading">
+    <div class="d-flex content-header">
+        <button class="btn ml-auto main-btn sync-btn" (click)="goToExpenseGroup(task.expense_group)">View Expense Group</button>
+    </div>
+    <div class="content">
+        <div class="alert alert-light mx-auto warning" *ngIf="!errors.length">
+            <p>Looks like you don't have any errors</p>
+        </div>
+        <div class="table-layout" *ngIf="errors.length">
+            <div class="table-responsive">
+                <table class="table expense-groups-table">
+                    <thead class="table-head">
+                        <tr class="colHeadings">
+                            <th style="width: 30%">Level</th>
+                            <th>Value</th>
+                            <th>Message</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let error of errors;">
+                        <tr class="expense-groups-row">
+                            <td>{{error.row? 'Expense': 'Expense Group'}}</td>
+                            <td>{{error.value}}</td>
+                            <td>{{error.message}}</td>
+                            <td>{{error.type}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
