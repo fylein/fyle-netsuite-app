@@ -177,7 +177,7 @@ export class SettingsComponent implements OnInit {
           this.isLoading = false;
         }
       }, error => {
-        if (error.status == 400) {
+        if (error.status == 400 || error.status == 401) {
           this.isLoading = false;
           this.invalidLogin = true;
           this.netsuiteConnected = false

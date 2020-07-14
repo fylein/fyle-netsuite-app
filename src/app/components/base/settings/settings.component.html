@@ -34,8 +34,13 @@
     <div class="login center-div mt-5" *ngIf="netsuiteConnected && !isLoading">
         <p>Connected to your NetSuite account</p>
     </div>
-    <div>
+    <div class="schedule-content">
         <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!netsuiteConnected && !isLoading">
+            <div class="mb-2 col-5">
+                <p>
+                    Connect your Netsuite account to export expenses. <a class="support" href="https://www.fylehq.com/help/en/articles/2012953-integration-with-oracle-netsuite" target="_blank">Read more</a>
+                </p>
+            </div>
             <label class=" control-label col-md-3">NetSuite Account ID</label>
             <div class="col-md-4">
               <input class="form-control" type="text" formControlName="nsAccountId">
@@ -94,10 +99,11 @@
             <div class="col-md-4">
                 <button class="main-btn btn save-btn" type="submit">Connect</button>
             </div>
-            <div class="text-danger mt-2" *ngIf="!netsuiteConnected">
+
+            <div class="text-danger mt-2 mb-2 col-5" *ngIf="!netsuiteConnected">
                 <p>{{error}}</p>
             </div>
-            <div class="text-danger mt-2" *ngIf="invalidLogin">
+            <div class="text-danger mt-2 mb-2 col-5" *ngIf="invalidLogin">
                 <p>Invalid Login Attempt</p>
             </div>
         </form>
