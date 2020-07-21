@@ -19,7 +19,7 @@
     <div class="d-flex content-header">
         <button class="btn main-btn sync-btn" (click)="syncExpenseGroups()">Sync Expense Groups</button>
         <button class="main-btn-outline delete-btn ml-3" type="submit" form="delete-form" name="method" value="delete"
-            (click)="createBills()" *ngIf="selectedGroups.length">Export Expense Groups
+            (click)="createNetSuiteItems()" *ngIf="selectedGroups.length">Export Expense Groups
         </button>
     </div>
     <div class="content">
@@ -42,6 +42,7 @@
                             <th *ngIf="state !== 'ALL'">Status</th>
                             <th>Employee</th>
                             <th>Claim No.</th>
+                            <th>Expense Type</th>
                             <th>View</th>
                         </tr>
                     </thead>
@@ -62,6 +63,9 @@
                             <td *ngIf="state === 'READY'">Ready</td>
                             <td>{{expenseGroup.description.employee_email}}</td>
                             <td>{{expenseGroup.description.claim_number}}</td>
+                            <td>
+                                {{expenseGroup.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card'  }}
+                            </td>
                             <td>
                                 <button class="btn" (click)="goToExpenseGroup(expenseGroup.id)">
                                     <i class="material-icons">open_in_new</i>

@@ -4,6 +4,8 @@ import { ExpenseGroupsService } from '../expense-groups.service';
 import { forkJoin } from 'rxjs';
 import { TasksService } from '../../tasks/tasks.service';
 import { BillsService } from '../../bills/bills.service';
+import { JournalEntriesService } from '../../journal-entries/journal-entries.service';
+import { ExpenseReportsService } from '../../expense-reports/expense-reports.service';
 
 @Component({
   selector: 'app-view-expense-group',
@@ -17,13 +19,52 @@ export class ViewExpenseGroupComponent implements OnInit {
   isLoading: boolean = true;
   expenseGroup: any;
   task: any;
+  generalSettings: any;
 
-  constructor(private route: ActivatedRoute, private router: Router, private expenseGroupsService: ExpenseGroupsService, private tasksService: TasksService, private billsService: BillsService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private expenseGroupsService: ExpenseGroupsService, private tasksService: TasksService, private billsService: BillsService, private expenseReportsService: ExpenseReportsService, private journalEntriesService: JournalEntriesService) { }
 
   createBills(expense_group_id: number) { 
     this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
       this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
     });
+  }
+
+  createNetSuiteItems(expense_group_id: number) {
+    if (this.generalSettings.reimbursable_expenses_object) {
+      if (this.generalSettings.reimbursable_expenses_object == 'VENDOR BILL') {
+        this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+      else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
+        this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+      else {
+        this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+    }
+
+    if (this.generalSettings.corporate_credit_card_expenses_object) {
+      if (this.generalSettings.corporate_credit_card_expenses_object == 'JOURNAL ENTRY') {
+        this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+      else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
+        this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+      else {
+        this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
+          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+        });
+      }
+    }
   }
 
   openExpenseInFyle(expenseId: string) {
@@ -36,10 +77,21 @@ export class ViewExpenseGroupComponent implements OnInit {
     window.open(`https://${nsAccountId}.app.netsuite.com/app/accounting/transactions/vendbill.nl?id=${this.task['detail']['internalId']}`, '_blank');
   }
 
+  openExpenseReportInNetSuite() {
+    let nsAccountId = localStorage.getItem('ns_account_id');
+    window.open(`https://${nsAccountId}.app.netsuite.com/app/accounting/transactions/exprept.nl?id=${this.task['detail']['internalId']}`, '_blank');
+  }
+
+  openJournalEntryInNetSuite() {
+    let nsAccountId = localStorage.getItem('ns_account_id');
+    window.open(`https://${nsAccountId}.app.netsuite.com/app/accounting/transactions/journal.nl?id=${this.task['detail']['internalId']}`, '_blank');
+  }
+
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.workspaceId = +params['workspace_id'];
       this.expenseGroupId = +params['expense_group_id'];
+      this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'));
 
       forkJoin(
         [

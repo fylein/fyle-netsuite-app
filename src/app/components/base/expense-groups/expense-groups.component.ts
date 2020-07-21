@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseGroupsService } from './expense-groups.service';
 import { BillsService } from '../bills/bills.service';
+import { JournalEntriesService } from '../journal-entries/journal-entries.service';
+import { ExpenseReportsService } from '../expense-reports/expense-reports.service';
 import { SettingsService} from '../settings/settings.service';
 import { MappingsService} from '../mappings/mappings.service';
 
@@ -26,8 +28,9 @@ export class ExpenseGroupsComponent implements OnInit {
   all: string
   allSelected: boolean;
   selectedGroups: any[] = [];
+  generalSettings: any;
 
-  constructor(private route: ActivatedRoute, private expenseGroupService: ExpenseGroupsService, private router: Router, private billsService: BillsService, private settingsService: SettingsService, private mappingsService: MappingsService) {}
+  constructor(private route: ActivatedRoute, private expenseGroupService: ExpenseGroupsService, private router: Router, private billsService: BillsService,  private expenseReportsService: ExpenseReportsService, private journalEntriesService: JournalEntriesService, private settingsService: SettingsService, private mappingsService: MappingsService) {}
 
   syncExpenseGroups() {
     this.expenseGroupService.syncExpenseGroups(this.workspaceId).subscribe(task => {
@@ -80,6 +83,50 @@ export class ExpenseGroupsComponent implements OnInit {
     });
   }
 
+  createNetSuiteItems() { 
+    if (this.generalSettings.reimbursable_expenses_object){
+      let filteredIds = this.expenseGroups.filter(expenseGroup => expenseGroup.selected && expenseGroup.fund_source == 'PERSONAL').map(expenseGroup => expenseGroup.id);
+      if (filteredIds.length > 0) {
+        if(this.generalSettings.reimbursable_expenses_object == 'VENDOR BILL') {
+          this.billsService.createBills(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
+          this.expenseReportsService.createExpenseReports(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else {
+          this.journalEntriesService.createJournalEntries(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+      }
+    }
+
+    if (this.generalSettings.corporate_credit_card_expenses_object) {
+      let filteredIds = this.expenseGroups.filter(expenseGroup => expenseGroup.selected && expenseGroup.fund_source == 'CCC').map(expenseGroup => expenseGroup.id);
+      if (filteredIds.length > 0) {
+        if (this.generalSettings.corporate_credit_card_expenses_object == 'JOURNAL ENTRY') {
+          this.journalEntriesService.createJournalEntries(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
+          this.expenseReportsService.createExpenseReports(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else {
+          this.billsService.createBills(this.workspaceId, filteredIds).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+      }
+    }
+  }
+
   toggleSelectAll() {
     this.expenseGroups.map(expenseGroup => expenseGroup.selected = this.allSelected);
     this.selectedGroups = this.expenseGroups.filter(expenseGroup => expenseGroup.selected == true);
@@ -106,6 +153,7 @@ export class ExpenseGroupsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.workspaceId = +params['workspace_id'];
       this.getPaginatedExpenseGroups();
+      this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'));
     });
     this.mappingsService.postNetSuiteLocations(this.workspaceId).subscribe(accounts =>{
     });

@@ -42,6 +42,12 @@
                             <td *ngIf="task.type === 'CREATING_BILL'">
                                 {{task.type === 'CREATING_BILL'? 'Creating Bill': ''}}
                             </td>
+                            <td *ngIf="task.type === 'CREATING_EXPENSE_REPORT'">
+                                {{task.type === 'CREATING_EXPENSE_REPORT'? 'Creating Expense Report': ''}}
+                            </td>
+                            <td *ngIf="task.type === 'CREATING_JOURNAL_ENTRY'">
+                                {{task.type === 'CREATING_JOURNAL_ENTRY'? 'Creating Journal Entry': ''}}
+                            </td>
                             <td *ngIf="task.status === 'COMPLETE'">Complete</td>
                             <td *ngIf="task.status === 'IN_PROGRESS'">
                                 <div class="spinner-border spinner-color" role="status">

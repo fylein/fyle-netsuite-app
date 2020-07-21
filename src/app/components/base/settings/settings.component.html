@@ -15,6 +15,9 @@
         <li class="sub-nav-item">
             <a class="sub-nav-link {{subsidiary}}" (click)="toggleState('subsidiary')">Subsidiary</a>
         </li>
+        <li class="sub-nav-item">
+            <a class="sub-nav-link {{schedule}}" (click)="toggleState('schedule')">Schedule</a>
+        </li>
     </ul>
 </nav>
 <div class="tabitem-content" *ngIf="state === 'source'">
@@ -110,17 +113,49 @@
     </div>
 </div>
 
-
 <div class="tabitem-content" *ngIf="state === 'settings' && !isLoading">
     <div class="schedule-content">
-        <form [formGroup]="generalSettingsForm">
-
+        <form  *ngIf="generalSettings" [formGroup]="generalSettingsForm">
+    
             <div class="settings-object">
-                <label for="employeeFieldOptions" class="d-flex">Map Fyle employees to</label>
+                <label for="employeeFieldOptions" class="d-flex"> Map Fyle employees to </label>
                 <select formControlName="employeeFieldOptions" id="employeeFieldOptions" class="form-control selectpicker col-4">
-                    <option *ngFor="let option of employeeFieldOptions; let i = index"
+                    <option *ngFor="let employeeMappingsObject of employeeFieldOptions; let i = index"
                         [selected]="employeeFieldOptions[i].name === employeeFieldMapping.destination_field" [value]="employeeFieldOptions[i].name">
-                        {{ option.name }}
+                        {{employeeFieldOptions[i].name}}
+                    </option>
+                </select>
+            </div>
+    
+            <div class="text-danger mb-2" *ngIf="!employeeMappingsObjectIsValid">
+                <small>
+                    Employee Field Mappings Object should not be empty
+                </small>
+            </div>
+    
+            <div class="settings-object">
+                <label for="reimbursableExpensesObjects" class="d-flex">Map reimbursable expenses to</label>
+                <select formControlName="reimbursableExpensesObjects" id="reimbursableExpensesObjects" class="form-control selectpicker col-4">
+                    <option *ngFor="let accountPayableAccount of reimbursableExpensesObjects; let i = index"
+                        [selected]="reimbursableExpensesObjects[i].name === generalSettings?.reimbursable_expenses_object" [value]="reimbursableExpensesObjects[i].name">
+                        {{reimbursableExpensesObjects[i].name}}
+                    </option>
+                </select>
+            </div>
+    
+            <div class="text-danger mb-2" *ngIf="!reimbursableExpensesObjectIsValid">
+                <small>
+                    Reimbursable Expenses Object should not be empty
+                </small>
+            </div>
+    
+            <div class="settings-object">
+                <label for="cccExpensesObjects" class="d-flex">Map corporate credit card expenses to</label>
+                <select formControlName="cccExpensesObjects" id="cccExpensesObjects" class="form-control selectpicker col-4">
+                    <option [ngValue]="null">None</option>
+                    <option *ngFor="let accountPayableAccount of cccExpensesObjects; let i = index"
+                        [selected]="cccExpensesObjects[i].name === generalSettings?.corporate_credit_card_expenses_object" [value]="cccExpensesObjects[i].name">
+                        {{cccExpensesObjects[i].name}}
                     </option>
                 </select>
             </div>
@@ -151,7 +186,7 @@
                 <button class="main-btn btn save-btn" type="submit" (click)="open(content)">Save Settings</button>
             </div>
     
-            <div class="save-schedule">
+            <div class="save-schedule" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.reimbursable_expenses_object && generalSettings.employee_field_mapping">
                 <p>
                     To change your settings, Please send us a note at 
                     <a class="support" href="mailto:support@fyle.in">support@fyle.in</a>
@@ -235,6 +270,52 @@
                 </div>
             </ng-template>
     
+        </form>
+    </div>
+</div>
+
+<div class="tabitem-content" *ngIf="state === 'schedule' && !isLoading">
+    <div class="schedule-content">
+        <form [formGroup]="scheduleForm" (ngSubmit)="submitScheduleSettings()">
+            <div class="d-flex enable-schedule">
+                <p>Status</p>
+                <input type="checkbox" id="schedule-enabled" name="schedule" (value)="scheduleEnabled" class="switch-input"
+                    formControlName="scheduleEnabled" checked>
+                <label for="schedule-enabled" class="switch-label"></label>
+            </div>
+            <div class="d-flex repeat-frequency row">
+                <div class="col-2">
+                    <p>Repeat Frequency</p>
+                </div>
+                <div class="input-group col-1">
+                    <input id="changeHourStep" type="number" min="1" oninput="validity.valid||(value='');"
+                        class="form-control" formControlName="hours" required />
+                </div>
+                <div class="input-group col-1">
+                    hours
+                </div>
+                <div class="text-danger mb-2 col-3" *ngIf="!frequencyIsValid">
+                    <small>
+                        frequency field cannot be empty
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <p>Start date & time</p>
+                </div>
+                <div class="input-group col-3">
+                    <ng2-flatpickr formControlName="datetime" [config]="datetimePickerOptions"></ng2-flatpickr>
+                </div>
+                <div class="text-danger mb-2 col-3" *ngIf="!datetimeIsValid">
+                    <small>
+                        date time field cannot be empty
+                    </small>
+                </div>
+            </div>
+            <div class="save-schedule">
+                <button class="main-btn btn save-btn" type="submit">Save Schedule</button>
+            </div>
         </form>
     </div>
 </div>

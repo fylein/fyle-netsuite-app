@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { WorkspaceService } from './workspace.service';
 import { SettingsService } from './settings/settings.service'
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -20,13 +21,20 @@ export class BaseComponent implements OnInit {
   }
 
   getGeneralSettings() { 
-    this.settingsService.getMappingSettings(this.workspace.id).subscribe(response => {
-      this.generalSettings = [
-        {'project_field_mapping': ''},
-        {'cost_center_field_mapping': ''},
-        {'workspace_id': this.workspace.id}
+
+    forkJoin(
+      [
+        this.settingsService.getGeneralSettings(this.workspace.id),
+        this.settingsService.getMappingSettings(this.workspace.id)
       ]
-      this.mappingSettings = response['results'];
+    ).subscribe(responses => {
+      this.generalSettings = responses[0];
+      this.mappingSettings = responses[1]['results'];
+      
+      let employeeFieldMapping = this.mappingSettings.filter(
+        setting => (setting.source_field === 'EMPLOYEE') && 
+        (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
+      )[0];
 
       let projectFieldMapping = this.mappingSettings.filter(
         settings => settings.source_field === 'PROJECT'
@@ -36,16 +44,17 @@ export class BaseComponent implements OnInit {
         settings => settings.source_field === 'COST_CENTER'
       )[0];
 
+      this.generalSettings['employee_field_mapping'] = employeeFieldMapping.destination_field;
+
       if (projectFieldMapping) {
         this.generalSettings['project_field_mapping'] = projectFieldMapping.destination_field;
-        localStorage.setItem('project_field_mapping', JSON.stringify(projectFieldMapping.destination_field));
       }
 
       if (costCenterFieldMapping) {
         this.generalSettings['cost_center_field_mapping'] = costCenterFieldMapping.destination_field;
-        localStorage.setItem('cost_center_field_mapping', JSON.stringify(costCenterFieldMapping.destination_field));
       }
 
+      localStorage.setItem('generalSettings', JSON.stringify(this.generalSettings));
     });
   }
 

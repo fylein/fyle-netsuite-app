@@ -41,6 +41,25 @@ export class SettingsService {
     });
   }
 
+  postSettings(workspace_id: number, next_run: string, hours: number, schedule_enabled: boolean) {
+    return this.generalService.post(`/workspaces/${workspace_id}/schedule/`, {
+      next_run: next_run,
+      hours: hours,
+      schedule_enabled: schedule_enabled
+    });
+  }
+
+  postGeneralSettings(workspace_id: number, reimbursable_expenses_object: string, corporate_credit_card_expenses_object: string) {
+    return this.generalService.post(`/workspaces/${workspace_id}/settings/general/`, {
+      reimbursable_expenses_object: reimbursable_expenses_object,
+      corporate_credit_card_expenses_object: corporate_credit_card_expenses_object,
+    });
+  }
+
+  getSettings(workspace_id: number) {
+    return this.generalService.get(`/workspaces/${workspace_id}/schedule/`, {});
+  }
+
   getMappingSettings(workspace_id: number) {
     return this.generalService.get(`/workspaces/${workspace_id}/mappings/settings/`, {});
   }
@@ -51,6 +70,10 @@ export class SettingsService {
 
   getNetSuiteSubsidiaries(workspace_id: number): Observable<any> {
     return this.generalService.get(`/workspaces/${workspace_id}/netsuite/subsidiaries/`, {});
+  }
+
+  getGeneralSettings(workspace_id: number) {
+    return this.generalService.get(`/workspaces/${workspace_id}/settings/general/`, {});
   }
 
   postMappingSettings(workspace_id: number, mappingSettings: any) {

@@ -19,8 +19,18 @@
                     View Bill in NetSuite
                 </button>
             </div>
+            <div class="row-4 ml-auto mr-2" *ngIf="task && task.status === 'COMPLETE' && task.type === 'CREATING_EXPENSE_REPORT'">
+                <button class="btn ml-auto main-btn sync-btn" (click)="openExpenseReportInNetSuite()">
+                    View Expense Report in NetSuite
+                </button>
+            </div>
+            <div class="row-4 ml-auto mr-2" *ngIf="task && task.status === 'COMPLETE' && task.type === 'CREATING_JOURNAL_ENTRY'">
+                <button class="btn ml-auto main-btn sync-btn" (click)="openJournalEntryInNetSuite()">
+                    View Journal Entry in NetSuite
+                </button>
+            </div>
             <div class="row-4 ml-auto mr-2" *ngIf="!task || task.status === 'FAILED'">
-                <button class="btn ml-auto main-btn sync-btn" (click)="createBills(expenseGroup.id)">
+                <button class="btn ml-auto main-btn sync-btn" (click)="createNetSuiteItems(expenseGroup.id)">
                     Export Group
                 </button>
             </div>
