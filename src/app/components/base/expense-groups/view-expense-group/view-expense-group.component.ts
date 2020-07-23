@@ -23,47 +23,43 @@ export class ViewExpenseGroupComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private expenseGroupsService: ExpenseGroupsService, private tasksService: TasksService, private billsService: BillsService, private expenseReportsService: ExpenseReportsService, private journalEntriesService: JournalEntriesService) { }
 
-  createBills(expense_group_id: number) { 
-    this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
-      this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-    });
-  }
-
-  createNetSuiteItems(expense_group_id: number) {
-    if (this.generalSettings.reimbursable_expenses_object) {
-      if (this.generalSettings.reimbursable_expenses_object == 'VENDOR BILL') {
-        this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
-      else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
-        this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
-      else {
-        this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
+  createNetSuiteItems(expense_group_id: number) { 
+    if (this.generalSettings.reimbursable_expenses_object){
+        if(this.generalSettings.reimbursable_expenses_object == 'VENDOR BILL' && this.expenseGroup.fund_source == 'PERSONAL') {
+          this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT' && this.expenseGroup.fund_source == 'PERSONAL') {
+          this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else if (this.generalSettings.reimbursable_expenses_object == 'JOURNAL ENTRY' && this.expenseGroup.fund_source == 'PERSONAL') {
+          this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
     }
 
     if (this.generalSettings.corporate_credit_card_expenses_object) {
-      if (this.generalSettings.corporate_credit_card_expenses_object == 'JOURNAL ENTRY') {
-        this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
-      else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
-        this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
-      else {
-        this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
-          this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
-        });
-      }
+        if (this.generalSettings.corporate_credit_card_expenses_object == 'JOURNAL ENTRY' && this.expenseGroup.fund_source == 'CCC') {
+          this.journalEntriesService.createJournalEntries(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+        else if (this.generalSettings.corporate_credit_card_expenses_object == 'EXPENSE REPORT' && this.expenseGroup.fund_source == 'CCC') {
+          this.expenseReportsService.createExpenseReports(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+
+          });
+        }
+        else if (this.generalSettings.corporate_credit_card_expenses_object == 'VENDOR BILL' && this.expenseGroup.fund_source == 'CCC') {
+          this.billsService.createBills(this.workspaceId, [expense_group_id]).subscribe(result => {
+            this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
+          });
+        }
+      // }
     }
   }
 

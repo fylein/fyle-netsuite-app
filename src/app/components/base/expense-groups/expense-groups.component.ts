@@ -6,6 +6,7 @@ import { JournalEntriesService } from '../journal-entries/journal-entries.servic
 import { ExpenseReportsService } from '../expense-reports/expense-reports.service';
 import { SettingsService} from '../settings/settings.service';
 import { MappingsService} from '../mappings/mappings.service';
+import { concat } from 'rxjs';
 
 
 @Component({
@@ -97,7 +98,7 @@ export class ExpenseGroupsComponent implements OnInit {
             this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
           });
         }
-        else {
+        else if (this.generalSettings.reimbursable_expenses_object == 'JOURNAL ENTRY') {
           this.journalEntriesService.createJournalEntries(this.workspaceId, filteredIds).subscribe(result => {
             this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
           });
@@ -113,12 +114,12 @@ export class ExpenseGroupsComponent implements OnInit {
             this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
           });
         }
-        else if (this.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT') {
+        else if (this.generalSettings.corporate_credit_card_expenses_object == 'EXPENSE REPORT') {
           this.expenseReportsService.createExpenseReports(this.workspaceId, filteredIds).subscribe(result => {
             this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
           });
         }
-        else {
+        else if (this.generalSettings.corporate_credit_card_expenses_object == 'VENDOR BILL') {
           this.billsService.createBills(this.workspaceId, filteredIds).subscribe(result => {
             this.router.navigateByUrl(`/workspaces/${this.workspaceId}/tasks`);
           });

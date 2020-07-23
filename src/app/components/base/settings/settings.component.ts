@@ -74,6 +74,9 @@ export class SettingsComponent implements OnInit {
       hours: new FormControl(''),
       scheduleEnabled: new FormControl()
     });
+    this.subsidiaryForm = this.formBuilder.group({
+      netsuiteSubsidiaries: new FormControl('')
+    });
   }
 
   open(content) {
@@ -117,15 +120,13 @@ export class SettingsComponent implements OnInit {
   getSettings() {
     this.settingsService.getSettings(this.workspaceId).subscribe(settings => {
       if (settings) {
-        if (settings) {
-          this.scheduleForm.setValue({
-            datetime: new Date(settings.start_datetime),
-            hours: settings.interval_hours,
-            scheduleEnabled: settings.enabled
-          });
-          this.datetimePickerOptions.minDate = new Date(settings.start_datetime.split('T')[0]);
-          this.datetimePickerOptions.defaultDate = new Date(settings.start_datetime).toISOString();
-        }
+        this.scheduleForm.setValue({
+          datetime: new Date(settings.start_datetime),
+          hours: settings.interval_hours,
+          scheduleEnabled: settings.enabled
+        });
+        this.datetimePickerOptions.minDate = new Date(settings.start_datetime.split('T')[0]);
+        this.datetimePickerOptions.defaultDate = new Date(settings.start_datetime).toISOString();
         this.isLoading = false;
       }
     }, error => {
@@ -465,7 +466,6 @@ export class SettingsComponent implements OnInit {
       this.subsidiaryIsValid = true;
     }
 
-
     if(this.subsidiaryIsValid){
       this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value,).subscribe(response => {
         this.closeModal();
@@ -475,13 +475,13 @@ export class SettingsComponent implements OnInit {
   }
 
   getSubsidiaryMappings() {
-    this.settingsService.getSubsidiaryMappings(this.workspaceId).subscribe(subsidiaryMappings => {
-      this.subsidiaryMappings = subsidiaryMappings;
-      this.isLoading = false;
-      this.subsidiaryForm = this.formBuilder.group({
-        netsuiteSubsidiaries: [this.subsidiaryMappings? this.subsidiaryMappings.internal_id: ''],
-      });
-      if (subsidiaryMappings) {
+    this.settingsService.getSubsidiaryMappings(this.workspaceId).subscribe(settings => {
+      this.subsidiaryMappings = settings;
+      if (settings) {
+        this.subsidiaryForm.setValue({
+          netsuiteSubsidiaries: settings.internal_id
+        });
+        this.isLoading = false;
         this.subsidiaryForm.disable();
       }
     }, error => {
