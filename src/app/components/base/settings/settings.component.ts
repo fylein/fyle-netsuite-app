@@ -477,13 +477,13 @@ export class SettingsComponent implements OnInit {
   getSubsidiaryMappings() {
     this.settingsService.getSubsidiaryMappings(this.workspaceId).subscribe(settings => {
       this.subsidiaryMappings = settings;
-      if (settings) {
-        this.subsidiaryForm.setValue({
-          netsuiteSubsidiaries: settings.internal_id
-        });
-        this.isLoading = false;
-        this.subsidiaryForm.disable();
-      }
+        if (settings) {
+          this.subsidiaryForm.setValue({
+            netsuiteSubsidiaries: settings.internal_id
+          });
+          this.isLoading = false;
+          this.subsidiaryForm.disable();
+        }
     }, error => {
       if(error.status == 400) {
         this.subsidiaryMappings = {};
