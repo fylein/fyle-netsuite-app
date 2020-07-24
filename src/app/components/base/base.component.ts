@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { WorkspaceService } from './workspace.service';
 import { SettingsService } from './settings/settings.service'
+import { AuthService } from '../auth/auth.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -16,8 +17,9 @@ export class BaseComponent implements OnInit {
   fyleConnected: boolean = false;
   generalSettings: any;
   mappingSettings: any;
+  showSwitchOrg: boolean = false;
 
-  constructor(private workspaceService: WorkspaceService, private settingsService: SettingsService, private router: Router) {
+  constructor(private workspaceService: WorkspaceService, private settingsService: SettingsService, private router: Router, private authService: AuthService) {
   }
 
   getGeneralSettings() { 
@@ -58,23 +60,32 @@ export class BaseComponent implements OnInit {
     });
   }
 
+  switchWorkspace() {
+    this.authService.switchWorkspace();
+  }
+
+  getSettingsAndNavigate(location) {
+    const pathName = window.location.pathname;
+    this.isLoading = false;
+    if (pathName === '/workspaces') {
+      this.router.navigateByUrl(`/workspaces/${this.workspace.id}/${location}`);
+    }
+    this.getGeneralSettings();
+  }
+
   ngOnInit() {
-    this.workspaceService.getWorkspaces().subscribe(workspaces => {
-      let pathName = window.location.pathname;
+    const orgsCount = parseInt(localStorage.getItem('orgsCount'));
+    if (orgsCount > 1) {
+      this.showSwitchOrg = true;
+    }
+    this.workspaceService.getWorkspaces(this.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length) {
         this.workspace = workspaces[0];
-        this.isLoading = false;
-        if (pathName === '/workspaces') {
-          this.router.navigateByUrl(`/workspaces/${this.workspace.id}/expense_groups`);
-        }
-        this.getGeneralSettings();
+        this.getSettingsAndNavigate('expense_groups');
       } else {
         this.workspaceService.createWorkspace().subscribe(workspace => {
           this.workspace = workspace;
-          this.isLoading = false;
-          if (pathName === '/workspaces') {
-            this.router.navigateByUrl(`/workspaces/${this.workspace.id}/settings`);
-          }
+          this.getSettingsAndNavigate('settings');
         });
       }
     });

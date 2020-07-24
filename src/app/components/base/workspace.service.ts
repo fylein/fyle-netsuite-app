@@ -13,7 +13,7 @@ export class WorkspaceService {
     return this.generalService.post('/workspaces/', {});
   }
 
-  getWorkspaces(): Observable<any> {
-    return this.generalService.get('/workspaces/', {});
+  getWorkspaces(org_id): Observable<any> {
+    return this.generalService.get(`/workspaces/?org_id=${org_id}`, {});
   }
 }
