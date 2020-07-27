@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MappingsService } from '../mappings.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin } from 'rxjs';
 
@@ -19,10 +19,15 @@ export class GeneralComponent implements OnInit {
   workspaceId: number;
   netsuiteLocations: any[]
   accountsPayableAccounts: any[]
+  bankAccounts: any[]
+  cccAccounts: any[]
   generalMappings: any;
+  generalSettings: any;
   isLoading: boolean = true;
   locationIsValid: boolean = true;
   accountsPayableIsValid: boolean = true;
+  bankAccountIsValid: boolean = true;
+  cccAccountIsValid: boolean = true;
 
   constructor(private modalService: NgbModal, private route: ActivatedRoute, private mappingsService: MappingsService, private formBuilder: FormBuilder) {
   }
@@ -39,6 +44,8 @@ export class GeneralComponent implements OnInit {
   submit() {
     this.locationIsValid = false;
     this.accountsPayableIsValid = false;
+    this.bankAccountIsValid = false;
+    this.cccAccountIsValid = false;
 
     let formValues = this.form.getRawValue()
 
@@ -56,17 +63,29 @@ export class GeneralComponent implements OnInit {
         'destination_id': null
       }
     }
-    
-    let accountId = formValues? formValues.accountsPayableAccounts: this.form.value.accountsPayableAccounts;
-    let accountsPayableAccount = this.accountsPayableAccounts.filter(filteredAccount => filteredAccount.destination_id === accountId)[0];
+
+    let accountId = this.generalSettings.employee_field_mapping === 'VENDOR' ? this.form.value.accountsPayableAccounts: '';
+    let accountsPayableAccount = this.generalSettings.employee_field_mapping === 'VENDOR' ? this.accountsPayableAccounts.filter(filteredAccount => filteredAccount.destination_id === accountId)[0]: '';
+
+    let bankAccountId = this.generalSettings.employee_field_mapping === 'EMPLOYEE' ? this.form.value.bankAccounts : '';
+    let bankAccount = this.generalSettings.employee_field_mapping === 'EMPLOYEE' ? this.bankAccounts.filter(filteredBankAccount => filteredBankAccount.destination_id === bankAccountId)[0] : '';
+
+    let cccAccountId = this.generalSettings.corporate_credit_card_expenses_object ? this.form.value.cccAccounts: '';
+    let cccAccount = this.generalSettings.corporate_credit_card_expenses_object ? this.cccAccounts.filter(filteredCCCAccount => filteredCCCAccount.destination_id === cccAccountId)[0] : '';
 
     if (accountId != null) {
       this.accountsPayableIsValid = true;
     }
+    if (bankAccountId != null) {
+      this.bankAccountIsValid = true;
+    }
+    if (cccAccountId != null) {
+      this.cccAccountIsValid = true;
+    }
 
-    if(this.locationIsValid && this.accountsPayableIsValid){
+    if(this.locationIsValid && this.accountsPayableIsValid && this.bankAccountIsValid && this.cccAccountIsValid){
       this.isLoading = true;
-      this.mappingsService.postGeneralMappings(this.workspaceId, netsuiteLocation.value, netsuiteLocation.destination_id, accountsPayableAccount.value, accountsPayableAccount.destination_id).subscribe(response => {
+      this.mappingsService.postGeneralMappings(this.workspaceId, netsuiteLocation.value, netsuiteLocation.destination_id, accountsPayableAccount.value, accountsPayableAccount.destination_id, bankAccount.value, bankAccount.destination_id, cccAccount.value, cccAccount.destination_id).subscribe(response => {
         this.getGeneralMappings();
       });
     }
@@ -79,7 +98,9 @@ export class GeneralComponent implements OnInit {
       this.isLoading = false;
       this.form = this.formBuilder.group({
         netsuiteLocations: [this.generalMappings? this.generalMappings.location_id: ''],
-        accountsPayableAccounts: [this.generalMappings? this.generalMappings.accounts_payable_id: '']
+        accountsPayableAccounts: [this.generalMappings? this.generalMappings.accounts_payable_id: ''],
+        bankAccounts: [this.generalMappings? this.generalMappings.reimbursable_account_id: ''],
+        cccAccounts: [this.generalMappings? this.generalMappings.default_ccc_account_id: '']
       });
     }, error => {
       if(error.status == 400) {
@@ -90,7 +111,9 @@ export class GeneralComponent implements OnInit {
         this.isLoading = false;
         this.form = this.formBuilder.group({
           netsuiteLocations: [this.netsuiteLocations? this.generalMappings.location_id: ''],
-          accountsPayableAccounts: [this.generalMappings? this.generalMappings.accounts_payable_id: '']
+          accountsPayableAccounts: [this.generalMappings? this.generalMappings['accounts_payable_id']: ''],
+          bankAccounts: [this.generalMappings? this.generalMappings['reimbursable_account_id']: ''],
+          cccAccounts: [this.generalMappings? this.generalMappings['default_ccc_account_id']: '']
         });
       }
     });
@@ -100,14 +123,19 @@ export class GeneralComponent implements OnInit {
     ngOnInit() {
       this.route.parent.params.subscribe(params => {
         this.workspaceId = +params['workspace_id'];
+        this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'));
         forkJoin(
           [
             this.mappingsService.getNetSuiteLocations(this.workspaceId),
-            this.mappingsService.getAccountsPayables(this.workspaceId)
+            this.mappingsService.getAccountsPayables(this.workspaceId),
+            this.mappingsService.getBankAccounts(this.workspaceId),
+            this.mappingsService.getCreditCardAccounts(this.workspaceId)
           ]
         ).subscribe(responses => {
           this.netsuiteLocations = responses[0]
           this.accountsPayableAccounts = responses[1]
+          this.bankAccounts = responses[2]
+          this.cccAccounts = responses[3]
           this.getGeneralMappings();
         });
       });

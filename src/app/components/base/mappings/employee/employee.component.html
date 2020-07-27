@@ -1,6 +1,6 @@
 <div class="content" *ngIf="!isLoading">
     <div class="d-flex content-header">
-        <button class="btn main-btn" type="button" (click)="open(content)">New Employee
+        <button class="btn main-btn" type="button" (click)="open(content)">Create Employee
             Mapping
         </button>
     </div>
@@ -13,16 +13,24 @@
                 <thead class="table-head">
                     <tr class="colHeadings">
                         <th>Employee Email</th>
-                        <th>Vendor Name</th>
+                        <th *ngIf="generalSettings?.employee_field_mapping == 'VENDOR'">Vendor Name</th>
+                        <th *ngIf="generalSettings?.employee_field_mapping == 'EMPLOYEE'">NetSuite Employee Name</th>
+                        <th *ngIf="generalSettings?.corporate_credit_card_expenses_object">Credit Card</th>
                     </tr>
                 </thead>
                 <tbody *ngFor="let employeeMapping of employeeMappings;">
                     <tr class="expense-groups-row">
                         <td>
-                            {{ employeeMapping.source.value }}
+                            {{ employeeMapping.fyle_value }}
                         </td>
-                        <td>
-                            {{ employeeMapping.destination.value }}
+                        <td *ngIf="generalSettings?.employee_field_mapping === 'VENDOR'">
+                            {{ employeeMapping.netsuite_value }}
+                        </td>
+                        <td *ngIf="generalSettings?.employee_field_mapping === 'EMPLOYEE'">
+                            {{ employeeMapping.netsuite_value }}
+                        </td>
+                        <td *ngIf="generalSettings?.corporate_credit_card_expenses_object">
+                            {{ employeeMapping.ccc_account }}
                         </td>
                     </tr>
                 </tbody>
@@ -51,16 +59,37 @@
                     </small>
                 </div>
             </div>
-            <div class="floating-label">
+            <div class="floating-label" *ngIf="generalSettings.employee_field_mapping === 'VENDOR'">
                 <input formControlName="netsuiteVendor" type="text" class="form-control" [ngbTypeahead]="vendorSearch"
                     [inputFormatter]="vendorFormatter" [resultFormatter]="vendorFormatter" [editable]='false' />
                 <label for="netsuiteVendors" class="input-label">Vendor</label>
                 <div class="text-danger mb-2" *ngIf="!vendorIsValid">
                     <small>
-                        vendor not found in NetSuite
+                        Vendor not found in NetSuite
                     </small>
                 </div>
             </div>
+            <div class="floating-label" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+                <input formControlName="netsuiteEmployee" type="text" class="form-control" [ngbTypeahead]="employeeSearch"
+                    [inputFormatter]="employeeFormatter" [resultFormatter]="employeeFormatter" [editable]='false' />
+                <label for="netsuiteEmployees" class="input-label">Employee</label>
+                <div class="text-danger mb-2" *ngIf="!employeeIsValid">
+                    <small>
+                        Employee not found in NetSuite
+                    </small>
+                </div>
+            </div>
+            <div class="floating-label" *ngIf="generalSettings.corporate_credit_card_expenses_object">
+                <input formControlName="creditCardAccount" type="text" class="form-control" [value] = "generalMappings.default_ccc_account_name" [ngbTypeahead]="accountSearch"
+                    [inputFormatter]="accountFormatter" [resultFormatter]="accountFormatter" [editable]='true' />
+                <label for="creditCardAccounts" class="input-label">Account</label>
+                <div class="text-danger mb-2" *ngIf="!accountIsValid">
+                    <small>
+                        Account not found in NetSuite
+                    </small>
+                </div>
+            </div>
+
         </div>
         <div class="modal-footer">
             <button id="cancel-btn" class="btn btnInline cancelBtn" type="button" data-dismiss="modal"

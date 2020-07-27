@@ -24,6 +24,7 @@ export class CostCenterComponent implements OnInit {
   modalRef: NgbModalRef;
   isLoading: boolean = true;
   costCenterSetting: any;
+  generalSettings: any = true;
 
   constructor(private modalService: NgbModal, private route: ActivatedRoute, private mappingsService: MappingsService, private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
@@ -101,14 +102,15 @@ export class CostCenterComponent implements OnInit {
 
   ngOnInit() {
     this.route.parent.params.subscribe(params => {
-      this.costCenterSetting = JSON.parse(localStorage.getItem('cost_center_field_mapping'));
+      this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'))
+      this.costCenterSetting = this.generalSettings.cost_center_field_mapping;
       this.workspaceId = +params['workspace_id'];
       this.mappingsService.getFyleCostCenters(this.workspaceId).subscribe(costCenters => {
         this.fyleCostCenters = costCenters;
         this.getCostCenterMappings();
       });
 
-      if (this.costCenterSetting == 'CLASS') { 
+      if (this.costCenterSetting === 'CLASS') { 
         this.mappingsService.getNetSuiteClasses(this.workspaceId).subscribe(objects => {
           this.netsuiteObjects = objects;
         });

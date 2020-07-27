@@ -24,6 +24,7 @@ export class ProjectComponent implements OnInit {
   modalRef: NgbModalRef;
   isLoading: boolean = true;
   projectSetting: any;
+  generalSettings: any = true;
 
   constructor(private modalService: NgbModal, private route: ActivatedRoute, private mappingsService: MappingsService, private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
@@ -103,7 +104,8 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
     this.route.parent.params.subscribe(params => {
-      this.projectSetting = JSON.parse(localStorage.getItem('project_field_mapping'));
+      this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'))
+      this.projectSetting = this.generalSettings.project_field_mapping
       this.workspaceId = +params['workspace_id'];
       this.mappingsService.getFyleProjects(this.workspaceId).subscribe(projects => {
         this.fyleProjects = projects;

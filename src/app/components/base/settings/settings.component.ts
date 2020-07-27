@@ -331,9 +331,9 @@ export class SettingsComponent implements OnInit {
     this.generalSettingsForm.controls['employeeFieldOptions'].valueChanges.subscribe((value) => {
       setTimeout(() => {
         switch (value) {
-          case 'VENDOR': this.reimbursableExpensesObjects = [{ name: 'VENDOR BILL' }];
+          case 'VENDOR': this.reimbursableExpensesObjects = [{ name: 'VENDOR BILL' }, { name: 'JOURNAL ENTRY' }];
             break;
-          case 'EMPLOYEE': this.reimbursableExpensesObjects = [{ name: 'EXPENSE REPORT' }];
+          case 'EMPLOYEE': this.reimbursableExpensesObjects = [{ name: 'EXPENSE REPORT' }, { name: 'JOURNAL ENTRY' }];
             break;
         }
       }, 500);
@@ -355,7 +355,6 @@ export class SettingsComponent implements OnInit {
       setTimeout(() => {
         this.costCenterFieldOptions = [
           { name: 'CLASS' },
-          { name: 'CUSTOMER' },
           { name: 'DEPARTMENT' }
         ];
         
@@ -368,7 +367,6 @@ export class SettingsComponent implements OnInit {
     this.generalSettingsForm.controls['costCenterFieldOptions'].valueChanges.subscribe((value) => {
       this.projectFieldOptions = [
         { name: 'CLASS' },
-        { name: 'CUSTOMER' },
         { name: 'DEPARTMENT' }
       ];
 
@@ -503,14 +501,12 @@ export class SettingsComponent implements OnInit {
 
     this.projectFieldOptions = [
       { name: 'DEPARTMENT' },
-      { name: 'CLASS' },
-      { name: 'CUSTOMER' }
+      { name: 'CLASS' }
     ];
 
     this.costCenterFieldOptions = [
       { name: 'CLASS' },
-      { name: 'DEPARTMENT' },
-      { name: 'CUSTOMER' }
+      { name: 'DEPARTMENT' }
     ];
 
     this.reimbursableExpensesObjects = [

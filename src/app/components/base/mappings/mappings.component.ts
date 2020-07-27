@@ -21,16 +21,15 @@ export class MappingsComponent implements OnInit {
 
   updateDimensionTables(workspaceId: number) {
     concat(
-        this.mappingService.postAccountsPayables(workspaceId),
-        this.mappingService.postExpenseAccounts(workspaceId),
+        this.mappingService.postNetSuiteAccounts(workspaceId),
         this.mappingService.postNetSuiteVendors(workspaceId),
-        this.mappingService.postNetSuiteLocations(workspaceId),
-        this.mappingService.postNetSuiteDepartments(workspaceId),
-        this.mappingService.postNetSuiteClasses(workspaceId),
+        this.mappingService.postNetSuiteEmployees(workspaceId),
         this.mappingService.postFyleEmployees(workspaceId),
         this.mappingService.postFyleCategories(workspaceId),
-        this.mappingService.postFyleCostCenters(workspaceId),
-        this.mappingService.postFyleProjects(workspaceId)
+        this.mappingService.postNetSuiteDepartments(workspaceId),
+        this.mappingService.postFyleProjects(workspaceId),
+        this.mappingService.postNetSuiteClasses(workspaceId),
+        this.mappingService.postFyleCostCenters(workspaceId)
     ).subscribe(response => {
       if (response) {
         this.isLoading = false;
@@ -40,21 +39,16 @@ export class MappingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.workspaceId = +params['workspace_id'];
-      this.projectFieldMapping = JSON.parse(localStorage.getItem('project_field_mapping'));
-      this.costCenterFieldMapping = JSON.parse(localStorage.getItem('cost_center_field_mapping'));
+    this.generalSettings = JSON.parse(localStorage.getItem('generalSettings'));
 
-      if (this.projectFieldMapping) {
-        this.projectsEnabled = true;
-      }
+    this.updateDimensionTables(this.generalSettings.workspace);
+    
+    if (this.generalSettings.project_field_mapping) {
+      this.projectsEnabled = true;
+    }
 
-      if (this.costCenterFieldMapping) {
-        this.costCentersEnabled = true;
-      }
-      
-      this.updateDimensionTables(this.workspaceId);
-
-  });
+    if (this.generalSettings.cost_center_field_mapping) {
+      this.costCentersEnabled = true;
+    }
   }
 }
