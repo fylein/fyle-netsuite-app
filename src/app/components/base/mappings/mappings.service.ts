@@ -83,8 +83,18 @@ export class MappingsService {
     return this.netsuiteVendors;
   }
 
+  postNetSuiteEmployees(workspace_id: number): Observable<any> {
+    if (!this.netsuiteEmployees) {
+      this.netsuiteEmployees = this.generalService.post(`/workspaces/${workspace_id}/netsuite/employees/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteEmployees;
+  }
 
-  postExpenseAccounts(workspace_id: number): Observable<any> {
+  postNetSuiteAccounts(workspace_id: number): Observable<any> {
     if (!this.netsuiteAccounts) {
       this.netsuiteAccounts = this.generalService.post(
         `/workspaces/${workspace_id}/netsuite/accounts/`, {}
@@ -95,19 +105,6 @@ export class MappingsService {
       );
     }
     return this.netsuiteAccounts;
-  }
-
-  postAccountsPayables(workspace_id: number): Observable<any> {
-    if (!this.accountPayables) {
-      this.accountPayables = this.generalService.post(
-        `/workspaces/${workspace_id}/netsuite/accounts_payables/`, {}
-      ).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.accountPayables;
   }
 
 
@@ -144,14 +141,18 @@ export class MappingsService {
     return this.netsuiteClasses;
   }
 
-  postGeneralMappings(workspace_id: number, location_name: string, location_id: string, accounts_payable_name: string, accounts_payable_id: string): Observable<any> {
+  postGeneralMappings(workspace_id: number, location_name: string, location_id: string, accounts_payable_name: string, accounts_payable_id: string, reimbursable_account_name: string, reimbursable_account_id: string, default_ccc_account_name: string, default_ccc_account_id: string): Observable<any> {
     this.generalMappings = null;
     return this.generalService.post(
       `/workspaces/${workspace_id}/mappings/general/`, {
         location_name: location_name,
         location_id: location_id,
         accounts_payable_name: accounts_payable_name,
-        accounts_payable_id: accounts_payable_id
+        accounts_payable_id: accounts_payable_id,
+        reimbursable_account_name: reimbursable_account_name,
+        reimbursable_account_id: reimbursable_account_id,
+        default_ccc_account_name: default_ccc_account_name,
+        default_ccc_account_id: default_ccc_account_id
       }
     );
   }
@@ -166,6 +167,10 @@ export class MappingsService {
 
   getNetSuiteVendors(workspace_id: number): Observable<any> {
     return this.generalService.get(`/workspaces/${workspace_id}/netsuite/vendors/`, {});
+  }
+
+  getNetSuiteEmployees(workspace_id: number): Observable<any> {
+    return this.generalService.get(`/workspaces/${workspace_id}/netsuite/employees/`, {});
   }
 
   getNetSuiteLocations(workspace_id: number): Observable<any> {
@@ -197,6 +202,18 @@ export class MappingsService {
   getAccountsPayables(workspace_id: number): Observable<any> {
     return this.generalService.get(
       `/workspaces/${workspace_id}/netsuite/accounts_payables/`, {}
+    );
+  }
+
+  getBankAccounts(workspace_id: number): Observable<any> {
+    return this.generalService.get(
+      `/workspaces/${workspace_id}/netsuite/bank_accounts/`, {}
+    );
+  }
+
+  getCreditCardAccounts(workspace_id: number): Observable<any> {
+    return this.generalService.get(
+      `/workspaces/${workspace_id}/netsuite/credit_card_accounts/`, {}
     );
   }
 

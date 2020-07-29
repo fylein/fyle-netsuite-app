@@ -23,6 +23,8 @@ import { EmployeeComponent } from './components/base/mappings/employee/employee.
 import { ProjectComponent } from './components/base/mappings/project/project.component';
 import { CostCenterComponent } from './components/base/mappings/cost-center/cost-center.component';
 import { GeneralComponent } from './components/base/mappings/general/general.component';
+import { ExpenseReportsComponent } from './components/base/expense-reports/expense-reports.component';
+import { JournalEntriesComponent } from './components/base/journal-entries/journal-entries.component';
 
 const authRoutes: Routes = [
   {
@@ -70,6 +72,9 @@ const baseModuleRoutes: Routes = [
       },
       { path: ':workspace_id/expense_groups/:expense_group_id/view', component: ViewExpenseGroupComponent, canActivate: [WorkspacesGuard] },
       { path: ':workspace_id/bills', component: BillsComponent , canActivate: [WorkspacesGuard]},
+      { path: ':workspace_id/expense_reports', component: ExpenseReportsComponent , canActivate: [WorkspacesGuard]},
+      { path: ':workspace_id/journal_entries', component: JournalEntriesComponent , canActivate: [WorkspacesGuard]},
+
       { path: ':workspace_id/settings', component: SettingsComponent },
       { path: 'fyle/callback', component: FyleCallbackComponent },
       { 

@@ -1,7 +1,9 @@
 <div class="content" *ngIf="!isLoading">
     <div class="schedule-content">
         <form [formGroup]="form">
-
+            <div>
+                Set up the following NetSuite fields.
+            </div><br>
             <div class="bank-account">
                 <label for="netsuiteLocations" class="d-flex">NetSuite Location</label>
                 <select formControlName="netsuiteLocations" id="netsuiteLocations" class="form-control selectpicker col-4">
@@ -13,7 +15,7 @@
                 </select>
             </div>
 
-            <div class="bank-account">
+            <div class="bank-account" *ngIf="generalSettings.employee_field_mapping === 'VENDOR'">
                 <label for="accountsPayableAccounts" class="d-flex">Accounts Payable Account</label>
                 <select formControlName="accountsPayableAccounts" id="accountsPayableAccounts" class="form-control selectpicker col-4">
                     <option *ngFor="let bankAccount of accountsPayableAccounts; let i = index"
@@ -25,7 +27,39 @@
 
             <div class="text-danger mb-2" *ngIf="!accountsPayableIsValid">
                 <small>
-                    Account should not be empty
+                    Accounts Payable Account should not be empty
+                </small>
+            </div>
+
+            <div class="bank-account" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+                <label for="bankAccounts" class="d-flex">Bank Account</label>
+                <select formControlName="bankAccounts" id="bankAccounts" class="form-control selectpicker col-4">
+                    <option *ngFor="let bankAccount of bankAccounts; let i = index"
+                        [selected]="bankAccounts[i].destination_id === generalMappings.bank_account_id" [value]="bankAccounts[i].destination_id">
+                        {{bankAccounts[i].value}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="text-danger mb-2" *ngIf="!bankAccountIsValid">
+                <small>
+                    Bank Account should not be empty
+                </small>
+            </div>
+
+            <div class="bank-account" *ngIf="generalSettings.corporate_credit_card_expenses_object">
+                <label for="cccAccounts" class="d-flex">Default Credit Card Account</label>
+                <select formControlName="cccAccounts" id="cccAccounts" class="form-control selectpicker col-4">
+                    <option *ngFor="let cccAccount of cccAccounts; let i = index"
+                        [selected]="cccAccounts[i].destination_id === generalMappings.default_ccc_account_id" [value]="cccAccounts[i].destination_id">
+                        {{cccAccounts[i].value}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="text-danger mb-2" *ngIf="!cccAccountIsValid">
+                <small>
+                    Default Credit Card Account should not be empty
                 </small>
             </div>
 

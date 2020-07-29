@@ -1,11 +1,14 @@
 <div class="content" *ngIf="!isLoading">
     <div class="d-flex content-header">
-        <button class="btn main-btn" type="button" (click)="open(content)">New Project
+        Map project items from Fyle to their counterparts on NetSuite.
+    </div>
+    <div class="d-flex content-header">
+        <button class="btn main-btn" type="button" (click)="open(content)">Create Project
             Mapping
         </button>
     </div>
     <div class="alert alert-light mx-auto warning" *ngIf="!projectMappings.length">
-        <p>Looks like you don't have any project mappings</p>
+        <p>You have no project mappings yet</p>
     </div>
     <div class="table-layout" *ngIf="projectMappings.length">
         <div class="table-responsive">
@@ -42,7 +45,7 @@
             <div class="floating-label">
                 <input formControlName="fyleProject" class="form-control" type="text" [ngbTypeahead]="projectSearch"
                     [inputFormatter]="projectFormatter" [resultFormatter]="projectFormatter" [editable]='false' />
-                <label for="fyleProjects" class="input-label">Project</label>
+                <label for="fyleProjects" class="input-label">Select a Project from Fyle</label>
                 <div class="text-danger mb-2" *ngIf="!projectIsValid">
                     <small>
                         project not found in Fyle
@@ -52,7 +55,7 @@
             <div class="floating-label">
                 <input formControlName="netsuiteObject" type="text" class="form-control" [ngbTypeahead]="objectSearch"
                     [inputFormatter]="objectFormatter" [resultFormatter]="objectFormatter" [editable]='false' />
-                <label for="netsuiteObjects" class="input-label">{{ projectSetting | titlecase }}</label>
+                <label for="netsuiteObjects" class="input-label">Map to Corresponding NetSuite {{ projectSetting | titlecase }}</label>
                 <div class="text-danger mb-2" *ngIf="!objectIsValid">
                     <small>
                         {{ projectSetting | titlecase }} not found in NetSuite

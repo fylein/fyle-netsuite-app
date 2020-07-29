@@ -1,27 +1,32 @@
-# FyleNetsuiteApp
+# Fyle NetSuite APP
+Angular 8 client for Fyle NetSuite Integration
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.23.
+### Setup
 
-## Development server
+* Setup environment variables in src/environments/environment.ts
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+    ```javascript
+    export const environment = {
+        production: false,
+        fyle_url: '{{FYLE_URL}}',
+        fyle_client_id: '{{FYLE_CLIENT_ID}}',
+        callback_uri: '{{CALLBACK_URI}}',
+        api_url: '{{API_URL}}',
+        app_url: '{{APP_URL}}'
+    }
+   ``` 
 
-## Code scaffolding
+* Install the requirements
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    ```
+    npm install
+    ```
 
-## Build
+* Run the Development server
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+    Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Running unit tests
+* Code scaffolding
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

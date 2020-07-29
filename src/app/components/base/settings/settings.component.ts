@@ -3,6 +3,7 @@ import { SettingsService } from './settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FlatpickrOptions } from 'ng2-flatpickr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin } from 'rxjs';
 
@@ -24,11 +25,17 @@ export class SettingsComponent implements OnInit {
   state: string = 'source';
   source: string = 'active';
   destination: string;
+  schedule: string;
   settings: string;
   subsidiary: string;
   workspaceId: number;
   form: FormGroup;
+  scheduleForm: FormGroup;
   error: string;
+  datetimeIsValid: boolean = true;
+  frequencyIsValid: boolean = true;
+  scheduleEnabled: boolean = true;
+  datetimePickerOptions: FlatpickrOptions;
   nsAccountIdIsValid: boolean = true;
   nsConsumerKeyIsValid: boolean = true;
   nsConsumerSecretIsValid: boolean = true;
@@ -37,6 +44,7 @@ export class SettingsComponent implements OnInit {
   modalRef: NgbModalRef;
   closeResult: string;
   generalSettingsForm: FormGroup;
+  generalSettings: any;
   mappingSettings: any;
   projectFieldMapping: any = {};
   costCenterFieldMapping: any = {};
@@ -44,6 +52,10 @@ export class SettingsComponent implements OnInit {
   employeeFieldOptions: any[];
   projectFieldOptions: any[];
   costCenterFieldOptions: any[];
+  reimbursableExpensesObjects: any[]
+  cccExpensesObjects: any[]
+  reimbursableExpensesObjectIsValid: boolean = true;
+  employeeMappingsObjectIsValid: boolean = true;
   netsuiteSubsidiaries: any[];
   subsidiaryMappings: any;
   subsidiaryForm: FormGroup;
@@ -56,6 +68,14 @@ export class SettingsComponent implements OnInit {
       nsConsumerSecret: new FormControl(),
       nsTokenId: new FormControl(),
       nsTokenSecret: new FormControl(),
+    });
+    this.scheduleForm = this.formBuilder.group({
+      datetime: new FormControl(''),
+      hours: new FormControl(''),
+      scheduleEnabled: new FormControl()
+    });
+    this.subsidiaryForm = this.formBuilder.group({
+      netsuiteSubsidiaries: new FormControl('')
     });
   }
 
@@ -97,6 +117,25 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  getSettings() {
+    this.settingsService.getSettings(this.workspaceId).subscribe(settings => {
+      if (settings) {
+        this.scheduleForm.setValue({
+          datetime: new Date(settings.start_datetime),
+          hours: settings.interval_hours,
+          scheduleEnabled: settings.enabled
+        });
+        this.datetimePickerOptions.minDate = new Date(settings.start_datetime.split('T')[0]);
+        this.datetimePickerOptions.defaultDate = new Date(settings.start_datetime).toISOString();
+        this.isLoading = false;
+      }
+    }, error => {
+      if (error.status == 400) {
+        this.isLoading = false;
+      }
+    });
+  }
+
   disconnectFyle() {
     this.settingsService.deleteFyleCredentials(this.workspaceId).subscribe(response => {
       this.fyleConnected = false;
@@ -113,24 +152,56 @@ export class SettingsComponent implements OnInit {
       this.destination = '';
       this.settings = '';
       this.subsidiary= '';
+      this.schedule= '';
     } else if (this.state === 'destination') {
       this.source = '';
       this.destination = 'active';
       this.settings = '';
       this.subsidiary= '';
+      this.schedule= '';
     } else if (this.state === 'subsidiary') {
       this.source = '';
       this.destination = '';
       this.settings = '';
       this.subsidiary= 'active';
+      this.schedule= '';
     } else if (this.state === 'settings') {
       this.source = '';
       this.destination = '';
       this.subsidiary= '';
       this.settings = 'active';
+      this.schedule= '';
+    } else if (this.state === 'schedule') {
+      this.source = '';
+      this.destination = '';
+      this.subsidiary= '';
+      this.settings = '';
+      this.schedule= 'active';
     }
   }
 
+  submitScheduleSettings() {
+    this.datetimeIsValid = false
+    this.frequencyIsValid = false
+
+    if (this.scheduleForm.value.datetime) {
+      this.datetimeIsValid = true;
+    }
+
+    if (this.scheduleForm.value.hours) {
+      this.frequencyIsValid = true;
+    }
+
+    if (this.datetimeIsValid && this.frequencyIsValid) {
+      let nextRun = new Date(this.scheduleForm.value.datetime).toISOString();
+      let hours = this.scheduleForm.value.hours;
+      let scheduleEnabled = this.scheduleForm.value.scheduleEnabled;
+      this.isLoading = true;
+      this.settingsService.postSettings(this.workspaceId, nextRun, hours, scheduleEnabled).subscribe(response => {
+        this.getSettings();
+      });
+    }
+  }
 
   submit() {
     this.nsAccountIdIsValid = false;
@@ -189,13 +260,16 @@ export class SettingsComponent implements OnInit {
   getAllSettings() {
     forkJoin(
       [
+        this.settingsService.getGeneralSettings(this.workspaceId),
         this.settingsService.getMappingSettings(this.workspaceId)
       ]
     ).subscribe(responses => {
-      this.mappingSettings = responses[0]['results'];
+      this.generalSettings = responses[0];
+      this.mappingSettings = responses[1]['results'];
 
       let employeeFieldMapping = this.mappingSettings.filter(
-        settings => settings.source_field === 'EMPLOYEE'
+        setting => (setting.source_field === 'EMPLOYEE') &&
+          (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
       )[0];
 
       let projectFieldMapping = this.mappingSettings.filter(
@@ -206,20 +280,25 @@ export class SettingsComponent implements OnInit {
         settings => settings.source_field === 'COST_CENTER'
       )[0];
 
-      this.employeeFieldMapping = employeeFieldMapping? employeeFieldMapping: {};
+      this.employeeFieldMapping = employeeFieldMapping;
       this.projectFieldMapping = projectFieldMapping? projectFieldMapping: {};
       this.costCenterFieldMapping = costCenterFieldMapping? costCenterFieldMapping: {};
       
       this.generalSettingsForm = this.formBuilder.group({
-        employeeFieldOptions: [this.employeeFieldMapping? this.employeeFieldMapping.destination_field: ''],
+        reimbursableExpensesObjects: [this.generalSettings ? this.generalSettings['reimbursable_expenses_object'] : ''],
+        cccExpensesObjects: [this.generalSettings ? this.generalSettings['corporate_credit_card_expenses_object'] : ''],
+        employeeFieldOptions: [this.employeeFieldMapping ? this.employeeFieldMapping.destination_field : ''],
         projectFieldOptions: [this.projectFieldMapping? this.projectFieldMapping.destination_field: ''],
         costCenterFieldOptions: [this.costCenterFieldMapping? this.costCenterFieldMapping.destination_field: '']
       });
-
-      if (employeeFieldMapping) {
-        this.generalSettingsForm.controls.employeeFieldOptions.disable();
-      }
       
+      this.generalSettingsForm.controls.employeeFieldOptions.disable()
+      this.generalSettingsForm.controls.reimbursableExpensesObjects.disable()
+      
+      if (this.generalSettings.corporate_credit_card_expenses_object) {
+        this.generalSettingsForm.controls.cccExpensesObjects.disable()
+      }
+
       if (projectFieldMapping) {
         this.generalSettingsForm.controls.projectFieldOptions.disable();
       }
@@ -233,9 +312,12 @@ export class SettingsComponent implements OnInit {
       this.isLoading = false;
     }, error => {
       if (error.status == 400) {
+        this.generalSettings = {};
         this.mappingSettings = {}
         this.isLoading = false;
         this.generalSettingsForm = this.formBuilder.group({
+          reimbursableExpensesObjects: [''],
+          cccExpensesObjects: [''],
           employeeFieldOptions: [''],
           projectFieldOptions: [''],
           costCenterFieldOptions: ['']
@@ -246,11 +328,34 @@ export class SettingsComponent implements OnInit {
   }
 
   initializeForm() {
+    this.generalSettingsForm.controls['employeeFieldOptions'].valueChanges.subscribe((value) => {
+      setTimeout(() => {
+        switch (value) {
+          case 'VENDOR': this.reimbursableExpensesObjects = [{ name: 'VENDOR BILL' }, { name: 'JOURNAL ENTRY' }];
+            break;
+          case 'EMPLOYEE': this.reimbursableExpensesObjects = [{ name: 'EXPENSE REPORT' }, { name: 'JOURNAL ENTRY' }];
+            break;
+        }
+      }, 500);
+    });
+
+    this.generalSettingsForm.controls['employeeFieldOptions'].valueChanges.subscribe((value) => {
+      setTimeout(() => {
+        switch (value) {
+          case 'VENDOR': this.cccExpensesObjects = [{ name: 'VENDOR BILL' }, { name: 'JOURNAL ENTRY' }];
+            break;
+          case 'EMPLOYEE': this.cccExpensesObjects = [{ name: 'EXPENSE REPORT' }, { name: 'JOURNAL ENTRY' }];
+            break;
+        }
+      }, 500);
+    });
+    
+
     this.generalSettingsForm.controls['projectFieldOptions'].valueChanges.subscribe((value) => {
       setTimeout(() => {
         this.costCenterFieldOptions = [
-          { name: 'DEPARTMENT' },
           { name: 'CLASS' },
+          { name: 'DEPARTMENT' }
         ];
         
         if (value) {
@@ -262,7 +367,7 @@ export class SettingsComponent implements OnInit {
     this.generalSettingsForm.controls['costCenterFieldOptions'].valueChanges.subscribe((value) => {
       this.projectFieldOptions = [
         { name: 'CLASS' },
-        { name: 'DEPARTMENT' },
+        { name: 'DEPARTMENT' }
       ];
 
       setTimeout(() => {
@@ -271,49 +376,69 @@ export class SettingsComponent implements OnInit {
         }
       }, 500);
     });
-}
+  }
 
   submitSettings() {
+    this.reimbursableExpensesObjectIsValid = false;
+    this.employeeMappingsObjectIsValid = false;
 
     let mappingsSettingsPayload = [{
       source_field: 'CATEGORY',
       destination_field: 'ACCOUNT'
     }]
 
-    let employeeMappingObject = this.generalSettingsForm.value.employeeFieldOptions? this.generalSettingsForm.value.employeeFieldOptions: this.employeeFieldMapping.destination_field;
+    let reimbursableExpensesObject = this.generalSettingsForm.value.reimbursableExpensesObjects ? this.generalSettingsForm.value.reimbursableExpensesObjects: this.generalSettings.reimbursable_expenses_object;
+    let cccExpensesObject = this.generalSettingsForm.value.cccExpensesObjects? this.generalSettingsForm.value.cccExpensesObjects: this.generalSettings.corporate_credit_card_expenses_object;
+    let employeeMappingsObject = this.generalSettingsForm.value.employeeFieldOptions ? this.generalSettingsForm.value.employeeFieldOptions: this.employeeFieldMapping.destination_field;
     let costCenterMappingObject = this.generalSettingsForm.value.costCenterFieldOptions? this.generalSettingsForm.value.costCenterFieldOptions: this.costCenterFieldMapping.destination_field;
     let projectMappingObject = this.generalSettingsForm.value.projectFieldOptions? this.generalSettingsForm.value.projectFieldOptions: this.projectFieldMapping.destination_field;
 
-    if (employeeMappingObject) {
+    if (reimbursableExpensesObject != null) {
+      this.reimbursableExpensesObjectIsValid = true;
+    }
+    if (employeeMappingsObject != null) {
+      this.employeeMappingsObjectIsValid = true;
+    }
+
+    if (cccExpensesObject) {
       mappingsSettingsPayload.push({
         source_field: 'EMPLOYEE',
-        destination_field: employeeMappingObject
+        destination_field: 'CREDIT_CARD_ACCOUNT'
       });
     }
 
-    if (projectMappingObject != null) {
+    if (projectMappingObject) {
       mappingsSettingsPayload.push({
         source_field: 'PROJECT',
         destination_field: projectMappingObject
       });
     }
 
-    if (costCenterMappingObject != null) {
+    if (costCenterMappingObject) {
       mappingsSettingsPayload.push({
         source_field: 'COST_CENTER',
         destination_field: costCenterMappingObject
       });
     }
+
+    if (this.reimbursableExpensesObjectIsValid && this.employeeMappingsObjectIsValid) {
       this.isLoading = true;
+      mappingsSettingsPayload.push({
+        source_field: 'EMPLOYEE',
+        destination_field: employeeMappingsObject
+      });
+
       forkJoin(
         [
           this.settingsService.postMappingSettings(this.workspaceId, mappingsSettingsPayload),
+          this.settingsService.postGeneralSettings(this.workspaceId, reimbursableExpensesObject, cccExpensesObject)
         ]
       ).subscribe(responses => {
         this.closeModal();
         this.isLoading = true;
         window.location.href= `/workspaces/${this.workspaceId}/expense_groups`;
       });
+    }
   }
 
   closeModal() {
@@ -339,7 +464,6 @@ export class SettingsComponent implements OnInit {
       this.subsidiaryIsValid = true;
     }
 
-
     if(this.subsidiaryIsValid){
       this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value,).subscribe(response => {
         this.closeModal();
@@ -349,15 +473,15 @@ export class SettingsComponent implements OnInit {
   }
 
   getSubsidiaryMappings() {
-    this.settingsService.getSubsidiaryMappings(this.workspaceId).subscribe(subsidiaryMappings => {
-      this.subsidiaryMappings = subsidiaryMappings;
-      this.isLoading = false;
-      this.subsidiaryForm = this.formBuilder.group({
-        netsuiteSubsidiaries: [this.subsidiaryMappings? this.subsidiaryMappings.internal_id: ''],
-      });
-      if (subsidiaryMappings) {
-        this.subsidiaryForm.disable();
-      }
+    this.settingsService.getSubsidiaryMappings(this.workspaceId).subscribe(settings => {
+      this.subsidiaryMappings = settings;
+        if (settings) {
+          this.subsidiaryForm.setValue({
+            netsuiteSubsidiaries: settings.internal_id
+          });
+          this.isLoading = false;
+          this.subsidiaryForm.disable();
+        }
     }, error => {
       if(error.status == 400) {
         this.subsidiaryMappings = {};
@@ -371,25 +495,44 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.employeeFieldOptions = [
+      { name: 'EMPLOYEE' },
       { name: 'VENDOR' }
     ];
 
     this.projectFieldOptions = [
       { name: 'DEPARTMENT' },
-      { name: 'CLASS' },
+      { name: 'CLASS' }
     ];
 
     this.costCenterFieldOptions = [
       { name: 'CLASS' },
-      { name: 'DEPARTMENT' },
+      { name: 'DEPARTMENT' }
     ];
 
+    this.reimbursableExpensesObjects = [
+      { name: 'VENDOR BILL' },
+      { name: 'EXPENSE REPORT' },
+      { name: 'JOURNAL ENTRY' }
+    ];
+
+    this.cccExpensesObjects = [
+      { name: 'VENDOR BILL' },
+      { name: 'EXPENSE REPORT' },
+      { name: 'JOURNAL ENTRY' }
+    ];
+
+    this.datetimePickerOptions = {
+      enableTime: true,
+      minDate: new Date()
+    }
+    
     this.route.params.subscribe(params => {
       this.workspaceId = +params['workspace_id'];
       this.route.queryParams.subscribe(queryParams => {
         this.getSource();
         this.getDestination();
         this.getSubsidiaryMappings();
+        this.getSettings();
         if (queryParams.state) {
           this.toggleState(queryParams.state);
           this.error = queryParams.error;

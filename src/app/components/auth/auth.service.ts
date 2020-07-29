@@ -1,8 +1,4 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -17,6 +13,9 @@ const httpOptions = {
 };
 
 const API_BASE_URL = environment.api_url;
+const FYLE_URL = environment.fyle_url;
+const FYLE_CLIENT_ID = environment.fyle_client_id;
+const CALLBACK_URI = environment.callback_uri;
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +70,27 @@ export class AuthService {
     return this.generalService.get(`/user/domain/`, {}); 
   }
 
+  getFyleOrgs(): Observable<any> {
+    return this.generalService.get(`/user/orgs/`, {});
+  }
+
   logout() {
     localStorage.clear();
+  }
+
+  redirectToLogin() {
+    window.location.href =
+    FYLE_URL +
+    '/app/developers/#/oauth/authorize?' +
+    'client_id=' +
+    FYLE_CLIENT_ID +
+    '&redirect_uri=' +
+    CALLBACK_URI +
+    '&response_type=code';
+  }
+
+  switchWorkspace() {
+    this.logout();
+    this.redirectToLogin();
   }
 }

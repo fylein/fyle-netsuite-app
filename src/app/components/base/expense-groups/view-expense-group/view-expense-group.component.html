@@ -1,6 +1,6 @@
 <app-loader *ngIf="isLoading"></app-loader>
 <div class="tabitem-content" *ngIf="!isLoading">
-    <div class="content-header container">
+    <div class="content-header">
         <div class="row">
             <div class="col">
                 Expenses grouped by report id {{ expenseGroup.description.claim_number }} 
@@ -19,13 +19,24 @@
                     View Bill in NetSuite
                 </button>
             </div>
+            <div class="row-4 ml-auto mr-2" *ngIf="task && task.status === 'COMPLETE' && task.type === 'CREATING_EXPENSE_REPORT'">
+                <button class="btn ml-auto main-btn sync-btn" (click)="openExpenseReportInNetSuite()">
+                    View Expense Report in NetSuite
+                </button>
+            </div>
+            <div class="row-4 ml-auto mr-2" *ngIf="task && task.status === 'COMPLETE' && task.type === 'CREATING_JOURNAL_ENTRY'">
+                <button class="btn ml-auto main-btn sync-btn" (click)="openJournalEntryInNetSuite()">
+                    View Journal Entry in NetSuite
+                </button>
+            </div>
             <div class="row-4 ml-auto mr-2" *ngIf="!task || task.status === 'FAILED'">
-                <button class="btn ml-auto main-btn sync-btn" (click)="createBills(expenseGroup.id)">
+                <button class="btn ml-auto main-btn sync-btn" (click)="createNetSuiteItems(expenseGroup.id)">
                     Export Group
                 </button>
             </div>
         </div>
     </div>
+
     <div class="content">
         <div class="alert alert-light mx-auto warning" *ngIf="!expenses.length">
             <p>Looks like you don't have any Expense Groups</p>

@@ -24,9 +24,11 @@ export class CallbackComponent implements OnInit {
             forkJoin([
               this.authService.setUserProfile(),
               this.authService.getClusterDomain(),
+              this.authService.getFyleOrgs()
             ]).subscribe(responses => {
               localStorage.setItem('user', JSON.stringify(responses[0]));
               localStorage.setItem('clusterDomain', responses[1]);
+              localStorage.setItem('orgsCount', responses[2].length);
               this.router.navigate(['/workspaces']);
             });
           },

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { WorkspaceService } from './workspace.service';
 import { SettingsService } from './settings/settings.service'
+import { AuthService } from '../auth/auth.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -15,18 +17,26 @@ export class BaseComponent implements OnInit {
   fyleConnected: boolean = false;
   generalSettings: any;
   mappingSettings: any;
+  showSwitchOrg: boolean = false;
 
-  constructor(private workspaceService: WorkspaceService, private settingsService: SettingsService, private router: Router) {
+  constructor(private workspaceService: WorkspaceService, private settingsService: SettingsService, private router: Router, private authService: AuthService) {
   }
 
   getGeneralSettings() { 
-    this.settingsService.getMappingSettings(this.workspace.id).subscribe(response => {
-      this.generalSettings = [
-        {'project_field_mapping': ''},
-        {'cost_center_field_mapping': ''},
-        {'workspace_id': this.workspace.id}
+
+    forkJoin(
+      [
+        this.settingsService.getGeneralSettings(this.workspace.id),
+        this.settingsService.getMappingSettings(this.workspace.id)
       ]
-      this.mappingSettings = response['results'];
+    ).subscribe(responses => {
+      this.generalSettings = responses[0];
+      this.mappingSettings = responses[1]['results'];
+      
+      let employeeFieldMapping = this.mappingSettings.filter(
+        setting => (setting.source_field === 'EMPLOYEE') && 
+        (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
+      )[0];
 
       let projectFieldMapping = this.mappingSettings.filter(
         settings => settings.source_field === 'PROJECT'
@@ -36,36 +46,46 @@ export class BaseComponent implements OnInit {
         settings => settings.source_field === 'COST_CENTER'
       )[0];
 
+      this.generalSettings['employee_field_mapping'] = employeeFieldMapping.destination_field;
+
       if (projectFieldMapping) {
         this.generalSettings['project_field_mapping'] = projectFieldMapping.destination_field;
-        localStorage.setItem('project_field_mapping', JSON.stringify(projectFieldMapping.destination_field));
       }
 
       if (costCenterFieldMapping) {
         this.generalSettings['cost_center_field_mapping'] = costCenterFieldMapping.destination_field;
-        localStorage.setItem('cost_center_field_mapping', JSON.stringify(costCenterFieldMapping.destination_field));
       }
 
+      localStorage.setItem('generalSettings', JSON.stringify(this.generalSettings));
     });
   }
 
+  switchWorkspace() {
+    this.authService.switchWorkspace();
+  }
+
+  getSettingsAndNavigate(location) {
+    const pathName = window.location.pathname;
+    this.isLoading = false;
+    if (pathName === '/workspaces') {
+      this.router.navigateByUrl(`/workspaces/${this.workspace.id}/${location}`);
+    }
+    this.getGeneralSettings();
+  }
+
   ngOnInit() {
-    this.workspaceService.getWorkspaces().subscribe(workspaces => {
-      let pathName = window.location.pathname;
+    const orgsCount = parseInt(localStorage.getItem('orgsCount'));
+    if (orgsCount > 1) {
+      this.showSwitchOrg = true;
+    }
+    this.workspaceService.getWorkspaces(this.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length) {
         this.workspace = workspaces[0];
-        this.isLoading = false;
-        if (pathName === '/workspaces') {
-          this.router.navigateByUrl(`/workspaces/${this.workspace.id}/expense_groups`);
-        }
-        this.getGeneralSettings();
+        this.getSettingsAndNavigate('expense_groups');
       } else {
         this.workspaceService.createWorkspace().subscribe(workspace => {
           this.workspace = workspace;
-          this.isLoading = false;
-          if (pathName === '/workspaces') {
-            this.router.navigateByUrl(`/workspaces/${this.workspace.id}/settings`);
-          }
+          this.getSettingsAndNavigate('settings');
         });
       }
     });

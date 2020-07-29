@@ -15,6 +15,9 @@
         <li class="sub-nav-item">
             <a class="sub-nav-link {{subsidiary}}" (click)="toggleState('subsidiary')">Subsidiary</a>
         </li>
+        <li class="sub-nav-item">
+            <a class="sub-nav-link {{schedule}}" (click)="toggleState('schedule')">Schedule</a>
+        </li>
     </ul>
 </nav>
 <div class="tabitem-content" *ngIf="state === 'source'">
@@ -110,23 +113,57 @@
     </div>
 </div>
 
-
 <div class="tabitem-content" *ngIf="state === 'settings' && !isLoading">
     <div class="schedule-content">
-        <form [formGroup]="generalSettingsForm">
-
+        <form  *ngIf="generalSettings" [formGroup]="generalSettingsForm">
+            <div>
+                Please map the following Fyle fields to their NetSuite equivalent.
+            </div>
             <div class="settings-object">
-                <label for="employeeFieldOptions" class="d-flex">Map Fyle employees to</label>
+                <label for="employeeFieldOptions" class="d-flex"> Map Employees from Fyle to </label>
                 <select formControlName="employeeFieldOptions" id="employeeFieldOptions" class="form-control selectpicker col-4">
-                    <option *ngFor="let option of employeeFieldOptions; let i = index"
+                    <option *ngFor="let employeeMappingsObject of employeeFieldOptions; let i = index"
                         [selected]="employeeFieldOptions[i].name === employeeFieldMapping.destination_field" [value]="employeeFieldOptions[i].name">
-                        {{ option.name }}
+                        {{employeeFieldOptions[i].name}}
+                    </option>
+                </select>
+            </div>
+    
+            <div class="text-danger mb-2" *ngIf="!employeeMappingsObjectIsValid">
+                <small>
+                    Employee Field Mappings Object should not be empty
+                </small>
+            </div>
+    
+            <div class="settings-object">
+                <label for="reimbursableExpensesObjects" class="d-flex"> Map reimbursable Expenses from Fyle to </label>
+                <select formControlName="reimbursableExpensesObjects" id="reimbursableExpensesObjects" class="form-control selectpicker col-4">
+                    <option *ngFor="let accountPayableAccount of reimbursableExpensesObjects; let i = index"
+                        [selected]="reimbursableExpensesObjects[i].name === generalSettings?.reimbursable_expenses_object" [value]="reimbursableExpensesObjects[i].name">
+                        {{reimbursableExpensesObjects[i].name}}
+                    </option>
+                </select>
+            </div>
+    
+            <div class="text-danger mb-2" *ngIf="!reimbursableExpensesObjectIsValid">
+                <small>
+                    Reimbursable Expenses Object should not be empty
+                </small>
+            </div>
+    
+            <div class="settings-object">
+                <label for="cccExpensesObjects" class="d-flex"> Map Corporate Credit Card Expenses from Fyle to </label>
+                <select formControlName="cccExpensesObjects" id="cccExpensesObjects" class="form-control selectpicker col-4">
+                    <option [ngValue]="null">None</option>
+                    <option *ngFor="let accountPayableAccount of cccExpensesObjects; let i = index"
+                        [selected]="cccExpensesObjects[i].name === generalSettings?.corporate_credit_card_expenses_object" [value]="cccExpensesObjects[i].name">
+                        {{cccExpensesObjects[i].name}}
                     </option>
                 </select>
             </div>
     
             <div class="settings-object">
-                <label for="projectFieldOptions" class="d-flex">Map Fyle projects to</label>
+                <label for="projectFieldOptions" class="d-flex"> Map Projects from Fyle to </label>
                 <select formControlName="projectFieldOptions" id="projectFieldOptions" class="form-control selectpicker col-4">
                     <option [ngValue]="null">None</option>
                     <option *ngFor="let option of projectFieldOptions; let i = index"
@@ -137,7 +174,7 @@
             </div>
     
             <div class="settings-object">
-                <label for="costCenterFieldOptions" class="d-flex">Map Fyle cost centers to</label>
+                <label for="costCenterFieldOptions" class="d-flex"> Map Cost Centers from Fyle to </label>
                 <select formControlName="costCenterFieldOptions" id="costCenterFieldOptions" class="form-control selectpicker col-4">
                     <option [ngValue]="null">None</option>
                     <option *ngFor="let option of costCenterFieldOptions; let i = index"
@@ -148,10 +185,10 @@
             </div>
     
             <div class="save-schedule">
-                <button class="main-btn btn save-btn" type="submit" (click)="open(content)">Save Settings</button>
+                <button class="main-btn btn save-btn" type="submit" (click)="open(content)"> Save </button>
             </div>
     
-            <div class="save-schedule">
+            <div class="save-schedule" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.reimbursable_expenses_object && generalSettings.employee_field_mapping">
                 <p>
                     To change your settings, Please send us a note at 
                     <a class="support" href="mailto:support@fyle.in">support@fyle.in</a>
@@ -186,7 +223,9 @@
 <div class="tabitem-content" *ngIf="state === 'subsidiary' && !isLoading">
     <div class="schedule-content">
         <form [formGroup]="subsidiaryForm">
-
+            <div>
+                Please select your NetSuite Subsidiary.
+            </div><br>
             <div class="bank-account">
                 <label for="netsuiteSubsidiaries" class="d-flex">NetSuite Subsidiary</label>
                 <select formControlName="netsuiteSubsidiaries" id="netsuiteSubsidiaries | async" class="form-control selectpicker col-4">
@@ -235,6 +274,55 @@
                 </div>
             </ng-template>
     
+        </form>
+    </div>
+</div>
+
+<div class="tabitem-content" *ngIf="state === 'schedule' && !isLoading">
+    <div class="schedule-content">
+        <form [formGroup]="scheduleForm" (ngSubmit)="submitScheduleSettings()">
+            <div>
+                Set up an automatic process for importing expense groups from Fyle and exporting them to NetSuite.
+            </div><br>
+            <div class="d-flex enable-schedule">
+                <p>Status</p>
+                <input type="checkbox" id="schedule-enabled" name="schedule" (value)="scheduleEnabled" class="switch-input"
+                    formControlName="scheduleEnabled" checked>
+                <label for="schedule-enabled" class="switch-label"></label>
+            </div>
+            <div class="d-flex repeat-frequency row">
+                <div class="col-2">
+                    <p>Repeat every</p>
+                </div>
+                <div class="schedule-input-group">
+                    <input id="changeHourStep" type="number" min="1" oninput="validity.valid||(value='');"
+                        class="form-control" formControlName="hours" required />
+                </div>
+                <div>
+                    hours
+                </div>
+                <div class="text-danger mb-2 col-3" *ngIf="!frequencyIsValid">
+                    <small>
+                        frequency field cannot be empty
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <p>Start Date</p>
+                </div>
+                <div class="input-group col-3">
+                    <ng2-flatpickr placeholder="YYYY-MM-DD HH:MM" formControlName="datetime" [config]="datetimePickerOptions"></ng2-flatpickr>
+                </div>
+                <div class="text-danger mb-2 col-3" *ngIf="!datetimeIsValid">
+                    <small>
+                        date time field cannot be empty
+                    </small>
+                </div>
+            </div>
+            <div class="save-schedule">
+                <button class="main-btn btn save-btn" type="submit">Save Schedule</button>
+            </div>
         </form>
     </div>
 </div>

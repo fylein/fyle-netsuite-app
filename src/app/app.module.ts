@@ -28,6 +28,8 @@ import { ProjectComponent } from './components/base/mappings/project/project.com
 import { CostCenterComponent } from './components/base/mappings/cost-center/cost-center.component';
 import { BillsComponent } from './components/base/bills/bills.component';
 import { GeneralComponent } from './components/base/mappings/general/general.component';
+import { ExpenseReportsComponent } from './components/base/expense-reports/expense-reports.component';
+import { JournalEntriesComponent } from './components/base/journal-entries/journal-entries.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { GeneralComponent } from './components/base/mappings/general/general.com
     CostCenterComponent,
     BillsComponent,
     GeneralComponent,
+    ExpenseReportsComponent,
+    JournalEntriesComponent,
   ],
   entryComponents: [
   ],

@@ -14,9 +14,17 @@
         <a class="nav-link tabitem" routerLink="{{workspace.id}}/expense_groups/"
           routerLinkActive="active">Expense Groups</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="generalSettings?.reimbursable_expenses_object == 'VENDOR BILL' || generalSettings?.corporate_credit_card_expenses_object == 'VENDOR BILL'">
         <a class="nav-link tabitem" routerLink="{{workspace.id}}/bills/"
-          routerLinkActive="active">Bills</a>
+          routerLinkActive="active">Vendor Bills</a>
+      </li>
+      <li class="nav-item" *ngIf="generalSettings?.reimbursable_expenses_object == 'EXPENSE REPORT' || generalSettings?.corporate_credit_card_expenses_object =='EXPENSE REPORT'">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/expense_reports/"
+         routerLinkActive="active">Expense Reports</a>
+      </li>
+      <li class="nav-item" *ngIf="generalSettings?.reimbursable_expenses_object == 'JOURNAL ENTRY' || generalSettings?.corporate_credit_card_expenses_object == 'JOURNAL ENTRY'">
+        <a class="nav-link tabitem" routerLink="{{workspace.id}}/journal_entries/"
+         routerLinkActive="active">Journal Entries</a>
       </li>
       <li class="nav-item">
         <a class="nav-link tabitem" routerLink="{{workspace.id}}/mappings/general/"
@@ -46,6 +54,14 @@
           </button>
           <div class="dropdown-menu profile-content" aria-labelledby="profileBtn">
             <div>
+              <button *ngIf="showSwitchOrg" class="btn-block signoutBtn" (click)="switchWorkspace()" type="submit">
+                <div class="d-flex signout-layout">
+                  <i class="material-icons icon">repeat</i>
+                  <strong>
+                    <p class="signout-text">Switch Org</p>
+                  </strong>
+                </div>
+              </button>
               <button class="btn-block signoutBtn" [routerLink]="['../auth/logout']" type="submit">
                 <div class="d-flex signout-layout">
                   <i class="material-icons icon">power_settings_new</i>

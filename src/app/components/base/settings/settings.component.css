@@ -124,6 +124,10 @@ input {
 width: 16%;
 }
 
+.schedule-input-group {
+  width: 5%;
+  }
+
 .form-control {
 border: 0;
 outline: 0;
