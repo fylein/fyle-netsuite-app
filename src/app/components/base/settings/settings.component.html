@@ -223,7 +223,9 @@
 <div class="tabitem-content" *ngIf="state === 'subsidiary' && !isLoading">
     <div class="schedule-content">
         <form [formGroup]="subsidiaryForm">
-
+            <div>
+                Please select your NetSuite Subsidiary.
+            </div><br>
             <div class="bank-account">
                 <label for="netsuiteSubsidiaries" class="d-flex">NetSuite Subsidiary</label>
                 <select formControlName="netsuiteSubsidiaries" id="netsuiteSubsidiaries | async" class="form-control selectpicker col-4">
@@ -279,6 +281,9 @@
 <div class="tabitem-content" *ngIf="state === 'schedule' && !isLoading">
     <div class="schedule-content">
         <form [formGroup]="scheduleForm" (ngSubmit)="submitScheduleSettings()">
+            <div>
+                Set up an automatic process for importing expense groups from Fyle and exporting them to NetSuite.
+            </div><br>
             <div class="d-flex enable-schedule">
                 <p>Status</p>
                 <input type="checkbox" id="schedule-enabled" name="schedule" (value)="scheduleEnabled" class="switch-input"
@@ -287,7 +292,7 @@
             </div>
             <div class="d-flex repeat-frequency row">
                 <div class="col-2">
-                    <p>Repeat Frequency</p>
+                    <p>Repeat every</p>
                 </div>
                 <div class="input-group col-1">
                     <input id="changeHourStep" type="number" min="1" oninput="validity.valid||(value='');"
@@ -304,7 +309,7 @@
             </div>
             <div class="row">
                 <div class="col-2">
-                    <p>Start date & time</p>
+                    <p>Start Date</p>
                 </div>
                 <div class="input-group col-3">
                     <ng2-flatpickr formControlName="datetime" [config]="datetimePickerOptions"></ng2-flatpickr>

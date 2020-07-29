@@ -1,6 +1,9 @@
 <div class="content" *ngIf="!isLoading">
     <div class="schedule-content">
         <form [formGroup]="form">
+            <div>
+                Set up the following NetSuite fields.
+            </div><br>
             <div class="bank-account">
                 <label for="netsuiteLocations" class="d-flex">NetSuite Location</label>
                 <select formControlName="netsuiteLocations" id="netsuiteLocations" class="form-control selectpicker col-4">
