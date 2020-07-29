@@ -294,11 +294,11 @@
                 <div class="col-2">
                     <p>Repeat every</p>
                 </div>
-                <div class="input-group col-1">
+                <div class="schedule-input-group">
                     <input id="changeHourStep" type="number" min="1" oninput="validity.valid||(value='');"
                         class="form-control" formControlName="hours" required />
                 </div>
-                <div class="input-group col-1">
+                <div>
                     hours
                 </div>
                 <div class="text-danger mb-2 col-3" *ngIf="!frequencyIsValid">
@@ -312,7 +312,7 @@
                     <p>Start Date</p>
                 </div>
                 <div class="input-group col-3">
-                    <ng2-flatpickr formControlName="datetime" [config]="datetimePickerOptions"></ng2-flatpickr>
+                    <ng2-flatpickr placeholder="YYYY-MM-DD HH:MM" formControlName="datetime" [config]="datetimePickerOptions"></ng2-flatpickr>
                 </div>
                 <div class="text-danger mb-2 col-3" *ngIf="!datetimeIsValid">
                     <small>

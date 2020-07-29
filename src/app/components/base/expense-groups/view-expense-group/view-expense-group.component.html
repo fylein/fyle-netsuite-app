@@ -1,6 +1,6 @@
 <app-loader *ngIf="isLoading"></app-loader>
 <div class="tabitem-content" *ngIf="!isLoading">
-    <div class="content-header container">
+    <div class="content-header">
         <div class="row">
             <div class="col">
                 Expenses grouped by report id {{ expenseGroup.description.claim_number }} 
@@ -36,6 +36,7 @@
             </div>
         </div>
     </div>
+
     <div class="content">
         <div class="alert alert-light mx-auto warning" *ngIf="!expenses.length">
             <p>Looks like you don't have any Expense Groups</p>
