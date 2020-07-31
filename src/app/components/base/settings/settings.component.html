@@ -10,13 +10,13 @@
             <a class="sub-nav-link {{destination}}" (click)="toggleState('destination')">Destination</a>
         </li>
         <li class="sub-nav-item">
-            <a class="sub-nav-link {{settings}}" (click)="toggleState('settings')">General Settings</a>
+            <a class="sub-nav-link {{settings}}" (click)="toggleState('settings')">Configurations</a>
         </li>
         <li class="sub-nav-item">
             <a class="sub-nav-link {{subsidiary}}" (click)="toggleState('subsidiary')">Subsidiary</a>
         </li>
         <li class="sub-nav-item">
-            <a class="sub-nav-link {{schedule}}" (click)="toggleState('schedule')">Schedule</a>
+            <a class="sub-nav-link {{schedule}}" (click)="toggleState('schedule')">Auto Import/Export</a>
         </li>
     </ul>
 </nav>
@@ -198,15 +198,14 @@
     
             <ng-template #content let-modal>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="generalSettingModalTitle">Save Settings</h5>
+                    <h5 class="modal-title" id="generalSettingModalTitle">Save Configurations</h5>
                     <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <p class="md-caption text-danger mt-0">
-                        Setting cannot be modified once saved.
-                        Are you sure you want to continue ? 
+                        Configurations cannot be modified once saved. Do you wish to proceed?
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -248,8 +247,8 @@
     
             <div class="save-schedule">
                 <p>
-                    To change your subsidiary, Please send us a note at 
-                    <a class="support" href="mailto:support@fyle.in">support@fyle.in</a>
+                    To change your NetSuite subsidiary, please reach out to us at 
+                    <a class="support" href="mailto:support@fyle.in">support@fyle.in.</a>
                 </p>
     
             </div>
@@ -263,8 +262,7 @@
                 </div>
                 <div class="modal-body">
                     <p class="md-caption text-danger mt-0">
-                        Subsidiary cannot be modified once saved.
-                        Are you sure you want to continue ? 
+                        Subsidiary cannot be modified once saved. Do you wish to proceed?
                     </p>
                 </div>
                 <div class="modal-footer">
