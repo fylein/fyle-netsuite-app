@@ -1,6 +1,6 @@
 <div class="content" *ngIf="!isLoading">
     <div class="d-flex content-header">
-        Map category items from Fyle to their counterparts on NetSuite.
+        Map category items from Fyle to their counterparts on NetSuite. <a class="support" href="https://www.fylehq.com/help/en/articles/4312778-fyle-netsuite-integration" target="_blank">&nbsp;Read more</a>
     </div>
     <div class="d-flex content-header">
         <button class="btn main-btn" type="button" (click)="open(content)">Create
@@ -32,7 +32,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="categoryMappingModal">Create New Mapping</h5>
+        <h5 class="modal-title" id="categoryMappingModal">Create Category Mapping</h5>
         <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close"
             (click)="clearModalValues()">
             <span aria-hidden="true">&times;</span>
