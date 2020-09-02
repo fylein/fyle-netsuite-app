@@ -4,12 +4,21 @@
 
 export const environment = {
   production: false,
-  fyle_url: '{{FYLE_URL}}',
-  fyle_client_id: '{{FYLE_CLIENT_ID}}',
-  callback_uri: '{{CALLBACK_URI}}',
-  api_url: '{{API_URL}}',
-  app_url: '{{APP_URL}}'
+  fyle_url: 'https://accounts.fylehq.ninja',
+  fyle_client_id: 'tpaPu6HJt8hfL',
+  // fyle_client_id: 'tpa8PygXJWI1g',
+  callback_uri: 'http://localhost:4200/auth/callback',
+  api_url: 'http://342f774d7581.ngrok.io/api',
+  // api_url: 'http://localhost:8000/api',
+  // api_url: 'https://api-netsuite.fyleappz.com/api',
+  app_url: 'http://localhost:4200'
 }
+
+// FYLE_URL='https://accounts.fylehq.ninja' \
+// FYLE_CLIENT_ID='tpa8PygXJWI1g' \
+// CALLBACK_URI='https://netsuite.fyleappz.com/auth/callback' \
+// API_URL='https://api-netsuite.fyleappz.com/api' \
+// APP_URL='https://netsuite.fyleappz.com' 
 
 /*
  * For easier debugging in development mode, you can import the following file

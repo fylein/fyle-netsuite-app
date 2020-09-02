@@ -1,0 +1,121 @@
+<mat-sidenav-container class="netsuite" autosize fxFlexFill *ngIf="!isLoading">
+    <mat-sidenav class="netsuite-sidenav" mode="side" opened>
+      <mat-nav-list>
+        <header matSubheader class="netsuite-sidenav--header">
+          <img alt="Fyle" src="../../assets/images/pngs/fyle-logo.png" class="netsuite-sidenav--logo" />
+          <mat-icon>add</mat-icon>
+          <img alt="netsuite" src="../../../assets/images/pngs/netsuite-logo2.png" class="netsuite-sidenav--logo">
+        </header>
+  
+        <a class="mat-h2 netsuite-sidenav--nav-item" mat-list-item routerLink="{{workspace.id}}/dashboard"
+          routerLinkActive="active">
+          Dashboard
+        </a>
+  
+        <a class="mat-h2 netsuite-sidenav--nav-item" [ngClass]="{'netsuite-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/sync_export/sync"
+          routerLinkActive="active">
+          Import & Export
+        </a>
+  
+        <a class="mat-h2 netsuite-sidenav--nav-item" [ngClass]="{'netsuite-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/expense_groups/"
+          routerLinkActive="active">
+          Expense Groups
+        </a>
+  
+        <a class="mat-h3 netsuite-sidenav--nav-item" mat-list-item>
+          Settings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" mat-list-item *ngIf="connectNetSuite"
+        routerLink="{{workspace.id}}/settings/netsuite/connect/" routerLinkActive="active">
+        Connect to NetSuite
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" mat-list-item routerLink="{{workspace.id}}/settings/configurations/"
+          routerLinkActive="active">
+          Configurations
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/general_mappings/"
+          routerLinkActive="active">
+          General Mappings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+          routerLink="{{workspace.id}}/settings/employee_mappings/" routerLinkActive="active">
+          Employee Mappings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+          routerLink="{{workspace.id}}/settings/category_mappings/" routerLinkActive="active">
+          Category Mappings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/project_mappings/"
+          routerLinkActive="active">
+          Project Mappings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+          routerLink="{{workspace.id}}/settings/cost_center_mappings/" routerLinkActive="active">
+          Cost Center Mappings
+        </a>
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/schedule/"
+          routerLinkActive="active">
+          Automated Import/Export
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <mat-toolbar fxLayoutAlign="space-between center">
+        <div class="netsuite--title" fxLayout="row" fxLayoutAlign="space-around center">
+          <div class="mat-small">
+            Fyle Org Name:
+            <span class="netsuite--title-fyle-org">
+              {{user.org_name}}
+            </span>
+          </div>
+          <div class="mat-small netsuite--title-separator" *ngIf="netsuiteCompanyName">
+            |
+          </div>
+        </div>
+  
+        <mat-menu class="netsuite--menu" #appMenu="matMenu" xPosition="before">
+          <button type="button" mat-menu-item *ngIf="orgsCount > 0" (click)="switchWorkspace()">
+            <div fxLayoutAlign="space-around center">
+              <mat-icon class="netsuite--menu-icon">
+                swap_horiz
+              </mat-icon>
+              <strong class="netsuite--menu-text">
+                Switch Org
+              </strong>
+            </div>
+          </button>
+          <button type="button" mat-menu-item [routerLink]="['../auth/logout']">
+            <div fxLayoutAlign="space-around center">
+              <mat-icon class="netsuite--menu-icon">
+                power_settings_new
+              </mat-icon>
+              <strong class="netsuite--menu-text">
+                Sign Out
+              </strong>
+            </div>
+          </button>
+        </mat-menu>
+  
+        <div class="netsuite--menu" [matMenuTriggerFor]="appMenu">
+          <div fxLayoutAlign="space-around center">
+            <mat-icon class="netsuite--menu-icon">
+              account_circle
+            </mat-icon>
+            <strong class="netsuite--menu-text">{{user.full_name}}</strong>
+            <mat-icon class="netsuite--menu-icon netsuite--menu-icon__offset">
+              keyboard_arrow_down
+            </mat-icon>
+          </div>
+        </div>
+  
+      </mat-toolbar>
+      <div class="netsuite-body">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
+  <div fxLayoutAlign="center center" fxFlexFill *ngIf="isLoading">
+    <app-loader></app-loader>
+  </div>
