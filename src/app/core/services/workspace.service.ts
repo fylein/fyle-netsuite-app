@@ -18,7 +18,7 @@ export class WorkspaceService {
   }
 
   // TODO: Replace any with proper model
-  getWorkspaces(orgId): Observable<any> {
+  getWorkspaces(orgId): Observable<string> {
     return this.apiService.get(`/workspaces/`, {
       org_id: orgId
     });

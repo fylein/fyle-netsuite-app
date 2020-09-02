@@ -19,7 +19,7 @@ export class ExpenseGroupsComponent implements OnInit {
   isLoading = true;
   count: number;
   state: string;
-  settings;
+  settings: any;
   pageNumber = 0;
   pageSize = 5;
   columnsToDisplay = ['description', 'employee', 'expensetype'];

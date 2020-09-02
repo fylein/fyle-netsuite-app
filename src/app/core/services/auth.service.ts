@@ -80,7 +80,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.storageService.get('access_token') != null;
+    return this.storageService.get('access_token') !== null;
   }
 
   getUser() {

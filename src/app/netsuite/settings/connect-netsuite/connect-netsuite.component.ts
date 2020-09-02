@@ -25,7 +25,7 @@ export class ConnectNetsuiteComponent implements OnInit {
       that.state = state;
       that.router.navigate([`workspaces/${that.workspaceId}/settings/netsuite/${that.state.toLowerCase()}`]);
     }
-    if (that.state == 'SUBSIDIARY') {
+    if (that.state === 'SUBSIDIARY') {
       that.state = state;
       that.router.navigate([`workspaces/${that.workspaceId}/settings/netsuite/${that.state.toLowerCase()}`]);
     }

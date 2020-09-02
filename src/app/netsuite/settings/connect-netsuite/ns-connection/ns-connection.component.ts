@@ -28,20 +28,17 @@ export class NsConnectionComponent implements OnInit {
 
   save() {
     const that = this;
-    const nsAccountId = this.connectNetSuiteForm.value.nsAccountId;
-    const nsConsumerKey = this.connectNetSuiteForm.value.nsConsumerKey;
-    const nsConsumerSecret = this.connectNetSuiteForm.value.nsConsumerSecret;
-    const nsTokenId = this.connectNetSuiteForm.value.nsTokenId;
-    const nsTokenSecret = this.connectNetSuiteForm.value.nsTokenSecret
-    if (nsAccountId && nsConsumerKey && nsConsumerSecret && nsTokenId && nsTokenSecret) {
+    const netsuiteCredentials = {
+      ns_account_id: that.connectNetSuiteForm.value.nsAccountId,
+      ns_consumer_key: that.connectNetSuiteForm.value.nsConsumerKey,
+      ns_consumer_secret: that.connectNetSuiteForm.value.nsConsumerSecret,
+      ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
+      ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
+    }
+    if (netsuiteCredentials) {
       that.isLoading = true;
       that.netsuiteConnectionDone = false;
-      const connectNetSuite = [
-        that.settingsService.connectNetSuite(
-          that.workspaceId, nsAccountId, nsConsumerKey, nsConsumerSecret, nsTokenId, nsTokenSecret
-        )
-      ];
-      forkJoin(connectNetSuite).subscribe(responses => {
+      that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
         if (responses) {
           this.mappingsService.postNetSuiteSubsidiaries().subscribe(response => {
           });

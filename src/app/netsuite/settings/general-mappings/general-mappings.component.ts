@@ -78,9 +78,20 @@ export class GeneralMappingsComponent implements OnInit {
       }
     }
 
+    const generalMappings = {
+      location_name: netsuiteLocation.value,
+      location_id: netsuiteLocation.destination_id,
+      accounts_payable_name: accountPayableAccount.value,
+      accounts_payable_id: accountPayableAccount.destination_id,
+      reimbursable_account_name: bankAccount.value,
+      reimbursable_account_id: bankAccount.destination_id,
+      default_ccc_account_name: cccAccount.value,
+      default_ccc_account_id: cccAccount.destination_id
+    };
+
     if (that.locationIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid) {
       that.isLoading = true;
-      this.mappingsService.postGeneralMappings(this.workspaceId, netsuiteLocation.value, netsuiteLocation.destination_id, accountPayableAccount.value, accountPayableAccount.destination_id, bankAccount.value, bankAccount.destination_id, cccAccount.value, cccAccount.destination_id).subscribe(response => {
+      this.mappingsService.postGeneralMappings(generalMappings).subscribe(response => {
         const onboarded = that.storageService.get('onboarded');
         if (onboarded === true) {
           that.getGeneralMappings();

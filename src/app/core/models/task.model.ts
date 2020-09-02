@@ -3,17 +3,16 @@
 import { MappingError } from './mapping-error.model';
 
 export class Task {
-  bill: number;
-  cheque: number;
-  created_at: Date;
-  credit_card_purchase: number;
-  detail: MappingError[];
-  expense_group: number;
   id: number;
-  journal_entry: number;
-  status: string;
   task_id: string;
+  expense_group: number;
+  detail: MappingError[];
+  status: string;
   type: string;
+  bill: number;
+  expense_report: number;
+  journal_entry: number;
+  created_at: Date;
   updated_at: Date;
   workspace: number;
 }

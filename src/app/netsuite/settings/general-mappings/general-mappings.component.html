@@ -61,7 +61,7 @@
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.corporate_credit_card_expenses_object">
-          <mat-select class="general-mappings--input" placeholder="Select default credit card account for card expenses imported from Fyl"
+          <mat-select class="general-mappings--input" placeholder="Select default credit card account for card expenses imported from Fyle"
             formControlName="cccAccounts">
             <mat-option *ngFor="let cccAccount of cccAccounts; let i = index" [value]="cccAccounts[i].destination_id">
               {{cccAccounts[i].value}}

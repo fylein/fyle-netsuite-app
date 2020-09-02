@@ -54,25 +54,11 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: netsuiteCredentialsCache
   })
-  connectNetSuite(workspaceId: number, nsAccountId: string, nsConsumerKey: string, nsConsumerSecret: string, nsTokenId: string, nsTokenSecret: string) {
+  connectNetSuite(workspaceId: number, netsuiteCredentials) {
     globalCacheBusterNotifier.next();
-    return this.apiService.post('/workspaces/' + workspaceId + '/connect_netsuite/tba/', {
-      ns_account_id: nsAccountId,
-      ns_consumer_key: nsConsumerKey,
-      ns_consumer_secret: nsConsumerSecret,
-      ns_token_id: nsTokenId,
-      ns_token_secret: nsTokenSecret
-    });
+    return this.apiService.post('/workspaces/' + workspaceId + '/connect_netsuite/tba/', netsuiteCredentials
+    );
   }
-
-  // TODO: Add model
-  // postSettings(workspaceId: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
-  //   return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
-  //     next_run: nextRun,
-  //     hours,
-  //     schedule_enabled: scheduleEnabled
-  //   });
-  // }
 
   postSettings(workspace_id: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
     return this.apiService.post(`/workspaces/${workspace_id}/schedule/`, {

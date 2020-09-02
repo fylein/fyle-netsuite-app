@@ -36,14 +36,14 @@ export class NsSubsidiaryComponent implements OnInit {
   submit() {
     this.subsidiaryIsValid = false;
 
-    let subsidiaryId = this.subsidiaryForm.value.netsuiteSubsidiaries;
-    let netsuiteSubsidiary = this.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
+    const subsidiaryId = this.subsidiaryForm.value.netsuiteSubsidiaries;
+    const netsuiteSubsidiary = this.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
 
-    if (subsidiaryId != null) {
+    if (subsidiaryId) {
       this.subsidiaryIsValid = true;
     }
 
-    if(this.subsidiaryIsValid){
+    if (this.subsidiaryIsValid){
       this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value,).subscribe(response => {
         this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
       });

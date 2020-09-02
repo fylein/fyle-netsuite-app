@@ -8,4 +8,3 @@ export class SubsidiaryMapping {
     updated_at: Date;
     workspace: number;
   }
-  

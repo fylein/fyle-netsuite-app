@@ -270,19 +270,8 @@ export class MappingsService {
   }
 
   // TODO: Replace any with proper model
-  postGeneralMappings(workspace_id: number, location_name: string, location_id: string, accounts_payable_name: string, accounts_payable_id: string, reimbursable_account_name: string, reimbursable_account_id: string, default_ccc_account_name: string, default_ccc_account_id: string): Observable<any> {
-    this.netsuiteAccounts = null;
+  postGeneralMappings(generalMappings: any) {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    const generalMappings = {
-      location_name: location_name,
-      location_id: location_id,
-      accounts_payable_name: accounts_payable_name,
-      accounts_payable_id: accounts_payable_id,
-      reimbursable_account_name: reimbursable_account_name,
-      reimbursable_account_id: reimbursable_account_id,
-      default_ccc_account_name: default_ccc_account_name,
-      default_ccc_account_id: default_ccc_account_id
-    };
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/general/`, generalMappings);
   }
 
