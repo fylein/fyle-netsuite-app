@@ -57,10 +57,10 @@ export class NsSubsidiaryComponent implements OnInit {
       that.subsidiaryMappings = subsidiaryMappings;
       that.isLoading = false;
       that.subsidiaryMappingDone = true;
-      that.subsidiaryForm.disable();
       that.subsidiaryForm = that.formBuilder.group({
         netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
       });
+      that.subsidiaryForm.controls.netsuiteSubsidiaries.disable();
     }, error => {
       that.subsidiaryMappings = {};
       that.isLoading = false;

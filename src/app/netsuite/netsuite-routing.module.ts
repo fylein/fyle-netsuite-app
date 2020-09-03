@@ -6,8 +6,6 @@ import { WorkspacesGuard } from '../core/guard/workspaces.guard';
 import { ExpenseGroupsComponent } from './expense-groups/expense-groups.component';
 import { ViewExpenseGroupComponent } from './expense-groups/view-expense-group/view-expense-group.component';
 import { SettingsComponent } from './settings/settings.component';
-import { FyleCallbackComponent } from './settings/fyle-callback/fyle-callback.component';
-import { NetsuiteCallbackComponent } from './settings/netsuite-callback/netsuite-callback.component';
 import { InfoComponent } from './expense-groups/view-expense-group/info/info.component';
 import { GroupMappingErrorComponent } from './expense-groups/view-expense-group/group-mapping-error/group-mapping-error.component';
 import { SyncExportComponent } from './sync-export/sync-export.component';
@@ -127,14 +125,6 @@ const routes: Routes = [{
           canActivate: [WorkspacesGuard]
         }
       ]
-    },
-    {
-      path: 'fyle/callback',
-      component: FyleCallbackComponent
-    },
-    {
-      path: 'netsuite/callback',
-      component: NetsuiteCallbackComponent
     }
   ]
 }];

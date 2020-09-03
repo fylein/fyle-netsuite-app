@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ConnectNetsuiteComponent implements OnInit {
   state: string;
   workspaceId: number;
-  isParentLoading: boolean;
+  isLoading = true;
   fyleFields: any;
   netsuiteConnection: any;
   netsuiteConnectionDone: boolean;
@@ -34,26 +33,16 @@ export class ConnectNetsuiteComponent implements OnInit {
   ngOnInit() {
     const that = this;
 
-    that.isParentLoading = true;
+    that.isLoading = true;
     that.netsuiteConnection = false;
 
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
     that.workspaceId = +that.route.snapshot.parent.params.workspace_id;
-
-    forkJoin(
-      [
-        that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getNetSuiteCredentials(that.workspaceId)
-      ]
-    ).subscribe(response => {
-      that.fyleFields = response[0];
-      that.netsuiteConnection = response[1]
-      if(that.netsuiteConnection){
-          that.netsuiteConnectionDone = true;
+    that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((response) => {
+      if (response) {
+        that.netsuiteConnectionDone = true;
+        that.isLoading = false;
       }
-      that.isParentLoading = false;
-    }, () => {
-      that.isParentLoading = false;
     });
   }
 

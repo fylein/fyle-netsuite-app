@@ -30,11 +30,11 @@ export class ConfigurationComponent implements OnInit {
       EMPLOYEE: [
         {
           label: 'Expense Report',
-          value: 'EXPENSE_REPORT'
+          value: 'EXPENSE REPORT'
         },
         {
           label: 'Journal Entry',
-          value: 'JOURNAL_ENTRY'
+          value: 'JOURNAL ENTRY'
         }
       ],
       VENDOR: [
@@ -44,7 +44,7 @@ export class ConfigurationComponent implements OnInit {
         },
         {
           label: 'Journal Entry',
-          value: 'JOURNAL_ENTRY'
+          value: 'JOURNAL ENTRY'
         }
       ]
     }[employeeMappedTo];
@@ -60,7 +60,7 @@ export class ConfigurationComponent implements OnInit {
     return project === costCenter ? { projectCostCenterSame: true } : null;
   }
 
-  configurationCCCValidator: ValidatorFn = (fg: FormGroup) => {
+  vendorConfigurationValidator: ValidatorFn = (fg: FormGroup) => {
     const emp = fg.get('employees').value;
     const cccObject = fg.get('cccExpense').value;
     if (!emp || !cccObject) {
@@ -70,7 +70,7 @@ export class ConfigurationComponent implements OnInit {
     return emp === 'VENDOR' && cccObject === 'EXPENSE REPORT' ? { billCheck: true } : null;
   }
 
-  expenseReportCheck: ValidatorFn = (fg: FormGroup) => {
+  employeeConfigurationValidator: ValidatorFn = (fg: FormGroup) => {
     const emp = fg.get('employees').value;
     const cccObject = fg.get('cccExpense').value;
     if (!emp || !cccObject) {
@@ -118,7 +118,7 @@ export class ConfigurationComponent implements OnInit {
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
         costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : ''],
       }, {
-        validators: [that.configurationProjectCostCenterValidator, that.configurationCCCValidator]
+        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator, that.employeeConfigurationValidator]
       });
 
       if (that.generalSettings.reimbursable_expenses_object) {

@@ -1,7 +1,7 @@
-<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isParentLoading" fxFlexFill>
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
 </div>
-<div class="page-header" *ngIf="!isParentLoading">
+<div class="page-header" *ngIf="!isLoading">
   <div class="page-header--name mat-h2">
     NetSuite Connection
   </div>
@@ -15,6 +15,6 @@
   </nav>
 </div>
 
-<div *ngIf="!isParentLoading">
+<div *ngIf="!isLoading">
   <router-outlet></router-outlet>
 </div>
