@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ConnectNetsuiteComponent implements OnInit {
   state: string;
   workspaceId: number;
-  isLoading = true;
+  isParentLoading: boolean;
   fyleFields: any;
   netsuiteConnection: any;
   netsuiteConnectionDone: boolean;
@@ -32,8 +32,9 @@ export class ConnectNetsuiteComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    
+    that.isParentLoading = true;
 
-    that.isLoading = true;
     that.netsuiteConnection = false;
 
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
@@ -41,8 +42,10 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((response) => {
       if (response) {
         that.netsuiteConnectionDone = true;
-        that.isLoading = false;
       }
+      that.isParentLoading = false;
+    }, () => {
+      that.isParentLoading = false;
     });
   }
 

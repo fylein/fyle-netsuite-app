@@ -7,6 +7,7 @@ import { NetSuiteComponent } from './netsuite.component';
 import { ExpenseGroupsComponent } from './expense-groups/expense-groups.component';
 import { ViewExpenseGroupComponent } from './expense-groups/view-expense-group/view-expense-group.component';
 import { SettingsComponent } from './settings/settings.component';
+import { FyleCallbackComponent } from './settings/fyle-callback/fyle-callback.component';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -61,6 +62,7 @@ import { NsSubsidiaryComponent } from './settings/connect-netsuite/ns-subsidiary
     ExpenseGroupsComponent,
     ViewExpenseGroupComponent,
     SettingsComponent,
+    FyleCallbackComponent,
     InfoComponent,
     GroupMappingErrorComponent,
     SyncExportComponent,
