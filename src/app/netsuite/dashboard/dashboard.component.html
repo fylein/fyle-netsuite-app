@@ -35,7 +35,6 @@
               Connect Fyle
             </div>
           </div>
-
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
@@ -43,13 +42,12 @@
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Connect to NetSuite Account</div>
             </div>
-            <div routerLink="../settings/netsuite/connect/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/netsuite/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.fyleConnected"
               [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}">
               Connect to NetSuite
             </div>
           </div>
-
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
@@ -57,13 +55,12 @@
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Select NetSuite Subsidiary</div>
             </div>
-            <div routerLink="../settings/netsuite/subsidiary/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/configurations/subsidiary/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.netsuiteConnected"
               [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.netsuiteConnected}">
               Select Subsidiary
             </div>
           </div>
-          
         </mat-step>
         <mat-step [completed]="false">
           <ng-template matStepLabel>
@@ -78,7 +75,7 @@
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Fyle fields to NetSuite fields</div>
             </div>
-            <div routerLink="../settings/configurations/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/configurations/general/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.subsidiaryMappingDone"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.subsidiaryMappingDone}">
               Go to Configurations

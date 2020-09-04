@@ -13,7 +13,6 @@ import { SyncExportComponent } from './sync-export/sync-export.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SyncComponent } from './sync-export/sync/sync.component';
 import { ExportComponent } from './sync-export/export/export.component';
-import { ConfigurationComponent } from './settings/configuration/configuration.component';
 import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
@@ -21,8 +20,9 @@ import { ProjectMappingsComponent } from './settings/project-mappings/project-ma
 import { ScheduleComponent } from './settings/schedule/schedule.component';
 import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 import { ConnectNetsuiteComponent } from './settings/connect-netsuite/connect-netsuite.component';
-import { NsConnectionComponent } from './settings/connect-netsuite/ns-connection/ns-connection.component';
-import { NsSubsidiaryComponent } from './settings/connect-netsuite/ns-subsidiary/ns-subsidiary.component';
+import { ConfigurationComponent } from './settings/netsuite-configurations/configuration/configuration.component';
+import { SubsidiaryComponent } from './settings/netsuite-configurations/subsidiary/subsidiary.component';
+import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurations/netsuite-configurations.component';
 
 
 const routes: Routes = [{
@@ -79,21 +79,26 @@ const routes: Routes = [{
       children: [
         {
           path: 'configurations',
-          component: ConfigurationComponent,
+          component: NetsuiteConfigurationsComponent,
+          children: [
+            {
+              path: 'general',
+              component: ConfigurationComponent
+            },
+            {
+              path: 'subsidiary',
+              component: SubsidiaryComponent
+            }
+          ]
         },
         {
           path: 'netsuite',
           component: ConnectNetsuiteComponent,
-          children: [
-            {
-              path: 'connect',
-              component: NsConnectionComponent
-            },
-            {
-              path: 'subsidiary',
-              component: NsSubsidiaryComponent
-            }
-          ]
+        },
+        {
+          path: 'general_mappings',
+          component: GeneralMappingsComponent,
+          canActivate: [WorkspacesGuard]
         },
         {
           path: 'general_mappings',

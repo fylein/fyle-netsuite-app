@@ -31,7 +31,6 @@ import { ExportComponent } from './sync-export/export/export.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ConfigurationComponent } from './settings/configuration/configuration.component';
 import { MatSelectModule } from '@angular/material/select';
 import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
@@ -53,8 +52,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConnectNetsuiteComponent } from './settings/connect-netsuite/connect-netsuite.component';
-import { NsConnectionComponent } from './settings/connect-netsuite/ns-connection/ns-connection.component';
-import { NsSubsidiaryComponent } from './settings/connect-netsuite/ns-subsidiary/ns-subsidiary.component';
+import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurations/netsuite-configurations.component';
+import { SubsidiaryComponent } from './settings/netsuite-configurations/subsidiary/subsidiary.component';
+import { ConfigurationComponent } from './settings/netsuite-configurations/configuration/configuration.component';
 
 @NgModule({
   declarations: [
@@ -81,8 +81,8 @@ import { NsSubsidiaryComponent } from './settings/connect-netsuite/ns-subsidiary
     ProjectMappingsDialogComponent,
     CostCenterMappingsDialogComponent,
     ConnectNetsuiteComponent,
-    NsConnectionComponent,
-    NsSubsidiaryComponent
+    NetsuiteConfigurationsComponent,
+    SubsidiaryComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,

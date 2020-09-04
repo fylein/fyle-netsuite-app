@@ -173,14 +173,13 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postNetSuiteLocations(),
       this.mappingsService.postNetSuiteEmployees(),
       this.mappingsService.postNetSuiteVendors(),
-      this.mappingsService.postNetSuiteClasses(),
-      this.mappingsService.postNetSuiteDepartments(),
       this.mappingsService.postFyleEmployees(),
       this.mappingsService.postFyleCategories(),
+      this.mappingsService.postNetSuiteClasses(),
+      this.mappingsService.postNetSuiteDepartments(),
       this.mappingsService.postFyleCostCenters(),
       this.mappingsService.postFyleProjects()
     ).subscribe(() => {
-      // that.snackBar.open('All employee data synced from your fyle account');
     });
   }
 

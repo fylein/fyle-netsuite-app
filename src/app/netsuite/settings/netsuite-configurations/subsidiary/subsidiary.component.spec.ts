@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NsConnectionComponent } from './ns-connection.component';
+import { SubsidiaryComponent } from './subsidiary.component';
 
-describe('NsConnectionComponent', () => {
-  let component: NsConnectionComponent;
-  let fixture: ComponentFixture<NsConnectionComponent>;
+describe('SubsidiaryComponent', () => {
+  let component: SubsidiaryComponent;
+  let fixture: ComponentFixture<SubsidiaryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NsConnectionComponent ]
+      declarations: [ SubsidiaryComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NsConnectionComponent);
+    fixture = TestBed.createComponent(SubsidiaryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

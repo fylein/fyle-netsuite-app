@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-configuration',
   templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss', '../../netsuite.component.scss']
+  styleUrls: ['./configuration.component.scss', '../../../netsuite.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
 
@@ -238,7 +238,7 @@ export class ConfigurationComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.isSaveDisabled = false;
-    that.workspaceId = that.route.snapshot.parent.params.workspace_id;
+    that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.getAllSettings();
   }
 

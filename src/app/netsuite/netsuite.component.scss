@@ -12,6 +12,7 @@ $fy-page-info-desc: #414562;
     border-right: 0;
     min-width: 320px;
     overflow-x: hidden;
+    overflow: hidden;
     &--header {
       padding: 32px 0;
     }
@@ -85,6 +86,10 @@ $fy-page-info-desc: #414562;
 
   .mat-drawer-content {
     background-color: $fy-white;
+  }
+
+  .mat-drawer-inner {
+    overflow: hidden;
   }
 
   &--menu {

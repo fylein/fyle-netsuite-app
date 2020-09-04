@@ -24,7 +24,6 @@ export class NetSuiteComponent implements OnInit {
   showSwitchOrg = false;
   navDisabled = true;
   windowReference: Window;
-  connectNetSuite = true;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -136,11 +135,24 @@ export class NetSuiteComponent implements OnInit {
     });
   }
 
+  getNetSuiteStatus() {
+    const that = this
+    const workspaceId = this.storageService.get('workspaceId');
+    if(workspaceId) {
+      that.settingsService.getNetSuiteCredentials(workspaceId).subscribe(credentials => {
+        if (credentials) {
+          that.netsuiteConnected = true;
+        }
+      })
+    }
+  }
+
   ngOnInit() {
     const that = this;
     const onboarded = that.storageService.get('onboarded');
     that.navDisabled = onboarded !== true;
     that.orgsCount = that.authService.getOrgCount();
     that.setupWorkspace();
+    that.getNetSuiteStatus()
   }
 }

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-connect-netsuite',
@@ -9,43 +12,71 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./connect-netsuite.component.scss', '../../netsuite.component.scss']
 })
 export class ConnectNetsuiteComponent implements OnInit {
-  state: string;
+  
+  isLoading: boolean;
+  isSaveDisabled: boolean;
+  connectNetSuiteForm: FormGroup;
   workspaceId: number;
-  isParentLoading: boolean;
-  fyleFields: any;
-  netsuiteConnection: any;
   netsuiteConnectionDone: boolean;
 
-  constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }
+  constructor(private formBuilder: FormBuilder, 
+              private settingsService: SettingsService, 
+              private mappingsService: MappingsService, 
+              private route: ActivatedRoute, 
+              private router: Router, 
+              private snackBar: MatSnackBar) { }
 
-  changeState(state) {
+  save() {
     const that = this;
-    if (that.state !== state) {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/netsuite/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'SUBSIDIARY') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/netsuite/${that.state.toLowerCase()}`]);
+    if (that.connectNetSuiteForm.valid) {
+      const netsuiteCredentials = {
+        ns_account_id: that.connectNetSuiteForm.value.nsAccountId,
+        ns_consumer_key: that.connectNetSuiteForm.value.nsConsumerKey,
+        ns_consumer_secret: that.connectNetSuiteForm.value.nsConsumerSecret,
+        ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
+        ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
+      }
+      if (netsuiteCredentials) {
+        that.isLoading = true;
+        that.netsuiteConnectionDone = false;
+        that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
+          if (responses) {
+            this.mappingsService.postNetSuiteSubsidiaries().subscribe(response => {
+            });
+          }
+          that.snackBar.open('NetSuite account connected successfully');
+          that.netsuiteConnectionDone = true;
+          that.isLoading = false;
+          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        }, err => {
+          that.snackBar.open('Wrong credentials, please try again');
+          that.isLoading = false;
+          that.netsuiteConnectionDone = false;
+        });
+      } else {
+        that.snackBar.open('Please fill all the fields');
+        that.connectNetSuiteForm.markAllAsTouched();
+      }
     }
   }
 
   ngOnInit() {
     const that = this;
-    
-    that.isParentLoading = true;
-
-    that.netsuiteConnection = false;
-
-    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
-    that.workspaceId = +that.route.snapshot.parent.params.workspace_id;
-    that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((response) => {
-      if (response) {
-        that.netsuiteConnectionDone = true;
-      }
-      that.isParentLoading = false;
-    }, () => {
-      that.isParentLoading = false;
+    that.isSaveDisabled = false;
+    that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
+    that.isLoading = true;
+    that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
+      that.netsuiteConnectionDone = true;
+      that.isLoading = false;
+    }, (error) => {
+      that.isLoading = false;
+      that.connectNetSuiteForm = that.formBuilder.group({
+        nsAccountId: ['', Validators.required],
+        nsConsumerKey: ['', Validators.required],
+        nsConsumerSecret: ['', Validators.required],
+        nsTokenId: ['', Validators.required],
+        nsTokenSecret: ['', Validators.required]
+      });
     });
   }
 

@@ -5,13 +5,14 @@ import { MappingsService } from '../../../../core/services/mappings.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
+import {} from '../../../netsuite.component'
 
 @Component({
-  selector: 'app-ns-subsidiary',
-  templateUrl: './ns-subsidiary.component.html',
-  styleUrls: ['./ns-subsidiary.component.scss', '../../../netsuite.component.scss']
+  selector: 'app-subsidiary',
+  templateUrl: './subsidiary.component.html',
+  styleUrls: ['./subsidiary.component.scss', '../../../netsuite.component.scss']
 })
-export class NsSubsidiaryComponent implements OnInit {
+export class SubsidiaryComponent implements OnInit {
 
   subsidiaryForm: FormGroup;
   workspaceId: number;
