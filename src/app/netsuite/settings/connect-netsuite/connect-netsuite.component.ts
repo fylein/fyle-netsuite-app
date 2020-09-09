@@ -5,6 +5,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component'
 
 @Component({
   selector: 'app-connect-netsuite',
@@ -47,7 +48,7 @@ export class ConnectNetsuiteComponent implements OnInit {
           that.snackBar.open('NetSuite account connected successfully');
           that.netsuiteConnectionDone = true;
           that.isLoading = false;
-          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+          window.location.href = (`workspaces/${that.workspaceId}/dashboard`); 
         }, err => {
           that.snackBar.open('Wrong credentials, please try again');
           that.isLoading = false;
