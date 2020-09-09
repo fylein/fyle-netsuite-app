@@ -49,7 +49,7 @@ export class ProjectMappingsComponent implements OnInit {
   }
 
   goToConfigurations() {
-    this.router.navigate([`/workspaces/${this.workspaceId}/settings/configurations/`]);
+    this.router.navigate([`/workspaces/${this.workspaceId}/settings/configurations/general`]);
   }
 
   ngOnInit() {
