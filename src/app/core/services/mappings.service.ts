@@ -22,6 +22,8 @@ export class MappingsService {
   fyleCostCenters: Observable<any[]>;
   netsuiteLocations: Observable<any[]>;
   netsuiteClasses: Observable<any[]>;
+  netsuiteCategories: Observable<any[]>;
+  netsuiteCurrencies: Observable<any[]>;
   generalMappings: Observable<any[]>;
   accountPayables: Observable<any[]>;
   netsuiteSubsidiaries: Observable<any[]>;
@@ -93,6 +95,32 @@ export class MappingsService {
       );
     }
     return this.netsuiteVendors;
+  }
+
+  postNetSuiteCurrencies() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteCurrencies) {
+      this.netsuiteCurrencies = this.apiService.post(`/workspaces/${workspaceId}/netsuite/currencies/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteCurrencies;
+  }
+
+  postNetSuiteExpenseCategories() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteCategories) {
+      this.netsuiteCategories = this.apiService.post(`/workspaces/${workspaceId}/netsuite/expense_categories/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteCategories;
   }
 
   postNetSuiteEmployees() {
