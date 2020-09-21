@@ -28,7 +28,6 @@ speed-measure-plugin*.json
 
 # Environment files
 environment.localhost.ts
-environment.ts
 
 # IDE - VSCode
 .vscode/*
