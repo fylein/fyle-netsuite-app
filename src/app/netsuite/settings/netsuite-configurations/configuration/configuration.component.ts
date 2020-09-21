@@ -118,7 +118,7 @@ export class ConfigurationComponent implements OnInit {
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
         costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : ''],
       }, {
-        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator, that.employeeConfigurationValidator]
+        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator]
       });
 
       if (that.generalSettings.reimbursable_expenses_object) {

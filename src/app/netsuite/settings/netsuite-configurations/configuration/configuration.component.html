@@ -47,8 +47,14 @@
           <mat-option>
             None
           </mat-option>
-          <mat-option *ngFor="let option of expenseOptions" [value]="option.value">
-            {{option.label}}
+          <mat-option value="BILL">
+            Bill
+          </mat-option>
+          <mat-option value="EXPENSE REPORT">
+            Expense Report
+          </mat-option>
+          <mat-option value="JOURNAL ENTRY">
+            Journal Entry
           </mat-option>
         </mat-select>
       </mat-form-field>

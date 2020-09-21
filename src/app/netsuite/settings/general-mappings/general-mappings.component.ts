@@ -16,6 +16,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: any[]
+  netsuiteVendors: any[]
   accountPayableAccounts: any[];
   bankAccounts: any[];
   cccAccounts: any[];
@@ -26,6 +27,7 @@ export class GeneralMappingsComponent implements OnInit {
   bankAccountIsValid = true;
   cccAccountIsValid = true;
   locationIsValid = true;
+  vendorIsValid = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,14 +51,17 @@ export class GeneralMappingsComponent implements OnInit {
     let locationId = formValues? formValues.netsuiteLocations: this.form.value.netsuiteLocations;
     let netsuiteLocation = this.netsuiteLocations.filter(filteredLocation => filteredLocation.destination_id === locationId)[0];
 
-    const accountPayableAccountId = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.accountPayableAccounts : '';
-    const accountPayableAccount = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.accountPayableAccounts.filter(filteredAccountsPayableAccount => filteredAccountsPayableAccount.destination_id === accountPayableAccountId)[0] : '';
+    const accountPayableAccountId = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.form.value.accountPayableAccounts : '';
+    const accountPayableAccount = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.accountPayableAccounts.filter(filteredAccountsPayableAccount => filteredAccountsPayableAccount.destination_id === accountPayableAccountId)[0] : '';
 
     const bankAccountId = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.bankAccounts : '';
     const bankAccount = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.bankAccounts.filter(filteredBankAccount => filteredBankAccount.destination_id === bankAccountId)[0] : '';
 
-    const cccAccountId = that.generalSettings.corporate_credit_card_expenses_object ? that.form.value.cccAccounts : '';
-    const cccAccount = that.generalSettings.corporate_credit_card_expenses_object ? that.cccAccounts.filter(filteredCCCAccount => filteredCCCAccount.destination_id === cccAccountId)[0] : '';
+    let cccAccountId = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.form.value.cccAccounts : '';
+    let cccAccount = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.cccAccounts.filter(filteredCCCAccount => filteredCCCAccount.destination_id === cccAccountId)[0] : '';
+
+    const defaultVendorId = that.generalSettings.corporate_credit_card_expenses_object === 'BILL' ? that.form.value.netsuiteVendors : '';
+    const defaultVendor = that.generalSettings.corporate_credit_card_expenses_object === 'BILL' ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : '';
 
     if (accountPayableAccountId != null) {
       that.accountsPayableIsValid = true;
@@ -67,12 +72,22 @@ export class GeneralMappingsComponent implements OnInit {
     if (cccAccountId != null) {
       that.cccAccountIsValid = true;
     }
+    if (defaultVendorId != null) {
+      that.vendorIsValid = true;
+    }
     if (locationId != null) {
       this.locationIsValid = true;
     }
     if (locationId === null) {
       this.locationIsValid = true;
       netsuiteLocation = {
+        'value' : null,
+        'destination_id': null
+      }
+    }
+    if (cccAccountId === null) {
+      this.cccAccountIsValid = true;
+      cccAccount = {
         'value' : null,
         'destination_id': null
       }
@@ -86,10 +101,12 @@ export class GeneralMappingsComponent implements OnInit {
       reimbursable_account_name: bankAccount.value,
       reimbursable_account_id: bankAccount.destination_id,
       default_ccc_account_name: cccAccount.value,
-      default_ccc_account_id: cccAccount.destination_id
+      default_ccc_account_id: cccAccount.destination_id,
+      default_ccc_vendor_name: defaultVendor.value,
+      default_ccc_vendor_id: defaultVendor.destination_id
     };
 
-    if (that.locationIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid) {
+    if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid) {
       that.isLoading = true;
       this.mappingsService.postGeneralMappings(generalMappings).subscribe(response => {
         const onboarded = that.storageService.get('onboarded');
@@ -116,7 +133,8 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteLocations: [this.generalMappings? this.generalMappings.location_id: ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
-        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : '']
+        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
+        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
     }, error => {
       that.generalMappings = {};
@@ -125,7 +143,8 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteLocations: [this.netsuiteLocations? this.generalMappings.location_id: ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
-        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : '']
+        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : '',],
+        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
     });
   }
@@ -138,7 +157,8 @@ export class GeneralMappingsComponent implements OnInit {
         that.mappingsService.getBankAccounts(),
         that.mappingsService.getCreditCardAccounts(),
         that.mappingsService.getAccountsPayables(),
-        that.mappingsService.getNetSuiteLocations()
+        that.mappingsService.getNetSuiteLocations(),
+        that.mappingsService.getNetSuiteVendors()
       ]
     ).subscribe(responses => {
       that.isLoading = false;
@@ -146,6 +166,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccounts = responses[1];
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3]
+      that.netsuiteVendors = responses[4]
       that.getGeneralMappings();
     });
   }
