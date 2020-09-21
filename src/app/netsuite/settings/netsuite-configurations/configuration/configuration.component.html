@@ -47,14 +47,8 @@
           <mat-option>
             None
           </mat-option>
-          <mat-option value="BILL">
-            Bill
-          </mat-option>
-          <mat-option value="EXPENSE REPORT">
-            Expense Report
-          </mat-option>
-          <mat-option value="JOURNAL ENTRY">
-            Journal Entry
+          <mat-option *ngFor="let option of cccExpenseOptions" [value]="option.value">
+            {{option.label}}
           </mat-option>
         </mat-select>
       </mat-form-field>
