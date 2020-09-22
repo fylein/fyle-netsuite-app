@@ -17,7 +17,7 @@ export class ConfigurationComponent implements OnInit {
   isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
-  cccExpenseOptions: { label: string, value: string }[];
+  cccExpenseOptions: { label: string, value: string}[];
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
@@ -52,9 +52,13 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  getCCCOptions(employeeMappedTo) {
+  getCCCExpenseOptions(employeeMappedTo) {
     return {
       EMPLOYEE: [
+        {
+          label: 'Bill',
+          value: 'BILL'
+        },
         {
           label: 'Expense Report',
           value: 'EXPENSE REPORT'
@@ -62,11 +66,7 @@ export class ConfigurationComponent implements OnInit {
         {
           label: 'Journal Entry',
           value: 'JOURNAL ENTRY'
-        },
-        {
-          label: 'Bill',
-          value: 'BILL'
-        },
+        }
       ],
       VENDOR: [
         {
@@ -141,7 +141,7 @@ export class ConfigurationComponent implements OnInit {
       that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
-      that.cccExpenseOptions = that.getCCCOptions(that.employeeFieldMapping.destination_field);
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
       that.generalSettingsForm = that.formBuilder.group({
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
@@ -155,6 +155,22 @@ export class ConfigurationComponent implements OnInit {
 
       if (that.generalSettings.reimbursable_expenses_object) {
         that.expenseOptions = [{
+          label: 'Bill',
+          value: 'BILL'
+        },
+        {
+          label: 'Expense Report',
+          value: 'EXPENSE REPORT'
+        },
+        {
+          label: 'Journal Entry',
+          value: 'JOURNAL ENTRY'
+        }
+        ];
+      }
+
+      if(that.generalSettings.corporate_credit_card_expenses_object){
+        that.cccExpenseOptions = [{
           label: 'Bill',
           value: 'BILL'
         },
@@ -205,7 +221,7 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
-        that.cccExpenseOptions = that.getCCCOptions(employeeMappedTo);
+        that.cccExpenseOptions = that.getCCCExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
       });
     });
