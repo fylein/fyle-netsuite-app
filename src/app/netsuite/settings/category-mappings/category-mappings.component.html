@@ -17,20 +17,27 @@
       <zero-state message="You have no category mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="categoryMappings.length" [hidden]="isLoading">
-      <table mat-table [dataSource]="categoryMappings" class="page-table" matSort matSortActive="created_at"
+    <div *ngIf="categoryCCCMappings.length" [hidden]="isLoading">
+      <table mat-table [dataSource]="categoryCCCMappings" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef> Category </th>
           <td mat-cell *matCellDef="let element">
-            {{element.source.value}}
+            {{element.fyle_value}}
           </td>
         </ng-container>
   
         <ng-container matColumnDef="netsuite">
-          <th mat-header-cell *matHeaderCellDef> NetSuite Account </th>
+          <th mat-header-cell *matHeaderCellDef> {{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Netsuite Expense Category': 'Netsuite Account'}} </th>
           <td mat-cell *matCellDef="let element">
-            {{element.destination.value}}
+            {{element.netsuite_value}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ccc">
+          <th mat-header-cell *matHeaderCellDef> Credit Card Expense {{generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT'? 'Category': 'Account'}} </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.ccc_value}}
           </td>
         </ng-container>
   

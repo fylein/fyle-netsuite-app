@@ -34,11 +34,11 @@
   
         <div class="mat-body-strong">
           <strong class="mappings-dialog--label">
-            Map to Corresponding NetSuite Account
+            Map to Corresponding NetSuite {{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Expense Category' : 'Expense Account'}}
           </strong>
         </div>
         <mat-form-field class="mappings-dialog--field" appearance="outline">
-          <input type="text" formControlName="netsuiteAccount" placeholder="Select NetSuite Account" matInput
+          <input type="text" formControlName="netsuiteAccount" placeholder="{{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Netsuite Expense Category': 'Netsuite Account'}}" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
             <mat-option *ngFor="let option of netsuiteAccountOptions" [value]="option">
@@ -49,7 +49,26 @@
             Please enter a valid value
           </mat-error>
         </mat-form-field>
+
+        <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+          <strong class="mappings-dialog--label">
+            Map to Corresponding Credit Card {{generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT'? 'Expense Category': 'Account'}}
+          </strong>
+        </div>
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
+          <input type="text" formControlName="cccAccount" placeholder="Select NetSuite Account" matInput
+            [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
+          <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
+            <mat-option *ngFor="let option of netsuiteCCCAccountOptions" [value]="option">
+              {{option.value}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error class="mappings-dialog--error" *ngIf="form.controls.netsuiteAccount.hasError('forbiddenOption')">
+            Please enter a valid value
+          </mat-error>
+        </mat-form-field>
       </div>
+      
     </form>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
