@@ -120,6 +120,16 @@ export class CategoryMappingsDialogComponent implements OnInit {
     });
   }
 
+  showSeparateCCCField() {
+    const that = this;
+    if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' || that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
+      if (that.generalSettings.reimbursable_expenses_object !== that.generalSettings.corporate_credit_card_expenses_object) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   setupNetSuiteCCCAccountWatchers() {
     const that = this;
 

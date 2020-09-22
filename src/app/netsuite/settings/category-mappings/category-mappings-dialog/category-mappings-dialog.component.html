@@ -50,12 +50,12 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+        <div class="mat-body-strong" *ngIf="showSeparateCCCField()">
           <strong class="mappings-dialog--label">
             Map to Corresponding Credit Card {{generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT'? 'Expense Category': 'Account'}}
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="showSeparateCCCField()">
           <input type="text" formControlName="cccAccount" placeholder="Select NetSuite Account" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">

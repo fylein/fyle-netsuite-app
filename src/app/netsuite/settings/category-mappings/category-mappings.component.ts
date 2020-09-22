@@ -44,6 +44,15 @@ export class CategoryMappingsComponent implements OnInit {
     });
   }
 
+  showSeparateCCCField() {
+    const that = this;
+    if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' || that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
+      if (that.generalSettings.reimbursable_expenses_object !== that.generalSettings.corporate_credit_card_expenses_object) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   getCategoryMappings() {
     const that = this;
@@ -71,7 +80,7 @@ export class CategoryMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
     that.generalSettings = that.storageService.get('generalSettings');
-    if (that.generalSettings.reimbursable_expenses_object == 'EXPENSE REPORT' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+    if (that.showSeparateCCCField()) {
       that.columnsToDisplay.push('ccc');
     }
     that.getCategoryMappings();
