@@ -7,10 +7,6 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
-<<<<<<< HEAD
-import { ActivatedRoute } from '@angular/router';
-=======
->>>>>>> fyle-1b8ucf
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -184,11 +180,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.form = that.formBuilder.group({
         fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
         netsuiteAccount: ['', Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
-<<<<<<< HEAD
-        cccAccount: ['', (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
-=======
         cccAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
->>>>>>> fyle-1b8ucf
       });
 
       that.setupAutocompleteWatchers();
