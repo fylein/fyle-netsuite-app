@@ -45,26 +45,35 @@ export class SubsidiaryComponent implements OnInit {
     }
 
     if (this.subsidiaryIsValid){
+      this.isLoading = true;
       this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value,).subscribe(response => {
-        this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
+        this.snackBar.open('Fetching Data from NetSuite. This might take a few minutes.', null, {
+          duration: 200000000
+        });
+        this.mappingsService.postNetSuiteAccounts().subscribe(() => {
+          this.isLoading = false;
+          this.snackBar.open('Data Imported from NetSuite');
+          this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
+        });
       });
     }
   }
 
   getSubsidiaryMappings() {
     const that = this;
-    that.isLoading = true;
     that.mappingsService.getSubsidiaryMappings().subscribe(subsidiaryMappings => {
       that.subsidiaryMappings = subsidiaryMappings;
-      that.isLoading = false;
       that.subsidiaryMappingDone = true;
+      that.mappingsService.getNetSuiteSubsidiaries().subscribe(subsidiaries => {
+        that.netsuiteSubsidiaries = subsidiaries;
+        this.isLoading = false;
+      });
       that.subsidiaryForm = that.formBuilder.group({
         netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
       });
       that.subsidiaryForm.controls.netsuiteSubsidiaries.disable();
     }, error => {
       that.subsidiaryMappings = {};
-      that.isLoading = false;
       that.subsidiaryForm = that.formBuilder.group({
         netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
       });
@@ -75,9 +84,10 @@ export class SubsidiaryComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.getNetSuiteSubsidiaries().subscribe(subsidiaries => {
+    that.mappingsService.postNetSuiteSubsidiaries().subscribe(subsidiaries => {
       that.netsuiteSubsidiaries = subsidiaries;
-    })
+      this.isLoading = false;
+    });
     that.getSubsidiaryMappings();
   }
 

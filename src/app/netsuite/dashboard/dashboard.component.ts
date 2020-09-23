@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -51,7 +52,8 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
     private storageService: StorageService,
-    private windowReferenceService: WindowReferenceService) {
+    private windowReferenceService: WindowReferenceService,
+    private snackBar: MatSnackBar) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
@@ -168,19 +170,26 @@ export class DashboardComponent implements OnInit {
   // to be callled in background whenever dashboard is opened for sncing fyle data for org
   updateDimensionTables() {
     const that = this;
+    
+    that.mappingsService.postNetSuiteAccounts().subscribe(() => {
+      this.snackBar.open('Data Successfully imported from NetSuite');
+    }, () => {
+      this.snackBar.dismiss();
+    });
+
+    this.mappingsService.postFyleEmployees().subscribe(() => {});
+    this.mappingsService.postFyleCategories().subscribe(() => {});
+    this.mappingsService.postFyleCostCenters().subscribe(() => {});
+    this.mappingsService.postFyleProjects().subscribe(() => {});
+
     concat(
-      this.mappingsService.postFyleEmployees(),
-      this.mappingsService.postFyleCategories(),
-      this.mappingsService.postNetSuiteClasses(),
-      this.mappingsService.postNetSuiteDepartments(),
-      this.mappingsService.postFyleCostCenters(),
-      this.mappingsService.postFyleProjects(),
+      this.mappingsService.postNetSuiteExpenseCategories(),
+      this.mappingsService.postNetSuiteLocations(),
+      this.mappingsService.postNetSuiteVendors(),
       this.mappingsService.postNetSuiteEmployees(),
       this.mappingsService.postNetSuiteCurrencies(),
-      this.mappingsService.postNetSuiteVendors(),
-      this.mappingsService.postNetSuiteExpenseCategories(),
-      this.mappingsService.postNetSuiteAccounts(),
-      this.mappingsService.postNetSuiteLocations()
+      this.mappingsService.postNetSuiteClasses(),
+      this.mappingsService.postNetSuiteDepartments(),
     ).subscribe(() => {
     });
   }
