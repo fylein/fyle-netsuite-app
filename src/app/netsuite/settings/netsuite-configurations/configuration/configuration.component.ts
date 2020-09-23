@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StorageService } from 'src/app/core/services/storage.service';
 
 @Component({
   selector: 'app-configuration',
@@ -16,6 +17,7 @@ export class ConfigurationComponent implements OnInit {
   isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
+  cccExpenseOptions: { label: string, value: string}[];
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
@@ -23,11 +25,40 @@ export class ConfigurationComponent implements OnInit {
   projectFieldMapping: any;
   costCenterFieldMapping: any;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
       EMPLOYEE: [
+        {
+          label: 'Expense Report',
+          value: 'EXPENSE REPORT'
+        },
+        {
+          label: 'Journal Entry',
+          value: 'JOURNAL ENTRY'
+        }
+      ],
+      VENDOR: [
+        {
+          label: 'Bill',
+          value: 'BILL'
+        },
+        {
+          label: 'Journal Entry',
+          value: 'JOURNAL ENTRY'
+        }
+      ]
+    }[employeeMappedTo];
+  }
+
+  getCCCExpenseOptions(employeeMappedTo) {
+    return {
+      EMPLOYEE: [
+        {
+          label: 'Bill',
+          value: 'BILL'
+        },
         {
           label: 'Expense Report',
           value: 'EXPENSE REPORT'
@@ -110,6 +141,7 @@ export class ConfigurationComponent implements OnInit {
       that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
       that.generalSettingsForm = that.formBuilder.group({
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
@@ -118,11 +150,27 @@ export class ConfigurationComponent implements OnInit {
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
         costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : ''],
       }, {
-        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator, that.employeeConfigurationValidator]
+        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator]
       });
 
       if (that.generalSettings.reimbursable_expenses_object) {
         that.expenseOptions = [{
+          label: 'Bill',
+          value: 'BILL'
+        },
+        {
+          label: 'Expense Report',
+          value: 'EXPENSE REPORT'
+        },
+        {
+          label: 'Journal Entry',
+          value: 'JOURNAL ENTRY'
+        }
+        ];
+      }
+
+      if(that.generalSettings.corporate_credit_card_expenses_object){
+        that.cccExpenseOptions = [{
           label: 'Bill',
           value: 'BILL'
         },
@@ -173,6 +221,7 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
+        that.cccExpenseOptions = that.getCCCExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
       });
     });
@@ -184,7 +233,12 @@ export class ConfigurationComponent implements OnInit {
       const mappingsSettingsPayload = [{
         source_field: 'CATEGORY',
         destination_field: 'ACCOUNT'
-      }];
+      },
+      {
+        destination_field: 'CCC_ACCOUNT',
+        source_field:'CATEGORY'
+      }
+    ];
 
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || that.generalSettings.reimbursable_expenses_object;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
@@ -193,9 +247,12 @@ export class ConfigurationComponent implements OnInit {
       const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
 
       if (cccExpensesObject) {
+        var destination_field = 'CREDIT_CARD_ACCOUNT';
+        var source_field = 'EMPLOYEE'
+
         mappingsSettingsPayload.push({
-          source_field: 'EMPLOYEE',
-          destination_field: 'CREDIT_CARD_ACCOUNT'
+          source_field: source_field,
+          destination_field: destination_field
         });
       }
 
@@ -226,6 +283,7 @@ export class ConfigurationComponent implements OnInit {
         ]
       ).subscribe(responses => {
         that.isLoading = true;
+        that.storageService.set('generalSettings', responses[1])
         that.snackBar.open('Configuration saved successfully');
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });

@@ -31,11 +31,11 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR'">
+        <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Accounts Payable
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
-          *ngIf="generalSettings.employee_field_mapping === 'VENDOR'">
+          *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           <mat-select class="general-mappings--input" placeholder="Select accounts payable for expenses imported from Fyle"
             formControlName="accountPayableAccounts">
             <mat-option *ngFor="let accountPayableAccount of accountPayableAccounts; let i = index"
@@ -56,15 +56,27 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object">
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
           Default Credit Card Account
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
-          *ngIf="generalSettings.corporate_credit_card_expenses_object">
+          *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
           <mat-select class="general-mappings--input" placeholder="Select default credit card account for card expenses imported from Fyle"
             formControlName="cccAccounts">
             <mat-option *ngFor="let cccAccount of cccAccounts; let i = index" [value]="cccAccounts[i].destination_id">
               {{cccAccounts[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+          Default Credit Card Vendor
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" required
+          *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+          <mat-select class="general-mappings--input" placeholder="Select default credit card Vendor for card expenses imported from Fyle"
+            formControlName="netsuiteVendors">
+            <mat-option *ngFor="let cccAccount of netsuiteVendors; let i = index" [value]="netsuiteVendors[i].destination_id">
+              {{netsuiteVendors[i].value}}
             </mat-option>
           </mat-select>
         </mat-form-field>

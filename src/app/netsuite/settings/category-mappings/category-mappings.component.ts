@@ -14,6 +14,8 @@ export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
   categoryMappings: any[];
+  categoryCCCMappings: any[] = [];
+  generalSettings: any;
   columnsToDisplay = ['category', 'netsuite'];
 
   constructor(
@@ -42,12 +44,32 @@ export class CategoryMappingsComponent implements OnInit {
     });
   }
 
+  showSeparateCCCField() {
+    const that = this;
+    if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' || that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
+      if (that.generalSettings.reimbursable_expenses_object !== that.generalSettings.corporate_credit_card_expenses_object) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   getCategoryMappings() {
     const that = this;
     that.isLoading = true;
     that.mappingsService.getMappings('CATEGORY').subscribe(categoryMappings => {
+      that.categoryCCCMappings = [];
       that.categoryMappings = categoryMappings.results;
+      const accountMappings = that.categoryMappings.filter(mappings => mappings.destination.attribute_type === 'ACCOUNT');
+      accountMappings.forEach(mapping => {
+        var netsuiteValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'ACCOUNT')[0];
+        var cccValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'CCC_ACCOUNT')[0];
+        that.categoryCCCMappings.push({
+          fyle_value: mapping.source.value,
+          netsuite_value: netsuiteValue.destination.value,
+          ccc_value: cccValue? cccValue.destination.value : ''
+        });
+      });
       that.isLoading = false;
     }, () => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
@@ -57,6 +79,10 @@ export class CategoryMappingsComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
+    that.generalSettings = that.storageService.get('generalSettings');
+    if (that.showSeparateCCCField()) {
+      that.columnsToDisplay.push('ccc');
+    }
     that.getCategoryMappings();
   }
 
