@@ -65,7 +65,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const expenseFields = that.expenseFieldsForm.value.expenseFields;
 
     that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe(response => {
-      this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
+      that.router.navigate([`workspaces/${this.workspaceId}/dashboard`]).then(() => {
+        that.windowReference.location.reload();
+      });
       that.isLoading = false;
     });
   }
