@@ -37,26 +37,24 @@
          routerLink="{{workspace.id}}/settings/configurations/subsidiary/" routerLinkActive="active">
           Configurations
         </a>
-        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/general_mappings/"
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/general/mappings/"
           routerLinkActive="active">
           General Mappings
         </a>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
-          routerLink="{{workspace.id}}/settings/employee_mappings/" routerLinkActive="active">
+          routerLink="{{workspace.id}}/settings/employee/mappings/" routerLinkActive="active">
           Employee Mappings
         </a>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
-          routerLink="{{workspace.id}}/settings/category_mappings/" routerLinkActive="active">
+          routerLink="{{workspace.id}}/settings/category/mappings/" routerLinkActive="active">
           Category Mappings
         </a>
-        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/project_mappings/"
+        <div *ngFor="let setting of mappingSettings">
+          <a class="mat-h3 netsuite-sidenav--nav-sub-item" *ngIf="setting.source_field !== 'CATEGORY'" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/{{setting.source_field.toLowerCase()}}/mappings/"
           routerLinkActive="active">
-          Project Mappings
-        </a>
-        <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
-          routerLink="{{workspace.id}}/settings/cost_center_mappings/" routerLinkActive="active">
-          Cost Center Mappings
-        </a>
+            {{ getTitle(setting.source_field) | titlecase }} Mappings
+         </a>
+        </div>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/schedule/"
           routerLinkActive="active">
           Automated Import/Export

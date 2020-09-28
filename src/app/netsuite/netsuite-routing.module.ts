@@ -16,13 +16,13 @@ import { ExportComponent } from './sync-export/export/export.component';
 import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
-import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
 import { ScheduleComponent } from './settings/schedule/schedule.component';
-import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 import { ConnectNetsuiteComponent } from './settings/connect-netsuite/connect-netsuite.component';
 import { ConfigurationComponent } from './settings/netsuite-configurations/configuration/configuration.component';
 import { SubsidiaryComponent } from './settings/netsuite-configurations/subsidiary/subsidiary.component';
 import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurations/netsuite-configurations.component';
+import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configurations/expense-field-configuration/expense-field-configuration.component';
+import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component'
 
 
 const routes: Routes = [{
@@ -88,6 +88,10 @@ const routes: Routes = [{
             {
               path: 'subsidiary',
               component: SubsidiaryComponent
+            },
+            {
+              path: 'expense_fields',
+              component: ExpenseFieldConfigurationComponent
             }
           ]
         },
@@ -96,33 +100,23 @@ const routes: Routes = [{
           component: ConnectNetsuiteComponent,
         },
         {
-          path: 'general_mappings',
+          path: 'general/mappings',
           component: GeneralMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {
-          path: 'general_mappings',
-          component: GeneralMappingsComponent,
-          canActivate: [WorkspacesGuard]
-        },
-        {
-          path: 'employee_mappings',
+          path: 'employee/mappings',
           component: EmployeeMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {
-          path: 'category_mappings',
+          path: 'category/mappings',
           component: CategoryMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {
-          path: 'project_mappings',
-          component: ProjectMappingsComponent,
-          canActivate: [WorkspacesGuard]
-        },
-        {
-          path: 'cost_center_mappings',
-          component: CostCenterMappingsComponent,
+          path: ':source_field/mappings',
+          component: GenericMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {

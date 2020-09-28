@@ -177,6 +177,7 @@ export class DashboardComponent implements OnInit {
       this.snackBar.dismiss();
     });
 
+    this.mappingsService.postExpenseCustomFields().subscribe(() => {});
     this.mappingsService.postFyleEmployees().subscribe(() => {});
     this.mappingsService.postFyleCategories().subscribe(() => {});
     this.mappingsService.postFyleCostCenters().subscribe(() => {});

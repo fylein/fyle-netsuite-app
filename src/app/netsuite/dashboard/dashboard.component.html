@@ -95,7 +95,7 @@
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Bank Accounts</div>
             </div>
-            <div routerLink="../settings/general_mappings/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/general/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.configurationsDone"
               [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.configurationsDone}">
               Go to General Mappings
@@ -108,7 +108,7 @@
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Employees</div>
             </div>
-            <div routerLink="../settings/employee_mappings/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/employee/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.generalMappingsDone"
               [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}">
               Go to Employee Mappings
@@ -119,7 +119,7 @@
               <mat-icon class="onboarding-stepper--check">check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Categories</div>
             </div>
-            <div routerLink="../settings/category_mappings/" class="onboarding-stepper--navigation cursor-pointer"
+            <div routerLink="../settings/category/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.employeeMappingsDone"
               [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.employeeMappingsDone}">
               Go to Category Mappings
