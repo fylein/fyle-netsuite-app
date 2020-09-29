@@ -18,7 +18,7 @@
 							Expenses Grouped by: {{ getDescription().expensesGroupedBy }}
 						</div>
 						<div class="sync-card--text">
-							Expense States: {{ getDescription().expenseStates | titlecase }}
+							Expense State: {{ getDescription().expenseState | titlecase }}
 						</div>
 						<div class="sync-card--text" *ngIf="getDescription().exportDateType">
 							Export Date: {{ getDescription().exportDateType}}

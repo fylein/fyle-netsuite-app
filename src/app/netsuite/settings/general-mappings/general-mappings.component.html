@@ -16,6 +16,21 @@
     </div>
     <form class="general-mappings--form" [formGroup]="form" (ngSubmit)="submit()">
       <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="mat-body-strong">
+          NetSuite Location
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" required>
+          <mat-select class="general-mappings--input" placeholder="Select NetSuite Location"
+            formControlName="netsuiteLocations">
+            <mat-option [value]="null">
+              None
+            </mat-option>
+            <mat-option *ngFor="let netsuiteLocation of netsuiteLocations; let i = index"
+              [value]="netsuiteLocations[i].destination_id">
+              {{netsuiteLocations[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Accounts Payable
         </div>

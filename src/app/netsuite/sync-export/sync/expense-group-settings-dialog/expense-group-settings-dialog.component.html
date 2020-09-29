@@ -37,11 +37,10 @@
         </mat-form-field>
 
         <div class="dialog--label">
-          Import Expenses in States:
+          Import Expenses in State:
         </div>
         <mat-form-field floatLabel="always" class="dialog--field" appearance="outline" required>
-          <mat-select placeholder="Choose States of Expenses to be fetched" formControlName="expenseStates"
-            multiple>
+          <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="expenseState">
             <mat-option value="PAYMENT_PENDING">
               Payment Pending
             </mat-option>
@@ -52,7 +51,7 @@
               Paid
             </mat-option>
           </mat-select>
-          <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseStates.errors?.required">
+          <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
             Please select atleast 1 state
           </mat-error>
         </mat-form-field>
@@ -82,7 +81,7 @@
 <mat-dialog-actions align="end">
   <form *ngIf="!isLoading" class="dialog--form" [formGroup]="importExpensesForm">
     <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
-    <button class="dialog--save-btn" [disabled]="importExpensesForm.controls.expenseStates.errors?.required" mat-flat-button color="primary" type="submit" (click)="save()">
+    <button class="dialog--save-btn" [disabled]='importExpensesForm.controls.expenseState.errors?.required' mat-flat-button color="primary" type="submit" (click)="save()">
       Save
     </button>
   </form>

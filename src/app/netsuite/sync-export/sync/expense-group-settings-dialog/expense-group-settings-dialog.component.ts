@@ -21,10 +21,10 @@ save() {
   that.isLoading = true;
 
   const expensesGroupedBy = that.importExpensesForm.value.expenseGroupConfiguration;
-  const expenseStates = that.importExpensesForm.value.expenseStates;
+  const expenseState = that.importExpensesForm.value.expenseState;
   const exportDateType = that.importExpensesForm.value.exportDate;
 
-  this.expenseGroupsService.createExpenseGroupsSettings(expensesGroupedBy, expenseStates, exportDateType).subscribe(response => {
+  this.expenseGroupsService.createExpenseGroupsSettings(expensesGroupedBy, expenseState, exportDateType).subscribe(response => {
     that.dialogRef.close();
   });
 }
@@ -36,7 +36,7 @@ getExpenseGroupSettings() {
     that.isLoading = false;
     that.importExpensesForm = that.formBuilder.group({
       expenseGroupConfiguration: [ that.expenseGroupSettings.reimbursable_expense_group_fields ],
-      expenseStates: [ that.expenseGroupSettings.expense_states, [ Validators.required ]],
+      expenseState: [ that.expenseGroupSettings.expense_state, [ Validators.required ]],
       exportDate: [ that.expenseGroupSettings.export_date_type]
     });
 

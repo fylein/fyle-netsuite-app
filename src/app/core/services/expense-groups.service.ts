@@ -43,11 +43,11 @@ export class ExpenseGroupsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_group_settings/`, {});
   }
 
-  createExpenseGroupsSettings(expensesGroupedBy: string[], expenseStates: string[], exportDateType: string): Observable<ExpenseGroupResponse> {
+  createExpenseGroupsSettings(expensesGroupedBy: string[], expenseState: string[], exportDateType: string): Observable<ExpenseGroupResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_group_settings/`, {
       expenses_grouped_by: expensesGroupedBy,
-      expense_states: expenseStates,
+      expense_state: expenseState,
       export_date_type: exportDateType
     });
   }
