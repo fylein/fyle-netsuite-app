@@ -186,10 +186,10 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postNetSuiteExpenseCategories(),
       this.mappingsService.postNetSuiteLocations(),
       this.mappingsService.postNetSuiteVendors(),
-      this.mappingsService.postNetSuiteEmployees(),
       this.mappingsService.postNetSuiteCurrencies(),
       this.mappingsService.postNetSuiteClasses(),
       this.mappingsService.postNetSuiteDepartments(),
+      this.mappingsService.postNetSuiteEmployees(),
     ).subscribe(() => {
     });
   }
