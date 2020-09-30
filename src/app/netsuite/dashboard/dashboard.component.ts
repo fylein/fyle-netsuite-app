@@ -170,13 +170,7 @@ export class DashboardComponent implements OnInit {
   // to be callled in background whenever dashboard is opened for sncing fyle data for org
   updateDimensionTables() {
     const that = this;
-    
-    that.mappingsService.postNetSuiteAccounts().subscribe(() => {
-      this.snackBar.open('Data Successfully imported from NetSuite');
-    }, () => {
-      this.snackBar.dismiss();
-    });
-
+  
     this.mappingsService.postFyleEmployees().subscribe(() => {});
     this.mappingsService.postFyleCategories().subscribe(() => {});
     this.mappingsService.postFyleCostCenters().subscribe(() => {});
@@ -190,7 +184,9 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postNetSuiteClasses(),
       this.mappingsService.postNetSuiteDepartments(),
       this.mappingsService.postNetSuiteEmployees(),
+      that.mappingsService.postNetSuiteAccounts()
     ).subscribe(() => {
+      this.snackBar.open('Data Successfully imported from NetSuite');
     });
   }
 
