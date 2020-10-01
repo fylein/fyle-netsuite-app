@@ -171,6 +171,7 @@ export class DashboardComponent implements OnInit {
   updateDimensionTables() {
     const that = this;
   
+    this.mappingsService.postExpenseCustomFields().subscribe(() => {});
     this.mappingsService.postFyleEmployees().subscribe(() => {});
     this.mappingsService.postFyleCategories().subscribe(() => {});
     this.mappingsService.postFyleCostCenters().subscribe(() => {});
