@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoryMappingsDialogComponent } from './category-mappings-dialog/category-mappings-dialog.component';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { SettingsService } from 'src/app/core/services/settings.service';
 
 @Component({
   selector: 'app-category-mappings',
@@ -23,6 +24,7 @@ export class CategoryMappingsComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
+    private settingsService: SettingsService,
     private storageService: StorageService) { }
 
   open() {
@@ -80,12 +82,18 @@ export class CategoryMappingsComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    this.isLoading = true
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    that.generalSettings = that.storageService.get('generalSettings');
-    if (that.showSeparateCCCField()) {
-      that.columnsToDisplay.push('ccc');
-    }
-    that.getCategoryMappings();
+    that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
+      that.generalSettings = settings;
+      this.isLoading = false;
+
+      if (that.showSeparateCCCField()) {
+        that.columnsToDisplay.push('ccc');
+      }
+
+      that.getCategoryMappings();
+    });
   }
 
 }
