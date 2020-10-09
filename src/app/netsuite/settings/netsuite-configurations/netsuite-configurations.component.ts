@@ -29,6 +29,10 @@ export class NetsuiteConfigurationsComponent implements OnInit {
       that.state = state;
       that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
     }
+    if (that.state === 'EXPENSE_FIELDS') {
+      that.state = state;
+      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
+    }
   }
 
   ngOnInit() {

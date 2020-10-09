@@ -2,8 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MappingsService } from 'src/app/core/services/mappings.service';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { forkJoin } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -14,23 +14,25 @@ export class MappingErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
+
 @Component({
-  selector: 'app-project-mappings-dialog',
-  templateUrl: './project-mappings-dialog.component.html',
-  styleUrls: ['./project-mappings-dialog.component.scss', '../../settings.component.scss']
+  selector: 'app-generic-mappings-dialog',
+  templateUrl: './generic-mappings-dialog.component.html',
+  styleUrls: ['./generic-mappings-dialog.component.scss', '../../settings.component.scss']
 })
-export class ProjectMappingsDialogComponent implements OnInit {
+export class GenericMappingsDialogComponent implements OnInit {
+
   isLoading = false;
   form: FormGroup;
-  fyleProjects: any[];
+  fyleAttributes: any[];
   netsuiteElements: any[];
-  fyleProjectOptions: any[];
+  fyleAttributeOptions: any[];
   netsuiteOptions: any[];
-  generalSettings: any;
+  setting: any;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
-              public dialogRef: MatDialogRef<ProjectMappingsDialogComponent>,
+              public dialogRef: MatDialogRef<GenericMappingsDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private mappingsService: MappingsService,
               private settingsService: SettingsService,
@@ -40,17 +42,8 @@ export class ProjectMappingsDialogComponent implements OnInit {
     return mappingObject ? mappingObject.value : '';
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const forbidden = !options.some((option) => {
-        return control.value.id && option.id === control.value.id;
-      });
-      return forbidden ? {
-        forbiddenOption: {
-          value: control.value
-        }
-      } : null;
-    };
+  getTitle(name: string) {
+    return name.replace(/_/g, ' ');
   }
 
   submit() {
@@ -58,10 +51,10 @@ export class ProjectMappingsDialogComponent implements OnInit {
     if (that.form.valid) {
       that.isLoading = true;
       that.mappingsService.postMappings({
-        source_type: 'PROJECT',
-        destination_type: that.generalSettings.project_field_mapping,
-        source_value: that.form.controls.fyleProject.value.value,
-        destination_value: that.form.controls.netsuiteObject.value.value
+        source_type: that.setting.source_field,
+        destination_type: that.setting.destination_field,
+        source_value: that.form.controls.sourceField.value.value,
+        destination_value: that.form.controls.destinationField.value.value
       }).subscribe(response => {
         that.snackBar.open('Mapping saved successfully');
         that.isLoading = false;
@@ -76,18 +69,34 @@ export class ProjectMappingsDialogComponent implements OnInit {
     }
   }
 
-  setupProjectAutocompleteWatcher() {
+  forbiddenSelectionValidator(options: any[]): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      const forbidden = !options.some((option) => {
+        return control.value.id && option.id === control.value.id;
+      });
+      return forbidden ? {
+        forbiddenOption: {
+          value: control.value
+        }
+      } : null;
+    };
+  }
+
+  setupAttributeWatcher() {
     const that = this;
-    that.form.controls.fyleProject.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
+
+    that.form.controls.sourceField.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof (newValue) === 'string') {
-        that.fyleProjectOptions = that.fyleProjects.filter(fyleProject => new RegExp(newValue.toLowerCase(), 'g').test(fyleProject.value.toLowerCase()));
+        that.fyleAttributeOptions = that.fyleAttributes
+          .filter(fyleAttribute => new RegExp(newValue.toLowerCase(), 'g').test(fyleAttribute.value.toLowerCase()));
       }
     });
   }
 
-  setupnetsuiteAutocompleteWatcher() {
+  setupnetsuiteObjectWatcher() {
     const that = this;
-    that.form.controls.netsuiteObject.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
+
+    that.form.controls.destinationField.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof (newValue) === 'string') {
         that.netsuiteOptions = that.netsuiteElements
           .filter(netsuiteElement => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteElement.value.toLowerCase()));
@@ -95,55 +104,63 @@ export class ProjectMappingsDialogComponent implements OnInit {
     });
   }
 
-  setupAutcompleteWatchers() {
+  setupAutcompleteWathcers() {
     const that = this;
-    that.setupProjectAutocompleteWatcher();
-    that.setupnetsuiteAutocompleteWatcher();
+    that.setupAttributeWatcher();
+    that.setupnetsuiteObjectWatcher();
   }
 
   reset() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    const getFyleCateogories = that.mappingsService.getFyleProjects().toPromise().then(projects => {
-      that.fyleProjects = projects;
+    const getFyleAttributes = that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field).toPromise().then(attributes => {
+      that.fyleAttributes = attributes;
     });
 
     let netsuitePromise;
-    if (that.generalSettings.project_field_mapping === 'CLASS') {
+    if (that.setting.destination_field === 'CLASS') {
       // TODO: remove promises and do with rxjs observables
       netsuitePromise = that.mappingsService.getNetSuiteClasses().toPromise().then(objects => {
         that.netsuiteElements = objects;
       });
-    } else if (that.generalSettings.project_field_mapping === 'DEPARTMENT') {
-      // TODO: remove promises and do with rxjs observables
+    } else if (that.setting.destination_field === 'DEPARTMENT') {
       netsuitePromise = that.mappingsService.getNetSuiteDepartments().toPromise().then(objects => {
+        that.netsuiteElements = objects;
+      });
+    } else if (that.setting.destination_field === 'ACCOUNT') {
+      netsuitePromise = that.mappingsService.getExpenseAccounts().toPromise().then(objects => {
+        that.netsuiteElements = objects;
+      });
+    } else if (that.setting.destination_field === 'LOCATION') {
+      netsuitePromise = that.mappingsService.getNetSuiteLocations().toPromise().then(objects => {
         that.netsuiteElements = objects;
       });
     }
 
     that.isLoading = true;
+    // TODO: remove promises and do with rxjs observables
     forkJoin([
-      getFyleCateogories,
+      getFyleAttributes,
       netsuitePromise
     ]).subscribe(() => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleProject: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleProjects)])],
-        netsuiteObject: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.netsuiteElements)])]
+        sourceField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
+        destinationField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.netsuiteElements)])]
       });
 
-      that.setupAutcompleteWatchers();
+      that.setupAutcompleteWathcers();
     });
   }
 
   ngOnInit() {
     const that = this;
-
     that.isLoading = true;
-    that.settingsService.getCombinedSettings(that.data.workspaceId).subscribe(settings => {
-      that.generalSettings = settings;
-      that.isLoading = false;
-      that.reset();
-    });
+
+    that.setting = that.data.setting;
+    
+    that.isLoading = false;
+    that.reset();
   }
+
 }

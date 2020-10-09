@@ -41,7 +41,6 @@ export class GeneralMappingsComponent implements OnInit {
 
   submit() {
     const that = this;
-    that.locationIsValid = false;
     that.accountsPayableIsValid = false;
     that.bankAccountIsValid = false;
     that.cccAccountIsValid = false;

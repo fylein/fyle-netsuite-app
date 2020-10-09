@@ -81,36 +81,6 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  configurationProjectCostCenterValidator: ValidatorFn = (fg: FormGroup) => {
-    const project = fg.get('projects').value;
-    const costCenter = fg.get('costCenters').value;
-    if (!project || !costCenter) {
-      return null;
-    }
-
-    return project === costCenter ? { projectCostCenterSame: true } : null;
-  }
-
-  vendorConfigurationValidator: ValidatorFn = (fg: FormGroup) => {
-    const emp = fg.get('employees').value;
-    const cccObject = fg.get('cccExpense').value;
-    if (!emp || !cccObject) {
-      return null;
-    }
-
-    return emp === 'VENDOR' && cccObject === 'EXPENSE REPORT' ? { billCheck: true } : null;
-  }
-
-  employeeConfigurationValidator: ValidatorFn = (fg: FormGroup) => {
-    const emp = fg.get('employees').value;
-    const cccObject = fg.get('cccExpense').value;
-    if (!emp || !cccObject) {
-      return null;
-    }
-
-    return emp === 'EMPLOYEE' && cccObject === 'BILL' ? { exprptCheck: true } : null;
-  }
-
   getAllSettings() {
     const that = this;
     that.isLoading = true;
@@ -128,17 +98,7 @@ export class ConfigurationComponent implements OnInit {
           (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
       )[0];
 
-      const projectFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'PROJECT'
-      )[0];
-
-      const costCenterFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'COST_CENTER'
-      )[0];
-
       that.employeeFieldMapping = employeeFieldMapping;
-      that.projectFieldMapping = projectFieldMapping ? projectFieldMapping : {};
-      that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
@@ -147,10 +107,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
-        projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
-        costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : ''],
       }, {
-        validators: [that.configurationProjectCostCenterValidator, that.vendorConfigurationValidator]
       });
 
       if (that.generalSettings.reimbursable_expenses_object) {
@@ -192,15 +149,7 @@ export class ConfigurationComponent implements OnInit {
         that.generalSettingsForm.controls.cccExpense.disable();
       }
 
-      if (projectFieldMapping) {
-        that.generalSettingsForm.controls.projects.disable();
-      }
-
-      if (costCenterFieldMapping) {
-        that.generalSettingsForm.controls.costCenters.disable();
-      }
-
-      if (that.generalSettings.corporate_credit_card_expenses_object && projectFieldMapping && costCenterFieldMapping) {
+      if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.isSaveDisabled = true;
       }
 
@@ -212,11 +161,8 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
-        cccExpense: [null],
-        projects: [null],
-        costCenters: [null],
+        cccExpense: [null]
       }, {
-        validators: [that.configurationProjectCostCenterValidator]
       });
 
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
@@ -243,8 +189,6 @@ export class ConfigurationComponent implements OnInit {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || that.generalSettings.reimbursable_expenses_object;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
-      const costCenterMappingObject = that.generalSettingsForm.value.costCenters || (that.costCenterFieldMapping && that.costCenterFieldMapping.destination_field);
-      const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
 
       if (cccExpensesObject) {
         var destination_field = 'CREDIT_CARD_ACCOUNT';
@@ -253,20 +197,6 @@ export class ConfigurationComponent implements OnInit {
         mappingsSettingsPayload.push({
           source_field: source_field,
           destination_field: destination_field
-        });
-      }
-
-      if (projectMappingObject) {
-        mappingsSettingsPayload.push({
-          source_field: 'PROJECT',
-          destination_field: projectMappingObject
-        });
-      }
-
-      if (costCenterMappingObject) {
-        mappingsSettingsPayload.push({
-          source_field: 'COST_CENTER',
-          destination_field: costCenterMappingObject
         });
       }
 

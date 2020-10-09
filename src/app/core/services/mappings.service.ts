@@ -18,6 +18,7 @@ export class MappingsService {
   netsuiteVendors: Observable<any[]>;
   netsuiteEmployees: Observable<any[]>;
   fyleProjects: Observable<any[]>;
+  fyleExpenseCustomFields: Observable<any[]>;
   netsuiteDepartments: Observable<any[]>;
   fyleCostCenters: Observable<any[]>;
   netsuiteLocations: Observable<any[]>;
@@ -27,6 +28,7 @@ export class MappingsService {
   generalMappings: Observable<any[]>;
   accountPayables: Observable<any[]>;
   netsuiteSubsidiaries: Observable<any[]>;
+  expenseFields: Observable<any[]>;
 
   constructor(
     private apiService: ApiService,
@@ -82,6 +84,19 @@ export class MappingsService {
       );
     }
     return this.fyleCostCenters;
+  }
+
+  postExpenseCustomFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.fyleExpenseCustomFields) {
+      this.fyleExpenseCustomFields = this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.fyleExpenseCustomFields;
   }
 
   postNetSuiteVendors() {
@@ -211,6 +226,12 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/employees/`, {});
   }
 
+  getFyleExpenseFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
+  }
+
   getFyleCategories() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -221,6 +242,20 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/vendors/`, {});
+  }
+
+  getNetSuiteFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
+  }
+
+  getFyleExpenseCustomFields(attributeType: string) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
+      attribute_type: attributeType
+    });
   }
 
   getNetSuiteEmployees() {

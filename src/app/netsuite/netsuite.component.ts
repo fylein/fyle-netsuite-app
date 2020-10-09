@@ -37,38 +37,13 @@ export class NetSuiteComponent implements OnInit {
 
   getGeneralSettings() {
     const that = this;
-    forkJoin(
-      [
-        that.settingsService.getGeneralSettings(that.workspace.id),
-        that.settingsService.getMappingSettings(that.workspace.id)
-      ]
-    ).subscribe((responses) => {
-      that.generalSettings = responses[0];
-      that.mappingSettings = responses[1].results;
-
-      const employeeFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'EMPLOYEE') &&
-          (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
-      )[0];
-
-      const projectFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'PROJECT'
-      )[0];
-
-      const costCenterFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'COST_CENTER'
-      )[0];
-
-      that.generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
-
-      if (projectFieldMapping) {
-        that.generalSettings.project_field_mapping = projectFieldMapping.destination_field;
-      }
-
-      if (costCenterFieldMapping) {
-        that.generalSettings.cost_center_field_mapping = costCenterFieldMapping.destination_field;
-      }
-      that.storageService.set('generalSettings', that.generalSettings);
+    that.settingsService.getMappingSettings(that.workspace.id).subscribe((response) => {
+      that.mappingSettings = response.results.filter(
+        setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
+      );
+      that.isLoading = false;
+    }, () => {
+      that.isLoading = false;
     });
   }
 
@@ -80,12 +55,15 @@ export class NetSuiteComponent implements OnInit {
     const that = this;
     const pathName = that.windowReference.location.pathname;
     that.storageService.set('workspaceId', that.workspace.id);
-    that.isLoading = false;
     if (pathName === '/workspaces') {
       that.router.navigateByUrl(`/workspaces/${that.workspace.id}/dashboard`);
     }
     that.getGeneralSettings();
     that.setupAccessiblePathWatchers();
+  }
+
+  getTitle(name: string) {
+    return name.replace(/_/g, ' ');
   }
 
   getConfigurations() {
