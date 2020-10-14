@@ -141,7 +141,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
           newValue = `expense category - ${newValue.toLowerCase()}`
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         } else {
-          that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name != 'Expense Category');
+          that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name !== 'Expense Category');
         }
       }
     });

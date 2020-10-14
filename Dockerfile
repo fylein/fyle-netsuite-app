@@ -18,7 +18,8 @@ RUN npm install -g @angular/cli
 COPY . /app
 
 # generate build
-RUN ng build --configuration=production --output-path=dist --source-map=false
+RUN npm config set max-old-space-size=512
+RUN ng build --prod --output-path=dist
 
 ############
 ### prod ###
