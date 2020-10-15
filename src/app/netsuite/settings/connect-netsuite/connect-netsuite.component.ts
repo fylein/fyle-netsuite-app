@@ -18,7 +18,7 @@ export class ConnectNetsuiteComponent implements OnInit {
   isSaveDisabled: boolean;
   connectNetSuiteForm: FormGroup;
   workspaceId: number;
-  netsuiteConnectionDone: boolean;
+  netsuiteConnectionDone = false;
 
   constructor(private formBuilder: FormBuilder, 
               private settingsService: SettingsService, 
@@ -31,15 +31,12 @@ export class ConnectNetsuiteComponent implements OnInit {
     const that = this;
     if (that.connectNetSuiteForm.valid) {
       const netsuiteCredentials = {
-        ns_account_id: that.connectNetSuiteForm.value.nsAccountId,
-        ns_consumer_key: that.connectNetSuiteForm.value.nsConsumerKey,
-        ns_consumer_secret: that.connectNetSuiteForm.value.nsConsumerSecret,
+        ns_account_id: that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
         ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
       }
       if (netsuiteCredentials) {
         that.isLoading = true;
-        that.netsuiteConnectionDone = false;
         that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
           if (responses) {
             this.mappingsService.postNetSuiteSubsidiaries().subscribe(response => {
@@ -52,13 +49,16 @@ export class ConnectNetsuiteComponent implements OnInit {
         }, err => {
           that.snackBar.open('Wrong credentials, please try again');
           that.isLoading = false;
-          that.netsuiteConnectionDone = false;
         });
       } else {
         that.snackBar.open('Please fill all the fields');
         that.connectNetSuiteForm.markAllAsTouched();
       }
     }
+  }
+
+  reconnectNetsuite() {
+    this.netsuiteConnectionDone = false;
   }
 
   ngOnInit() {
@@ -69,12 +69,15 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
       that.netsuiteConnectionDone = true;
       that.isLoading = false;
+      that.connectNetSuiteForm = that.formBuilder.group({
+        nsAccountId: [res.ns_account_id, Validators.required],
+        nsTokenId: ['', Validators.required],
+        nsTokenSecret: ['', Validators.required]
+      });
     }, (error) => {
       that.isLoading = false;
       that.connectNetSuiteForm = that.formBuilder.group({
         nsAccountId: ['', Validators.required],
-        nsConsumerKey: ['', Validators.required],
-        nsConsumerSecret: ['', Validators.required],
         nsTokenId: ['', Validators.required],
         nsTokenSecret: ['', Validators.required]
       });
