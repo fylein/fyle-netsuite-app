@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/employee-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
+import {EditEmployeeMappingsDialogComponent} from './edit-employee-mappings-dialog/edit-employee-mappings-dialog.component'
 
 @Component({
   selector: 'app-employee-mappings',
@@ -21,6 +22,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: any;
   filteredAccounts: any[];
+  fyleEmployeeValue: any;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
@@ -37,6 +39,32 @@ export class EmployeeMappingsComponent implements OnInit {
       width: '450px',
       data: {
         workspaceId: that.workspaceId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      that.isLoading = true;
+      that.mappingsService.getMappings('EMPLOYEE').subscribe((employees) => {
+        that.employeeMappings = employees.results;
+        that.isLoading = false;
+        const onboarded = that.storageService.get('onboarded');
+
+        if (onboarded === true) {
+          that.createEmployeeMappingsRows();
+        } else {
+          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        }
+      });
+    });
+  }
+
+  edit(selectedItem: any) {
+    const that = this;
+    const dialogRef = that.dialog.open(EditEmployeeMappingsDialogComponent, {
+      width: '450px',
+      data: {
+        workspaceId: that.workspaceId,
+        fyleEmployeeValue: selectedItem
       }
     });
 
