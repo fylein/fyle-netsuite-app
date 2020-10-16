@@ -125,7 +125,7 @@ export class EditGenericMappingsDialogComponent implements OnInit {
     ]).subscribe(() => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        sourceField: [that.data.fyleValue],
+        sourceField: that.data.fyleValue,
         destinationField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.netsuiteElements)])]
       });
       that.form.controls.sourceField.disable();

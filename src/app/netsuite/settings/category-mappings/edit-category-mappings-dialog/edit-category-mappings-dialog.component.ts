@@ -164,7 +164,7 @@ export class EditCategoryMappingsDialogComponent implements OnInit {
     ]).subscribe(() => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleCategory: [that.data.fyleValue],
+        fyleCategory: that.data.fyleValue,
         netsuiteAccount: ['', Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
         cccAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
