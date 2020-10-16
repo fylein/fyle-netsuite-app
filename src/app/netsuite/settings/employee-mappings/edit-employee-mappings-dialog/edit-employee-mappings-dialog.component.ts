@@ -51,7 +51,7 @@ export class EditEmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.form.controls.fyleEmployee.value;
+    const fyleEmployee = that.form.controls.fyleEmployee;
     const netsuiteVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.netsuiteVendor : '';
     const netsuiteEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.netsuiteEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.generalMappings.default_ccc_account_name;
@@ -61,7 +61,7 @@ export class EditEmployeeMappingsDialogComponent implements OnInit {
         that.mappingsService.postMappings({
           source_type: 'EMPLOYEE',
           destination_type: that.generalSettings.employee_field_mapping,
-          source_value: fyleEmployee,
+          source_value: fyleEmployee.value,
           destination_value: that.generalSettings.employee_field_mapping === 'VENDOR' ? netsuiteVendor.value : netsuiteEmployee.value
         })
       ];
