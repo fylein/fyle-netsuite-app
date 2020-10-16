@@ -5,7 +5,6 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { forkJoin } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -29,13 +28,13 @@ export class GenericMappingsDialogComponent implements OnInit {
   fyleAttributeOptions: any[];
   netsuiteOptions: any[];
   setting: any;
+  editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<GenericMappingsDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private mappingsService: MappingsService,
-              private settingsService: SettingsService,
               private snackBar: MatSnackBar) { }
 
   mappingDisplay(mappingObject) {
@@ -53,7 +52,7 @@ export class GenericMappingsDialogComponent implements OnInit {
       that.mappingsService.postMappings({
         source_type: that.setting.source_field,
         destination_type: that.setting.destination_field,
-        source_value: that.form.controls.sourceField.value.value,
+        source_value: that.editMapping ? that.form.controls.sourceField.value : that.form.controls.sourceField.value.value,
         destination_value: that.form.controls.destinationField.value.value
       }).subscribe(response => {
         that.snackBar.open('Mapping saved successfully');
@@ -145,9 +144,13 @@ export class GenericMappingsDialogComponent implements OnInit {
     ]).subscribe(() => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        sourceField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
+        sourceField: [that.editMapping ? that.data.fyleValue.source.value : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
         destinationField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.netsuiteElements)])]
       });
+
+      if(that.editMapping) {
+        that.form.controls.sourceField.disable()
+      }
 
       that.setupAutcompleteWathcers();
     });
@@ -157,6 +160,10 @@ export class GenericMappingsDialogComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
+    if (that.data.fyleValue) {
+      that.editMapping = true;
+    }
+    
     that.setting = that.data.setting;
     
     that.isLoading = false;

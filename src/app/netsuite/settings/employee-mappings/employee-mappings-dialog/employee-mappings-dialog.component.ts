@@ -34,6 +34,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   cccOptions: any[];
   netsuiteVendorOptions: any[];
   generalMappings: any;
+  editMapping: boolean;
 
   matcher = new MappingErrorStateMatcher();
 
@@ -51,7 +52,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.form.value.fyleEmployee;
+    const fyleEmployee = that.editMapping ? that.form.controls.fyleEmployee : that.form.value.fyleEmployee;
     const netsuiteVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.netsuiteVendor : '';
     const netsuiteEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.netsuiteEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.generalMappings.default_ccc_account_name;
@@ -190,17 +191,27 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       const defaultCCCObj = that.cccObjects.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_account_name)[0];
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
+        fyleEmployee: [that.editMapping ? that.data.fyleEmployeeValue : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         netsuiteVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.netsuiteVendors) : null],
         netsuiteEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.netsuiteEmployees) : null],
         creditCardAccount: [defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.cccObjects) : null]
       });
+
+      if(that.editMapping) {
+        that.form.controls.fyleEmployee.disable()
+      }
+
       that.setupAutocompleteWatchers();
     });
   }
 
   ngOnInit() {
     const that = this;
+    
+    if (that.data.fyleEmployeeValue) {
+      that.editMapping = true;
+    }
+    
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
     that.settingsService.getCombinedSettings(that.workSpaceId).subscribe(settings => {

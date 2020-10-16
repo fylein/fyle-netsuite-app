@@ -56,9 +56,6 @@ import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configur
 import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
 import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
-import { EditCategoryMappingsDialogComponent } from './settings/category-mappings/edit-category-mappings-dialog/edit-category-mappings-dialog.component';
-import { EditEmployeeMappingsDialogComponent } from './settings/employee-mappings/edit-employee-mappings-dialog/edit-employee-mappings-dialog.component';
-import { EditGenericMappingsDialogComponent } from './settings/generic-mappings/edit-generic-mappings-dialog/edit-generic-mappings-dialog.component';
 
 @NgModule({
   declarations: [
@@ -86,19 +83,13 @@ import { EditGenericMappingsDialogComponent } from './settings/generic-mappings/
     ExpenseFieldConfigurationComponent,
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsComponent,
-    GenericMappingsDialogComponent,
-    EditCategoryMappingsDialogComponent,
-    EditEmployeeMappingsDialogComponent,
-    EditGenericMappingsDialogComponent
+    GenericMappingsDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
     ExpenseGroupSettingsDialogComponent,
-    GenericMappingsDialogComponent,
-    EditCategoryMappingsDialogComponent,
-    EditEmployeeMappingsDialogComponent,
-    EditGenericMappingsDialogComponent
+    GenericMappingsDialogComponent
   ],
   imports: [
     CommonModule,

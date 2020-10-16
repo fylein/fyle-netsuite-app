@@ -47,7 +47,7 @@
         </ng-container>
   
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="edit(row.fyle_value)"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row.fyle_value)"></tr>
       </table>
     </div>
   </div>

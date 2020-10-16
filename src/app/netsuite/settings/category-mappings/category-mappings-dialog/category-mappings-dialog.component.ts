@@ -31,6 +31,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   netsuiteCCCAccountOptions: any[];
   generalSettings: any;
   cccAccounts: any[];
+  editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
@@ -65,7 +66,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
         that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
-          source_value: that.form.controls.fyleCategory.value.value,
+          source_value: that.editMapping ? that.form.controls.fyleCategory.value : that.form.controls.fyleCategory.value.value,
           destination_value: that.form.controls.netsuiteAccount.value.value
         })
       ]
@@ -77,7 +78,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       mappings.push(that.mappingsService.postMappings({
         source_type: 'CATEGORY',
         destination_type: 'CCC_ACCOUNT',
-        source_value: that.form.controls.fyleCategory.value.value,
+        source_value: that.editMapping ? that.form.controls.fyleCategory.value : that.form.controls.fyleCategory.value.value,
         destination_value: destinationValue
       }))
 
@@ -157,7 +158,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.workspaceId = that.data.workspaceId;
-        // TODO: remove promises and do with rxjs observables
+
+    if (that.data.fyleValue) {
+      that.editMapping = true;
+    }
+
+    // TODO: remove promises and do with rxjs observables
     const getFyleCateogories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
       that.fyleCategories = fyleCategories;
     });
@@ -180,11 +186,15 @@ export class CategoryMappingsDialogComponent implements OnInit {
     ]).subscribe(() => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        fyleCategory: [this.editMapping ? that.data.fyleValue : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
         netsuiteAccount: ['', Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
         cccAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
 
+      if(that.editMapping) {
+        that.form.controls.fyleCategory.disable()
+      }
+      
       that.setupAutocompleteWatchers();
     });
   }

@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { GenericMappingsDialogComponent } from './generic-mappings-dialog/generic-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { EditGenericMappingsDialogComponent } from './edit-generic-mappings-dialog/edit-generic-mappings-dialog.component'
 
 @Component({
   selector: 'app-generic-mappings',
@@ -24,29 +23,14 @@ export class GenericMappingsComponent implements OnInit {
 
   constructor(private mappingsService: MappingsService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private storageService: StorageService, private settingsService: SettingsService) { }
 
-  open() {
+  open(selectedItem: any) {
     const that = this;
     const dialogRef = that.dialog.open(GenericMappingsDialogComponent, {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,
-        setting: that.setting
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      that.getMappings();
-    });
-  }
-
-  edit(selectedItem: any) {
-    const that = this;
-    const dialogRef = that.dialog.open(EditGenericMappingsDialogComponent, {
-      width: '450px',
-      data: {
-        workspaceId: that.workspaceId,
         setting: that.setting,
-        fyleValue: selectedItem.source.value
+        fyleValue: selectedItem
       }
     });
 

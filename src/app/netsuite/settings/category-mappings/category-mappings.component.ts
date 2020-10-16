@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CategoryMappingsDialogComponent } from './category-mappings-dialog/category-mappings-dialog.component';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { EditCategoryMappingsDialogComponent } from './edit-category-mappings-dialog/edit-category-mappings-dialog.component';
 
 @Component({
   selector: 'app-category-mappings',
@@ -29,28 +28,9 @@ export class CategoryMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private storageService: StorageService) { }
 
-  open() {
+  open(selectedItem: any) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
-      width: '450px',
-      data: {
-        workspaceId: that.workspaceId
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      const onboarded = that.storageService.get('onboarded');
-      if (onboarded === true) {
-        that.getCategoryMappings();
-      } else {
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-      }
-    });
-  }
-
-  edit(selectedItem: any) {
-    const that = this;
-    const dialogRef = that.dialog.open(EditCategoryMappingsDialogComponent, {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,

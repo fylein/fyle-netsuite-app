@@ -1,7 +1,10 @@
 <h2 mat-dialog-title>
     <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
-      <div class="mat-title">
+      <div class="mat-title" *ngIf="!editMapping">
         Create New Mapping
+      </div>
+      <div class="mat-title" *ngIf="editMapping">
+        Edit Category Mapping
       </div>
       <div>
         <mat-icon class="mappings-dialog--close cursor-pointer" aria-hidden="false" aria-label="close this dialog" mat-dialog-close>close</mat-icon>
@@ -19,7 +22,10 @@
             Select a Category from Fyle
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--field" appearance="outline">
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="editMapping">
+          <input required type="text" formControlName="fyleCategory" placeholder="Select Fyle Category" matInput>
+        </mat-form-field>
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="!editMapping">
           <input required type="text" formControlName="fyleCategory" placeholder="Select Fyle Category" matInput
             [matAutocomplete]="fyCat" [errorStateMatcher]="matcher">
           <mat-autocomplete #fyCat="matAutocomplete" [displayWith]="mappingDisplay">
