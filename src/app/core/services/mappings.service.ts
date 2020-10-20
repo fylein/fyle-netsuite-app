@@ -29,6 +29,7 @@ export class MappingsService {
   accountPayables: Observable<any[]>;
   netsuiteSubsidiaries: Observable<any[]>;
   expenseFields: Observable<any[]>;
+  netsuiteSync: Observable<any[]>;
 
   constructor(
     private apiService: ApiService,
@@ -97,6 +98,19 @@ export class MappingsService {
       );
     }
     return this.fyleExpenseCustomFields;
+  }
+
+  syncNetsuite() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteSync) {
+      this.netsuiteSync = this.apiService.post(`/workspaces/${workspaceId}/netsuite/sync_netsuite/trigger/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteSync;
   }
 
   postNetSuiteVendors() {

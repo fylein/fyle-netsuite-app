@@ -176,18 +176,8 @@ export class DashboardComponent implements OnInit {
     this.mappingsService.postFyleCategories().subscribe(() => {});
     this.mappingsService.postFyleCostCenters().subscribe(() => {});
     this.mappingsService.postFyleProjects().subscribe(() => {});
-
-    concat(
-      this.mappingsService.postNetSuiteExpenseCategories(),
-      this.mappingsService.postNetSuiteLocations(),
-      this.mappingsService.postNetSuiteVendors(),
-      this.mappingsService.postNetSuiteCurrencies(),
-      this.mappingsService.postNetSuiteClasses(),
-      this.mappingsService.postNetSuiteDepartments(),
-      this.mappingsService.postNetSuiteEmployees(),
-      that.mappingsService.postNetSuiteAccounts()
-    ).subscribe(() => {
-      this.snackBar.open('Data Successfully imported from NetSuite');
+    this.mappingsService.syncNetsuite().subscribe(() => {
+      this.snackBar.open('Data Sync started from NetSuite');
     });
   }
 
