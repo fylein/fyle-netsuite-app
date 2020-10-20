@@ -17,7 +17,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappings: any[];
   categoryCCCMappings: any[] = [];
   generalSettings: any;
-  fyleValue: any;
+  rowElement: any;
   columnsToDisplay = ['category', 'netsuite'];
 
   constructor(
@@ -34,7 +34,7 @@ export class CategoryMappingsComponent implements OnInit {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,
-        fyleValue: selectedItem
+        rowElement: selectedItem
       }
     });
 

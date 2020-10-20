@@ -189,11 +189,13 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       from(getGeneralMappings)
     ]).subscribe((res) => {
       const defaultCCCObj = that.cccObjects.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_account_name)[0];
+      const defaultVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
+      const defaultNetsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleEmployee: [that.editMapping ? that.data.fyleEmployeeValue : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        netsuiteVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.netsuiteVendors) : null],
-        netsuiteEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.netsuiteEmployees) : null],
+        fyleEmployee: [that.editMapping ? that.data.rowElement.fyle_value : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
+        netsuiteVendor: [that.generalSettings.employee_field_mapping === 'VENDOR' && that.editMapping ? defaultVendor : that.forbiddenSelectionValidator(that.netsuiteVendors)],
+        netsuiteEmployee: [that.generalSettings.employee_field_mapping === 'EMPLOYEE' && that.editMapping ? defaultNetsuiteEmployee : that.forbiddenSelectionValidator(that.netsuiteEmployees)],
         creditCardAccount: [defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.cccObjects) : null]
       });
 
@@ -208,7 +210,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
     
-    if (that.data.fyleEmployeeValue) {
+    if (that.data.rowElement) {
       that.editMapping = true;
     }
     

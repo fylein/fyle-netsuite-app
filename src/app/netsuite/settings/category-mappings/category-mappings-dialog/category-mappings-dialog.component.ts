@@ -159,7 +159,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
     that.workspaceId = that.data.workspaceId;
 
-    if (that.data.fyleValue) {
+    if (that.data.rowElement) {
       that.editMapping = true;
     }
 
@@ -185,10 +185,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
       getGeneralSettings
     ]).subscribe(() => {
       that.isLoading = false;
+      const defaultNetSuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0]: '';
+      const defaultCCCAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0]: '';
       that.form = that.formBuilder.group({
-        fyleCategory: [this.editMapping ? that.data.fyleValue : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: ['', Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
-        cccAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
+        fyleCategory: [this.editMapping ? that.data.rowElement.fyle_value : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        netsuiteAccount: [this.editMapping ? defaultNetSuiteAccount : Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
+        cccAccount: [defaultCCCAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
 
       if(that.editMapping) {

@@ -21,7 +21,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: any;
   filteredAccounts: any[];
-  fyleEmployeeValue: any;
+  rowElement: any;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
@@ -38,7 +38,7 @@ export class EmployeeMappingsComponent implements OnInit {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,
-        fyleEmployeeValue: selectedItem
+        rowElement: selectedItem
       }
     });
 

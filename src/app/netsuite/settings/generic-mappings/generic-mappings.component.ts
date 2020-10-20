@@ -18,7 +18,7 @@ export class GenericMappingsComponent implements OnInit {
   mappings: any[];
   generalSettings: any;
   setting: any;
-  fyleValue: any;
+  rowElement: any;
   columnsToDisplay = ['sourceField', 'destinationField'];
 
   constructor(private mappingsService: MappingsService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private storageService: StorageService, private settingsService: SettingsService) { }
@@ -30,7 +30,7 @@ export class GenericMappingsComponent implements OnInit {
       data: {
         workspaceId: that.workspaceId,
         setting: that.setting,
-        fyleValue: selectedItem
+        rowElement: selectedItem
       }
     });
 
