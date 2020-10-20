@@ -15,6 +15,9 @@
       <a mat-tab-link (click)="changeState('EXPENSE_FIELDS')" *ngIf="showExpenseFields()" [active]="state==='EXPENSE_FIELDS'">
         Expense Fields
       </a>
+      <a mat-tab-link (click)="changeState('CUSTOM_RECORDS')" *ngIf="showExpenseFields()" [active]="state==='CUSTOM_RECORDS'">
+        Netsuite Custom Records
+      </a>
     </nav>
   </div>
   

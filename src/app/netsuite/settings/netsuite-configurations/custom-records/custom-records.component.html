@@ -1,0 +1,48 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+    <app-loader></app-loader>
+  </div>
+  <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="page-info">
+      <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
+        <div>
+          Please map the following Fyle fields to their NetSuite equivalent. Added fields cannot be edited or removed after saving.
+        </div>
+        <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration"
+          target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row"
+          fxLayoutAlign="start center">Read
+          more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
+      </div>
+    </div>
+    <form class="custom-records--form" [formGroup]="customRecordsForm">
+      <div formArrayName="customFields">
+        <div class="row" *ngFor="let customField of customRecordsForm.controls.customFields['controls']; let i = index"
+          [formGroupName]="i">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-form-field class="custom-records--records" floatLabel="always" fxFlex="20" appearance="outline">
+              <input required type="text" formControlName="record_name" placeholder="Enter Record Name" matInput>
+            </mat-form-field>
+
+            <mat-form-field class="custom-records--records" floatLabel="always" fxFlex="30" appearance="outline">
+              <input required type="text" formControlName="script_id" placeholder="Enter Transaction Custom Field ScriptId" matInput>
+            </mat-form-field>
+
+            <mat-form-field class="custom-records--records" floatLabel="always" fxFlex="35" appearance="outline">
+              <input required type="text" formControlName="custom_record" placeholder="Enter Custom Record / Custom Field internal Id" matInput>
+            </mat-form-field>
+
+            <div fxFlex="15" *ngIf="i !== 0 && !customField.disabled">
+              <img class="custom-records--delete-icon" src="../../../../../assets/images/pngs/delete.png" (click)="removeCustomField(i)">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img class="custom-records--add-icon" src="../../../../../assets/images/pngs/add.png" (click)="addCustomField()">
+      </div>
+  
+      <button class="custom-records--save-btn" mat-flat-button color="primary" [disabled]="!customRecordsForm.valid"
+        (click)="saveCustomRecords()" type="submit">
+        Save
+      </button>
+    </form>
+  </div> 
