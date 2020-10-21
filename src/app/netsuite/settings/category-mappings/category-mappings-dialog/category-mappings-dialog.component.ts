@@ -31,6 +31,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   netsuiteCCCAccountOptions: any[];
   generalSettings: any;
   cccAccounts: any[];
+  editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
@@ -157,7 +158,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.workspaceId = that.data.workspaceId;
-        // TODO: remove promises and do with rxjs observables
+
+    if (that.data.rowElement) {
+      that.editMapping = true;
+    }
+
+    // TODO: remove promises and do with rxjs observables
     const getFyleCateogories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
       that.fyleCategories = fyleCategories;
     });
@@ -179,12 +185,19 @@ export class CategoryMappingsDialogComponent implements OnInit {
       getGeneralSettings
     ]).subscribe(() => {
       that.isLoading = false;
+      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
+      const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0]: '';
+      const cccAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0]: '';
       that.form = that.formBuilder.group({
-        fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: ['', Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
-        cccAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
+        fyleCategory: [that.editMapping ? fyleCategory : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        netsuiteAccount: [this.editMapping ? netsuiteAccount : Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
+        cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
 
+      if(that.editMapping) {
+        that.form.controls.fyleCategory.disable()
+      }
+      
       that.setupAutocompleteWatchers();
     });
   }

@@ -18,17 +18,19 @@ export class GenericMappingsComponent implements OnInit {
   mappings: any[];
   generalSettings: any;
   setting: any;
+  rowElement: any;
   columnsToDisplay = ['sourceField', 'destinationField'];
 
   constructor(private mappingsService: MappingsService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private storageService: StorageService, private settingsService: SettingsService) { }
 
-  open() {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(GenericMappingsDialogComponent, {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,
-        setting: that.setting
+        setting: that.setting,
+        rowElement: selectedItem
       }
     });
 

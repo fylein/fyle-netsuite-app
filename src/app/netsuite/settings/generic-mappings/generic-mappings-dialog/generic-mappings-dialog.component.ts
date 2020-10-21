@@ -5,7 +5,6 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { forkJoin } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -29,13 +28,13 @@ export class GenericMappingsDialogComponent implements OnInit {
   fyleAttributeOptions: any[];
   netsuiteOptions: any[];
   setting: any;
+  editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<GenericMappingsDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private mappingsService: MappingsService,
-              private settingsService: SettingsService,
               private snackBar: MatSnackBar) { }
 
   mappingDisplay(mappingObject) {
@@ -82,7 +81,7 @@ export class GenericMappingsDialogComponent implements OnInit {
     };
   }
 
-  setupAttributeWatcher() {
+  setupSourceFieldAutocompleteWatcher() {
     const that = this;
 
     that.form.controls.sourceField.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
@@ -93,7 +92,7 @@ export class GenericMappingsDialogComponent implements OnInit {
     });
   }
 
-  setupnetsuiteObjectWatcher() {
+  setupDestinationFieldAutocompleteWatcher() {
     const that = this;
 
     that.form.controls.destinationField.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
@@ -106,8 +105,8 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   setupAutcompleteWathcers() {
     const that = this;
-    that.setupAttributeWatcher();
-    that.setupnetsuiteObjectWatcher();
+    that.setupSourceFieldAutocompleteWatcher();
+    that.setupDestinationFieldAutocompleteWatcher();
   }
 
   reset() {
@@ -144,10 +143,16 @@ export class GenericMappingsDialogComponent implements OnInit {
       netsuitePromise
     ]).subscribe(() => {
       that.isLoading = false;
+      const sourceField = that.editMapping ? that.fyleAttributes.filter(sourceField => sourceField.value === that.data.rowElement.source.value)[0] : '';
+      const destinationField = that.editMapping ? that.netsuiteElements.filter(destinationField => destinationField.value === that.data.rowElement.destination.value)[0] : '';
       that.form = that.formBuilder.group({
-        sourceField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
-        destinationField: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.netsuiteElements)])]
+        sourceField: [that.editMapping ? sourceField : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
+        destinationField: [that.editMapping ? destinationField : that.forbiddenSelectionValidator(that.netsuiteElements)],
       });
+
+      if(that.editMapping) {
+        that.form.controls.sourceField.disable()
+      }
 
       that.setupAutcompleteWathcers();
     });
@@ -157,6 +162,10 @@ export class GenericMappingsDialogComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
+    if (that.data.rowElement) {
+      that.editMapping = true;
+    }
+    
     that.setting = that.data.setting;
     
     that.isLoading = false;

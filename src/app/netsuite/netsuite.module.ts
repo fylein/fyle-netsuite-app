@@ -89,7 +89,7 @@ import { GenericMappingsDialogComponent } from './settings/generic-mappings/gene
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
     ExpenseGroupSettingsDialogComponent,
-    GenericMappingsDialogComponent,
+    GenericMappingsDialogComponent
   ],
   imports: [
     CommonModule,
