@@ -28,7 +28,7 @@ export class CategoryMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private storageService: StorageService) { }
 
-  open(selectedItem: any) {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',

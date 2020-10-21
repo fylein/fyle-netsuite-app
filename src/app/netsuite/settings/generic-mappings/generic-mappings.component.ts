@@ -23,7 +23,7 @@ export class GenericMappingsComponent implements OnInit {
 
   constructor(private mappingsService: MappingsService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private storageService: StorageService, private settingsService: SettingsService) { }
 
-  open(selectedItem: any) {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(GenericMappingsDialogComponent, {
       width: '450px',
