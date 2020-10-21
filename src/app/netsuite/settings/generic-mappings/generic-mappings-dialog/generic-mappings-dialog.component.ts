@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MappingsService } from 'src/app/core/services/mappings.service';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -139,8 +139,8 @@ export class GenericMappingsDialogComponent implements OnInit {
     that.isLoading = true;
     // TODO: remove promises and do with rxjs observables
     forkJoin([
-      from(getFyleAttributes),
-      from(netsuitePromise)
+      getFyleAttributes,
+      netsuitePromise
     ]).subscribe(() => {
       that.isLoading = false;
       const sourceField = that.editMapping ? that.fyleAttributes.filter(sourceField => sourceField.value === that.data.rowElement.source.value)[0] : '';
