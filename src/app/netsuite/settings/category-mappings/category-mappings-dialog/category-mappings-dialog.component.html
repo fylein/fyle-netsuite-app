@@ -22,10 +22,7 @@
             Select a Category from Fyle
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="editMapping">
-          <input required type="text" formControlName="fyleCategory" placeholder="Select Fyle Category" matInput>
-        </mat-form-field>
-        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="!editMapping">
+        <mat-form-field class="mappings-dialog--field" appearance="outline">
           <input required type="text" formControlName="fyleCategory" placeholder="Select Fyle Category" matInput
             [matAutocomplete]="fyCat" [errorStateMatcher]="matcher">
           <mat-autocomplete #fyCat="matAutocomplete" [displayWith]="mappingDisplay">

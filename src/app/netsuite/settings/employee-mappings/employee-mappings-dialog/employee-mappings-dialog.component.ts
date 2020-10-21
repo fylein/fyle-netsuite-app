@@ -52,7 +52,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.editMapping ? that.form.controls.fyleEmployee : that.form.value.fyleEmployee;
+    const fyleEmployee = that.form.controls.fyleEmployee.value;
     const netsuiteVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.netsuiteVendor : '';
     const netsuiteEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.netsuiteEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.generalMappings.default_ccc_account_name;
@@ -188,14 +188,15 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       from(getnetsuiteVendors),
       from(getGeneralMappings)
     ]).subscribe((res) => {
+      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
+      const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
+      const netsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';
       const defaultCCCObj = that.cccObjects.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_account_name)[0];
-      const defaultVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
-      const defaultNetsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';
       that.isLoading = false;
       that.form = that.formBuilder.group({
-        fyleEmployee: [that.editMapping ? that.data.rowElement.fyle_value : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        netsuiteVendor: [that.generalSettings.employee_field_mapping === 'VENDOR' && that.editMapping ? defaultVendor : that.forbiddenSelectionValidator(that.netsuiteVendors)],
-        netsuiteEmployee: [that.generalSettings.employee_field_mapping === 'EMPLOYEE' && that.editMapping ? defaultNetsuiteEmployee : that.forbiddenSelectionValidator(that.netsuiteEmployees)],
+        fyleEmployee: [that.editMapping ? fyleEmployee : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
+        netsuiteVendor: [that.generalSettings.employee_field_mapping === 'VENDOR' && that.editMapping ? netsuiteVendor : that.forbiddenSelectionValidator(that.netsuiteVendors)],
+        netsuiteEmployee: [that.generalSettings.employee_field_mapping === 'EMPLOYEE' && that.editMapping ? netsuiteEmployee : that.forbiddenSelectionValidator(that.netsuiteEmployees)],
         creditCardAccount: [defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.cccObjects) : null]
       });
 

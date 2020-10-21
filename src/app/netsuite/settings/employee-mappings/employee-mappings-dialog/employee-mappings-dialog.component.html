@@ -22,10 +22,7 @@
             Select an Employee from Fyle
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="editMapping">
-          <input required type="text" formControlName="fyleEmployee" placeholder="Select Fyle Category" matInput>
-        </mat-form-field>
-        <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="!editMapping">
+        <mat-form-field class="mappings-dialog--form-element" appearance="outline">
           <input required type="text" formControlName="fyleEmployee" placeholder="Select Fyle Employee" matInput
             [matAutocomplete]="fyEmp">
           <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">

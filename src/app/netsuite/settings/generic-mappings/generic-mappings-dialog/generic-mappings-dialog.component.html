@@ -22,10 +22,7 @@
           Select a {{ getTitle(setting.source_field) | titlecase }} from Fyle
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="editMapping">
-        <input required type="text" formControlName="sourceField" placeholder="Select Fyle Category" matInput>
-      </mat-form-field>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="!editMapping">
+      <mat-form-field class="mappings-dialog--field" appearance="outline">
         <input required type="text" formControlName="sourceField" placeholder="Select Fyle {{ getTitle(setting.source_field) | titlecase }}" matInput
           [matAutocomplete]="fyProj" [errorStateMatcher]="matcher">
         <mat-autocomplete #fyProj="matAutocomplete" [displayWith]="mappingDisplay">

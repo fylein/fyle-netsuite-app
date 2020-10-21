@@ -66,7 +66,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
         that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
-          source_value: that.editMapping ? that.form.controls.fyleCategory.value : that.form.controls.fyleCategory.value.value,
+          source_value: that.form.controls.fyleCategory.value.value,
           destination_value: that.form.controls.netsuiteAccount.value.value
         })
       ]
@@ -78,7 +78,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       mappings.push(that.mappingsService.postMappings({
         source_type: 'CATEGORY',
         destination_type: 'CCC_ACCOUNT',
-        source_value: that.editMapping ? that.form.controls.fyleCategory.value : that.form.controls.fyleCategory.value.value,
+        source_value: that.form.controls.fyleCategory.value.value,
         destination_value: destinationValue
       }))
 
@@ -185,12 +185,13 @@ export class CategoryMappingsDialogComponent implements OnInit {
       getGeneralSettings
     ]).subscribe(() => {
       that.isLoading = false;
-      const defaultNetSuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0]: '';
-      const defaultCCCAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0]: '';
+      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
+      const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0]: '';
+      const cccAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0]: '';
       that.form = that.formBuilder.group({
-        fyleCategory: [this.editMapping ? that.data.rowElement.fyle_value : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: [this.editMapping ? defaultNetSuiteAccount : Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
-        cccAccount: [defaultCCCAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
+        fyleCategory: [that.editMapping ? fyleCategory : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        netsuiteAccount: [this.editMapping ? netsuiteAccount : Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
+        cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
 
       if(that.editMapping) {
