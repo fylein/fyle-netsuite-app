@@ -13,12 +13,12 @@
         </a>
   
         <a class="mat-h2 netsuite-sidenav--nav-item" [ngClass]="{'netsuite-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/sync_export/sync"
-          routerLinkActive="active" (click)="isOnboardingCompleted()">
+          routerLinkActive="active">
           Import & Export
         </a>
   
         <a class="mat-h2 netsuite-sidenav--nav-item" [ngClass]="{'netsuite-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/expense_groups/"
-          routerLinkActive="active" (click)="isOnboardingCompleted()">
+          routerLinkActive="active">
           Expense Groups
         </a>
   
@@ -42,11 +42,11 @@
           General Mappings
         </a>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
-          routerLink="{{workspace.id}}/settings/employee/mappings/" routerLinkActive="active" (click)="isOnboardingCompleted()">
+          routerLink="{{workspace.id}}/settings/employee/mappings/" routerLinkActive="active">
           Employee Mappings
         </a>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
-          routerLink="{{workspace.id}}/settings/category/mappings/" routerLinkActive="active" (click)="isOnboardingCompleted()">
+          routerLink="{{workspace.id}}/settings/category/mappings/" routerLinkActive="active">
           Category Mappings
         </a>
         <div *ngFor="let setting of mappingSettings">
@@ -56,7 +56,7 @@
          </a>
         </div>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/schedule/"
-          routerLinkActive="active" (click)="isOnboardingCompleted()">
+          routerLinkActive="active">
           Automated Import/Export
         </a>
       </mat-nav-list>

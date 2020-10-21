@@ -6,7 +6,6 @@ import { WorkspaceService } from '../core/services/workspace.service';
 import { SettingsService } from '../core/services/settings.service';
 import { StorageService } from '../core/services/storage.service';
 import { WindowReferenceService } from '../core/services/window.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-netsuite',
@@ -32,7 +31,6 @@ export class NetSuiteComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
-    private snackBar: MatSnackBar,
     private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
@@ -127,21 +125,12 @@ export class NetSuiteComponent implements OnInit {
     }
   }
 
-  isOnboardingCompleted() {
-    const that = this;
-    const onboarded = that.storageService.get('onboarded');
-    if(!onboarded) {
-      that.router.navigateByUrl(`/workspaces/${that.workspace.id}/dashboard`);
-      that.snackBar.open('You cannot access this page yet. Please follow the onboarding steps in the dashboard');
-    }
-  }
-
   ngOnInit() {
     const that = this;
     const onboarded = that.storageService.get('onboarded');
     that.navDisabled = onboarded !== true;
     that.orgsCount = that.authService.getOrgCount();
     that.setupWorkspace();
-    that.getNetSuiteStatus();
+    that.getNetSuiteStatus()
   }
 }
