@@ -185,7 +185,8 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postNetSuiteClasses(),
       this.mappingsService.postNetSuiteDepartments(),
       this.mappingsService.postNetSuiteEmployees(),
-      that.mappingsService.postNetSuiteAccounts()
+      that.mappingsService.postNetSuiteAccounts(),
+      that.mappingsService.postNetsuiteExpenseCustomFields()
     ).subscribe(() => {
       this.snackBar.open('Data Successfully imported from NetSuite');
     });

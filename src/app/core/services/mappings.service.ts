@@ -19,6 +19,7 @@ export class MappingsService {
   netsuiteEmployees: Observable<any[]>;
   fyleProjects: Observable<any[]>;
   fyleExpenseCustomFields: Observable<any[]>;
+  netsuiteExpenseCustomFields: Observable<any[]>;
   netsuiteDepartments: Observable<any[]>;
   fyleCostCenters: Observable<any[]>;
   netsuiteLocations: Observable<any[]>;
@@ -97,6 +98,25 @@ export class MappingsService {
       );
     }
     return this.fyleExpenseCustomFields;
+  }
+
+  postNetsuiteExpenseCustomFields(sync: boolean = false) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteExpenseCustomFields || sync) {
+      this.netsuiteExpenseCustomFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteExpenseCustomFields;
+  }
+
+  postNetsuiteExpenseCustomLists(data: any) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_lists/`, data);
   }
 
   postNetSuiteVendors() {
@@ -256,6 +276,20 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
       attribute_type: attributeType
     });
+  }
+
+  getNetsuiteExpenseCustomFields(attributeType: string) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {
+      attribute_type: attributeType
+    });
+  }
+
+  getNetsuiteExpenseCustomLists() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_lists/`, {});
   }
 
   getNetSuiteEmployees() {
