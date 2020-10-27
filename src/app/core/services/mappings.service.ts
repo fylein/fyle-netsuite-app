@@ -113,10 +113,10 @@ export class MappingsService {
     return this.netsuiteExpenseCustomFields;
   }
 
-  postNetsuiteExpenseCustomLists(data: any) {
+  postNetsuiteCustomSegments(data: any) {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_lists/`, data);
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
   }
 
   postNetSuiteVendors() {
@@ -286,10 +286,10 @@ export class MappingsService {
     });
   }
 
-  getNetsuiteExpenseCustomLists() {
+  getNetsuiteExpenseSegments() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_lists/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_segments/`, {});
   }
 
   getNetSuiteEmployees() {

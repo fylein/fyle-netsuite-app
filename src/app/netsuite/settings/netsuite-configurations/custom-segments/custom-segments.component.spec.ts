@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomRecordsComponent } from './custom-records.component';
+import { CustomSegmentsComponent } from './custom-segments.component';
 
-describe('CustomRecordsComponent', () => {
-  let component: CustomRecordsComponent;
-  let fixture: ComponentFixture<CustomRecordsComponent>;
+describe('CustomSegmentsComponent', () => {
+  let component: CustomSegmentsComponent;
+  let fixture: ComponentFixture<CustomSegmentsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomRecordsComponent ]
+      declarations: [ CustomSegmentsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CustomRecordsComponent);
+    fixture = TestBed.createComponent(CustomSegmentsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

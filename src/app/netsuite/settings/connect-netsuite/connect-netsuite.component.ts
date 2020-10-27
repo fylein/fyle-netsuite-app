@@ -18,7 +18,7 @@ export class ConnectNetsuiteComponent implements OnInit {
   isSaveDisabled: boolean;
   connectNetSuiteForm: FormGroup;
   workspaceId: number;
-  netsuiteConnectionDone: boolean;
+  netsuiteConnectionDone = false;
 
   constructor(private formBuilder: FormBuilder, 
               private settingsService: SettingsService, 
@@ -39,7 +39,6 @@ export class ConnectNetsuiteComponent implements OnInit {
       }
       if (netsuiteCredentials) {
         that.isLoading = true;
-        that.netsuiteConnectionDone = false;
         that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
           if (responses) {
             this.mappingsService.postNetSuiteSubsidiaries().subscribe(response => {
@@ -48,17 +47,20 @@ export class ConnectNetsuiteComponent implements OnInit {
           that.snackBar.open('NetSuite account connected successfully');
           that.netsuiteConnectionDone = true;
           that.isLoading = false;
-          window.location.href = (`workspaces/${that.workspaceId}/dashboard`); 
+          that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
         }, err => {
           that.snackBar.open('Wrong credentials, please try again');
           that.isLoading = false;
-          that.netsuiteConnectionDone = false;
         });
       } else {
         that.snackBar.open('Please fill all the fields');
         that.connectNetSuiteForm.markAllAsTouched();
       }
     }
+  }
+
+  reconnectNetsuite() {
+    this.netsuiteConnectionDone = false;
   }
 
   ngOnInit() {
@@ -68,6 +70,13 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.isLoading = true;
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
       that.netsuiteConnectionDone = true;
+      that.connectNetSuiteForm = that.formBuilder.group({
+        nsAccountId: [res.ns_account_id, Validators.required],
+        nsConsumerKey: ['', Validators.required],
+        nsConsumerSecret: ['', Validators.required],
+        nsTokenId: ['', Validators.required],
+        nsTokenSecret: ['', Validators.required]
+      });
       that.isLoading = false;
     }, (error) => {
       that.isLoading = false;

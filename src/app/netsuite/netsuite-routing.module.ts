@@ -23,7 +23,7 @@ import { SubsidiaryComponent } from './settings/netsuite-configurations/subsidia
 import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurations/netsuite-configurations.component';
 import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configurations/expense-field-configuration/expense-field-configuration.component';
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
-import { CustomRecordsComponent } from './settings/netsuite-configurations/custom-records/custom-records.component';
+import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
 
 
 const routes: Routes = [{
@@ -95,8 +95,8 @@ const routes: Routes = [{
               component: ExpenseFieldConfigurationComponent
             },
             {
-              path: 'custom_records',
-              component: CustomRecordsComponent
+              path: 'custom_segments',
+              component: CustomSegmentsComponent
             }
           ]
         },

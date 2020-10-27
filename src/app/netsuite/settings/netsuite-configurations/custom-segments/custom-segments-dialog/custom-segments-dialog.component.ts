@@ -15,11 +15,11 @@ export class MappingErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 @Component({
-  selector: 'app-custom-records-dialog',
-  templateUrl: './custom-records-dialog.component.html',
-  styleUrls: ['./custom-records-dialog.component.scss', '../../../settings.component.scss']
+  selector: 'app-custom-segments-dialog',
+  templateUrl: './custom-segments-dialog.component.html',
+  styleUrls: ['./custom-segments-dialog.component.scss', '../../../settings.component.scss']
 })
-export class CustomRecordsDialogComponent implements OnInit {
+export class CustomSegmentsDialogComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   workSpaceId: number;
@@ -28,7 +28,7 @@ export class CustomRecordsDialogComponent implements OnInit {
   windowReference: Window;
 
   constructor(private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<CustomRecordsDialogComponent>,
+    public dialogRef: MatDialogRef<CustomSegmentsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private mappingsService: MappingsService,
     private snackBar: MatSnackBar,
@@ -49,17 +49,18 @@ export class CustomRecordsDialogComponent implements OnInit {
     const customFields = {
       internal_id: that.form.value.internal_id,
       script_id: that.form.value.script_id,
-      custom_type: that.form.value.custom_field_type
+      segment_type: that.form.value.custom_field_type
     };
 
-    that.mappingsService.postNetsuiteExpenseCustomLists(customFields).subscribe(response => {
+    that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(response => {
       that.snackBar.open('Syncing Custom Record from Netsuite');
       that.mappingsService.postNetsuiteExpenseCustomFields(true).subscribe(res => {
         that.dialogRef.close();
         that.snackBar.open('Custom Record successfully added to Expense Fields');
-        that.router.navigate([`workspaces/${that.workSpaceId}/dashboard`]).then(() => {
-          that.windowReference.location.reload();
-        });
+        // that.router.navigate([`workspaces/${that.workSpaceId}/dashboard`]).then(() => {
+        //   that.windowReference.location.reload();
+        // });
+        that.router.navigateByUrl(`/workspaces/${that.workSpaceId}/settings/configurations/expense_fields`);
       })
     }, (err) => {
       that.snackBar.open('Invalid Custom Record fields, please try again');

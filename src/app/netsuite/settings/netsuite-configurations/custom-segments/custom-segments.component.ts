@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CustomRecordsDialogComponent } from './custom-records-dialog/custom-records-dialog.component';
+import { CustomSegmentsDialogComponent } from './custom-segments-dialog/custom-segments-dialog.component';
 
 @Component({
-  selector: 'app-custom-records',
-  templateUrl: './custom-records.component.html',
-  styleUrls: ['./custom-records.component.scss', '../../../netsuite.component.scss']
+  selector: 'app-custom-segments',
+  templateUrl: './custom-segments.component.html',
+  styleUrls: ['./custom-segments.component.scss', '../../../netsuite.component.scss']
 })
-export class CustomRecordsComponent implements OnInit {
+export class CustomSegmentsComponent implements OnInit {
   workspaceId: number;
   isLoading: boolean;
   customMappings: any;
@@ -19,7 +19,7 @@ export class CustomRecordsComponent implements OnInit {
 
    open() {
     const that = this;
-    const dialogRef = that.dialog.open(CustomRecordsDialogComponent, {
+    const dialogRef = that.dialog.open(CustomSegmentsDialogComponent, {
       width: '450px',
       data: {
         workspaceId: that.workspaceId
@@ -34,7 +34,7 @@ export class CustomRecordsComponent implements OnInit {
   reset() {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getNetsuiteExpenseCustomLists().subscribe((lists) => {
+    that.mappingsService.getNetsuiteExpenseSegments().subscribe((lists) => {
       that.customMappings = lists;
       that.isLoading = false;
     });
