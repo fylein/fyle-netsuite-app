@@ -77,6 +77,7 @@ export class ConnectNetsuiteComponent implements OnInit {
         nsTokenId: ['', Validators.required],
         nsTokenSecret: ['', Validators.required]
       });
+      that.connectNetSuiteForm.controls.nsAccountId.disable();
       that.isLoading = false;
     }, (error) => {
       that.isLoading = false;
