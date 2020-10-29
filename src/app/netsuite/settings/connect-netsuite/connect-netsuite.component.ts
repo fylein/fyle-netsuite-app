@@ -19,6 +19,7 @@ export class ConnectNetsuiteComponent implements OnInit {
   connectNetSuiteForm: FormGroup;
   workspaceId: number;
   netsuiteConnectionDone = false;
+  nsAccountId: string;
 
   constructor(private formBuilder: FormBuilder, 
               private settingsService: SettingsService, 
@@ -31,7 +32,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     const that = this;
     if (that.connectNetSuiteForm.valid) {
       const netsuiteCredentials = {
-        ns_account_id: that.connectNetSuiteForm.value.nsAccountId,
+        ns_account_id: that.connectNetSuiteForm.value.nsAccountId || that.nsAccountId,
         ns_consumer_key: that.connectNetSuiteForm.value.nsConsumerKey,
         ns_consumer_secret: that.connectNetSuiteForm.value.nsConsumerSecret,
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
@@ -70,6 +71,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.isLoading = true;
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
       that.netsuiteConnectionDone = true;
+      that.nsAccountId = res.ns_account_id;
       that.connectNetSuiteForm = that.formBuilder.group({
         nsAccountId: [res.ns_account_id, Validators.required],
         nsConsumerKey: ['', Validators.required],
