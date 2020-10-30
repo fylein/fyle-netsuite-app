@@ -10,6 +10,7 @@ $fy-page-info-desc: #414562;
   &-sidenav {
     background-color: $fy-layout-background;
     border-right: 0;
+    max-width: 340px;
     min-width: 320px;
     overflow-x: hidden;
     overflow: hidden;
