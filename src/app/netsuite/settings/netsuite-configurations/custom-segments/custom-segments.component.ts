@@ -13,11 +13,15 @@ export class CustomSegmentsComponent implements OnInit {
   workspaceId: number;
   isLoading: boolean;
   customMappings: any;
-  columnsToDisplay = ['script_id', 'internal_id', 'type'];
+  columnsToDisplay = ['name', 'script_id', 'internal_id', 'type'];
 
   constructor(public dialog: MatDialog, private route: ActivatedRoute, private mappingsService: MappingsService) {}
 
-   open() {
+  getTitle(name: string) {
+    return name.replace(/_/g, ' ');
+  }
+
+  open() {
     const that = this;
     const dialogRef = that.dialog.open(CustomSegmentsDialogComponent, {
       width: '450px',
@@ -27,7 +31,7 @@ export class CustomSegmentsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // Do nothing
+      that.reset();
     });
   }
 

@@ -57,7 +57,6 @@ export class CustomSegmentsDialogComponent implements OnInit {
       that.mappingsService.postNetsuiteExpenseCustomFields(true).subscribe(res => {
         that.dialogRef.close();
         that.snackBar.open('Custom Record successfully added to Expense Fields');
-        that.router.navigateByUrl(`/workspaces/${that.workSpaceId}/settings/configurations/expense_fields`);
       })
     }, (err) => {
       that.snackBar.open('Invalid Custom Record fields, please try again');
