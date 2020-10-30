@@ -1,6 +1,6 @@
 <mat-sidenav-container class="netsuite" autosize fxFlexFill *ngIf="!isLoading">
     <mat-sidenav class="netsuite-sidenav" mode="side" opened>
-      <mat-nav-list class="mat-drawer-inner">
+      <mat-nav-list>
         <header matSubheader class="netsuite-sidenav--header">
           <img alt="Fyle" src="../../assets/images/pngs/fyle-logo.png" class="netsuite-sidenav--logo" />
           <mat-icon>add</mat-icon>
@@ -25,9 +25,9 @@
         <a class="mat-h3 netsuite-sidenav--nav-item" mat-list-item>
           Settings
         </a>
-        <a class="mat-h3 netsuite-sidenav--nav-sub-item" mat-list-item *ngIf="!netsuiteConnected"
+        <a class="mat-h3 netsuite-sidenav--nav-sub-item" mat-list-item 
         routerLink="{{workspace.id}}/settings/netsuite/" routerLinkActive="active">
-          Connect to NetSuite
+          Connect to NetSuite Connect to NetSuite
         </a>
         <a class="mat-h3 netsuite-sidenav--nav-sub-item" *ngIf="!netsuiteConnected" [ngClass]="{'netsuite-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
          routerLink="{{workspace.id}}/settings/configurations/general/" routerLinkActive="active">

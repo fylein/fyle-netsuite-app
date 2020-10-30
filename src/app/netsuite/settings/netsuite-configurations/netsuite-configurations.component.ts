@@ -35,6 +35,10 @@ export class NetsuiteConfigurationsComponent implements OnInit {
       that.state = state;
       that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
     }
+    if (that.state === 'CUSTOM_SEGMENTS') {
+      that.state = state;
+      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
+    }
   }
 
   showExpenseFields() {

@@ -134,6 +134,10 @@ export class GenericMappingsDialogComponent implements OnInit {
       netsuitePromise = that.mappingsService.getNetSuiteLocations().toPromise().then(objects => {
         that.netsuiteElements = objects;
       });
+    } else {
+      netsuitePromise = that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field).toPromise().then(objects => {
+        that.netsuiteElements = objects;
+      });
     }
 
     that.isLoading = true;
