@@ -56,6 +56,8 @@ import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configur
 import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
 import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
+import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
+import { CustomSegmentsDialogComponent } from './settings/netsuite-configurations/custom-segments/custom-segments-dialog/custom-segments-dialog.component';
 
 @NgModule({
   declarations: [
@@ -83,13 +85,16 @@ import { GenericMappingsDialogComponent } from './settings/generic-mappings/gene
     ExpenseFieldConfigurationComponent,
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsComponent,
-    GenericMappingsDialogComponent
+    GenericMappingsDialogComponent,
+    CustomSegmentsComponent,
+    CustomSegmentsDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsDialogComponent,
+    CustomSegmentsDialogComponent
   ],
   imports: [
     CommonModule,

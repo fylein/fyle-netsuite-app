@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 
 @Component({
   selector: 'app-expense-field-configuration',
@@ -25,7 +26,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   netsuiteFormFieldList: any;
   windowReference: Window;
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private windowReferenceService: WindowReferenceService) {
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
    }
   
@@ -65,9 +66,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const expenseFields = that.expenseFieldsForm.value.expenseFields;
 
     that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe(response => {
-      that.router.navigate([`workspaces/${this.workspaceId}/dashboard`]).then(() => {
-        that.windowReference.location.reload();
-      });
+      this.netsuite.getGeneralSettings()
+      that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
       that.isLoading = false;
     });
   }

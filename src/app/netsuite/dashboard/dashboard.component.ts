@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, concat } from 'rxjs';
+import { forkJoin, onErrorResumeNext } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
@@ -177,7 +177,7 @@ export class DashboardComponent implements OnInit {
     this.mappingsService.postFyleCostCenters().subscribe(() => {});
     this.mappingsService.postFyleProjects().subscribe(() => {});
 
-    concat(
+    onErrorResumeNext(
       this.mappingsService.postNetSuiteExpenseCategories(),
       this.mappingsService.postNetSuiteLocations(),
       this.mappingsService.postNetSuiteVendors(),
@@ -185,7 +185,8 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postNetSuiteClasses(),
       this.mappingsService.postNetSuiteDepartments(),
       this.mappingsService.postNetSuiteEmployees(),
-      that.mappingsService.postNetSuiteAccounts()
+      that.mappingsService.postNetSuiteAccounts(),
+      that.mappingsService.postNetsuiteExpenseCustomFields()
     ).subscribe(() => {
       this.snackBar.open('Data Successfully imported from NetSuite');
     });

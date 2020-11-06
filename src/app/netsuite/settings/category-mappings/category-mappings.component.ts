@@ -17,6 +17,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappings: any[];
   categoryCCCMappings: any[] = [];
   generalSettings: any;
+  rowElement: any;
   columnsToDisplay = ['category', 'netsuite'];
 
   constructor(
@@ -27,12 +28,13 @@ export class CategoryMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private storageService: StorageService) { }
 
-  open() {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
       data: {
-        workspaceId: that.workspaceId
+        workspaceId: that.workspaceId,
+        rowElement: selectedItem
       }
     });
 

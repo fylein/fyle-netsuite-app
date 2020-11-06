@@ -19,6 +19,7 @@ export class ConnectNetsuiteComponent implements OnInit {
   connectNetSuiteForm: FormGroup;
   workspaceId: number;
   netsuiteConnectionDone = false;
+  nsAccountId: string;
 
   constructor(private formBuilder: FormBuilder, 
               private settingsService: SettingsService, 
@@ -31,7 +32,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     const that = this;
     if (that.connectNetSuiteForm.valid) {
       const netsuiteCredentials = {
-        ns_account_id: that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
+        ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
         ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
       }
@@ -45,7 +46,7 @@ export class ConnectNetsuiteComponent implements OnInit {
           that.snackBar.open('NetSuite account connected successfully');
           that.netsuiteConnectionDone = true;
           that.isLoading = false;
-          window.location.href = (`workspaces/${that.workspaceId}/dashboard`); 
+          that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
         }, err => {
           that.snackBar.open('Wrong credentials, please try again');
           that.isLoading = false;
@@ -68,12 +69,14 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.isLoading = true;
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
       that.netsuiteConnectionDone = true;
-      that.isLoading = false;
+      that.nsAccountId = res.ns_account_id;
       that.connectNetSuiteForm = that.formBuilder.group({
         nsAccountId: [res.ns_account_id, Validators.required],
         nsTokenId: ['', Validators.required],
         nsTokenSecret: ['', Validators.required]
       });
+      that.connectNetSuiteForm.controls.nsAccountId.disable();
+      that.isLoading = false;
     }, (error) => {
       that.isLoading = false;
       that.connectNetSuiteForm = that.formBuilder.group({

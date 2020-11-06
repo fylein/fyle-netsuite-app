@@ -21,6 +21,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: any;
   filteredAccounts: any[];
+  rowElement: any;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
@@ -31,12 +32,13 @@ export class EmployeeMappingsComponent implements OnInit {
     private storageService: StorageService) {
   }
 
-  open() {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(EmployeeMappingsDialogComponent, {
       width: '450px',
       data: {
-        workspaceId: that.workspaceId
+        workspaceId: that.workspaceId,
+        rowElement: selectedItem
       }
     });
 

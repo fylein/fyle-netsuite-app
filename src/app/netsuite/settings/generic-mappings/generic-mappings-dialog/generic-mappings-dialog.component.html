@@ -1,7 +1,10 @@
 <h2 mat-dialog-title>
   <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
-    <div class="mat-title">
+    <div class="mat-title" *ngIf="!editMapping">
       Create New Mapping
+    </div>
+    <div class="mat-title" *ngIf="editMapping">
+      Edit {{ getTitle(setting.source_field) | titlecase }} Mapping
     </div>
     <div>
       <mat-icon class="mappings-dialog--close cursor-pointer" aria-hidden="false" aria-label="close this dialog" mat-dialog-close>close</mat-icon>
@@ -34,11 +37,11 @@
 
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
-          Map to Corresponding NetSuite {{ setting.destination_field | titlecase}}
+          Map to Corresponding NetSuite {{ getTitle(setting.destination_field) | titlecase}}
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--field" appearance="outline">
-        <input type="text" formControlName="destinationField" placeholder="Select NetSuite {{ setting.destination_field | titlecase}}" matInput [matAutocomplete]="netsuiteEl"
+        <input type="text" formControlName="destinationField" placeholder="Select NetSuite {{ getTitle(setting.destination_field) | titlecase}}" matInput [matAutocomplete]="netsuiteEl"
           [errorStateMatcher]="matcher">
         <mat-autocomplete #netsuiteEl="matAutocomplete" [displayWith]="mappingDisplay">
           <mat-option *ngFor="let option of netsuiteOptions" [value]="option">
