@@ -32,9 +32,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     const that = this;
     if (that.connectNetSuiteForm.valid) {
       const netsuiteCredentials = {
-        ns_account_id: that.connectNetSuiteForm.value.nsAccountId || that.nsAccountId,
-        ns_consumer_key: that.connectNetSuiteForm.value.nsConsumerKey,
-        ns_consumer_secret: that.connectNetSuiteForm.value.nsConsumerSecret,
+        ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
         ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
       }
@@ -74,8 +72,6 @@ export class ConnectNetsuiteComponent implements OnInit {
       that.nsAccountId = res.ns_account_id;
       that.connectNetSuiteForm = that.formBuilder.group({
         nsAccountId: [res.ns_account_id, Validators.required],
-        nsConsumerKey: ['', Validators.required],
-        nsConsumerSecret: ['', Validators.required],
         nsTokenId: ['', Validators.required],
         nsTokenSecret: ['', Validators.required]
       });
@@ -85,8 +81,6 @@ export class ConnectNetsuiteComponent implements OnInit {
       that.isLoading = false;
       that.connectNetSuiteForm = that.formBuilder.group({
         nsAccountId: ['', Validators.required],
-        nsConsumerKey: ['', Validators.required],
-        nsConsumerSecret: ['', Validators.required],
         nsTokenId: ['', Validators.required],
         nsTokenSecret: ['', Validators.required]
       });
