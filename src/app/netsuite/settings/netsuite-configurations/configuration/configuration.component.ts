@@ -107,6 +107,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
+        syncPayments: [that.generalSettings.sync_payments]
       }, {
       });
 
@@ -149,19 +150,16 @@ export class ConfigurationComponent implements OnInit {
         that.generalSettingsForm.controls.cccExpense.disable();
       }
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
-        that.isSaveDisabled = true;
-      }
-
       that.isLoading = false;
     }, error => {
       that.generalSettings = {};
-      that.mappingSettings = {};
+      that.mappingSettings = [];
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
-        cccExpense: [null]
+        cccExpense: [null],
+        syncPayments: [false]
       }, {
       });
 
@@ -189,6 +187,7 @@ export class ConfigurationComponent implements OnInit {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || that.generalSettings.reimbursable_expenses_object;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
+      const syncPayments = that.generalSettingsForm.value.syncPayments;
 
       if (cccExpensesObject) {
         var destination_field = 'CREDIT_CARD_ACCOUNT';
@@ -209,7 +208,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, syncPayments)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
