@@ -107,6 +107,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
+        importProjects: [that.generalSettings.import_projects]
       }, {
       });
 
@@ -149,19 +150,15 @@ export class ConfigurationComponent implements OnInit {
         that.generalSettingsForm.controls.cccExpense.disable();
       }
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
-        that.isSaveDisabled = true;
-      }
-
       that.isLoading = false;
     }, error => {
       that.generalSettings = {};
-      that.mappingSettings = {};
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
-        cccExpense: [null]
+        cccExpense: [null],
+        importProjects: [false]
       }, {
       });
 
@@ -189,6 +186,7 @@ export class ConfigurationComponent implements OnInit {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || that.generalSettings.reimbursable_expenses_object;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
+      const importProjects = that.generalSettingsForm.value.importProjects;
 
       if (cccExpensesObject) {
         var destination_field = 'CREDIT_CARD_ACCOUNT';
@@ -209,7 +207,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
@@ -221,6 +219,20 @@ export class ConfigurationComponent implements OnInit {
       that.snackBar.open('Form has invalid fields');
       that.generalSettingsForm.markAllAsTouched();
     }
+  }
+
+  showImportProjects() {
+    const that = this;
+    let projectSetting;
+    if (that.mappingSettings) {
+      projectSetting = that.mappingSettings.filter(setting => setting.source_field === 'PROJECT')[0];
+    }
+
+    if (!projectSetting || projectSetting.destination_field === 'PROJECT') {
+      return true;
+    }
+
+    return false;
   }
 
   ngOnInit() {
