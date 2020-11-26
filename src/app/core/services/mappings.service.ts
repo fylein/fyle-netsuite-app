@@ -344,6 +344,14 @@ export class MappingsService {
     );
   }
 
+  getVendorPaymentAccounts() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/netsuite/vendor_payment_accounts/`, {}
+    );
+  }
+
   getAccountsPayables() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 

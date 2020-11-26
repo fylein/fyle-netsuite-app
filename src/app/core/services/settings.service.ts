@@ -88,7 +88,7 @@ export class SettingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
-      sync_payments: syncPayments
+      sync_fyle_to_netsuite_payments: syncPayments
     });
   }
 

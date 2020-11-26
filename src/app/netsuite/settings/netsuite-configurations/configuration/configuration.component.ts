@@ -107,7 +107,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
-        syncPayments: [that.generalSettings.sync_payments]
+        syncPayments: [that.generalSettings.sync_fyle_to_netsuite_payments]
       }, {
       });
 
