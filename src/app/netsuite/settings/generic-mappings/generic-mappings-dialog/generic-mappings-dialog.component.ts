@@ -47,6 +47,7 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
+    console.log('that.form.valid', that.form)
     if (that.form.valid) {
       that.isLoading = true;
       that.mappingsService.postMappings({
@@ -150,8 +151,8 @@ export class GenericMappingsDialogComponent implements OnInit {
       const sourceField = that.editMapping ? that.fyleAttributes.filter(sourceField => sourceField.value === that.data.rowElement.source.value)[0] : '';
       const destinationField = that.editMapping ? that.netsuiteElements.filter(destinationField => destinationField.value === that.data.rowElement.destination.value)[0] : '';
       that.form = that.formBuilder.group({
-        sourceField: [that.editMapping ? sourceField : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
-        destinationField: [that.editMapping ? destinationField : that.forbiddenSelectionValidator(that.netsuiteElements)],
+        sourceField: [that.editMapping ? sourceField : '', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
+        destinationField: [that.editMapping ? destinationField : '', that.forbiddenSelectionValidator(that.netsuiteElements)],
       });
 
       if(that.editMapping) {
