@@ -47,7 +47,6 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    console.log('that.form.valid', that.form)
     if (that.form.valid) {
       that.isLoading = true;
       that.mappingsService.postMappings({
