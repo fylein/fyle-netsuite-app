@@ -80,6 +80,18 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <div class="mat-body-strong" *ngIf="generalSettings.sync_fyle_to_netsuite_payments">
+          Payment Account
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" required
+          *ngIf="generalSettings.sync_fyle_to_netsuite_payments">
+          <mat-select class="general-mappings--input" placeholder="Select payment Account"
+            formControlName="vendorPaymentAccounts">
+            <mat-option *ngFor="let bankAccount of vendorPaymentAccounts; let i = index" [value]="vendorPaymentAccounts[i].destination_id">
+              {{vendorPaymentAccounts[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
   
       <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
