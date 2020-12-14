@@ -52,10 +52,26 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      
-      <mat-slide-toggle color="primary" class="schedule" formControlName="syncPayments">
-        <div class="schedule--toggle-text">Sync Payments from Fyle to NetSuite</div>
-      </mat-slide-toggle>
+
+      <div class="configurations--label">
+        Auto Sync Payments
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field floatLabel="always" appearance="outline" fxFlex="75">
+          <mat-select placeholder="Choose Auto Sync Payments"
+            formControlName="paymentsSync">
+            <mat-option [value]="'sync_fyle_to_netsuite_payments'">
+              Sync Fyle ACH Payments into NetSuite
+            </mat-option>
+            <mat-option [value]="'sync_netsuite_to_fyle_payments'">
+              Sync NetSuite Vendor Payments into Fyle
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div fxFlex="25">
+          <mat-icon class="info-icon" matTooltip="Sync payments between Fyle and NetSuite" matTooltipPosition="after">info</mat-icon>
+        </div>
+      </div>
 
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save

@@ -103,11 +103,18 @@ export class ConfigurationComponent implements OnInit {
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
+      let paymentsSyncOption = '';
+      if (that.generalSettings.sync_fyle_to_netsuite_payments) {
+        paymentsSyncOption = 'sync_fyle_to_netsuite_payments'
+      } else if (that.generalSettings.sync_netsuite_to_fyle_payments) {
+        paymentsSyncOption = 'sync_netsuite_to_fyle_payments'
+      }
+
       that.generalSettingsForm = that.formBuilder.group({
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
-        syncPayments: [that.generalSettings.sync_fyle_to_netsuite_payments]
+        paymentsSync: [paymentsSyncOption]
       }, {
       });
 
@@ -159,7 +166,7 @@ export class ConfigurationComponent implements OnInit {
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
         cccExpense: [null],
-        syncPayments: [false]
+        paymentsSync: [null]
       }, {
       });
 
@@ -187,7 +194,13 @@ export class ConfigurationComponent implements OnInit {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || that.generalSettings.reimbursable_expenses_object;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
-      const syncPayments = that.generalSettingsForm.value.syncPayments;
+      let fyleToNetSuite = false;
+      let netSuiteToFyle = false;
+
+      if (that.generalSettingsForm.controls.paymentsSync.value) {
+        fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
+        netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
+      }
 
       if (cccExpensesObject) {
         var destination_field = 'CREDIT_CARD_ACCOUNT';
@@ -208,7 +221,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, syncPayments)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle)
         ]
       ).subscribe(responses => {
         that.isLoading = true;

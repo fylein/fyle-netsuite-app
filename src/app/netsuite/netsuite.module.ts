@@ -58,6 +58,7 @@ import { GenericMappingsComponent } from './settings/generic-mappings/generic-ma
 import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
 import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
 import { CustomSegmentsDialogComponent } from './settings/netsuite-configurations/custom-segments/custom-segments-dialog/custom-segments-dialog.component';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,8 @@ import { CustomSegmentsDialogComponent } from './settings/netsuite-configuration
     MatDatepickerModule,
     MatNativeDateModule,
     MatStepperModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ],
   providers: [
     {
