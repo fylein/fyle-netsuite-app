@@ -24,6 +24,7 @@ export class ConfigurationComponent implements OnInit {
   employeeFieldMapping: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
+  showPaymentsSync: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
@@ -100,6 +101,7 @@ export class ConfigurationComponent implements OnInit {
 
       that.employeeFieldMapping = employeeFieldMapping;
 
+      that.checkPaymentsSync(that.generalSettings.reimbursable_expenses_object);
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
@@ -175,6 +177,10 @@ export class ConfigurationComponent implements OnInit {
         that.cccExpenseOptions = that.getCCCExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
       });
+
+      that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+        that.checkPaymentsSync(reimbursableExpenseMappedTo)
+      });
     });
   }
 
@@ -232,6 +238,15 @@ export class ConfigurationComponent implements OnInit {
     } else {
       that.snackBar.open('Form has invalid fields');
       that.generalSettingsForm.markAllAsTouched();
+    }
+  }
+
+  checkPaymentsSync(reimbursable_expenses_object) {
+    const that = this;
+    if (reimbursable_expenses_object && reimbursable_expenses_object !== 'JOURNAL ENTRY') {
+      that.showPaymentsSync = true;
+    } else {
+      that.showPaymentsSync = false;
     }
   }
 
