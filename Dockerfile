@@ -35,8 +35,6 @@ COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /app/run.sh ./
 
-COPY --from=build /app/* /fyle-netsuite-app/
-
 # expose port 80
 EXPOSE 80
 
