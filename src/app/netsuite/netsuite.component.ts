@@ -114,14 +114,14 @@ export class NetSuiteComponent implements OnInit {
   }
 
   getNetSuiteStatus() {
-    const that = this
+    const that = this;
     const workspaceId = this.storageService.get('workspaceId');
-    if(workspaceId) {
+    if (workspaceId) {
       that.settingsService.getNetSuiteCredentials(workspaceId).subscribe(credentials => {
         if (credentials) {
           that.netsuiteConnected = true;
         }
-      })
+      });
     }
   }
 
@@ -131,6 +131,6 @@ export class NetSuiteComponent implements OnInit {
     that.navDisabled = onboarded !== true;
     that.orgsCount = that.authService.getOrgCount();
     that.setupWorkspace();
-    that.getNetSuiteStatus()
+    that.getNetSuiteStatus();
   }
 }

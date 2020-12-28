@@ -44,7 +44,7 @@ export class ExportComponent implements OnInit {
   exportReimbursableExpenses(reimbursableExpensesObject) {
     const that = this;
     const handlerMap = {
-      'BILL': (filteredIds) => {
+      BILL: (filteredIds) => {
         return that.billsService.createBills(filteredIds);
       },
       'EXPENSE REPORT': (filteredIds) => {
@@ -55,13 +55,13 @@ export class ExportComponent implements OnInit {
       }
     };
 
-    return handlerMap[reimbursableExpensesObject] || handlerMap["JOURNAL ENTRY"];
+    return handlerMap[reimbursableExpensesObject] || handlerMap['JOURNAL ENTRY'];
   }
 
   exportCCCExpenses(corporateCreditCardExpensesObject) {
     const that = this;
     const handlerMap = {
-      'BILL': (filteredIds) => {
+      BILL: (filteredIds) => {
         return that.billsService.createBills(filteredIds);
       },
       'EXPENSE REPORT': (filteredIds) => {
@@ -72,7 +72,7 @@ export class ExportComponent implements OnInit {
       }
     };
 
-    return handlerMap[corporateCreditCardExpensesObject] || handlerMap["JOURNAL ENTRY"];
+    return handlerMap[corporateCreditCardExpensesObject] || handlerMap['JOURNAL ENTRY'];
   }
 
   openFailedExports() {

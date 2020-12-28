@@ -60,10 +60,10 @@ export class SettingsService {
     );
   }
 
-  postSettings(workspace_id: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
-    return this.apiService.post(`/workspaces/${workspace_id}/schedule/`, {
+  postSettings(workspaceId: number, nextRun: string, intervalHours: number, scheduleEnabled: boolean) {
+    return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       next_run: nextRun,
-      hours: hours,
+      hours: intervalHours,
       schedule_enabled: scheduleEnabled
     });
   }
@@ -108,7 +108,7 @@ export class SettingsService {
   getGeneralSettings(workspaceId: number) {
     return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
   }
-  
+
   // TODO: Add model
   @CacheBuster({
     cacheBusterNotifier: subsidiaryMappingCache

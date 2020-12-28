@@ -9,7 +9,7 @@ export const environment = {
   callback_uri: '{{CALLBACK_URI}}',
   api_url: '{{API_URL}}',
   app_url: '{{APP_URL}}'
-}
+};
 
 /*
  * For easier debugging in development mode, you can import the following file

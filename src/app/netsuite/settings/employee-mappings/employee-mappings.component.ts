@@ -25,14 +25,14 @@ export class EmployeeMappingsComponent implements OnInit {
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private mappingsService: MappingsService,
-    private router: Router,
-    private settingsService: SettingsService,
-    private storageService: StorageService) {
-  }
+              private route: ActivatedRoute,
+              private mappingsService: MappingsService,
+              private router: Router,
+              private settingsService: SettingsService,
+              private storageService: StorageService
+            ) { }
 
-  open(selectedItem: any=null) {
+  open(selectedItem: any = null) {
     const that = this;
     const dialogRef = that.dialog.open(EmployeeMappingsDialogComponent, {
       width: '450px',

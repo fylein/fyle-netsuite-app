@@ -107,9 +107,9 @@ export class ConfigurationComponent implements OnInit {
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_netsuite_payments) {
-        paymentsSyncOption = 'sync_fyle_to_netsuite_payments'
+        paymentsSyncOption = 'sync_fyle_to_netsuite_payments';
       } else if (that.generalSettings.sync_netsuite_to_fyle_payments) {
-        paymentsSyncOption = 'sync_netsuite_to_fyle_payments'
+        paymentsSyncOption = 'sync_netsuite_to_fyle_payments';
       }
 
       that.generalSettingsForm = that.formBuilder.group({
@@ -136,7 +136,7 @@ export class ConfigurationComponent implements OnInit {
         ];
       }
 
-      if(that.generalSettings.corporate_credit_card_expenses_object){
+      if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.cccExpenseOptions = [{
           label: 'Bill',
           value: 'BILL'
@@ -179,7 +179,7 @@ export class ConfigurationComponent implements OnInit {
       });
 
       that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-        that.checkPaymentsSync(reimbursableExpenseMappedTo)
+        that.checkPaymentsSync(reimbursableExpenseMappedTo);
       });
     });
   }
@@ -193,7 +193,7 @@ export class ConfigurationComponent implements OnInit {
       },
       {
         destination_field: 'CCC_ACCOUNT',
-        source_field:'CATEGORY'
+        source_field: 'CATEGORY'
       }
     ];
 
@@ -209,12 +209,12 @@ export class ConfigurationComponent implements OnInit {
       }
 
       if (cccExpensesObject) {
-        var destination_field = 'CREDIT_CARD_ACCOUNT';
-        var source_field = 'EMPLOYEE'
+        const destinationField = 'CREDIT_CARD_ACCOUNT';
+        const sourceField = 'EMPLOYEE';
 
         mappingsSettingsPayload.push({
-          source_field: source_field,
-          destination_field: destination_field
+          source_field: sourceField,
+          destination_field: destinationField
         });
       }
 
@@ -231,7 +231,7 @@ export class ConfigurationComponent implements OnInit {
         ]
       ).subscribe(responses => {
         that.isLoading = true;
-        that.storageService.set('generalSettings', responses[1])
+        that.storageService.set('generalSettings', responses[1]);
         that.snackBar.open('Configuration saved successfully');
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
@@ -241,9 +241,9 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
-  checkPaymentsSync(reimbursable_expenses_object) {
+  checkPaymentsSync(reimbursableExpensesObject) {
     const that = this;
-    if (reimbursable_expenses_object && reimbursable_expenses_object !== 'JOURNAL ENTRY') {
+    if (reimbursableExpensesObject && reimbursableExpensesObject !== 'JOURNAL ENTRY') {
       that.showPaymentsSync = true;
     } else {
       that.showPaymentsSync = false;

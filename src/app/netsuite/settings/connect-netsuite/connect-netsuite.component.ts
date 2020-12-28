@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component'
 
 @Component({
   selector: 'app-connect-netsuite',
@@ -13,7 +11,7 @@ import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component'
   styleUrls: ['./connect-netsuite.component.scss', '../../netsuite.component.scss']
 })
 export class ConnectNetsuiteComponent implements OnInit {
-  
+
   isLoading: boolean;
   isSaveDisabled: boolean;
   connectNetSuiteForm: FormGroup;
@@ -21,11 +19,11 @@ export class ConnectNetsuiteComponent implements OnInit {
   netsuiteConnectionDone = false;
   nsAccountId: string;
 
-  constructor(private formBuilder: FormBuilder, 
-              private settingsService: SettingsService, 
-              private mappingsService: MappingsService, 
-              private route: ActivatedRoute, 
-              private router: Router, 
+  constructor(private formBuilder: FormBuilder,
+              private settingsService: SettingsService,
+              private mappingsService: MappingsService,
+              private route: ActivatedRoute,
+              private router: Router,
               private snackBar: MatSnackBar) { }
 
   save() {
@@ -35,7 +33,8 @@ export class ConnectNetsuiteComponent implements OnInit {
         ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
         ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
-      }
+      };
+
       if (netsuiteCredentials) {
         that.isLoading = true;
         that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
