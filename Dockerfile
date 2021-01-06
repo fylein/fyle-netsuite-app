@@ -11,14 +11,13 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # install and cache app dependencies
 COPY package.json /app/package.json
-RUN npm install
-RUN npm install -g @angular/cli
+RUN npm install --production
+RUN npm install @angular-builders/custom-webpack@8.4.1
 
 # add app
 COPY . /app
 
 # generate build
-RUN npm config set max-old-space-size=512
 RUN ng build --prod --output-path=dist
 
 ############
