@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, Ng
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -28,15 +27,14 @@ export class CustomSegmentsDialogComponent implements OnInit {
   windowReference: Window;
 
   constructor(private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<CustomSegmentsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private mappingsService: MappingsService,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private windowReferenceService: WindowReferenceService) {
-      this.windowReference = this.windowReferenceService.nativeWindow;
-    }
-
+              public dialogRef: MatDialogRef<CustomSegmentsDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private mappingsService: MappingsService,
+              private snackBar: MatSnackBar,
+              private router: Router,
+              private windowReferenceService: WindowReferenceService) {
+                this.windowReference = this.windowReferenceService.nativeWindow;
+            }
 
   mappingDisplay(mappingObject) {
     return mappingObject ? mappingObject.value : '';
@@ -57,7 +55,7 @@ export class CustomSegmentsDialogComponent implements OnInit {
       that.mappingsService.postNetsuiteExpenseCustomFields(true).subscribe(res => {
         that.dialogRef.close();
         that.snackBar.open('Custom Record successfully added to Expense Fields');
-      })
+      });
     }, (err) => {
       that.snackBar.open('Invalid Custom Record fields, please try again');
       that.isLoading = false;
@@ -66,7 +64,7 @@ export class CustomSegmentsDialogComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    
+
     that.workSpaceId = that.data.workspaceId;
     that.form = that.formBuilder.group({
       script_id: ['', [Validators.required]],

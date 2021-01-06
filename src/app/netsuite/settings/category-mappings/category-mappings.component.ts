@@ -28,7 +28,7 @@ export class CategoryMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private storageService: StorageService) { }
 
-  open(selectedItem: any=null) {
+  open(selectedItem: any = null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
@@ -68,12 +68,12 @@ export class CategoryMappingsComponent implements OnInit {
       that.categoryMappings = categoryMappings.results;
       const accountMappings = that.categoryMappings.filter(mappings => mappings.destination.attribute_type === 'ACCOUNT');
       accountMappings.forEach(mapping => {
-        var netsuiteValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'ACCOUNT')[0];
-        var cccValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'CCC_ACCOUNT')[0];
+        const netsuiteValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'ACCOUNT')[0];
+        const cccValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'CCC_ACCOUNT')[0];
         that.categoryCCCMappings.push({
           fyle_value: mapping.source.value,
           netsuite_value: netsuiteValue.destination.value,
-          ccc_value: cccValue? cccValue.destination.value : ''
+          ccc_value: cccValue ? cccValue.destination.value : ''
         });
       });
       that.isLoading = false;
@@ -84,7 +84,7 @@ export class CategoryMappingsComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    this.isLoading = true
+    this.isLoading = true;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
     that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
       that.generalSettings = settings;

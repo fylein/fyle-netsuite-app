@@ -49,19 +49,19 @@ export class NetsuiteConfigurationsComponent implements OnInit {
     }
 
     return false;
-  } 
+  }
 
   ngOnInit() {
     const that = this;
-    
+
     that.isParentLoading = true;
 
     that.netsuiteConnection = false;
 
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    
+
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'SUBSIDIARY';
-    
+
     that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe(response => {
       if (response) {
         that.netsuiteConnectionDone = true;
@@ -71,14 +71,14 @@ export class NetsuiteConfigurationsComponent implements OnInit {
           that.mappingsService.getFyleExpenseFields(),
           that.settingsService.getGeneralSettings(that.workspaceId),
         ]
-      ).subscribe(response => {
-        that.fyleFields = response[0];
-        that.generalSettings = response[1];
+      ).subscribe(result => {
+        that.fyleFields = result[0];
+        that.generalSettings = result[1];
         that.isParentLoading = false;
       }, () => {
         that.isParentLoading = false;
       });
-      
+
     });
   }
 }

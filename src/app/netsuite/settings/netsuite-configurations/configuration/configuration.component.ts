@@ -24,6 +24,7 @@ export class ConfigurationComponent implements OnInit {
   employeeFieldMapping: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
+  showPaymentsSync: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
@@ -100,14 +101,23 @@ export class ConfigurationComponent implements OnInit {
 
       that.employeeFieldMapping = employeeFieldMapping;
 
+      that.checkPaymentsSync(that.generalSettings.reimbursable_expenses_object);
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
+
+      let paymentsSyncOption = '';
+      if (that.generalSettings.sync_fyle_to_netsuite_payments) {
+        paymentsSyncOption = 'sync_fyle_to_netsuite_payments';
+      } else if (that.generalSettings.sync_netsuite_to_fyle_payments) {
+        paymentsSyncOption = 'sync_netsuite_to_fyle_payments';
+      }
 
       that.generalSettingsForm = that.formBuilder.group({
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
-        importProjects: [that.generalSettings.import_projects]
+        importProjects: [that.generalSettings.import_projects],
+        paymentsSync: [paymentsSyncOption]
       }, {
       });
 
@@ -127,7 +137,7 @@ export class ConfigurationComponent implements OnInit {
         ];
       }
 
-      if(that.generalSettings.corporate_credit_card_expenses_object){
+      if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.cccExpenseOptions = [{
           label: 'Bill',
           value: 'BILL'
@@ -153,12 +163,14 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
     }, error => {
       that.generalSettings = {};
+      that.mappingSettings = [];
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
         cccExpense: [null],
-        importProjects: [false]
+        importProjects: [false],
+        paymentsSync: [null]
       }, {
       });
 
@@ -166,6 +178,10 @@ export class ConfigurationComponent implements OnInit {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
         that.cccExpenseOptions = that.getCCCExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
+      });
+
+      that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+        that.checkPaymentsSync(reimbursableExpenseMappedTo);
       });
     });
   }
@@ -179,7 +195,7 @@ export class ConfigurationComponent implements OnInit {
       },
       {
         destination_field: 'CCC_ACCOUNT',
-        source_field:'CATEGORY'
+        source_field: 'CATEGORY'
       }
     ];
 
@@ -188,13 +204,21 @@ export class ConfigurationComponent implements OnInit {
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
       const importProjects = that.generalSettingsForm.value.importProjects;
 
+      let fyleToNetSuite = false;
+      let netSuiteToFyle = false;
+
+      if (that.generalSettingsForm.controls.paymentsSync.value) {
+        fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
+        netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
+      }
+
       if (cccExpensesObject) {
-        var destination_field = 'CREDIT_CARD_ACCOUNT';
-        var source_field = 'EMPLOYEE'
+        const destinationField = 'CREDIT_CARD_ACCOUNT';
+        const sourceField = 'EMPLOYEE';
 
         mappingsSettingsPayload.push({
-          source_field: source_field,
-          destination_field: destination_field
+          source_field: sourceField,
+          destination_field: destinationField
         });
       }
 
@@ -207,11 +231,11 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
-        that.storageService.set('generalSettings', responses[1])
+        that.storageService.set('generalSettings', responses[1]);
         that.snackBar.open('Configuration saved successfully');
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
@@ -233,6 +257,15 @@ export class ConfigurationComponent implements OnInit {
     }
 
     return false;
+  }
+
+  checkPaymentsSync(reimbursableExpensesObject) {
+    const that = this;
+    if (reimbursableExpensesObject && reimbursableExpensesObject !== 'JOURNAL ENTRY') {
+      that.showPaymentsSync = true;
+    } else {
+      that.showPaymentsSync = false;
+    }
   }
 
   ngOnInit() {

@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../../core/services/mappings.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {MatSelectModule} from '@angular/material/select';
-import {} from '../../../netsuite.component'
 
 @Component({
   selector: 'app-subsidiary',
@@ -16,18 +14,17 @@ export class SubsidiaryComponent implements OnInit {
 
   subsidiaryForm: FormGroup;
   workspaceId: number;
-  netsuiteSubsidiaries: any[]
+  netsuiteSubsidiaries: any[];
   isLoading = true;
   subsidiaryIsValid = true;
   subsidiaryMappings: any;
   subsidiaryMappingDone = false;
 
-  constructor(private formBuilder: FormBuilder, 
-              private settingsService: SettingsService, 
-              private mappingsService: MappingsService, 
-              private route: ActivatedRoute, 
-              private router: Router, 
-              private matselect: MatSelectModule,
+  constructor(private formBuilder: FormBuilder,
+              private settingsService: SettingsService,
+              private mappingsService: MappingsService,
+              private route: ActivatedRoute,
+              private router: Router,
               private snackBar: MatSnackBar) {
                 this.subsidiaryForm = this.formBuilder.group({
                   netsuiteSubsidiaries: new FormControl('')
@@ -44,9 +41,9 @@ export class SubsidiaryComponent implements OnInit {
       this.subsidiaryIsValid = true;
     }
 
-    if (this.subsidiaryIsValid){
+    if (this.subsidiaryIsValid) {
       this.isLoading = true;
-      this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value,).subscribe(response => {
+      this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
         this.snackBar.open('Fetching Data from NetSuite. This might take a few minutes.', null, {
           duration: 200000000
         });

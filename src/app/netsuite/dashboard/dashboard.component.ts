@@ -170,25 +170,25 @@ export class DashboardComponent implements OnInit {
   // to be callled in background whenever dashboard is opened for sncing fyle data for org
   updateDimensionTables() {
     const that = this;
-  
-    this.mappingsService.postExpenseCustomFields().subscribe(() => {});
-    this.mappingsService.postFyleEmployees().subscribe(() => {});
-    this.mappingsService.postFyleCategories().subscribe(() => {});
-    this.mappingsService.postFyleCostCenters().subscribe(() => {});
-    this.mappingsService.postFyleProjects().subscribe(() => {});
+
+    that.mappingsService.postExpenseCustomFields().subscribe(() => {});
+    that.mappingsService.postFyleEmployees().subscribe(() => {});
+    that.mappingsService.postFyleCategories().subscribe(() => {});
+    that.mappingsService.postFyleCostCenters().subscribe(() => {});
+    that.mappingsService.postFyleProjects().subscribe(() => {});
 
     onErrorResumeNext(
-      this.mappingsService.postNetSuiteExpenseCategories(),
-      this.mappingsService.postNetSuiteLocations(),
-      this.mappingsService.postNetSuiteVendors(),
-      this.mappingsService.postNetSuiteCurrencies(),
-      this.mappingsService.postNetSuiteClasses(),
-      this.mappingsService.postNetSuiteDepartments(),
-      this.mappingsService.postNetSuiteEmployees(),
+      that.mappingsService.postNetSuiteExpenseCategories(),
+      that.mappingsService.postNetSuiteLocations(),
+      that.mappingsService.postNetSuiteVendors(),
+      that.mappingsService.postNetSuiteCurrencies(),
+      that.mappingsService.postNetSuiteClasses(),
+      that.mappingsService.postNetSuiteDepartments(),
+      that.mappingsService.postNetSuiteEmployees(),
       that.mappingsService.postNetSuiteAccounts(),
       that.mappingsService.postNetsuiteExpenseCustomFields()
     ).subscribe(() => {
-      this.snackBar.open('Data Successfully imported from NetSuite');
+      // that.snackBar.open('Data Successfully imported from NetSuite');
     });
   }
 
@@ -229,6 +229,7 @@ export class DashboardComponent implements OnInit {
           return that.loadDashboardData();
         }).catch(() => {
           // do nothing as this just means some steps are left
+          that.storageService.set('onboarded', false);
         }).finally(() => {
           that.isLoading = false;
         });

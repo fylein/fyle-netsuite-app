@@ -62,16 +62,16 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
     if (that.form.valid) {
       that.isLoading = true;
-      var mappings = [
+      const mappings = [
         that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
           source_value: that.form.controls.fyleCategory.value.value,
           destination_value: that.form.controls.netsuiteAccount.value.value
         })
-      ]
-      
-      var destinationValue = that.form.controls.cccAccount.value.value;
+      ];
+
+      let destinationValue = that.form.controls.cccAccount.value.value;
       if (!that.form.value.cccAccount) {
         destinationValue = that.form.controls.netsuiteAccount.value.value;
       }
@@ -80,7 +80,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
         destination_type: 'CCC_ACCOUNT',
         source_value: that.form.controls.fyleCategory.value.value,
         destination_value: destinationValue
-      }))
+      }));
 
       forkJoin(mappings).subscribe(response => {
         that.snackBar.open('Mapping saved successfully');
@@ -112,7 +112,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.form.controls.netsuiteAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
         if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT') {
-          newValue = `expense category - ${newValue.toLowerCase()}`
+          newValue = `expense category - ${newValue.toLowerCase()}`;
           that.netsuiteAccountOptions = that.netsuiteAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         } else {
           that.netsuiteAccountOptions = that.netsuiteAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name !== 'Expense Category');
@@ -139,7 +139,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.form.controls.cccAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
         if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
-          newValue = `expense category - ${newValue.toLowerCase()}`
+          newValue = `expense category - ${newValue.toLowerCase()}`;
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         } else {
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name !== 'Expense Category');
@@ -167,7 +167,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const getFyleCateogories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
       that.fyleCategories = fyleCategories;
     });
-    
+
     // TODO: remove promises and do with rxjs observables
     const getExpenseAccounts = that.mappingsService.getExpenseAccounts().toPromise().then(netsuiteAccounts => {
       that.netsuiteAccounts = netsuiteAccounts;
@@ -186,18 +186,18 @@ export class CategoryMappingsDialogComponent implements OnInit {
     ]).subscribe(() => {
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
-      const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0]: '';
-      const cccAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0]: '';
+      const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';
+      const cccAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : '';
       that.form = that.formBuilder.group({
-        fyleCategory: [that.editMapping ? fyleCategory : Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: [this.editMapping ? netsuiteAccount : Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
+        fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        netsuiteAccount: [netsuiteAccount, Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
         cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
       });
 
-      if(that.editMapping) {
-        that.form.controls.fyleCategory.disable()
+      if (that.editMapping) {
+        that.form.controls.fyleCategory.disable();
       }
-      
+
       that.setupAutocompleteWatchers();
     });
   }

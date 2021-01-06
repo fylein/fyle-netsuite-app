@@ -60,10 +60,10 @@ export class SettingsService {
     );
   }
 
-  postSettings(workspace_id: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
-    return this.apiService.post(`/workspaces/${workspace_id}/schedule/`, {
+  postSettings(workspaceId: number, nextRun: string, intervalHours: number, scheduleEnabled: boolean) {
+    return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       next_run: nextRun,
-      hours: hours,
+      hours: intervalHours,
       schedule_enabled: scheduleEnabled
     });
   }
@@ -84,10 +84,12 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: generalSettingsCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean) {
+  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, fyleToNetSuite: boolean, netSuiteToFyle: boolean, importProjects: boolean) {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
+      sync_fyle_to_netsuite_payments: fyleToNetSuite,
+      sync_netsuite_to_fyle_payments: netSuiteToFyle,
       import_projects: importProjects
     });
   }
@@ -107,7 +109,7 @@ export class SettingsService {
   getGeneralSettings(workspaceId: number) {
     return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
   }
-  
+
   // TODO: Add model
   @CacheBuster({
     cacheBusterNotifier: subsidiaryMappingCache
