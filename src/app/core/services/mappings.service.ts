@@ -423,13 +423,13 @@ export class MappingsService {
     );
   }
 
-  getMappings(limit: number, offset: number, sourceType: string): Observable<MappingsResponse> {
+  getMappings(page_limit: number, page_offset: number, sourceType: string): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/`, {
         source_type: sourceType,
-        limit: limit,
-        offset: offset
+        limit: page_limit,
+        offset: page_offset
       }
     );
   }
@@ -437,6 +437,8 @@ export class MappingsService {
   getAllMappings(sourceType: string): Observable<MappingsResponse> {
     const limit = 500;
     const offset = 0;
+
+    // tslint:disable-next-line: prefer-const
     let allMappingsResponse;
 
     return from(this.getAllMappingsInternal(limit, offset, sourceType, allMappingsResponse));
