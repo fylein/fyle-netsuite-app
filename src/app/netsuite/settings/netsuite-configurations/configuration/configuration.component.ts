@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 
 @Component({
   selector: 'app-configuration',
@@ -24,9 +25,9 @@ export class ConfigurationComponent implements OnInit {
   employeeFieldMapping: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
-  showPaymentsSync: boolean;
+  showPaymentsandProjectsField: boolean;
 
-  constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -101,7 +102,7 @@ export class ConfigurationComponent implements OnInit {
 
       that.employeeFieldMapping = employeeFieldMapping;
 
-      that.checkPaymentsSync(that.generalSettings.reimbursable_expenses_object);
+      that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
@@ -181,7 +182,7 @@ export class ConfigurationComponent implements OnInit {
       });
 
       that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-        that.checkPaymentsSync(reimbursableExpenseMappedTo);
+        that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
       });
     });
   }
@@ -222,6 +223,13 @@ export class ConfigurationComponent implements OnInit {
         });
       }
 
+      if (importProjects) {
+        mappingsSettingsPayload.push({
+          source_field: 'PROJECT',
+          destination_field: 'PROJECT'
+        });
+      }
+
       that.isLoading = true;
       mappingsSettingsPayload.push({
         source_field: 'EMPLOYEE',
@@ -237,6 +245,7 @@ export class ConfigurationComponent implements OnInit {
         that.isLoading = true;
         that.storageService.set('generalSettings', responses[1]);
         that.snackBar.open('Configuration saved successfully');
+        that.netsuite.getGeneralSettings();
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
     } else {
@@ -245,26 +254,12 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
-  showImportProjects() {
-    const that = this;
-    let projectSetting;
-    if (that.mappingSettings) {
-      projectSetting = that.mappingSettings.filter(setting => setting.source_field === 'PROJECT')[0];
-    }
-
-    if (!projectSetting || projectSetting.destination_field === 'PROJECT') {
-      return true;
-    }
-
-    return false;
-  }
-
-  checkPaymentsSync(reimbursableExpensesObject) {
+  showPaymentsandProjectFields(reimbursableExpensesObject) {
     const that = this;
     if (reimbursableExpensesObject && reimbursableExpensesObject !== 'JOURNAL ENTRY') {
-      that.showPaymentsSync = true;
+      that.showPaymentsandProjectsField = true;
     } else {
-      that.showPaymentsSync = false;
+      that.showPaymentsandProjectsField = false;
     }
   }
 

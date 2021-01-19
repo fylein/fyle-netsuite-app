@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { GeneralMapping } from '../models/general-mapping.model';
@@ -20,6 +20,8 @@ export class MappingsService {
   fyleProjects: Observable<any[]>;
   fyleExpenseCustomFields: Observable<any[]>;
   netsuiteExpenseCustomFields: Observable<any[]>;
+  netsuiteProjectFields: Observable<any[]>;
+  netsuiteCustomerFields: Observable<any[]>;
   netsuiteDepartments: Observable<any[]>;
   fyleCostCenters: Observable<any[]>;
   netsuiteLocations: Observable<any[]>;
@@ -111,6 +113,32 @@ export class MappingsService {
       );
     }
     return this.netsuiteExpenseCustomFields;
+  }
+
+  postNetsuiteProjectFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteProjectFields) {
+      this.netsuiteProjectFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/projects/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteProjectFields;
+  }
+
+  postNetsuiteCustomerFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.netsuiteCustomerFields) {
+      this.netsuiteCustomerFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/customers/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.netsuiteCustomerFields;
   }
 
   postNetsuiteCustomSegments(data: any) {
@@ -395,13 +423,40 @@ export class MappingsService {
     );
   }
 
-  getMappings(sourceType): Observable<MappingsResponse> {
+  getMappings(limit: number, offset: number, sourceType: string): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/`, {
-        source_type: sourceType
+        source_type: sourceType,
+        limit: limit,
+        offset: offset
       }
     );
+  }
+
+  getAllMappings(sourceType: string): Observable<MappingsResponse> {
+    const limit = 500;
+    const offset = 0;
+    let allMappingsResponse;
+
+    return from(this.getAllMappingsInternal(limit, offset, sourceType, allMappingsResponse));
+  }
+
+  private getAllMappingsInternal(limit: number, offset: number, sourceType: string, allMappingsResponse: MappingsResponse): Promise<MappingsResponse> {
+    const that = this;
+    return that.getMappings(limit, offset, sourceType).toPromise().then((expenseGroupRes) => {
+      if (!allMappingsResponse) {
+        allMappingsResponse = expenseGroupRes;
+      } else {
+        allMappingsResponse.results = allMappingsResponse.results.concat(expenseGroupRes.results);
+      }
+
+      if (allMappingsResponse.results.length < allMappingsResponse.count) {
+        return that.getAllMappingsInternal(limit, offset + limit, sourceType, allMappingsResponse);
+      } else {
+        return allMappingsResponse;
+      }
+    });
   }
 
   postMappings(mapping: any) {

@@ -44,7 +44,7 @@ export class EmployeeMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.isLoading = true;
-      that.mappingsService.getMappings('EMPLOYEE').subscribe((employees) => {
+      that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
         that.employeeMappings = employees.results;
         that.isLoading = false;
         const onboarded = that.storageService.get('onboarded');
@@ -82,7 +82,7 @@ export class EmployeeMappingsComponent implements OnInit {
   reset() {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getMappings('EMPLOYEE').subscribe((employees) => {
+    that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
       that.employeeMappings = employees.results;
       that.createEmployeeMappingsRows();
       that.isLoading = false;

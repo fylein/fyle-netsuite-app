@@ -63,7 +63,7 @@ export class CategoryMappingsComponent implements OnInit {
   getCategoryMappings() {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getMappings('CATEGORY').subscribe(categoryMappings => {
+    that.mappingsService.getAllMappings('CATEGORY').subscribe(categoryMappings => {
       that.categoryCCCMappings = [];
       that.categoryMappings = categoryMappings.results;
       const accountMappings = that.categoryMappings.filter(mappings => mappings.destination.attribute_type === 'ACCOUNT');

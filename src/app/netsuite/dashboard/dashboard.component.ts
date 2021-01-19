@@ -113,7 +113,7 @@ export class DashboardComponent implements OnInit {
   getEmployeeMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    return that.mappingsService.getMappings('EMPLOYEE').toPromise().then((res) => {
+    return that.mappingsService.getMappings(1, 0, 'EMPLOYEE').toPromise().then((res) => {
       if (res.results.length > 0) {
         that.currentState = onboardingStates.employeeMappingsDone;
       } else {
@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit {
   getCategoryMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    return that.mappingsService.getMappings('CATEGORY').toPromise().then((res) => {
+    return that.mappingsService.getMappings(1, 0, 'CATEGORY').toPromise().then((res) => {
       if (res.results.length > 0) {
         that.currentState = onboardingStates.categoryMappingsDone;
       } else {
@@ -186,7 +186,9 @@ export class DashboardComponent implements OnInit {
       that.mappingsService.postNetSuiteDepartments(),
       that.mappingsService.postNetSuiteEmployees(),
       that.mappingsService.postNetSuiteAccounts(),
-      that.mappingsService.postNetsuiteExpenseCustomFields()
+      that.mappingsService.postNetsuiteExpenseCustomFields(),
+      that.mappingsService.postNetsuiteProjectFields(),
+      that.mappingsService.postNetsuiteCustomerFields()
     ).subscribe(() => {
       // that.snackBar.open('Data Successfully imported from NetSuite');
     });
