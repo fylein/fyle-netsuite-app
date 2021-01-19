@@ -423,13 +423,13 @@ export class MappingsService {
     );
   }
 
-  getMappings(page_limit: number, page_offset: number, sourceType: string): Observable<MappingsResponse> {
+  getMappings(pageLimit: number, pageOffset: number, sourceType: string): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/`, {
         source_type: sourceType,
-        limit: page_limit,
-        offset: page_offset
+        limit: pageLimit,
+        offset: pageOffset
       }
     );
   }
