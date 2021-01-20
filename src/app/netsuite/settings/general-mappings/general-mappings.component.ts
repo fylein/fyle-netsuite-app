@@ -53,6 +53,8 @@ export class GeneralMappingsComponent implements OnInit {
     const locationId = formValues ? formValues.netsuiteLocations : this.form.value.netsuiteLocations;
     const netsuiteLocation = this.netsuiteLocations.filter(filteredLocation => filteredLocation.destination_id === locationId)[0];
 
+    const netsuiteLocationLevel = formValues ? formValues.netsuiteLocationLevels : this.form.value.netsuiteLocationLevels;
+
     const accountPayableAccountId = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.form.value.accountPayableAccounts : '';
     const accountPayableAccount = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.accountPayableAccounts.filter(filteredAccountsPayableAccount => filteredAccountsPayableAccount.destination_id === accountPayableAccountId)[0] : '';
 
@@ -89,6 +91,7 @@ export class GeneralMappingsComponent implements OnInit {
     if (locationId === null) {
       this.locationIsValid = true;
     }
+
     if (cccAccountId === null) {
       this.cccAccountIsValid = true;
     }
@@ -96,6 +99,7 @@ export class GeneralMappingsComponent implements OnInit {
     const generalMappings = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
+      location_level: netsuiteLocationLevel ? netsuiteLocationLevel : null,
       accounts_payable_name: accountPayableAccount.value,
       accounts_payable_id: accountPayableAccount.destination_id,
       reimbursable_account_name: bankAccount.value,
@@ -130,8 +134,8 @@ export class GeneralMappingsComponent implements OnInit {
     that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
       that.generalMappings = generalMappings;
       that.isLoading = false;
-
       that.form = that.formBuilder.group({
+        netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
@@ -142,7 +146,8 @@ export class GeneralMappingsComponent implements OnInit {
     }, error => {
       that.generalMappings = {};
       that.isLoading = false;
-      that.form = that.formBuilder.group({
+        that.form = that.formBuilder.group({
+        netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.netsuiteLocations ? this.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],

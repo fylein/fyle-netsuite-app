@@ -1,7 +1,7 @@
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>
-  
+
   <div class="general-mappings" *ngIf="!isLoading">
     <div class="page-header general-mappings--header">
       <div class="page-header--name mat-h2">
@@ -16,6 +16,24 @@
     </div>
     <form class="general-mappings--form" [formGroup]="form" (ngSubmit)="submit()">
       <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="mat-body-strong">
+         Select NetSuite Location Level
+        </div>
+
+        <mat-form-field floatLabel="always" appearance="outline" required>
+            <mat-select placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
+              <mat-option value="TRANSACTION_BODY">
+                Transaction Body
+              </mat-option>
+              <mat-option value="TRANSACTION_LINE">
+                Transaction Line
+              </mat-option>
+              <mat-option value="ALL">
+                All
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <div class="mat-body-strong">
           NetSuite Location
         </div>
@@ -93,7 +111,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-  
+
       <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>
