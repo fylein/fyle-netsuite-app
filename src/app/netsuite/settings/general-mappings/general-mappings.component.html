@@ -36,9 +36,6 @@
          </div>
          <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalMappings.location_id != null" required>
              <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
-              <mat-option value="null">
-                 None
-              </mat-option> 
               <mat-option value="TRANSACTION_BODY">
                  Transaction Body
                </mat-option>
