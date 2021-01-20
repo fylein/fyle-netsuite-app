@@ -31,10 +31,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="mat-body-strong">
+        <div class="mat-body-strong" *ngIf="generalMappings.location_id != null">
           Select NetSuite Location Level
          </div>
-         <mat-form-field floatLabel="always" appearance="outline" required>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalMappings.location_id != null" required>
              <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
               <mat-option value="null">
                  None
