@@ -17,24 +17,6 @@
     <form class="general-mappings--form" [formGroup]="form" (ngSubmit)="submit()">
       <div fxLayout="column" fxLayoutAlign="start stretch">
         <div class="mat-body-strong">
-         Select NetSuite Location Level
-        </div>
-
-        <mat-form-field floatLabel="always" appearance="outline" required>
-            <mat-select placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
-              <mat-option value="TRANSACTION_BODY">
-                Transaction Body
-              </mat-option>
-              <mat-option value="TRANSACTION_LINE">
-                Transaction Line
-              </mat-option>
-              <mat-option value="ALL">
-                All
-              </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div class="mat-body-strong">
           NetSuite Location
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required>
@@ -49,6 +31,25 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <div class="mat-body-strong">
+          Select NetSuite Location Level
+         </div>
+         <mat-form-field floatLabel="always" appearance="outline" required>
+             <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
+              <mat-option value="null">
+                 None
+              </mat-option> 
+              <mat-option value="TRANSACTION_BODY">
+                 Transaction Body
+               </mat-option>
+               <mat-option value="TRANSACTION_LINE">
+                 Transaction Line
+               </mat-option>
+               <mat-option value="ALL">
+                 All
+               </mat-option>
+             </mat-select>
+         </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Accounts Payable
         </div>
