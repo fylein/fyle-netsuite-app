@@ -146,7 +146,7 @@ export class GeneralMappingsComponent implements OnInit {
     }, error => {
       that.generalMappings = {};
       that.isLoading = false;
-        that.form = that.formBuilder.group({
+      that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.netsuiteLocations ? this.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
@@ -154,7 +154,7 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-      });
+    });
     });
   }
 
