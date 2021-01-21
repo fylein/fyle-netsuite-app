@@ -16,7 +16,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: any[];
-  locationLevelOptions:  { label: string, value: string }[];
+  locationLevelOptions: { label: string, value: string }[];
   netsuiteVendors: any[];
   accountPayableAccounts: any[];
   bankAccounts: any[];
@@ -156,31 +156,26 @@ export class GeneralMappingsComponent implements OnInit {
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
     });
-
-    that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-      if(locationMappedTo){
-        that.locationLevelOptions = [
-          {
-            label: "Transaction Body",
-            value: "TRANSACTION_BODY"
-          },
-          {
-            label: "Transaction Line",
-            value: "Transaction Line",
-          },
-          {
-            label: 'Both',
-            value: 'ALL'
-          }
-          ]
-      } else {
-        that.locationLevelOptions = null;
-      }
-      console.log(locationMappedTo)
-      console.log("nil",that.locationLevelOptions)
-    })
-  
-
+      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+        if (locationMappedTo) {
+          that.locationLevelOptions = [
+            {
+              label: 'Transaction Body',
+              value: 'TRANSACTION_BODY'
+            },
+            {
+              label: 'Transaction Line',
+              value: 'Transaction Line',
+            },
+            {
+              label: 'Both',
+              value: 'ALL'
+            }
+          ];
+        } else {
+          that.locationLevelOptions = null;
+        }
+      });
     });
   }
 
