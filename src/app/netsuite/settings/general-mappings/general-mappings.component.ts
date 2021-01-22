@@ -126,7 +126,6 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.markAllAsTouched();
     }
   }
-  
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
@@ -157,7 +156,7 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-    });  
+      });  
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
         that.checkLocationLevel(locationMappedTo);
       });
@@ -190,7 +189,7 @@ export class GeneralMappingsComponent implements OnInit {
 
   checkLocationLevel(netsuiteLocation) {
     const that = this;
-    if(netsuiteLocation) {
+    if (netsuiteLocation) {
       that.showLocationLevelOption = true;
     } else {
       that.showLocationLevelOption = false;
