@@ -16,7 +16,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: any[];
-  showLocationLevelOption: boolean;
+  locationLevelOptions: { label: string, value: string }[];
   netsuiteVendors: any[];
   accountPayableAccounts: any[];
   bankAccounts: any[];
@@ -41,7 +41,7 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
   }
-  
+
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
@@ -126,7 +126,6 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.markAllAsTouched();
     }
   }
-  
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
@@ -149,6 +148,9 @@ export class GeneralMappingsComponent implements OnInit {
     }, error => {
       that.generalMappings = {};
       that.isLoading = false;
+      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+        that.checkLocationLevel(locationMappedTo);
+      });
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.netsuiteLocations ? this.generalMappings.location_id : ''],
@@ -157,9 +159,6 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-    });  
-      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.checkLocationLevel(locationMappedTo);
       });
     });
   }
@@ -190,7 +189,7 @@ export class GeneralMappingsComponent implements OnInit {
 
   checkLocationLevel(netsuiteLocation) {
     const that = this;
-    if(netsuiteLocation) {
+    if (netsuiteLocation) {
       that.showLocationLevelOption = true;
     } else {
       that.showLocationLevelOption = false;
