@@ -1,7 +1,7 @@
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>
-  
+
   <div class="general-mappings" *ngIf="!isLoading">
     <div class="page-header general-mappings--header">
       <div class="page-header--name mat-h2">
@@ -31,6 +31,22 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <div class="mat-body-strong" *ngIf="locationLevelOptions || generalMappings.location_id">
+          Select NetSuite Location Level
+         </div>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="locationLevelOptions || generalMappings.location_id" required>
+             <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
+              <mat-option value="TRANSACTION_BODY">
+                 Transaction Body
+               </mat-option>
+               <mat-option value="TRANSACTION_LINE">
+                 Transaction Line
+               </mat-option>
+               <mat-option value="ALL">
+                 All
+               </mat-option>
+             </mat-select>
+         </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Accounts Payable
         </div>
@@ -93,7 +109,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-  
+
       <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>
