@@ -41,7 +41,6 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
   }
-  
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
@@ -99,7 +98,6 @@ export class GeneralMappingsComponent implements OnInit {
     const generalMappings = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
-      location_level: netsuiteLocation ? netsuiteLocationLevel : null,
       accounts_payable_name: accountPayableAccount.value,
       accounts_payable_id: accountPayableAccount.destination_id,
       reimbursable_account_name: bankAccount.value,
@@ -109,7 +107,8 @@ export class GeneralMappingsComponent implements OnInit {
       vendor_payment_account_name: vendorPaymentAccount.value,
       vendor_payment_account_id: vendorPaymentAccount.destination_id,
       default_ccc_vendor_name: defaultVendor.value,
-      default_ccc_vendor_id: defaultVendor.destination_id
+      default_ccc_vendor_id: defaultVendor.destination_id,
+      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
     };
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;
@@ -156,7 +155,7 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-      });  
+      });
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
         that.checkLocationLevel(locationMappedTo);
       });
