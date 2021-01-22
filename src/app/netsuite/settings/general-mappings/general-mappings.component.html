@@ -31,15 +31,21 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="mat-body-strong" *ngIf="locationLevelOptions">
+        <div class="mat-body-strong" *ngIf="showLocationLevelOption">
           Select NetSuite Location Level
          </div>
-         <mat-form-field floatLabel="always" appearance="outline" *ngIf="locationLevelOptions" required>
-             <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
-              <mat-option *ngFor="let option of locationLevelOptions" [value]="option.value">
-                {{option.label}}
-              </mat-option>
-             </mat-select>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="showLocationLevelOption" required>
+          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
+            <mat-option value="TRANSACTION_BODY">
+               Transaction Body
+             </mat-option>
+             <mat-option value="TRANSACTION_LINE">
+               Transaction Line
+             </mat-option>
+             <mat-option value="ALL">
+               All
+             </mat-option>
+           </mat-select>
          </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Accounts Payable

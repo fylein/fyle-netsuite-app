@@ -16,7 +16,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: any[];
-  locationLevelOptions: { label: string, value: string }[];
+  showLocationLevelOption: boolean;
   netsuiteVendors: any[];
   accountPayableAccounts: any[];
   bankAccounts: any[];
@@ -41,35 +41,13 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
   }
-
-  locationLevelMapping(locationMappedTo) {
-    if (locationMappedTo) {
-      this.locationLevelOptions = [
-        {
-          label: 'Transaction Body',
-          value: 'TRANSACTION_BODY'
-        },
-        {
-          label: 'Transaction Line',
-          value: 'TRANSACTION_LINE',
-        },
-        {
-          label: 'Both',
-          value: 'ALL'
-        }
-      ];
-    } else {
-      this.locationLevelOptions = null;
-    }
-  }
-
+  
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
     that.bankAccountIsValid = false;
     that.cccAccountIsValid = false;
     that.vendorPaymentAccountIsValid = false;
-
     const formValues = this.form.getRawValue();
 
     const locationId = formValues ? formValues.netsuiteLocations : this.form.value.netsuiteLocations;
@@ -121,7 +99,7 @@ export class GeneralMappingsComponent implements OnInit {
     const generalMappings = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
-      location_level: netsuiteLocationLevel ? netsuiteLocationLevel : null,
+      location_level: netsuiteLocation ? netsuiteLocationLevel : null,
       accounts_payable_name: accountPayableAccount.value,
       accounts_payable_id: accountPayableAccount.destination_id,
       reimbursable_account_name: bankAccount.value,
@@ -148,13 +126,14 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.markAllAsTouched();
     }
   }
-
+  
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
     that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
       that.generalMappings = generalMappings;
       that.isLoading = false;
+      that.checkLocationLevel(that.generalMappings.location_id);
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
@@ -165,7 +144,7 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.locationLevelMapping(locationMappedTo);
+        that.checkLocationLevel(locationMappedTo);
       });
     }, error => {
       that.generalMappings = {};
@@ -178,9 +157,9 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-    });
+    });  
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-         that.locationLevelMapping(locationMappedTo);
+        that.checkLocationLevel(locationMappedTo);
       });
     });
   }
@@ -203,11 +182,19 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccounts = responses[1];
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3];
-      that.locationLevelMapping(that.netsuiteLocations);
       that.netsuiteVendors = responses[4];
       that.vendorPaymentAccounts = responses[5];
       that.getGeneralMappings();
     });
+  }
+
+  checkLocationLevel(netsuiteLocation) {
+    const that = this;
+    if(netsuiteLocation) {
+      that.showLocationLevelOption = true;
+    } else {
+      that.showLocationLevelOption = false;
+    }
   }
 
   ngOnInit() {
