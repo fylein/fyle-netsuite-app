@@ -112,7 +112,6 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor.value,
       default_ccc_vendor_id: defaultVendor.destination_id
     };
-
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;
       this.mappingsService.postGeneralMappings(generalMappings).subscribe(response => {
@@ -144,6 +143,26 @@ export class GeneralMappingsComponent implements OnInit {
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
+      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+        if (locationMappedTo) {
+          that.locationLevelOptions = [
+            {
+              label: 'Transaction Body',
+              value: 'TRANSACTION_BODY'
+            },
+            {
+              label: 'Transaction Line',
+              value: 'TRANSACTION_LINE',
+            },
+            {
+              label: 'Both',
+              value: 'ALL'
+            }
+          ];
+        } else {
+          that.locationLevelOptions = null;
+        }
+      });
     }, error => {
       that.generalMappings = {};
       that.isLoading = false;
@@ -165,7 +184,7 @@ export class GeneralMappingsComponent implements OnInit {
             },
             {
               label: 'Transaction Line',
-              value: 'Transaction Line',
+              value: 'TRANSACTION_LINE',
             },
             {
               label: 'Both',
@@ -197,6 +216,24 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccounts = responses[1];
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3];
+      if (that.netsuiteLocations) {
+        that.locationLevelOptions = [
+          {
+            label: 'Transaction Body',
+            value: 'TRANSACTION_BODY'
+          },
+          {
+            label: 'Transaction Line',
+            value: 'TRANSACTION_LINE',
+          },
+          {
+            label: 'Both',
+            value: 'ALL'
+          }
+        ];
+      } else {
+        that.locationLevelOptions = null;
+      }
       that.netsuiteVendors = responses[4];
       that.vendorPaymentAccounts = responses[5];
       that.getGeneralMappings();
