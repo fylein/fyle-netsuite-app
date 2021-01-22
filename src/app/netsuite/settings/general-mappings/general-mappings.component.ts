@@ -112,7 +112,6 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor.value,
       default_ccc_vendor_id: defaultVendor.destination_id
     };
-    
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;
       this.mappingsService.postGeneralMappings(generalMappings).subscribe(response => {
@@ -217,7 +216,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccounts = responses[1];
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3];
-      if(that.netsuiteLocations){
+      if (that.netsuiteLocations) {
         that.locationLevelOptions = [
           {
             label: 'Transaction Body',
