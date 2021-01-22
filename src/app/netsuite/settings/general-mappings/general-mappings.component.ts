@@ -42,6 +42,27 @@ export class GeneralMappingsComponent implements OnInit {
     private storageService: StorageService) {
   }
 
+  locationLevelMapping(locationMappedTo) {
+    if (locationMappedTo) {
+      this.locationLevelOptions = [
+        {
+          label: 'Transaction Body',
+          value: 'TRANSACTION_BODY'
+        },
+        {
+          label: 'Transaction Line',
+          value: 'TRANSACTION_LINE',
+        },
+        {
+          label: 'Both',
+          value: 'ALL'
+        }
+      ];
+    } else {
+      this.locationLevelOptions = null;
+    }
+  }
+
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
@@ -144,24 +165,7 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        if (locationMappedTo) {
-          that.locationLevelOptions = [
-            {
-              label: 'Transaction Body',
-              value: 'TRANSACTION_BODY'
-            },
-            {
-              label: 'Transaction Line',
-              value: 'TRANSACTION_LINE',
-            },
-            {
-              label: 'Both',
-              value: 'ALL'
-            }
-          ];
-        } else {
-          that.locationLevelOptions = null;
-        }
+        that.locationLevelMapping(locationMappedTo);
       });
     }, error => {
       that.generalMappings = {};
@@ -176,24 +180,7 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
     });
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        if (locationMappedTo) {
-          that.locationLevelOptions = [
-            {
-              label: 'Transaction Body',
-              value: 'TRANSACTION_BODY'
-            },
-            {
-              label: 'Transaction Line',
-              value: 'TRANSACTION_LINE',
-            },
-            {
-              label: 'Both',
-              value: 'ALL'
-            }
-          ];
-        } else {
-          that.locationLevelOptions = null;
-        }
+         that.locationLevelMapping(locationMappedTo);
       });
     });
   }
@@ -216,24 +203,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccounts = responses[1];
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3];
-      if (that.netsuiteLocations) {
-        that.locationLevelOptions = [
-          {
-            label: 'Transaction Body',
-            value: 'TRANSACTION_BODY'
-          },
-          {
-            label: 'Transaction Line',
-            value: 'TRANSACTION_LINE',
-          },
-          {
-            label: 'Both',
-            value: 'ALL'
-          }
-        ];
-      } else {
-        that.locationLevelOptions = null;
-      }
+      that.locationLevelMapping(that.netsuiteLocations);
       that.netsuiteVendors = responses[4];
       that.vendorPaymentAccounts = responses[5];
       that.getGeneralMappings();
