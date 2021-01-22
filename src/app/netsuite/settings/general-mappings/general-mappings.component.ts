@@ -152,7 +152,7 @@ export class GeneralMappingsComponent implements OnInit {
             },
             {
               label: 'Transaction Line',
-              value: 'Transaction Line',
+              value: 'TRANSACTION_LINE',
             },
             {
               label: 'Both',
@@ -184,7 +184,7 @@ export class GeneralMappingsComponent implements OnInit {
             },
             {
               label: 'Transaction Line',
-              value: 'Transaction Line',
+              value: 'TRANSACTION_LINE',
             },
             {
               label: 'Both',
@@ -224,7 +224,7 @@ export class GeneralMappingsComponent implements OnInit {
           },
           {
             label: 'Transaction Line',
-            value: 'Transaction Line',
+            value: 'TRANSACTION_LINE',
           },
           {
             label: 'Both',
