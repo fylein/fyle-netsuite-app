@@ -16,7 +16,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: any[];
-  locationLevelOptions: { label: string, value: string }[];
+  showLocationLevelOption: boolean;
   netsuiteVendors: any[];
   accountPayableAccounts: any[];
   bankAccounts: any[];
@@ -41,14 +41,12 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
   }
-
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
     that.bankAccountIsValid = false;
     that.cccAccountIsValid = false;
     that.vendorPaymentAccountIsValid = false;
-
     const formValues = this.form.getRawValue();
 
     const locationId = formValues ? formValues.netsuiteLocations : this.form.value.netsuiteLocations;
@@ -100,7 +98,6 @@ export class GeneralMappingsComponent implements OnInit {
     const generalMappings = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
-      location_level: netsuiteLocationLevel ? netsuiteLocationLevel : null,
       accounts_payable_name: accountPayableAccount.value,
       accounts_payable_id: accountPayableAccount.destination_id,
       reimbursable_account_name: bankAccount.value,
@@ -110,9 +107,9 @@ export class GeneralMappingsComponent implements OnInit {
       vendor_payment_account_name: vendorPaymentAccount.value,
       vendor_payment_account_id: vendorPaymentAccount.destination_id,
       default_ccc_vendor_name: defaultVendor.value,
-      default_ccc_vendor_id: defaultVendor.destination_id
+      default_ccc_vendor_id: defaultVendor.destination_id,
+      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
     };
-
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;
       this.mappingsService.postGeneralMappings(generalMappings).subscribe(response => {
@@ -128,13 +125,13 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.markAllAsTouched();
     }
   }
-
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
     that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
       that.generalMappings = generalMappings;
       that.isLoading = false;
+      that.checkLocationLevel(that.generalMappings.location_id);
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
@@ -143,6 +140,9 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
+      });
+      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+        that.checkLocationLevel(locationMappedTo);
       });
     }, error => {
       that.generalMappings = {};
@@ -155,26 +155,9 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
-    });
+      });
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        if (locationMappedTo) {
-          that.locationLevelOptions = [
-            {
-              label: 'Transaction Body',
-              value: 'TRANSACTION_BODY'
-            },
-            {
-              label: 'Transaction Line',
-              value: 'Transaction Line',
-            },
-            {
-              label: 'Both',
-              value: 'ALL'
-            }
-          ];
-        } else {
-          that.locationLevelOptions = null;
-        }
+        that.checkLocationLevel(locationMappedTo);
       });
     });
   }
@@ -201,6 +184,15 @@ export class GeneralMappingsComponent implements OnInit {
       that.vendorPaymentAccounts = responses[5];
       that.getGeneralMappings();
     });
+  }
+
+  checkLocationLevel(netsuiteLocation) {
+    const that = this;
+    if (netsuiteLocation) {
+      that.showLocationLevelOption = true;
+    } else {
+      that.showLocationLevelOption = false;
+    }
   }
 
   ngOnInit() {
