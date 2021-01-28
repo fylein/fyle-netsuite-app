@@ -53,11 +53,11 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="configurations--label" *ngIf="showPaymentsSync">
+      <div class="configurations--label" *ngIf="showPaymentsandProjectsField">
         Auto Sync Payments
         <mat-icon [inline]="true" class="info-icon" matTooltip="Sync payments between Fyle and NetSuite" matTooltipPosition="after">info</mat-icon>
       </div>
-      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showPaymentsSync">
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showPaymentsandProjectsField">
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how payments flow between Fyle and NetSuite"
             formControlName="paymentsSync">
@@ -73,6 +73,10 @@
           </mat-select>
         </mat-form-field>
       </div>
+
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="showPaymentsandProjectsField" formControlName="importProjects">
+        <div class="schedule--toggle-text">Import NetSuite Projects / Customers into Fyle</div>
+      </mat-slide-toggle>
 
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
