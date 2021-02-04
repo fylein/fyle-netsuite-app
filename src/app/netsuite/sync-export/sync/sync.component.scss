@@ -29,6 +29,10 @@ $fy-error: #da1e28;
       color: $fy-title-text;
     }
 
+    &--loader {
+      margin: 16px 0;
+    }
+
     &--secondary-button {
       background-color: $fy-secondary;
     }
