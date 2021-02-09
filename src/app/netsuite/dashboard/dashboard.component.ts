@@ -172,11 +172,11 @@ export class DashboardComponent implements OnInit {
     const that = this;
 
     onErrorResumeNext(
-      that.mappingsService.postExpenseCustomFields(),
       that.mappingsService.postFyleEmployees(),
       that.mappingsService.postFyleCategories(),
       that.mappingsService.postFyleCostCenters(),
-      that.mappingsService.postFyleProjects()
+      that.mappingsService.postFyleProjects(),
+      that.mappingsService.postExpenseCustomFields()
     ).subscribe(() => {});
 
     onErrorResumeNext(
