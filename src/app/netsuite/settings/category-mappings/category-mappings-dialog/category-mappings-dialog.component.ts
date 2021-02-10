@@ -71,26 +71,31 @@ export class CategoryMappingsDialogComponent implements OnInit {
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
           source_value: that.form.controls.fyleCategory.value.value,
-          destination_value: that.form.controls.netsuiteAccount.value.value
+          destination_value: that.form.controls.netsuiteAccount.value.value,
+          destination_id: that.form.controls.netsuiteAccount.value.destination_id
         }));
       } else if (that.form.controls.netsuiteExpenseCategory.value) {
         mappings.push(that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'EXPENSE_CATEGORY',
           source_value: that.form.controls.fyleCategory.value.value,
-          destination_value: that.form.controls.netsuiteExpenseCategory.value.value
+          destination_value: that.form.controls.netsuiteExpenseCategory.value.value,
+          destination_id: that.form.controls.netsuiteExpenseCategory.value.destination_id
         }));
       }
 
       let destinationValue = that.form.controls.cccAccount.value.value;
+      let destinationId = that.form.controls.cccAccount.value.destination_id;
       let destinationType = that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? 'CCC_ACCOUNT' : 'CCC_EXPENSE_CATEGORY';
 
       if (!that.form.value.cccAccount) {
         if (that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
           destinationValue = that.form.controls.netsuiteAccount.value.value;
+          destinationId = that.form.controls.netsuiteAccount.value.destination_id;
         } else {
-          destinationType = 'CCC_EXPENSE_CATEGORY'
+          destinationType = 'CCC_EXPENSE_CATEGORY';
           destinationValue = that.form.controls.netsuiteExpenseCategory.value.value;
+          destinationId = that.form.controls.netsuiteExpenseCategory.value.destination_id;
         }
       }
 
@@ -98,7 +103,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
         source_type: 'CATEGORY',
         destination_type: destinationType,
         source_value: that.form.controls.fyleCategory.value.value,
-        destination_value: destinationValue
+        destination_value: destinationValue,
+        destination_id: destinationId
       }));
 
       forkJoin(mappings).subscribe(response => {

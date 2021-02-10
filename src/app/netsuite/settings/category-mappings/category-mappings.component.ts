@@ -68,7 +68,7 @@ export class CategoryMappingsComponent implements OnInit {
       that.categoryMappings = response.results;
 
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
-  
+
       categoryMappings.forEach(categoryMapping => {
         that.categoryCCCMappings.push({
           fyle_value: categoryMapping.source.value,
