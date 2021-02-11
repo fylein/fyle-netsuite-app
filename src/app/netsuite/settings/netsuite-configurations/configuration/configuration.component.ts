@@ -193,11 +193,19 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
     if (that.generalSettingsForm.valid) {
       const mappingsSettingsPayload = [{
-        source_field: 'CATEGORY',
-        destination_field: 'ACCOUNT'
+        destination_field: 'ACCOUNT',
+        source_field: 'CATEGORY'
       },
       {
         destination_field: 'CCC_ACCOUNT',
+        source_field: 'CATEGORY'
+      },
+      {
+        destination_field: 'EXPENSE_CATEGORY',
+        source_field: 'CATEGORY'
+      },
+      {
+        destination_field: 'CCC_EXPENSE_CATEGORY',
         source_field: 'CATEGORY'
       }
     ];

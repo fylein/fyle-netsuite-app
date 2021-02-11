@@ -364,6 +364,22 @@ export class MappingsService {
     );
   }
 
+  getExpenseCategories() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/netsuite/expense_categories/`, {}
+    );
+  }
+
+  getCCCExpenseCategories() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/netsuite/ccc_expense_categories/`, {}
+    );
+  }
+
   getBankAccounts() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
