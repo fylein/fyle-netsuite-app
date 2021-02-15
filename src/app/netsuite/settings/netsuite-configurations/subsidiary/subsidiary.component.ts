@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../../core/services/mappings.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
 
 @Component({
   selector: 'app-subsidiary',
@@ -14,10 +16,10 @@ export class SubsidiaryComponent implements OnInit {
 
   subsidiaryForm: FormGroup;
   workspaceId: number;
-  netsuiteSubsidiaries: any[];
-  isLoading = true;
+  netsuiteSubsidiaries: MappingDestination[];
+  isLoading: boolean;
   subsidiaryIsValid = true;
-  subsidiaryMappings: any;
+  subsidiaryMappings: SubsidiaryMapping;
   subsidiaryMappingDone = false;
 
   constructor(private formBuilder: FormBuilder,
@@ -59,20 +61,17 @@ export class SubsidiaryComponent implements OnInit {
   getSubsidiaryMappings() {
     const that = this;
     that.mappingsService.getSubsidiaryMappings().subscribe(subsidiaryMappings => {
+      that.isLoading = false;
       that.subsidiaryMappings = subsidiaryMappings;
       that.subsidiaryMappingDone = true;
-      that.mappingsService.getNetSuiteSubsidiaries().subscribe(subsidiaries => {
-        that.netsuiteSubsidiaries = subsidiaries;
-        this.isLoading = false;
-      });
       that.subsidiaryForm = that.formBuilder.group({
         netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
       });
       that.subsidiaryForm.controls.netsuiteSubsidiaries.disable();
     }, error => {
-      that.subsidiaryMappings = {};
+      that.isLoading = false;
       that.subsidiaryForm = that.formBuilder.group({
-        netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
+        netsuiteSubsidiaries: []
       });
     });
   }
@@ -81,11 +80,10 @@ export class SubsidiaryComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.postNetSuiteSubsidiaries().subscribe(subsidiaries => {
+    that.mappingsService.postNetSuiteSubsidiaries().subscribe((subsidiaries) => {
       that.netsuiteSubsidiaries = subsidiaries;
-      this.isLoading = false;
+      that.getSubsidiaryMappings();
     });
-    that.getSubsidiaryMappings();
   }
 
 }

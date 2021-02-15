@@ -3,7 +3,10 @@ import { Observable, from } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { GeneralMapping } from '../models/general-mapping.model';
+import { MappingDestination } from '../models/mapping-destination.model';
+import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
+import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { WorkspaceService } from './workspace.service';
 
 @Injectable({
@@ -12,26 +15,23 @@ import { WorkspaceService } from './workspace.service';
 export class MappingsService {
   // TODO: Map models to each of these and the methods below
 
-  fyleCategories: Observable<any[]>;
-  netsuiteAccounts: Observable<any[]>;
-  fyleEmployees: Observable<any[]>;
-  netsuiteVendors: Observable<any[]>;
-  netsuiteEmployees: Observable<any[]>;
-  fyleProjects: Observable<any[]>;
-  fyleExpenseCustomFields: Observable<any[]>;
-  netsuiteExpenseCustomFields: Observable<any[]>;
-  netsuiteProjectFields: Observable<any[]>;
-  netsuiteCustomerFields: Observable<any[]>;
-  netsuiteDepartments: Observable<any[]>;
-  fyleCostCenters: Observable<any[]>;
-  netsuiteLocations: Observable<any[]>;
-  netsuiteClasses: Observable<any[]>;
-  netsuiteCategories: Observable<any[]>;
-  netsuiteCurrencies: Observable<any[]>;
-  generalMappings: Observable<any[]>;
-  accountPayables: Observable<any[]>;
-  netsuiteSubsidiaries: Observable<any[]>;
-  expenseFields: Observable<any[]>;
+  netsuiteSubsidiaries: Observable<MappingDestination[]>;
+  netsuiteAccounts: Observable<MappingDestination[]>;
+  netsuiteVendors: Observable<MappingDestination[]>;
+  netsuiteEmployees: Observable<MappingDestination[]>;
+  netsuiteExpenseCustomFields: Observable<MappingDestination[]>;
+  netsuiteProjectFields: Observable<MappingDestination[]>;
+  netsuiteCustomerFields: Observable<MappingDestination[]>;
+  netsuiteDepartments: Observable<MappingDestination[]>;
+  netsuiteLocations: Observable<MappingDestination[]>;
+  netsuiteClasses: Observable<MappingDestination[]>;
+  netsuiteCategories: Observable<MappingDestination[]>;
+  netsuiteCurrencies: Observable<MappingDestination[]>;
+  fyleCategories: Observable<MappingSource[]>;
+  fyleEmployees: Observable<MappingSource[]>;
+  fyleProjects: Observable<MappingSource[]>;
+  fyleExpenseCustomFields: Observable<MappingSource[]>;
+  fyleCostCenters: Observable<MappingSource[]>;
 
   constructor(
     private apiService: ApiService,
@@ -418,8 +418,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
-  // TODO: Replace any with proper model
-  postGeneralMappings(generalMappings: any) {
+  postGeneralMappings(generalMappings: GeneralMapping) {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/general/`, generalMappings);
   }
@@ -432,7 +431,7 @@ export class MappingsService {
   }
 
 
-  getSubsidiaryMappings(): Observable<GeneralMapping> {
+  getSubsidiaryMappings(): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/subsidiaries/`, {}
