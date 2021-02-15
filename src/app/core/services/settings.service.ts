@@ -5,6 +5,7 @@ import { Cacheable, CacheBuster, globalCacheBusterNotifier } from 'ngx-cacheable
 import { FyleCredentials } from '../models/fyle-credentials.model';
 import { NetSuiteCredentials } from '../models/netsuite-credentials.model';
 import { Settings } from '../models/settings.model';
+import { MappingSetting } from '../models/mapping-setting.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
@@ -98,7 +99,7 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: mappingsSettingsCache
   })
-  postMappingSettings(workspaceId: number, mappingSettings: any) {
+  postMappingSettings(workspaceId: number, mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/settings/`, mappingSettings);
   }
 

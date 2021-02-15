@@ -7,6 +7,7 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-expense-field-configuration',
@@ -63,7 +64,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const that = this;
 
     that.isLoading = true;
-    const expenseFields = that.expenseFieldsForm.value.expenseFields;
+    const expenseFields: MappingSetting[] = that.expenseFieldsForm.value.expenseFields;
 
     that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe(response => {
       that.netsuite.getGeneralSettings();

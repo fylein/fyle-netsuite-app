@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-configuration',
@@ -190,7 +191,7 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
     if (that.generalSettingsForm.valid) {
-      const mappingsSettingsPayload = [{
+      const mappingsSettingsPayload: MappingSetting[] = [{
         destination_field: 'ACCOUNT',
         source_field: 'CATEGORY'
       },
