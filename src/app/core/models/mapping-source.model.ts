@@ -8,5 +8,7 @@ export class MappingSource {
   source_id: number;
   created_at: Date;
   updated_at: Date;
-  workspace: number
+  workspace: number;
+  // Having any here is ok, since different destination attributes has different keys
+  detail: any[];
 }

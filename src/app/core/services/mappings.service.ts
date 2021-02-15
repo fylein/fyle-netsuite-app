@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
+import { CustomSegment } from '../models/custom-segment.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
+import { Mapping } from '../models/mappings.model';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { WorkspaceService } from './workspace.service';
 
@@ -141,7 +143,7 @@ export class MappingsService {
     return this.netsuiteCustomerFields;
   }
 
-  postNetsuiteCustomSegments(data: any) {
+  postNetsuiteCustomSegments(data: CustomSegment): Observable<CustomSegment> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
@@ -476,7 +478,7 @@ export class MappingsService {
     });
   }
 
-  postMappings(mapping: any) {
+  postMappings(mapping: Mapping): Observable<Mapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/`, mapping);
   }
