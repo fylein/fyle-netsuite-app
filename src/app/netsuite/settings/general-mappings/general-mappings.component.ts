@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 
 @Component({
   selector: 'app-general-mappings',
@@ -95,7 +96,7 @@ export class GeneralMappingsComponent implements OnInit {
       this.cccAccountIsValid = true;
     }
 
-    const generalMappings = {
+    const generalMappings: GeneralMapping = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
       accounts_payable_name: accountPayableAccount.value,
@@ -108,7 +109,7 @@ export class GeneralMappingsComponent implements OnInit {
       vendor_payment_account_id: vendorPaymentAccount.destination_id,
       default_ccc_vendor_name: defaultVendor.value,
       default_ccc_vendor_id: defaultVendor.destination_id,
-      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
     };
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;

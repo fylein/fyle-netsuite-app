@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { Router } from '@angular/router';
+import { CustomSegment } from 'src/app/core/models/custom-segment.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -44,7 +45,7 @@ export class CustomSegmentsDialogComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
-    const customFields = {
+    const customFields: CustomSegment = {
       internal_id: that.form.value.internal_id,
       script_id: that.form.value.script_id,
       segment_type: that.form.value.custom_field_type

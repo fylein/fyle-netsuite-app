@@ -5,9 +5,10 @@ export class MappingDestination {
   attribute_type: string;
   display_name: string;
   value: string;
-  destination_id: number;
+  destination_id: string;
   created_at: Date;
   updated_at: Date;
   workspace: number;
-  detail: any;
+  // Having any here is ok, since different destination attributes has different keys
+  detail: any[];
 }
