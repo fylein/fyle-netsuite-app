@@ -55,33 +55,30 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  getCCCExpenseOptions(employeeMappedTo) {
+  getCCCExpenseOptions(reimbursableExpenseMappedTo) {
+    const cccExpenseList = [
+      {
+        label: 'Bill',
+        value: 'BILL'
+      },
+      {
+        label: 'Journal Entry',
+        value: 'JOURNAL ENTRY'
+      }
+    ];
+
+    if (reimbursableExpenseMappedTo === 'EXPENSE REPORT') {
+      cccExpenseList.push({
+        label: 'Expense Report',
+        value: 'EXPENSE REPORT'
+      });
+    }
+
     return {
-      EMPLOYEE: [
-        {
-          label: 'Bill',
-          value: 'BILL'
-        },
-        {
-          label: 'Expense Report',
-          value: 'EXPENSE REPORT'
-        },
-        {
-          label: 'Journal Entry',
-          value: 'JOURNAL ENTRY'
-        }
-      ],
-      VENDOR: [
-        {
-          label: 'Bill',
-          value: 'BILL'
-        },
-        {
-          label: 'Journal Entry',
-          value: 'JOURNAL ENTRY'
-        }
-      ]
-    }[employeeMappedTo];
+      BILL: cccExpenseList,
+      'JOURNAL ENTRY': cccExpenseList,
+      'EXPENSE REPORT': cccExpenseList
+    }[reimbursableExpenseMappedTo];
   }
 
   getAllSettings() {
@@ -105,7 +102,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
-      that.cccExpenseOptions = that.getCCCExpenseOptions(that.employeeFieldMapping.destination_field);
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_netsuite_payments) {
@@ -180,11 +176,11 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
-        that.cccExpenseOptions = that.getCCCExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
       });
 
       that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+        that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
         that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
       });
     });
