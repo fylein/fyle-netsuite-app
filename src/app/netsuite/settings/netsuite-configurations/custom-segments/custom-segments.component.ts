@@ -13,7 +13,7 @@ import { CustomSegment } from 'src/app/core/models/custom-segment.model';
 export class CustomSegmentsComponent implements OnInit {
   workspaceId: number;
   isLoading: boolean;
-  customMappings: CustomSegment;
+  customMappings: CustomSegment[];
   columnsToDisplay = ['name', 'script_id', 'internal_id', 'type'];
 
   constructor(public dialog: MatDialog, private route: ActivatedRoute, private mappingsService: MappingsService) {}
