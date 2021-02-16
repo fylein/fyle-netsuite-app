@@ -247,18 +247,21 @@ export class ConfigurationComponent implements OnInit {
         destination_field: employeeMappingsObject
       });
 
-      that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload).subscribe(() => {
-        that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, autoMapEmployees).subscribe(() => {
-          that.isLoading = true;
-          that.snackBar.open('Configuration saved successfully');
-          if (autoMapEmployees) {
-            setTimeout(() => {
-              that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
-            }, 1500);
-          }
-          that.netsuite.getGeneralSettings();
-          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-        });
+      forkJoin(
+        [
+          that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, autoMapEmployees)
+        ]
+      ).subscribe(() => {
+        that.isLoading = false;
+        that.snackBar.open('Configuration saved successfully');
+        if (autoMapEmployees) {
+          setTimeout(() => {
+            that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+          }, 1500);
+        }
+        that.netsuite.getGeneralSettings();
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
     } else {
       that.snackBar.open('Form has invalid fields');
