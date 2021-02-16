@@ -25,9 +25,11 @@ export class CategoryMappingsDialogComponent implements OnInit {
   form: FormGroup;
   fyleCategories: any[];
   netsuiteAccounts: any[];
+  netsuiteExpenseCategories: any[];
   fyleCategoryOptions: any[];
   workspaceId: number;
   netsuiteAccountOptions: any[];
+  netsuiteExpenseCategoryOptions: any[];
   netsuiteCCCAccountOptions: any[];
   generalSettings: any;
   cccAccounts: any[];
@@ -62,24 +64,47 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
     if (that.form.valid) {
       that.isLoading = true;
-      const mappings = [
-        that.mappingsService.postMappings({
+      const mappings = [];
+
+      if (that.form.controls.netsuiteAccount.value) {
+        mappings.push(that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
           source_value: that.form.controls.fyleCategory.value.value,
-          destination_value: that.form.controls.netsuiteAccount.value.value
-        })
-      ];
+          destination_value: that.form.controls.netsuiteAccount.value.value,
+          destination_id: that.form.controls.netsuiteAccount.value.destination_id
+        }));
+      } else if (that.form.controls.netsuiteExpenseCategory.value) {
+        mappings.push(that.mappingsService.postMappings({
+          source_type: 'CATEGORY',
+          destination_type: 'EXPENSE_CATEGORY',
+          source_value: that.form.controls.fyleCategory.value.value,
+          destination_value: that.form.controls.netsuiteExpenseCategory.value.value,
+          destination_id: that.form.controls.netsuiteExpenseCategory.value.destination_id
+        }));
+      }
 
       let destinationValue = that.form.controls.cccAccount.value.value;
+      let destinationId = that.form.controls.cccAccount.value.destination_id;
+      let destinationType = that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? 'CCC_ACCOUNT' : 'CCC_EXPENSE_CATEGORY';
+
       if (!that.form.value.cccAccount) {
-        destinationValue = that.form.controls.netsuiteAccount.value.value;
+        if (that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+          destinationValue = that.form.controls.netsuiteAccount.value.value;
+          destinationId = that.form.controls.netsuiteAccount.value.destination_id;
+        } else {
+          destinationType = 'CCC_EXPENSE_CATEGORY';
+          destinationValue = that.form.controls.netsuiteExpenseCategory.value.value;
+          destinationId = that.form.controls.netsuiteExpenseCategory.value.destination_id;
+        }
       }
+
       mappings.push(that.mappingsService.postMappings({
         source_type: 'CATEGORY',
-        destination_type: 'CCC_ACCOUNT',
+        destination_type: destinationType,
         source_value: that.form.controls.fyleCategory.value.value,
-        destination_value: destinationValue
+        destination_value: destinationValue,
+        destination_id: destinationId
       }));
 
       forkJoin(mappings).subscribe(response => {
@@ -111,12 +136,18 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     that.form.controls.netsuiteAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
-        if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT') {
-          newValue = `expense category - ${newValue.toLowerCase()}`;
-          that.netsuiteAccountOptions = that.netsuiteAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
-        } else {
-          that.netsuiteAccountOptions = that.netsuiteAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name !== 'Expense Category');
-        }
+        that.netsuiteAccountOptions = that.netsuiteAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
+      }
+    });
+  }
+
+  setupNetSuiteExpenseCategoryWatchers() {
+    const that = this;
+
+    that.form.controls.netsuiteExpenseCategory.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
+      if (typeof(newValue) === 'string') {
+        newValue = `expense category - ${newValue.toLowerCase()}`;
+        that.netsuiteExpenseCategoryOptions = that.netsuiteExpenseCategories.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
       }
     });
   }
@@ -140,9 +171,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
       if (typeof(newValue) === 'string') {
         if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
           newValue = `expense category - ${newValue.toLowerCase()}`;
+          that.cccAccounts = that.netsuiteExpenseCategories.slice();
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         } else {
-          that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()) && netsuiteAccount.display_name !== 'Expense Category');
+          that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         }
       }
     });
@@ -153,6 +185,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.setupFyleCateogryWatchers();
     that.setupNetSuiteAccountWatchers();
     that.setupNetSuiteCCCAccountWatchers();
+    that.setupNetSuiteExpenseCategoryWatchers();
   }
 
   ngOnInit() {
@@ -174,6 +207,11 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.cccAccounts = netsuiteAccounts;
     });
 
+    // TODO: remove promises and do with rxjs observables
+    const getExpenseCategories = that.mappingsService.getExpenseCategories().toPromise().then(netsuiteExpenseCategories => {
+      that.netsuiteExpenseCategories = netsuiteExpenseCategories;
+    });
+
     const getGeneralSettings = that.settingsService.getGeneralSettings(this.workspaceId).toPromise().then(
       settings => that.generalSettings = settings
     );
@@ -182,16 +220,19 @@ export class CategoryMappingsDialogComponent implements OnInit {
     forkJoin([
       getFyleCateogories,
       getExpenseAccounts,
-      getGeneralSettings
+      getGeneralSettings,
+      getExpenseCategories
     ]).subscribe(() => {
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';
       const cccAccount = that.editMapping ? that.cccAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : '';
+      const netsuiteExpenseCategory = that.editMapping ? that.netsuiteExpenseCategories.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: [netsuiteAccount, Validators.compose([that.forbiddenSelectionValidator(that.netsuiteAccounts)])],
-        cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.cccAccounts) : null]
+        netsuiteAccount: [netsuiteAccount, that.generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT' ? that.forbiddenSelectionValidator(that.netsuiteAccounts) : null],
+        netsuiteExpenseCategory: [netsuiteExpenseCategory, that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' ? that.forbiddenSelectionValidator(that.netsuiteExpenseCategories) : null],
+        cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? that.cccAccounts : that.netsuiteExpenseCategories) : null]
       });
 
       if (that.editMapping) {

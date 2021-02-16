@@ -35,13 +35,13 @@
           </mat-error>
         </mat-form-field>
   
-        <div class="mat-body-strong">
+        <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT'">
           <strong class="mappings-dialog--label">
-            Map to Corresponding NetSuite {{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Expense Category' : 'Expense Account'}}
+            Map to Corresponding NetSuite Expense Account
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--field" appearance="outline">
-          <input type="text" formControlName="netsuiteAccount" placeholder="{{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Netsuite Expense Category': 'Netsuite Account'}}" matInput
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT'">
+          <input type="text" formControlName="netsuiteAccount" placeholder="Netsuite Account" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
             <mat-option *ngFor="let option of netsuiteAccountOptions" [value]="option">
@@ -49,6 +49,24 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error class="mappings-dialog--error" *ngIf="form.controls.netsuiteAccount.hasError('forbiddenOption')">
+            Please enter a valid value
+          </mat-error>
+        </mat-form-field>
+
+        <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'">
+          <strong class="mappings-dialog--label">
+            Map to Corresponding NetSuite Expense Category
+          </strong>
+        </div>
+        <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'">
+          <input type="text" formControlName="netsuiteExpenseCategory" placeholder="Netsuite Expense Category" matInput
+            [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
+          <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
+            <mat-option *ngFor="let option of netsuiteExpenseCategoryOptions" [value]="option">
+              {{option.value}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error class="mappings-dialog--error" *ngIf="form.controls.netsuiteExpenseCategory.hasError('forbiddenOption')">
             Please enter a valid value
           </mat-error>
         </mat-form-field>
@@ -66,7 +84,7 @@
               {{option.value}}
             </mat-option>
           </mat-autocomplete>
-          <mat-error class="mappings-dialog--error" *ngIf="form.controls.netsuiteAccount.hasError('forbiddenOption')">
+          <mat-error class="mappings-dialog--error" *ngIf="form.controls.cccAccount.hasError('forbiddenOption')">
             Please enter a valid value
           </mat-error>
         </mat-form-field>

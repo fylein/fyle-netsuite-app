@@ -63,23 +63,29 @@ export class CategoryMappingsComponent implements OnInit {
   getCategoryMappings() {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getAllMappings('CATEGORY').subscribe(categoryMappings => {
+    that.mappingsService.getAllMappings('CATEGORY').subscribe(response => {
       that.categoryCCCMappings = [];
-      that.categoryMappings = categoryMappings.results;
-      const accountMappings = that.categoryMappings.filter(mappings => mappings.destination.attribute_type === 'ACCOUNT');
-      accountMappings.forEach(mapping => {
-        const netsuiteValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'ACCOUNT')[0];
-        const cccValue = that.categoryMappings.filter(currentMapping => currentMapping.source.value === mapping.source.value && currentMapping.destination.attribute_type === 'CCC_ACCOUNT')[0];
+      that.categoryMappings = response.results;
+
+      const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
+
+      categoryMappings.forEach(categoryMapping => {
         that.categoryCCCMappings.push({
-          fyle_value: mapping.source.value,
-          netsuite_value: netsuiteValue.destination.value,
-          ccc_value: cccValue ? cccValue.destination.value : ''
+          fyle_value: categoryMapping.source.value,
+          netsuite_value: categoryMapping.destination.value,
+          ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
         });
       });
       that.isLoading = false;
     }, () => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });
+  }
+
+  getCCCAccount(categoryMappings, categoryMapping) {
+    const categMapping = categoryMappings.filter(mapping => mapping.source.value === categoryMapping.source.value && (mapping.destination_type === 'CCC_ACCOUNT' || mapping.destination_type === 'CCC_EXPENSE_CATEGORY'));
+
+    return categMapping.length ? categMapping[0].destination.value : null;
   }
 
   ngOnInit() {
