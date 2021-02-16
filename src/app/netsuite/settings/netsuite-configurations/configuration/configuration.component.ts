@@ -119,7 +119,8 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
         importProjects: [that.generalSettings.import_projects],
-        paymentsSync: [paymentsSyncOption]
+        paymentsSync: [paymentsSyncOption],
+        autoMapEmployees: [that.generalSettings.auto_map_employees]
       }, {
       });
 
@@ -172,7 +173,8 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
-        paymentsSync: [null]
+        paymentsSync: [null],
+        autoMapEmployees: [null]
       }, {
       });
 
@@ -213,6 +215,7 @@ export class ConfigurationComponent implements OnInit {
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
       const importProjects = that.generalSettingsForm.value.importProjects;
+      const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
 
       let fyleToNetSuite = false;
       let netSuiteToFyle = false;
@@ -248,12 +251,16 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, autoMapEmployees)
         ]
-      ).subscribe(responses => {
-        that.isLoading = true;
-        that.storageService.set('generalSettings', responses[1]);
+      ).subscribe(() => {
+        that.isLoading = false;
         that.snackBar.open('Configuration saved successfully');
+        if (autoMapEmployees) {
+          setTimeout(() => {
+            that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+          }, 1500);
+        }
         that.netsuite.getGeneralSettings();
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
