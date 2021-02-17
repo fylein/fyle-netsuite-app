@@ -73,8 +73,8 @@ export class GenericMappingsDialogComponent implements OnInit {
     }
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: object} | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
