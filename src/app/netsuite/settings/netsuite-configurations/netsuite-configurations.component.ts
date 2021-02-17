@@ -3,6 +3,8 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { ExpenseField } from 'src/app/core/models/expensefield.model';
 
 @Component({
   selector: 'app-netsuite-configurations',
@@ -14,9 +16,9 @@ export class NetsuiteConfigurationsComponent implements OnInit {
   state: string;
   workspaceId: number;
   isParentLoading: boolean;
-  fyleFields: any;
-  generalSettings: any;
-  netsuiteConnection: any;
+  fyleFields: ExpenseField[];
+  generalSettings: GeneralSetting;
+  netsuiteConnection: boolean;
   netsuiteConnectionDone: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }

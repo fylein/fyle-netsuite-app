@@ -7,6 +7,10 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -21,24 +25,24 @@ export class MappingErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./category-mappings-dialog.component.scss', '../../settings.component.scss']
 })
 export class CategoryMappingsDialogComponent implements OnInit {
-  isLoading = false;
+  isLoading: boolean;
   form: FormGroup;
-  fyleCategories: any[];
-  netsuiteAccounts: any[];
-  netsuiteExpenseCategories: any[];
-  fyleCategoryOptions: any[];
+  fyleCategories: MappingSource[];
+  netsuiteAccounts: MappingDestination[];
+  netsuiteExpenseCategories: MappingDestination[];
+  fyleCategoryOptions: MappingSource[];
   workspaceId: number;
-  netsuiteAccountOptions: any[];
-  netsuiteExpenseCategoryOptions: any[];
-  netsuiteCCCAccountOptions: any[];
-  generalSettings: any;
-  cccAccounts: any[];
+  netsuiteAccountOptions: MappingDestination[];
+  netsuiteExpenseCategoryOptions: MappingDestination[];
+  netsuiteCCCAccountOptions: MappingDestination[];
+  generalSettings: GeneralSetting;
+  cccAccounts: MappingDestination[];
   editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CategoryMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar, private settingsService: SettingsService
               ) { }

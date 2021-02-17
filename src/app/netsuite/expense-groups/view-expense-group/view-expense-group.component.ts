@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseGroupsService } from '../../../core/services/expense-groups.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { TasksService } from '../../../core/services/tasks.service';
-import { environment } from 'src/environments/environment';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
@@ -19,7 +18,6 @@ export class ViewExpenseGroupComponent implements OnInit {
   expenses: ExpenseGroup[];
   isLoading = true;
   expenseGroup: ExpenseGroup;
-  task: any;
   state: string;
   pageSize: number;
   pageNumber: number;
@@ -62,9 +60,8 @@ export class ViewExpenseGroupComponent implements OnInit {
     const that = this;
     // TODO: remove promises and do with rxjs observables
     return that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId).toPromise().then((tasks) => {
-      if (tasks.length > 0) {
-        that.task = tasks[0];
-        that.status = that.task.status;
+      if (tasks.length) {
+        that.status = tasks[0].status;
       }
     });
   }

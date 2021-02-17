@@ -7,6 +7,9 @@ import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/empl
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { MatSnackBar } from '@angular/material';
+import { Mapping } from 'src/app/core/models/mappings.model';
+import { MappingRow } from 'src/app/core/models/mapping-row.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 
 @Component({
   selector: 'app-employee-mappings',
@@ -15,14 +18,13 @@ import { MatSnackBar } from '@angular/material';
 })
 export class EmployeeMappingsComponent implements OnInit {
 
-  closeResult: string;
   form: FormGroup;
-  employeeMappings: any[];
+  employeeMappings: Mapping[];
+  employeeMappingRows: MappingRow[];
   workspaceId: number;
   isLoading = true;
-  generalSettings: any;
-  filteredAccounts: any[];
-  rowElement: any;
+  generalSettings: GeneralSetting;
+  rowElement: Mapping;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
@@ -34,7 +36,7 @@ export class EmployeeMappingsComponent implements OnInit {
               private storageService: StorageService
             ) { }
 
-  open(selectedItem: any = null) {
+  open(selectedItem: MappingRow = null) {
     const that = this;
     const dialogRef = that.dialog.open(EmployeeMappingsDialogComponent, {
       width: '450px',
@@ -69,11 +71,11 @@ export class EmployeeMappingsComponent implements OnInit {
       mappings.push({
         fyle_value: employeeEVMapping.source.value,
         netsuite_value: employeeEVMapping.destination.value,
-        ccc_account: that.getCCCAccount(that.employeeMappings, employeeEVMapping),
+        ccc_value: that.getCCCAccount(that.employeeMappings, employeeEVMapping),
         auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
-    that.employeeMappings = mappings;
+    that.employeeMappingRows = mappings;
   }
 
   getCCCAccount(employeeMappings, employeeEVMapping) {

@@ -3,6 +3,7 @@ import { Observable, from } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CustomSegment } from '../models/custom-segment.model';
+import { ExpenseField } from '../models/expensefield.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
@@ -276,7 +277,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/employees/`, {});
   }
 
-  getFyleExpenseFields() {
+  getFyleExpenseFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
@@ -294,7 +295,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/vendors/`, {});
   }
 
-  getNetSuiteFields() {
+  getNetSuiteFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});

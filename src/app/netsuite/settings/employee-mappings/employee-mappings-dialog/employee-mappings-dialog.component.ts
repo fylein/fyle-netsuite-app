@@ -7,6 +7,11 @@ import { forkJoin, from } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -23,24 +28,23 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   workSpaceId: number;
-  // TODO: replace any with relevant models
-  fyleEmployees: any[];
-  netsuiteEmployees: any[];
-  cccObjects: any[];
-  netsuiteVendors: any[];
-  generalSettings: any;
-  employeeOptions: any[];
-  netsuiteEmployeeOptions: any[];
-  cccOptions: any[];
-  netsuiteVendorOptions: any[];
-  generalMappings: any;
+  fyleEmployees: MappingSource[];
+  netsuiteEmployees: MappingDestination[];
+  cccObjects: MappingDestination[];
+  netsuiteVendors: MappingDestination[];
+  generalSettings: GeneralSetting;
+  employeeOptions: MappingSource[];
+  netsuiteEmployeeOptions: MappingDestination[];
+  cccOptions: MappingDestination[];
+  netsuiteVendorOptions: MappingDestination[];
+  generalMappings: GeneralMapping;
   editMapping: boolean;
 
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar,
               private settingsService: SettingsService

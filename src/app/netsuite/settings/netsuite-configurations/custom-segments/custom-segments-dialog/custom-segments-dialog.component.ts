@@ -7,6 +7,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { Router } from '@angular/router';
 import { CustomSegment } from 'src/app/core/models/custom-segment.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -29,7 +30,7 @@ export class CustomSegmentsDialogComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CustomSegmentsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar,
               private router: Router,

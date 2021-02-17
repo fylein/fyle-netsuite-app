@@ -18,12 +18,12 @@
     </div>
   
   
-    <div class="mat-h2" *ngIf="!employeeMappings.length && !isLoading">
+    <div class="mat-h2" *ngIf="!employeeMappingRows.length && !isLoading">
       <zero-state message="You have no employee mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="employeeMappings.length" [hidden]="isLoading">
-      <table mat-table [dataSource]="employeeMappings" class="page-table" matSort matSortActive="created_at"
+    <div *ngIf="employeeMappingRows.length" [hidden]="isLoading">
+      <table mat-table [dataSource]="employeeMappingRows" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="employee_email">
           <th mat-header-cell *matHeaderCellDef> Employee Email </th>
@@ -47,7 +47,7 @@
         <ng-container matColumnDef="ccc">
           <th mat-header-cell *matHeaderCellDef> Credit Card</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.ccc_account }}
+            {{ element.ccc_value }}
           </td>
         </ng-container>
   

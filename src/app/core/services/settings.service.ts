@@ -6,6 +6,7 @@ import { FyleCredentials } from '../models/fyle-credentials.model';
 import { NetSuiteCredentials } from '../models/netsuite-credentials.model';
 import { Settings } from '../models/settings.model';
 import { MappingSetting } from '../models/mapping-setting.model';
+import { GeneralSetting } from '../models/general-setting.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
@@ -108,7 +109,7 @@ export class SettingsService {
   @Cacheable({
     cacheBusterObserver: generalSettingsCache
   })
-  getGeneralSettings(workspaceId: number) {
+  getGeneralSettings(workspaceId: number): Observable<GeneralSetting> {
     return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
   }
 
@@ -135,7 +136,7 @@ export class SettingsService {
         this.getMappingSettings(workspaceId)
       ]
     ).toPromise().then(responses => {
-      const generalSettings = responses[0];
+      const generalSettings: GeneralSetting = responses[0];
       const mappingSettings = responses[1].results;
 
       const employeeFieldMapping = mappingSettings.filter(
