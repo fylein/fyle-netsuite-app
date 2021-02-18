@@ -12,6 +12,7 @@ export class Task {
   bill: number;
   expense_report: number;
   journal_entry: number;
+  vendor_payment: number;
   created_at: Date;
   updated_at: Date;
   workspace: number;
