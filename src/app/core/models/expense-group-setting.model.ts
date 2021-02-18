@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface ExpenseGroupSetting {
+export class ExpenseGroupSetting {
   id: number;
   reimbursable_expense_group_fields: string[];
   corporate_credit_card_expense_group_fields: string[];

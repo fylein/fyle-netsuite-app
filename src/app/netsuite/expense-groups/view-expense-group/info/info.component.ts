@@ -43,22 +43,6 @@ export class InfoComponent implements OnInit {
     return name.replace(/_/g, ' ');
   }
 
-  // initExpenseGroupExpenses() {
-  //   const that = this;
-  //   return that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId).subscribe((expenses) => {
-  //     that.count = expenses.length;
-  //     that.expenses = new MatTableDataSource(expenses);
-  //   });
-  // }
-
-  // initExpenseGroupDetails() {
-  //   const that = this;
-  //   return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).subscribe((expenseGroup) => {
-  //     that.expenseGroup = expenseGroup;
-  //     that.expenseGroupFields = Object.keys(expenseGroup.description);
-  //   });
-  // }
-
   openExpenseInFyle(expense) {
     const that = this;
     const clusterDomain = this.storageService.get('clusterDomain');

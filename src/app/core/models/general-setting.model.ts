@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface GeneralSetting {
+export class GeneralSetting {
     id: number;
     reimbursable_expenses_object: string;
     corporate_credit_card_expenses_object: string;
