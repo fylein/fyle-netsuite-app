@@ -1,5 +1,4 @@
 /* tslint:disable */
-
 export interface GeneralSetting {
     id: number;
     reimbursable_expenses_object: string;

@@ -8,7 +8,7 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
-import { ExpenseField } from 'src/app/core/models/expensefield.model';
+import { ExpenseField } from 'src/app/core/models/expense-field.model';
 
 @Component({
   selector: 'app-expense-field-configuration',

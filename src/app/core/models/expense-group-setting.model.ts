@@ -1,6 +1,4 @@
 /* tslint:disable */
-// TODO: Use something for serialization / deserialization
-
 export interface ExpenseGroupSetting {
   id: number;
   reimbursable_expense_group_fields: string[];

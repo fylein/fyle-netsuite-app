@@ -4,7 +4,7 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
-import { ExpenseField } from 'src/app/core/models/expensefield.model';
+import { ExpenseField } from 'src/app/core/models/expense-field.model';
 
 @Component({
   selector: 'app-netsuite-configurations',

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroupsService } from '../../../../core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatTableDataSource } from '@angular/material/table';
 import { Expense } from 'src/app/core/models/expense.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -43,23 +43,21 @@ export class InfoComponent implements OnInit {
     return name.replace(/_/g, ' ');
   }
 
-  initExpenseGroupExpenses() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId).toPromise().then((expenses) => {
-      that.count = expenses.length;
-      that.expenses = new MatTableDataSource(expenses);
-    });
-  }
+  // initExpenseGroupExpenses() {
+  //   const that = this;
+  //   return that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId).subscribe((expenses) => {
+  //     that.count = expenses.length;
+  //     that.expenses = new MatTableDataSource(expenses);
+  //   });
+  // }
 
-  initExpenseGroupDetails() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).toPromise().then((expenseGroup) => {
-      that.expenseGroup = expenseGroup;
-      that.expenseGroupFields = Object.keys(expenseGroup.description);
-    });
-  }
+  // initExpenseGroupDetails() {
+  //   const that = this;
+  //   return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).subscribe((expenseGroup) => {
+  //     that.expenseGroup = expenseGroup;
+  //     that.expenseGroupFields = Object.keys(expenseGroup.description);
+  //   });
+  // }
 
   openExpenseInFyle(expense) {
     const that = this;
@@ -75,9 +73,13 @@ export class InfoComponent implements OnInit {
 
     that.isLoading = true;
     forkJoin([
-      that.initExpenseGroupExpenses(),
-      that.initExpenseGroupDetails()
-    ]).subscribe(() => {
+      that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId),
+      that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId)
+    ]).subscribe(res => {
+      that.count = res[0].length;
+      that.expenses = new MatTableDataSource(res[0]);
+      that.expenseGroup = res[1];
+      that.expenseGroupFields = Object.keys(res[1].description);
       that.isLoading = false;
     });
   }

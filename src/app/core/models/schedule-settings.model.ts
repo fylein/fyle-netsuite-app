@@ -5,5 +5,5 @@ export class ScheduleSettings {
   enabled: boolean;
   start_datetime: Date;
   interval_hours: number;
-  fyle_job_id: string
-};
+  schedule?: number;
+}

@@ -3,7 +3,6 @@
 import { MappingDestination } from "./mapping-destination.model";
 import { MappingSource } from "./mapping-source.model";
 
-// TODO: Use something for serialization / deserialization
 export class MappingRow {
     auto_mapped: boolean;
     ccc_value: string;

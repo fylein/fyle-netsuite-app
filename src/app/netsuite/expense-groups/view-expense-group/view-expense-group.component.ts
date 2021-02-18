@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseGroupsService } from '../../../core/services/expense-groups.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { TasksService } from '../../../core/services/tasks.service';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { StorageService } from 'src/app/core/services/storage.service';
@@ -47,37 +47,23 @@ export class ViewExpenseGroupComponent implements OnInit {
     this.windowReference.open(`${clusterDomain}/app/main/#/enterprise/view_expense/${expenseId}`, '_blank');
   }
 
-  initExpenseGroupDetails() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).toPromise().then((expenseGroup) => {
-      that.expenseGroup = expenseGroup;
-      return expenseGroup;
-    });
-  }
-
-  initTasks() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId).toPromise().then((tasks) => {
-      if (tasks.length) {
-        that.status = tasks[0].status;
-      }
-    });
-  }
-
   ngOnInit() {
-    this.workspaceId = +this.route.snapshot.params.workspace_id;
-    this.expenseGroupId = +this.route.snapshot.params.expense_group_id;
-    this.state = this.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'INFO';
+    const that = this;
 
-    forkJoin(
-      [
-        this.initExpenseGroupDetails(),
-        this.initTasks()
-      ]
-    ).subscribe(response => {
-      this.isLoading = false;
+    that.workspaceId = +that.route.snapshot.params.workspace_id;
+    that.expenseGroupId = +that.route.snapshot.params.expense_group_id;
+    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'INFO';
+
+    forkJoin([
+      that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId),
+      that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId)
+    ]).subscribe(response => {
+      that.expenseGroup = response[0];
+      if (response[1].length) {
+        that.status = response[1][0].status;
+      }
+
+      that.isLoading = false;
     });
   }
 

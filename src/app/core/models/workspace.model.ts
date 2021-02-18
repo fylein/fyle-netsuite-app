@@ -1,7 +1,6 @@
 /* tslint:disable */
 import { User } from "./user.model";
 
-// TODO: Use something for serialization / deserialization
 export class Workspace {
     id?: number;
     name: string;

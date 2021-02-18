@@ -200,33 +200,19 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.editMapping = true;
     }
 
-    // TODO: remove promises and do with rxjs observables
-    const getFyleCateogories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
-      that.fyleCategories = fyleCategories;
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getExpenseAccounts = that.mappingsService.getExpenseAccounts().toPromise().then(netsuiteAccounts => {
-      that.netsuiteAccounts = netsuiteAccounts;
-      that.cccAccounts = netsuiteAccounts;
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getExpenseCategories = that.mappingsService.getExpenseCategories().toPromise().then(netsuiteExpenseCategories => {
-      that.netsuiteExpenseCategories = netsuiteExpenseCategories;
-    });
-
-    const getGeneralSettings = that.settingsService.getGeneralSettings(this.workspaceId).toPromise().then(
-      settings => that.generalSettings = settings
-    );
-
     that.isLoading = true;
     forkJoin([
-      getFyleCateogories,
-      getExpenseAccounts,
-      getGeneralSettings,
-      getExpenseCategories
-    ]).subscribe(() => {
+      that.mappingsService.getFyleCategories(),
+      that.mappingsService.getExpenseAccounts(),
+      that.mappingsService.getExpenseCategories(),
+      that.settingsService.getGeneralSettings(that.workspaceId)
+    ]).subscribe((res) => {
+      that.fyleCategories = res[0];
+      that.netsuiteAccounts = res[1];
+      that.cccAccounts = res[1];
+      that.netsuiteExpenseCategories = res[2];
+      that.generalSettings = res[3];
+
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';

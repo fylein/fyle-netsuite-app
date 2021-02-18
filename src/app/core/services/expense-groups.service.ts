@@ -80,7 +80,6 @@ export class ExpenseGroupsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_groups/${expenseGroupId}/`, {});
   }
 
-  // TODO: Map response to a model
   syncExpenseGroups() {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_groups/trigger/`, {});

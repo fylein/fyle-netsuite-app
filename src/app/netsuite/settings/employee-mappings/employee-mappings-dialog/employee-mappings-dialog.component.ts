@@ -166,35 +166,21 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
-    const getFyleEmployees = that.mappingsService.getFyleEmployees().toPromise().then((fyleEmployees) => {
-      that.fyleEmployees = fyleEmployees;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getnetsuiteEmployees = that.mappingsService.getNetSuiteEmployees().toPromise().then((netsuiteEmployees) => {
-      that.netsuiteEmployees = netsuiteEmployees;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getCCCAccounts = that.mappingsService.getCreditCardAccounts().toPromise().then((cccObjects) => {
-      that.cccObjects = cccObjects;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getnetsuiteVendors = that.mappingsService.getNetSuiteVendors().toPromise().then((netsuiteVendors) => {
-      that.netsuiteVendors = netsuiteVendors;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getGeneralMappings = that.mappingsService.getGeneralMappings().toPromise().then((generalMappings) => {
-      that.generalMappings = generalMappings;
-    });
 
     that.isLoading = true;
     forkJoin([
-      from(getFyleEmployees),
-      from(getnetsuiteEmployees),
-      from(getCCCAccounts),
-      from(getnetsuiteVendors),
-      from(getGeneralMappings)
+      that.mappingsService.getFyleEmployees(),
+      that.mappingsService.getNetSuiteEmployees(),
+      that.mappingsService.getCreditCardAccounts(),
+      that.mappingsService.getNetSuiteVendors(),
+      that.mappingsService.getGeneralMappings()
     ]).subscribe((res) => {
+      that.fyleEmployees = res[0];
+      that.netsuiteEmployees = res[1];
+      that.cccObjects = res[2];
+      that.netsuiteVendors = res[3];
+      that.generalMappings = res[4];
+
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
       const netsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';
