@@ -48,7 +48,7 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: netsuiteCredentialsCache
   })
-  connectNetSuite(workspaceId: number, netsuiteCredentials): Observable<NetSuiteCredentials> {
+  connectNetSuite(workspaceId: number, netsuiteCredentials: NetSuiteCredentials): Observable<NetSuiteCredentials> {
     globalCacheBusterNotifier.next();
     return this.apiService.post('/workspaces/' + workspaceId + '/connect_netsuite/tba/', netsuiteCredentials
     );

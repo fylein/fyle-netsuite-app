@@ -4,6 +4,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NetSuiteCredentials } from 'src/app/core/models/netsuite-credentials.model';
 
 @Component({
   selector: 'app-connect-netsuite',
@@ -29,7 +30,7 @@ export class ConnectNetsuiteComponent implements OnInit {
   save() {
     const that = this;
     if (that.connectNetSuiteForm.valid) {
-      const netsuiteCredentials = {
+      const netsuiteCredentials: NetSuiteCredentials = {
         ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
         ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
         ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
@@ -39,8 +40,7 @@ export class ConnectNetsuiteComponent implements OnInit {
         that.isLoading = true;
         that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
           if (responses) {
-            this.mappingsService.postNetSuiteSubsidiaries().subscribe(response => {
-            });
+            this.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {});
           }
           that.snackBar.open('NetSuite account connected successfully');
           that.netsuiteConnectionDone = true;
