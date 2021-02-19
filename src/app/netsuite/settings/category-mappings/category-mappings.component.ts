@@ -75,6 +75,7 @@ export class CategoryMappingsComponent implements OnInit {
       categoryMappings.forEach(categoryMapping => {
         mappings.push({
           fyle_value: categoryMapping.source.value,
+          auto_mapped: categoryMapping.source.auto_mapped,
           netsuite_value: categoryMapping.destination.value,
           ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
         });
