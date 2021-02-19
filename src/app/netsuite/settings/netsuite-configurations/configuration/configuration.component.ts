@@ -115,6 +115,7 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
         importProjects: [that.generalSettings.import_projects],
+        importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees]
       }, {
@@ -169,6 +170,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
+        importCategories: [false],
         paymentsSync: [null],
         autoMapEmployees: [null]
       }, {
@@ -211,6 +213,7 @@ export class ConfigurationComponent implements OnInit {
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object;
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
       const importProjects = that.generalSettingsForm.value.importProjects;
+      const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
 
       let fyleToNetSuite = false;
@@ -247,7 +250,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, autoMapEmployees)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, importCategories, autoMapEmployees)
         ]
       ).subscribe(() => {
         that.isLoading = false;
