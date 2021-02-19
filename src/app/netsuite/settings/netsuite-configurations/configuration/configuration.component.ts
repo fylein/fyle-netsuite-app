@@ -121,37 +121,21 @@ export class ConfigurationComponent implements OnInit {
       }, {
       });
 
-      if (that.generalSettings.reimbursable_expenses_object) {
-        that.expenseOptions = [{
-          label: 'Bill',
-          value: 'BILL'
-        },
-        {
-          label: 'Expense Report',
-          value: 'EXPENSE REPORT'
-        },
-        {
-          label: 'Journal Entry',
-          value: 'JOURNAL ENTRY'
-        }
-        ];
+      that.expenseOptions = [{
+        label: 'Bill',
+        value: 'BILL'
+      },
+      {
+        label: 'Expense Report',
+        value: 'EXPENSE REPORT'
+      },
+      {
+        label: 'Journal Entry',
+        value: 'JOURNAL ENTRY'
       }
+      ];
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
-        that.cccExpenseOptions = [{
-          label: 'Bill',
-          value: 'BILL'
-        },
-        {
-          label: 'Expense Report',
-          value: 'EXPENSE REPORT'
-        },
-        {
-          label: 'Journal Entry',
-          value: 'JOURNAL ENTRY'
-        }
-        ];
-      }
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
 
       that.generalSettingsForm.controls.employees.disable();
       that.generalSettingsForm.controls.reimbursableExpense.disable();

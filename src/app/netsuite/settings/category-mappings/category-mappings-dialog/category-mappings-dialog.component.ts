@@ -66,7 +66,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.isLoading = true;
       const mappings = [];
 
-      if (that.form.controls.netsuiteAccount.value) {
+      if (that.form.controls.netsuiteAccount.value && that.generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT') {
         mappings.push(that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
@@ -74,7 +74,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
           destination_value: that.form.controls.netsuiteAccount.value.value,
           destination_id: that.form.controls.netsuiteAccount.value.destination_id
         }));
-      } else if (that.form.controls.netsuiteExpenseCategory.value) {
+      } else if (that.form.controls.netsuiteExpenseCategory.value && that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT') {
         mappings.push(that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'EXPENSE_CATEGORY',
@@ -84,28 +84,30 @@ export class CategoryMappingsDialogComponent implements OnInit {
         }));
       }
 
-      let destinationValue = that.form.controls.cccAccount.value.value;
-      let destinationId = that.form.controls.cccAccount.value.destination_id;
-      let destinationType = that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? 'CCC_ACCOUNT' : 'CCC_EXPENSE_CATEGORY';
+      if (this.generalSettings.corporate_credit_card_expenses_object) {
+        let destinationValue = that.form.controls.cccAccount.value.value;
+        let destinationId = that.form.controls.cccAccount.value.destination_id;
+        let destinationType = that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? 'CCC_ACCOUNT' : 'CCC_EXPENSE_CATEGORY';
 
-      if (!that.form.value.cccAccount) {
-        if (that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
-          destinationValue = that.form.controls.netsuiteAccount.value.value;
-          destinationId = that.form.controls.netsuiteAccount.value.destination_id;
-        } else {
-          destinationType = 'CCC_EXPENSE_CATEGORY';
-          destinationValue = that.form.controls.netsuiteExpenseCategory.value.value;
-          destinationId = that.form.controls.netsuiteExpenseCategory.value.destination_id;
+        if (!that.form.value.cccAccount) {
+          if (that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+            destinationValue = that.form.controls.netsuiteAccount.value.value;
+            destinationId = that.form.controls.netsuiteAccount.value.destination_id;
+          } else {
+            destinationType = 'CCC_EXPENSE_CATEGORY';
+            destinationValue = that.form.controls.netsuiteExpenseCategory.value.value;
+            destinationId = that.form.controls.netsuiteExpenseCategory.value.destination_id;
+          }
         }
-      }
 
-      mappings.push(that.mappingsService.postMappings({
-        source_type: 'CATEGORY',
-        destination_type: destinationType,
-        source_value: that.form.controls.fyleCategory.value.value,
-        destination_value: destinationValue,
-        destination_id: destinationId
-      }));
+        mappings.push(that.mappingsService.postMappings({
+          source_type: 'CATEGORY',
+          destination_type: destinationType,
+          source_value: that.form.controls.fyleCategory.value.value,
+          destination_value: destinationValue,
+          destination_id: destinationId
+        }));
+      }
 
       forkJoin(mappings).subscribe(response => {
         that.snackBar.open('Mapping saved successfully');
