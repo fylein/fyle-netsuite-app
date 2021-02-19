@@ -146,7 +146,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     that.form.controls.netsuiteExpenseCategory.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
-        newValue = `expense category - ${newValue.toLowerCase()}`;
         that.netsuiteExpenseCategoryOptions = that.netsuiteExpenseCategories.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
       }
     });
@@ -170,7 +169,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.form.controls.cccAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
         if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
-          newValue = `expense category - ${newValue.toLowerCase()}`;
           that.cccAccounts = that.netsuiteExpenseCategories.slice();
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
         } else {
