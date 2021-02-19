@@ -1,5 +1,5 @@
 /* tslint:disable */
-export class GeneralSetting {
+export type GeneralSetting = {
     id: number;
     reimbursable_expenses_object: string;
     corporate_credit_card_expenses_object: string;
@@ -13,4 +13,4 @@ export class GeneralSetting {
     created_at: Date;
     updated_at: Date;
     workspace: number;
-}
+};

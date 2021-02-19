@@ -1,5 +1,5 @@
 /* tslint:disable */
-export class ExpenseGroupSetting {
+export type ExpenseGroupSetting = {
   id: number;
   reimbursable_expense_group_fields: string[];
   corporate_credit_card_expense_group_fields: string[];
@@ -8,4 +8,4 @@ export class ExpenseGroupSetting {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-}
+};

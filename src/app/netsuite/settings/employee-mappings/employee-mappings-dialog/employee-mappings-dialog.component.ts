@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, Ng
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';

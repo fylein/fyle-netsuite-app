@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseGroupsService } from '../../../core/services/expense-groups.service';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 import { TasksService } from '../../../core/services/tasks.service';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { StorageService } from 'src/app/core/services/storage.service';

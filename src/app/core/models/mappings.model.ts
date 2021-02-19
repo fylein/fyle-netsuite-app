@@ -3,7 +3,7 @@ import { MappingSource } from './mapping-source.model';
 
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class Mapping {
+export type Mapping = {
   id?: number;
   source?: MappingSource;
   source_value?: string;
@@ -15,4 +15,4 @@ export class Mapping {
   created_at?: Date;
   updated_at?: Date;
   workspace?: number;
-}
+};

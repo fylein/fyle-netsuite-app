@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { User } from "./user.model";
 
-export class Workspace {
+export type Workspace = {
   id?: number;
   name: string;
   user: User[];
@@ -10,4 +10,4 @@ export class Workspace {
   last_synced_at?: Date;
   created_at?: Date;
   updated_at?: Date;
-}
+};

@@ -2,7 +2,7 @@
 // TODO: Use something for serialization / deserialization
 import { MappingError } from './mapping-error.model';
 
-export class Task {
+export type Task = {
   id: number;
   task_id: string;
   expense_group: number;
@@ -16,4 +16,4 @@ export class Task {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-}
+};

@@ -1,6 +1,8 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class MappingDestination {
+import { DestinationAttributeDetail } from "./destination-attribute-detail.model";
+
+export type MappingDestination = {
   id: number;
   attribute_type: string;
   display_name: string;
@@ -10,6 +12,5 @@ export class MappingDestination {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-  // Having any here is ok, since different destination attributes have different keys
-  detail: any[];
-}
+  detail: DestinationAttributeDetail;
+};

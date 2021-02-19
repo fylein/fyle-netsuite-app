@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface ExpenseField {
+export type ExpenseField = {
     attribute_type: string;
     display_name: string;
-}
+};

@@ -1,6 +1,8 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class MappingSource {
+import { ExpenseAttributeDetail } from "./expense-attribute-detail.model";
+
+export type MappingSource = {
   id: number;
   attribute_type: string;
   display_name: string;
@@ -11,6 +13,5 @@ export class MappingSource {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-  // Having any here is ok, since different source attributes have different keys
-  detail: any[];
-}
+  detail: ExpenseAttributeDetail;
+};

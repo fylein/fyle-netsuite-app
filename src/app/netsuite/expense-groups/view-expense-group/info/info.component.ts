@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroupsService } from '../../../../core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { Expense } from 'src/app/core/models/expense.model';
 import { AuthService } from 'src/app/core/services/auth.service';

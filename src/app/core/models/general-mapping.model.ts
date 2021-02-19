@@ -1,6 +1,6 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class GeneralMapping {
+export type GeneralMapping = {
   id?: number;
   location_id: string;
   location_name: string;
@@ -18,4 +18,4 @@ export class GeneralMapping {
   created_at?: Date;
   updated_at?: Date;
   workspace?: number;
-}
+};
