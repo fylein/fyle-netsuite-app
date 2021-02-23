@@ -7,7 +7,7 @@ export type GeneralSetting = {
     import_categories: boolean;
     sync_fyle_to_netsuite_payments: boolean;
     sync_netsuite_to_fyle_payments: boolean;
-    auto_map_employees: boolean;
+    auto_map_employees: string;
     employee_field_mapping?: string;
     project_field_mapping?: string;
     cost_center_field_mapping?: string;
