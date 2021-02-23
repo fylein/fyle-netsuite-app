@@ -7,6 +7,10 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -21,24 +25,24 @@ export class MappingErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./category-mappings-dialog.component.scss', '../../settings.component.scss']
 })
 export class CategoryMappingsDialogComponent implements OnInit {
-  isLoading = false;
+  isLoading: boolean;
   form: FormGroup;
-  fyleCategories: any[];
-  netsuiteAccounts: any[];
-  netsuiteExpenseCategories: any[];
-  fyleCategoryOptions: any[];
+  fyleCategories: MappingSource[];
+  netsuiteAccounts: MappingDestination[];
+  netsuiteExpenseCategories: MappingDestination[];
+  fyleCategoryOptions: MappingSource[];
   workspaceId: number;
-  netsuiteAccountOptions: any[];
-  netsuiteExpenseCategoryOptions: any[];
-  netsuiteCCCAccountOptions: any[];
-  generalSettings: any;
-  cccAccounts: any[];
+  netsuiteAccountOptions: MappingDestination[];
+  netsuiteExpenseCategoryOptions: MappingDestination[];
+  netsuiteCCCAccountOptions: MappingDestination[];
+  generalSettings: GeneralSetting;
+  cccAccounts: MappingDestination[];
   editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CategoryMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar, private settingsService: SettingsService
               ) { }
@@ -47,8 +51,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
     return mappingObject ? mappingObject.value : '';
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: object} | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -196,33 +200,19 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.editMapping = true;
     }
 
-    // TODO: remove promises and do with rxjs observables
-    const getFyleCateogories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
-      that.fyleCategories = fyleCategories;
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getExpenseAccounts = that.mappingsService.getExpenseAccounts().toPromise().then(netsuiteAccounts => {
-      that.netsuiteAccounts = netsuiteAccounts;
-      that.cccAccounts = netsuiteAccounts;
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getExpenseCategories = that.mappingsService.getExpenseCategories().toPromise().then(netsuiteExpenseCategories => {
-      that.netsuiteExpenseCategories = netsuiteExpenseCategories;
-    });
-
-    const getGeneralSettings = that.settingsService.getGeneralSettings(this.workspaceId).toPromise().then(
-      settings => that.generalSettings = settings
-    );
-
     that.isLoading = true;
     forkJoin([
-      getFyleCateogories,
-      getExpenseAccounts,
-      getGeneralSettings,
-      getExpenseCategories
-    ]).subscribe(() => {
+      that.mappingsService.getFyleCategories(),
+      that.mappingsService.getExpenseAccounts(),
+      that.mappingsService.getExpenseCategories(),
+      that.settingsService.getGeneralSettings(that.workspaceId)
+    ]).subscribe((res) => {
+      that.fyleCategories = res[0];
+      that.netsuiteAccounts = res[1];
+      that.cccAccounts = res[1];
+      that.netsuiteExpenseCategories = res[2];
+      that.generalSettings = res[3];
+
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';

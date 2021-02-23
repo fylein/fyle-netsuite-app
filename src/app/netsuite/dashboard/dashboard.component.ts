@@ -89,13 +89,12 @@ export class DashboardComponent implements OnInit {
 
   getConfigurations() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
     return forkJoin(
       [
         that.settingsService.getGeneralSettings(that.workspaceId),
         that.settingsService.getMappingSettings(that.workspaceId)
       ]
-    ).toPromise().then((res) => {
+    ).subscribe((res) => {
       that.currentState = onboardingStates.configurationsDone;
       return res;
     });
@@ -167,7 +166,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // to be callled in background whenever dashboard is opened for sncing fyle data for org
+  // to be callled in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
   updateDimensionTables() {
     const that = this;
 

@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Mapping } from 'src/app/core/models/mappings.model';
 
 @Component({
   selector: 'app-configuration',
@@ -21,11 +23,9 @@ export class ConfigurationComponent implements OnInit {
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string}[];
   workspaceId: number;
-  generalSettings: any;
-  mappingSettings: any;
-  employeeFieldMapping: any;
-  projectFieldMapping: any;
-  costCenterFieldMapping: any;
+  generalSettings: GeneralSetting;
+  mappingSettings: MappingSetting[];
+  employeeFieldMapping: MappingSetting;
   showPaymentsandProjectsField: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
@@ -146,7 +146,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.isLoading = false;
     }, error => {
-      that.generalSettings = {};
       that.mappingSettings = [];
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({

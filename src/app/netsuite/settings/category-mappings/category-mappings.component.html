@@ -17,8 +17,8 @@
       <zero-state message="You have no category mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="categoryCCCMappings.length" [hidden]="isLoading">
-      <table mat-table [dataSource]="categoryCCCMappings" class="page-table" matSort matSortActive="created_at"
+    <div *ngIf="categoryMappingRows.length" [hidden]="isLoading">
+      <table mat-table [dataSource]="categoryMappingRows" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef> Category </th>

@@ -3,10 +3,15 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, Ng
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -23,24 +28,23 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   workSpaceId: number;
-  // TODO: replace any with relevant models
-  fyleEmployees: any[];
-  netsuiteEmployees: any[];
-  cccObjects: any[];
-  netsuiteVendors: any[];
-  generalSettings: any;
-  employeeOptions: any[];
-  netsuiteEmployeeOptions: any[];
-  cccOptions: any[];
-  netsuiteVendorOptions: any[];
-  generalMappings: any;
+  fyleEmployees: MappingSource[];
+  netsuiteEmployees: MappingDestination[];
+  cccObjects: MappingDestination[];
+  netsuiteVendors: MappingDestination[];
+  generalSettings: GeneralSetting;
+  employeeOptions: MappingSource[];
+  netsuiteEmployeeOptions: MappingDestination[];
+  cccOptions: MappingDestination[];
+  netsuiteVendorOptions: MappingDestination[];
+  generalMappings: GeneralMapping;
   editMapping: boolean;
 
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar,
               private settingsService: SettingsService
@@ -96,8 +100,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     }
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: object } | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -162,35 +166,21 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
-    const getFyleEmployees = that.mappingsService.getFyleEmployees().toPromise().then((fyleEmployees) => {
-      that.fyleEmployees = fyleEmployees;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getnetsuiteEmployees = that.mappingsService.getNetSuiteEmployees().toPromise().then((netsuiteEmployees) => {
-      that.netsuiteEmployees = netsuiteEmployees;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getCCCAccounts = that.mappingsService.getCreditCardAccounts().toPromise().then((cccObjects) => {
-      that.cccObjects = cccObjects;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getnetsuiteVendors = that.mappingsService.getNetSuiteVendors().toPromise().then((netsuiteVendors) => {
-      that.netsuiteVendors = netsuiteVendors;
-    });
-    // TODO: remove promises and do with rxjs observables
-    const getGeneralMappings = that.mappingsService.getGeneralMappings().toPromise().then((generalMappings) => {
-      that.generalMappings = generalMappings;
-    });
 
     that.isLoading = true;
     forkJoin([
-      from(getFyleEmployees),
-      from(getnetsuiteEmployees),
-      from(getCCCAccounts),
-      from(getnetsuiteVendors),
-      from(getGeneralMappings)
+      that.mappingsService.getFyleEmployees(),
+      that.mappingsService.getNetSuiteEmployees(),
+      that.mappingsService.getCreditCardAccounts(),
+      that.mappingsService.getNetSuiteVendors(),
+      that.mappingsService.getGeneralMappings()
     ]).subscribe((res) => {
+      that.fyleEmployees = res[0];
+      that.netsuiteEmployees = res[1];
+      that.cccObjects = res[2];
+      that.netsuiteVendors = res[3];
+      that.generalMappings = res[4];
+
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
       const netsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';

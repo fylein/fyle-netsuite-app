@@ -6,6 +6,10 @@ import { forkJoin } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -23,17 +27,17 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   isLoading = false;
   form: FormGroup;
-  fyleAttributes: any[];
-  netsuiteElements: any[];
-  fyleAttributeOptions: any[];
-  netsuiteOptions: any[];
-  setting: any;
+  fyleAttributes: MappingSource[];
+  netsuiteElements: MappingDestination[];
+  fyleAttributeOptions: MappingSource[];
+  netsuiteOptions: MappingDestination[];
+  setting: MappingSetting;
   editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<GenericMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar) { }
 
@@ -69,8 +73,8 @@ export class GenericMappingsDialogComponent implements OnInit {
     }
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: object} | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -112,41 +116,28 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
-    const getFyleAttributes = that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field).toPromise().then(attributes => {
-      that.fyleAttributes = attributes;
-    });
-
     let netsuitePromise;
+
     if (that.setting.destination_field === 'CLASS') {
-      // TODO: remove promises and do with rxjs observables
-      netsuitePromise = that.mappingsService.getNetSuiteClasses().toPromise().then(objects => {
-        that.netsuiteElements = objects;
-      });
+      netsuitePromise = that.mappingsService.getNetSuiteClasses();
     } else if (that.setting.destination_field === 'DEPARTMENT') {
-      netsuitePromise = that.mappingsService.getNetSuiteDepartments().toPromise().then(objects => {
-        that.netsuiteElements = objects;
-      });
+      netsuitePromise = that.mappingsService.getNetSuiteDepartments();
     } else if (that.setting.destination_field === 'ACCOUNT') {
-      netsuitePromise = that.mappingsService.getExpenseAccounts().toPromise().then(objects => {
-        that.netsuiteElements = objects;
-      });
+      netsuitePromise = that.mappingsService.getExpenseAccounts();
     } else if (that.setting.destination_field === 'LOCATION') {
-      netsuitePromise = that.mappingsService.getNetSuiteLocations().toPromise().then(objects => {
-        that.netsuiteElements = objects;
-      });
+      netsuitePromise = that.mappingsService.getNetSuiteLocations();
     } else {
-      netsuitePromise = that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field).toPromise().then(objects => {
-        that.netsuiteElements = objects;
-      });
+      netsuitePromise = that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field);
     }
 
     that.isLoading = true;
-    // TODO: remove promises and do with rxjs observables
     forkJoin([
-      getFyleAttributes,
+      that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field),
       netsuitePromise
-    ]).subscribe(() => {
+    ]).subscribe((res) => {
+      that.fyleAttributes = res[0];
+      that.netsuiteElements = res[1];
+
       that.isLoading = false;
       const sourceField = that.editMapping ? that.fyleAttributes.filter(source => source.value === that.data.rowElement.source.value)[0] : '';
       const destinationField = that.editMapping ? that.netsuiteElements.filter(destination => destination.value === that.data.rowElement.destination.value)[0] : '';

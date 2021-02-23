@@ -5,6 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CategoryMappingsDialogComponent } from './category-mappings-dialog/category-mappings-dialog.component';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Mapping } from 'src/app/core/models/mappings.model';
+import { MappingRow } from 'src/app/core/models/mapping-row.model';
 
 @Component({
   selector: 'app-category-mappings',
@@ -14,10 +17,10 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
-  categoryMappings: any[];
-  categoryCCCMappings: any[] = [];
-  generalSettings: any;
-  rowElement: any;
+  categoryMappings: Mapping[];
+  categoryMappingRows: MappingRow[];
+  generalSettings: GeneralSetting;
+  rowElement: Mapping;
   columnsToDisplay = ['category', 'netsuite'];
 
   constructor(
@@ -28,7 +31,7 @@ export class CategoryMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private storageService: StorageService) { }
 
-  open(selectedItem: any = null) {
+  open(selectedItem: MappingRow = null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
@@ -64,19 +67,20 @@ export class CategoryMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
     that.mappingsService.getAllMappings('CATEGORY').subscribe(response => {
-      that.categoryCCCMappings = [];
       that.categoryMappings = response.results;
+      const mappings = [];
 
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
 
       categoryMappings.forEach(categoryMapping => {
-        that.categoryCCCMappings.push({
+        mappings.push({
           fyle_value: categoryMapping.source.value,
           auto_mapped: categoryMapping.source.auto_mapped,
           netsuite_value: categoryMapping.destination.value,
           ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
         });
       });
+      that.categoryMappingRows = mappings;
       that.isLoading = false;
     }, () => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);

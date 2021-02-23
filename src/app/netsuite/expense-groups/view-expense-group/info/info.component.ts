@@ -43,24 +43,6 @@ export class InfoComponent implements OnInit {
     return name.replace(/_/g, ' ');
   }
 
-  initExpenseGroupExpenses() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId).toPromise().then((expenses) => {
-      that.count = expenses.length;
-      that.expenses = new MatTableDataSource(expenses);
-    });
-  }
-
-  initExpenseGroupDetails() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).toPromise().then((expenseGroup) => {
-      that.expenseGroup = expenseGroup;
-      that.expenseGroupFields = Object.keys(expenseGroup.description);
-    });
-  }
-
   openExpenseInFyle(expense) {
     const that = this;
     const clusterDomain = this.storageService.get('clusterDomain');
@@ -75,9 +57,13 @@ export class InfoComponent implements OnInit {
 
     that.isLoading = true;
     forkJoin([
-      that.initExpenseGroupExpenses(),
-      that.initExpenseGroupDetails()
-    ]).subscribe(() => {
+      that.expenseGroupsService.getExpensesByExpenseGroupId(that.expenseGroupId),
+      that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId)
+    ]).subscribe(res => {
+      that.count = res[0].length;
+      that.expenses = new MatTableDataSource(res[0]);
+      that.expenseGroup = res[1];
+      that.expenseGroupFields = Object.keys(res[1].description);
       that.isLoading = false;
     });
   }

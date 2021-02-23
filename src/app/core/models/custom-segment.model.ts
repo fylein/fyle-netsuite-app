@@ -1,6 +1,6 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class CustomSegment {
+export type CustomSegment = {
   id?: number;
   name?: string;
   segment_type: string;
@@ -9,4 +9,4 @@ export class CustomSegment {
   created_at?: Date;
   updated_at?: Date;
   workspace?: number;
-}
+};

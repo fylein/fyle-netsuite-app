@@ -3,6 +3,7 @@ import { Observable, from } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CustomSegment } from '../models/custom-segment.model';
+import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
@@ -15,8 +16,6 @@ import { WorkspaceService } from './workspace.service';
   providedIn: 'root',
 })
 export class MappingsService {
-  // TODO: Map models to each of these and the methods below
-
   netsuiteSubsidiaries: Observable<MappingDestination[]>;
   netsuiteAccounts: Observable<MappingDestination[]>;
   netsuiteVendors: Observable<MappingDestination[]>;
@@ -39,7 +38,7 @@ export class MappingsService {
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
 
-  postFyleEmployees() {
+  postFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleEmployees) {
@@ -52,7 +51,7 @@ export class MappingsService {
     return this.fyleEmployees;
   }
 
-  postFyleCategories() {
+  postFyleCategories(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleCategories) {
@@ -65,7 +64,7 @@ export class MappingsService {
     return this.fyleCategories;
   }
 
-  postFyleProjects() {
+  postFyleProjects(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleProjects) {
@@ -78,7 +77,7 @@ export class MappingsService {
     return this.fyleProjects;
   }
 
-  postFyleCostCenters() {
+  postFyleCostCenters(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleCostCenters) {
@@ -91,7 +90,7 @@ export class MappingsService {
     return this.fyleCostCenters;
   }
 
-  postExpenseCustomFields() {
+  postExpenseCustomFields(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleExpenseCustomFields) {
@@ -104,7 +103,7 @@ export class MappingsService {
     return this.fyleExpenseCustomFields;
   }
 
-  postNetsuiteExpenseCustomFields(sync: boolean = false) {
+  postNetsuiteExpenseCustomFields(sync: boolean = false): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteExpenseCustomFields || sync) {
@@ -117,7 +116,7 @@ export class MappingsService {
     return this.netsuiteExpenseCustomFields;
   }
 
-  postNetsuiteProjectFields() {
+  postNetsuiteProjectFields(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteProjectFields) {
@@ -130,7 +129,7 @@ export class MappingsService {
     return this.netsuiteProjectFields;
   }
 
-  postNetsuiteCustomerFields() {
+  postNetsuiteCustomerFields(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteCustomerFields) {
@@ -149,7 +148,7 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
   }
 
-  postNetSuiteVendors() {
+  postNetSuiteVendors(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteVendors) {
@@ -162,7 +161,7 @@ export class MappingsService {
     return this.netsuiteVendors;
   }
 
-  postNetSuiteCurrencies() {
+  postNetSuiteCurrencies(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteCurrencies) {
@@ -175,7 +174,7 @@ export class MappingsService {
     return this.netsuiteCurrencies;
   }
 
-  postNetSuiteExpenseCategories() {
+  postNetSuiteExpenseCategories(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteCategories) {
@@ -188,7 +187,7 @@ export class MappingsService {
     return this.netsuiteCategories;
   }
 
-  postNetSuiteEmployees() {
+  postNetSuiteEmployees(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteEmployees) {
@@ -201,7 +200,7 @@ export class MappingsService {
     return this.netsuiteEmployees;
   }
 
-  postNetSuiteAccounts() {
+  postNetSuiteAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteAccounts) {
@@ -216,7 +215,7 @@ export class MappingsService {
     return this.netsuiteAccounts;
   }
 
-  postNetSuiteClasses() {
+  postNetSuiteClasses(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteClasses) {
@@ -229,7 +228,7 @@ export class MappingsService {
     return this.netsuiteClasses;
   }
 
-  postNetSuiteDepartments() {
+  postNetSuiteDepartments(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteDepartments) {
@@ -242,7 +241,7 @@ export class MappingsService {
     return this.netsuiteDepartments;
   }
 
-  postNetSuiteLocations() {
+  postNetSuiteLocations(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteLocations) {
@@ -256,7 +255,7 @@ export class MappingsService {
   }
 
 
-  postNetSuiteSubsidiaries() {
+  postNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.netsuiteSubsidiaries) {
@@ -270,37 +269,37 @@ export class MappingsService {
   }
 
 
-  getFyleEmployees() {
+  getFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/employees/`, {});
   }
 
-  getFyleExpenseFields() {
+  getFyleExpenseFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
   }
 
-  getFyleCategories() {
+  getFyleCategories(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/categories/`, {});
   }
 
-  getNetSuiteVendors() {
+  getNetSuiteVendors(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/vendors/`, {});
   }
 
-  getNetSuiteFields() {
+  getNetSuiteFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleExpenseCustomFields(attributeType: string) {
+  getFyleExpenseCustomFields(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
@@ -308,7 +307,7 @@ export class MappingsService {
     });
   }
 
-  getNetsuiteExpenseCustomFields(attributeType: string) {
+  getNetsuiteExpenseCustomFields(attributeType: string): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {
@@ -316,49 +315,37 @@ export class MappingsService {
     });
   }
 
-  getNetsuiteExpenseSegments() {
+  getNetsuiteExpenseSegments(): Observable<CustomSegment[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_segments/`, {});
   }
 
-  getNetSuiteEmployees() {
+  getNetSuiteEmployees(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/employees/`, {});
   }
 
-  getNetSuiteLocations() {
+  getNetSuiteLocations(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/locations/`, {});
   }
 
-  getFyleProjects() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/projects/`, {});
-  }
-
-  getNetSuiteClasses() {
+  getNetSuiteClasses(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/classifications/`, {});
   }
 
-  getNetSuiteDepartments() {
+  getNetSuiteDepartments(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/departments/`, {});
   }
 
-  getFyleCostCenters() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/cost_centers/`, {});
-  }
-
-  getExpenseAccounts() {
+  getExpenseAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -366,7 +353,7 @@ export class MappingsService {
     );
   }
 
-  getExpenseCategories() {
+  getExpenseCategories(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -374,7 +361,7 @@ export class MappingsService {
     );
   }
 
-  getCCCExpenseCategories() {
+  getCCCExpenseCategories(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -382,7 +369,7 @@ export class MappingsService {
     );
   }
 
-  getBankAccounts() {
+  getBankAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -390,7 +377,7 @@ export class MappingsService {
     );
   }
 
-  getVendorPaymentAccounts() {
+  getVendorPaymentAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -398,7 +385,7 @@ export class MappingsService {
     );
   }
 
-  getAccountsPayables() {
+  getAccountsPayables(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -406,7 +393,7 @@ export class MappingsService {
     );
   }
 
-  getCreditCardAccounts() {
+  getCreditCardAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -414,13 +401,13 @@ export class MappingsService {
     );
   }
 
-  getNetSuiteSubsidiaries() {
+  getNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
-  postGeneralMappings(generalMappings: GeneralMapping) {
+  postGeneralMappings(generalMappings: GeneralMapping): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/general/`, generalMappings);
   }
@@ -486,36 +473,5 @@ export class MappingsService {
   triggerAutoMapEmployees() {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
-  }
-
-  getCategoryMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/categories/`, {}
-    );
-  }
-
-  getEmployeeMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/employees/`, {}
-    );
-  }
-
-  getProjectMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/projects/`, {}
-    );
-  }
-
-  getCostCenterMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/cost_centers/`, {}
-    );
   }
 }

@@ -6,6 +6,9 @@ import { WorkspaceService } from '../core/services/workspace.service';
 import { SettingsService } from '../core/services/settings.service';
 import { StorageService } from '../core/services/storage.service';
 import { WindowReferenceService } from '../core/services/window.service';
+import { Workspace } from '../core/models/workspace.model';
+import { UserProfile } from '../core/models/user-profile.model';
+import { MappingSetting } from '../core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-netsuite',
@@ -13,14 +16,13 @@ import { WindowReferenceService } from '../core/services/window.service';
   styleUrls: ['./netsuite.component.scss']
 })
 export class NetSuiteComponent implements OnInit {
-  user: any;
+  user: UserProfile;
   orgsCount: number;
-  workspace: any = {};
+  workspace: Workspace;
   isLoading = true;
   fyleConnected = false;
   netsuiteConnected = false;
-  generalSettings: any;
-  mappingSettings: any;
+  mappingSettings: MappingSetting[];
   showSwitchOrg = false;
   navDisabled = true;
   windowReference: Window;
