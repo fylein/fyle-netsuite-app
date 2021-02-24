@@ -64,7 +64,7 @@ export class CustomSegmentsDialogComponent implements OnInit {
         that.isLoading = false;
       });
     } else {
-      that.snackBar.open('Please fill all fields');
+      that.snackBar.open('Please fill all required fields');
       that.form.markAllAsTouched();
     }
   }
