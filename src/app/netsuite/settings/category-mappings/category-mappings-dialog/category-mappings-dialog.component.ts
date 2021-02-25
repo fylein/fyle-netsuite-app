@@ -204,14 +204,15 @@ export class CategoryMappingsDialogComponent implements OnInit {
     forkJoin([
       that.mappingsService.getFyleCategories(),
       that.mappingsService.getExpenseAccounts(),
+      that.mappingsService.getCCCExpenseAccounts(),
       that.mappingsService.getExpenseCategories(),
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe((res) => {
       that.fyleCategories = res[0];
       that.netsuiteAccounts = res[1];
-      that.cccAccounts = res[1];
-      that.netsuiteExpenseCategories = res[2];
-      that.generalSettings = res[3];
+      that.cccAccounts = res[2];
+      that.netsuiteExpenseCategories = res[3];
+      that.generalSettings = res[4];
 
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
