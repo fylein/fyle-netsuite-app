@@ -42,7 +42,7 @@ export class GenericMappingsComponent implements OnInit {
       const data = {
         pageSize: that.storageService.get('mappings.pageSize') || 10,
         pageNumber: 0
-      }
+      };
       that.getMappings(data);
       const onboarded = that.storageService.get('onboarded');
 
@@ -51,7 +51,7 @@ export class GenericMappingsComponent implements OnInit {
       }
     });
   }
-  
+
   applyFilter(event: Event) {
     const that = this;
     const filterValue = (event.target as HTMLInputElement).value;

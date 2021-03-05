@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StorageService } from 'src/app/core/services/storage.service';
 
 @Component({
-    selector:'app-paginator',
-    templateUrl:'./paginator.component.html',
+    selector: 'app-paginator',
+    templateUrl: './paginator.component.html',
     styleUrls: ['./paginator.component.scss']
 })
 export class PaginatorComponent implements OnInit {
@@ -17,8 +17,8 @@ export class PaginatorComponent implements OnInit {
     @Output() getMappings = new EventEmitter<any>();
 
     constructor(private storageService: StorageService) {}
-    
-    getParentMappings(){
+
+    getParentMappings() {
         const that = this;
         const data = {
             pageSize: that.multiplier * that.pageSize,
@@ -28,7 +28,7 @@ export class PaginatorComponent implements OnInit {
         that.getMappings.emit(data);
     }
 
-    onPageChange(event){
+    onPageChange(event) {
         const that = this;
         if (that.pageSize !== event.pageSize) {
             that.storageService.set('mappings.pageSize', event.pageSize);

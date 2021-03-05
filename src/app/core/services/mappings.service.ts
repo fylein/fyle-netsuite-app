@@ -442,7 +442,7 @@ export class MappingsService {
         source_type: sourceType,
         limit: pageLimit,
         offset: pageOffset,
-        is3D: is3D
+        is3D
       }
     );
   }

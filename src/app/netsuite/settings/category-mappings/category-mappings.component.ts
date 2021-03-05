@@ -50,7 +50,7 @@ export class CategoryMappingsComponent implements OnInit {
           pageSize: (that.storageService.get('mappings.pageSize') || 10) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
           pageNumber: 0,
           is3D: that.columnsToDisplay.includes('ccc')
-        }
+        };
         that.getCategoryMappings(data);
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
@@ -81,11 +81,11 @@ export class CategoryMappingsComponent implements OnInit {
     that.isLoading = true;
     that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.is3D).subscribe(response => {
       that.categoryMappings = response.results;
-      that.count = that.columnsToDisplay.includes('ccc') ?  response.count/2 : response.count;
+      that.count = that.columnsToDisplay.includes('ccc') ?  response.count / 2 : response.count;
       const mappings = [];
-  
+
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
-  
+
       categoryMappings.forEach(categoryMapping => {
         mappings.push({
           fyle_value: categoryMapping.source.value,

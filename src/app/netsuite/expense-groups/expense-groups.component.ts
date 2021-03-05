@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, ActivationEnd } from '@angular/router';
 import { ExpenseGroupsService } from '../../core/services/expense-groups.service';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
@@ -14,7 +14,7 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
   templateUrl: './expense-groups.component.html',
   styleUrls: ['./expense-groups.component.scss', '../netsuite.component.scss'],
 })
-export class ExpenseGroupsComponent implements OnInit {
+export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   workspaceId: number;
   expenseGroups: MatTableDataSource<ExpenseGroup> = new MatTableDataSource([]);
   isLoading = true;
@@ -108,7 +108,7 @@ export class ExpenseGroupsComponent implements OnInit {
     });
 
     that.router.events.subscribe(event => {
-      if (event instanceof ActivationEnd && that.router.url == `/workspaces/${that.workspaceId}/expense_groups?page_number=${+event.snapshot.queryParams.page_number}&page_size=${event.snapshot.queryParams.page_size}&state=${event.snapshot.queryParams.state}`) {
+      if (event instanceof ActivationEnd && that.router.url === `/workspaces/${that.workspaceId}/expense_groups?page_number=${+event.snapshot.queryParams.page_number}&page_size=${event.snapshot.queryParams.page_size}&state=${event.snapshot.queryParams.state}`) {
         const pageNumber = +event.snapshot.queryParams.page_number || 0;
 
         if (+event.snapshot.queryParams.page_size) {
