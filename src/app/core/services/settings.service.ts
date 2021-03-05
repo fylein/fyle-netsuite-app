@@ -54,9 +54,8 @@ export class SettingsService {
     );
   }
 
-  postSettings(workspaceId: number, nextRun: string, intervalHours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+  postSettings(workspaceId: number, intervalHours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
-      next_run: nextRun,
       hours: intervalHours,
       schedule_enabled: scheduleEnabled
     });

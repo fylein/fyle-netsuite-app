@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-employee-mappings',
@@ -20,11 +21,12 @@ export class EmployeeMappingsComponent implements OnInit {
 
   form: FormGroup;
   employeeMappings: Mapping[];
-  employeeMappingRows: MappingRow[];
+  employeeMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   workspaceId: number;
   isLoading = true;
   generalSettings: GeneralSetting;
   rowElement: Mapping;
+  count: number;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
   constructor(public dialog: MatDialog,
@@ -48,18 +50,27 @@ export class EmployeeMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.isLoading = true;
-      that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
+      const is3D = that.columnsToDisplay.includes('ccc');
+      const pageSize = (that.storageService.get('mappings.pageSize') || 10) * (is3D ? 2 : 1);
+      that.mappingsService.getMappings(pageSize, 0, 'EMPLOYEE', is3D).subscribe((employees) => {
+        that.count = that.columnsToDisplay.includes('ccc') ? employees.count/2 : employees.count;
         that.employeeMappings = employees.results;
         that.isLoading = false;
         const onboarded = that.storageService.get('onboarded');
 
-        if (onboarded === true) {
+        if (onboarded) {
           that.createEmployeeMappingsRows();
         } else {
           that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
         }
       });
     });
+  }
+
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.employeeMappingRows.filter = filterValue.trim().toLowerCase();
   }
 
   createEmployeeMappingsRows() {
@@ -75,7 +86,8 @@ export class EmployeeMappingsComponent implements OnInit {
         auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
-    that.employeeMappingRows = mappings;
+    that.employeeMappingRows = new MatTableDataSource(mappings);
+    that.employeeMappingRows.filterPredicate = that.searchByText;
   }
 
   getCCCAccount(employeeMappings, employeeEVMapping) {
@@ -84,18 +96,15 @@ export class EmployeeMappingsComponent implements OnInit {
     return empMapping.length ? empMapping[0].destination.value : null;
   }
 
-  reset() {
+  reset(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
+    that.mappingsService.getMappings(data.pageSize, data.pageNumber * data.pageSize, 'EMPLOYEE', data.is3D).subscribe((employees) => {
       that.employeeMappings = employees.results;
+      that.count = that.columnsToDisplay.includes('ccc') ? employees.count/2 : employees.count;
       that.createEmployeeMappingsRows();
       that.isLoading = false;
     });
-
-    if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
-      that.columnsToDisplay.push('ccc');
-    }
   }
 
   triggerAutoMapEmployees() {
@@ -110,6 +119,12 @@ export class EmployeeMappingsComponent implements OnInit {
     });
   }
 
+  searchByText(data: MappingRow, filterText: string) {
+    return  data.fyle_value.toLowerCase().includes(filterText) ||
+    data.netsuite_value.toLowerCase().includes(filterText) ||
+    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
+  }
+
   ngOnInit() {
     const that = this;
     that.isLoading = true;
@@ -117,7 +132,15 @@ export class EmployeeMappingsComponent implements OnInit {
     that.settingsService.getCombinedSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
-      that.reset();
+      if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
+        that.columnsToDisplay.push('ccc');
+      }
+      const data = {
+        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 10),
+        pageNumber: 0,
+        is3D: that.columnsToDisplay.includes('ccc')
+      };
+      that.reset(data);
     }, () => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });

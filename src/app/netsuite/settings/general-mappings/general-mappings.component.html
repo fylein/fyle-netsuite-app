@@ -16,10 +16,10 @@
     </div>
     <form class="general-mappings--form" [formGroup]="form" (ngSubmit)="submit()">
       <div fxLayout="column" fxLayoutAlign="start stretch">
-        <div class="mat-body-strong">
+        <div class="mat-body-strong" *ngIf="netsuiteLocations.length">
           NetSuite Location
         </div>
-        <mat-form-field floatLabel="always" appearance="outline" required>
+        <mat-form-field floatLabel="always" appearance="outline" *ngIf="netsuiteLocations.length" required>
           <mat-select class="general-mappings--input" placeholder="Select NetSuite Location"
             formControlName="netsuiteLocations">
             <mat-option [value]="null">
