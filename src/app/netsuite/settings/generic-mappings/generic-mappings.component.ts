@@ -77,7 +77,7 @@ export class GenericMappingsComponent implements OnInit {
   }
 
   searchByText(data: Mapping, filterText: string) {
-    return  data.source.value.toLowerCase().includes(filterText) ||
+    return data.source.value.toLowerCase().includes(filterText) ||
     data.destination.value.toLowerCase().includes(filterText);
   }
 

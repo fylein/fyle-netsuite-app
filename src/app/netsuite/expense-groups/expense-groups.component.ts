@@ -8,6 +8,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { TasksService } from 'src/app/core/services/tasks.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-expense-groups',
@@ -25,7 +26,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   pageSize: number;
   columnsToDisplay = ['employee', 'expensetype'];
   windowReference: Window;
-  routerEventSubscription;
+  routerEventSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -107,7 +108,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
       that.getPaginatedExpenseGroups();
     });
 
-    that.router.events.subscribe(event => {
+    that.routerEventSubscription = that.router.events.subscribe(event => {
       if (event instanceof ActivationEnd && that.router.url === `/workspaces/${that.workspaceId}/expense_groups?page_number=${+event.snapshot.queryParams.page_number}&page_size=${event.snapshot.queryParams.page_size}&state=${event.snapshot.queryParams.state}`) {
         const pageNumber = +event.snapshot.queryParams.page_number || 0;
 

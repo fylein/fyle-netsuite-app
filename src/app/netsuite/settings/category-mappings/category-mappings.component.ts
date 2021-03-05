@@ -109,7 +109,7 @@ export class CategoryMappingsComponent implements OnInit {
   }
 
   searchByText(data: MappingRow, filterText: string) {
-    return  data.fyle_value.toLowerCase().includes(filterText) ||
+    return data.fyle_value.toLowerCase().includes(filterText) ||
     data.netsuite_value.toLowerCase().includes(filterText) ||
     (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
   }

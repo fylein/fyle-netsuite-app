@@ -57,7 +57,7 @@
       </table>
     </div>
   </div>
-  <app-paginator *ngIf="generalSettings" [coloumnArray]="columnsToDisplay" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+  <app-paginator *ngIf="count" [coloumnArray]="columnsToDisplay" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
   
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>

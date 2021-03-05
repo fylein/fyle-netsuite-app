@@ -13,7 +13,7 @@ export class PaginatorComponent implements OnInit {
     is3D: boolean;
     @Input() isLoading: boolean;
     @Input() count: number;
-    @Input() coloumnArray;
+    @Input() coloumnArray: any[];
     @Output() getMappings = new EventEmitter<any>();
 
     constructor(private storageService: StorageService) {}
@@ -41,7 +41,7 @@ export class PaginatorComponent implements OnInit {
 
     ngOnInit() {
         const that = this;
-        that.pageSize = that.storageService.get('mappings.pageSize') || 10,
+        that.pageSize = that.storageService.get('mappings.pageSize') || 10;
         that.pageNumber = 0;
         that.multiplier = that.coloumnArray.includes('ccc') ? 2 : 1;
         that.is3D = that.coloumnArray.includes('ccc');
