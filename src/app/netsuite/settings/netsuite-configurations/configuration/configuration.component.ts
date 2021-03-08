@@ -27,6 +27,7 @@ export class ConfigurationComponent implements OnInit {
   mappingSettings: MappingSetting[];
   employeeFieldMapping: MappingSetting;
   showPaymentsandProjectsField: boolean;
+  showAutoCreate: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
@@ -117,7 +118,8 @@ export class ConfigurationComponent implements OnInit {
         importProjects: [that.generalSettings.import_projects],
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
-        autoMapEmployees: [that.generalSettings.auto_map_employees]
+        autoMapEmployees: [that.generalSettings.auto_map_employees],
+        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
       }, {
       });
 
@@ -137,8 +139,14 @@ export class ConfigurationComponent implements OnInit {
 
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
 
+      that.showAutoCreateOption(that.generalSettings.auto_map_employees);
+
       that.generalSettingsForm.controls.employees.disable();
       that.generalSettingsForm.controls.reimbursableExpense.disable();
+
+      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+        that.showAutoCreateOption(employeeMappingPreference);
+      });
 
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
@@ -155,7 +163,8 @@ export class ConfigurationComponent implements OnInit {
         importProjects: [false],
         importCategories: [false],
         paymentsSync: [null],
-        autoMapEmployees: [null]
+        autoMapEmployees: [null],
+        autoCreateDestinationEntity: [false]
       }, {
       });
 
@@ -198,6 +207,7 @@ export class ConfigurationComponent implements OnInit {
       const importProjects = that.generalSettingsForm.value.importProjects;
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
+      const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
       let fyleToNetSuite = false;
       let netSuiteToFyle = false;
@@ -233,7 +243,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, importCategories, autoMapEmployees)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, importCategories, autoMapEmployees, autoCreateDestinationEntity)
         ]
       ).subscribe(() => {
         that.isLoading = false;
@@ -258,6 +268,16 @@ export class ConfigurationComponent implements OnInit {
       that.showPaymentsandProjectsField = true;
     } else {
       that.showPaymentsandProjectsField = false;
+    }
+  }
+
+  showAutoCreateOption(autoMapEmployees) {
+    const that = this;
+    if (autoMapEmployees) {
+      that.showAutoCreate = true;
+    } else {
+      that.showAutoCreate = false;
+      that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
     }
   }
 
