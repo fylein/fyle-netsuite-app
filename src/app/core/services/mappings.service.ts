@@ -353,6 +353,14 @@ export class MappingsService {
     );
   }
 
+  getCCCExpenseAccounts(): Observable<MappingDestination[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/netsuite/ccc_accounts/`, {}
+    );
+  }
+
   getExpenseCategories(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
