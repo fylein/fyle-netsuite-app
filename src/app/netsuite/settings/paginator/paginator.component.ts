@@ -13,7 +13,7 @@ export class PaginatorComponent implements OnInit {
     is3D: boolean;
     @Input() isLoading: boolean;
     @Input() count: number;
-    @Input() coloumnArray: any[];
+    @Input() coloumnArray: string[];
     @Output() getMappings = new EventEmitter<any>();
 
     constructor(private storageService: StorageService) {}
