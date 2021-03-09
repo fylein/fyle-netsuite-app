@@ -47,7 +47,7 @@ export class CategoryMappingsComponent implements OnInit {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 10) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
           pageNumber: 0,
           is3D: that.columnsToDisplay.includes('ccc')
         };
@@ -126,7 +126,7 @@ export class CategoryMappingsComponent implements OnInit {
         that.columnsToDisplay.push('ccc');
       }
       const data = {
-        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 10),
+        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
         is3D: that.columnsToDisplay.includes('ccc')
       };

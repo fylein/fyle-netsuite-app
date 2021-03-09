@@ -40,7 +40,7 @@ export class GenericMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       const data = {
-        pageSize: that.storageService.get('mappings.pageSize') || 10,
+        pageSize: that.storageService.get('mappings.pageSize') || 50,
         pageNumber: 0
       };
       that.getMappings(data);
@@ -91,7 +91,7 @@ export class GenericMappingsComponent implements OnInit {
         that.setting = response.results.filter(setting => setting.source_field === that.sourceField.toUpperCase())[0];
       });
       const data = {
-        pageSize: that.storageService.get('mappings.pageSize') || 10,
+        pageSize: that.storageService.get('mappings.pageSize') || 50,
         pageNumber: 0
       };
       that.getMappings(data);
