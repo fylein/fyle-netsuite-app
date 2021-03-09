@@ -168,6 +168,10 @@ export class ConfigurationComponent implements OnInit {
       }, {
       });
 
+      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+        that.showAutoCreateOption(employeeMappingPreference);
+      });
+
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
