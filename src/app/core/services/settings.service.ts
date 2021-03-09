@@ -75,7 +75,7 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: generalSettingsCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, fyleToNetSuite: boolean, netSuiteToFyle: boolean, importProjects: boolean, importCategories: boolean, autoMapEmployees: string = null): Observable<GeneralSetting> {
+  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, fyleToNetSuite: boolean, netSuiteToFyle: boolean, importProjects: boolean, importCategories: boolean, autoMapEmployees: string = null, autoCreateDestinationEntity: boolean): Observable<GeneralSetting> {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
@@ -83,7 +83,8 @@ export class SettingsService {
       sync_netsuite_to_fyle_payments: netSuiteToFyle,
       import_projects: importProjects,
       import_categories: importCategories,
-      auto_map_employees: autoMapEmployees
+      auto_map_employees: autoMapEmployees,
+      auto_create_destination_entity: autoCreateDestinationEntity
     });
   }
 
