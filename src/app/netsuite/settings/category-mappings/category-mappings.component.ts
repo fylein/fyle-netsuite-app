@@ -49,7 +49,7 @@ export class CategoryMappingsComponent implements OnInit {
         const data = {
           pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
           pageNumber: 0,
-          table_dimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+          tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
         };
         that.getCategoryMappings(data);
       } else {
@@ -79,7 +79,7 @@ export class CategoryMappingsComponent implements OnInit {
   getCategoryMappings(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.table_dimension).subscribe(response => {
+    that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.tableDimension).subscribe(response => {
       that.categoryMappings = response.results;
       that.count = that.columnsToDisplay.includes('ccc') ?  response.count / 2 : response.count;
       const mappings = [];
@@ -128,7 +128,7 @@ export class CategoryMappingsComponent implements OnInit {
       const data = {
         pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
-        table_dimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+        tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
       };
       that.getCategoryMappings(data);
     });

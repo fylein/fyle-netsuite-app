@@ -50,9 +50,9 @@ export class EmployeeMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.isLoading = true;
-      const table_dimension = that.columnsToDisplay.includes('ccc') ? 3 : 2;
+      const tableDimension = that.columnsToDisplay.includes('ccc') ? 3 : 2;
       const pageSize = (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1);
-      that.mappingsService.getMappings(pageSize, 0, 'EMPLOYEE', table_dimension).subscribe((employees) => {
+      that.mappingsService.getMappings(pageSize, 0, 'EMPLOYEE', tableDimension).subscribe((employees) => {
         that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
         that.employeeMappings = employees.results;
         that.isLoading = false;
@@ -99,7 +99,7 @@ export class EmployeeMappingsComponent implements OnInit {
   reset(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getMappings(data.pageSize, data.pageNumber * data.pageSize, 'EMPLOYEE', data.table_dimension).subscribe((employees) => {
+    that.mappingsService.getMappings(data.pageSize, data.pageNumber * data.pageSize, 'EMPLOYEE', data.tableDimension).subscribe((employees) => {
       that.employeeMappings = employees.results;
       that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
       that.createEmployeeMappingsRows();
@@ -138,7 +138,7 @@ export class EmployeeMappingsComponent implements OnInit {
       const data = {
         pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
-        table_dimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+        tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
       };
       that.reset(data);
     }, () => {

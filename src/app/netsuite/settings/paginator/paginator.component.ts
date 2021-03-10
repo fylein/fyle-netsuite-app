@@ -11,7 +11,7 @@ export class PaginatorComponent implements OnInit {
     pageNumber: number;
     pageSize: number;
     multiplier: number;
-    table_dimension: number;
+    tableDimension: number;
     @Input() isLoading: boolean;
     @Input() count: number;
     @Input() coloumnArray: string[];
@@ -24,7 +24,7 @@ export class PaginatorComponent implements OnInit {
         const data = {
             pageSize: that.multiplier * that.pageSize,
             pageNumber: that.pageNumber,
-            table_dimension: that.table_dimension
+            tableDimension: that.tableDimension
         };
         that.getMappings.emit(data);
     }
@@ -46,7 +46,7 @@ export class PaginatorComponent implements OnInit {
             that.pageSize = that.storageService.get('mappings.pageSize') || 50;
             that.pageNumber = 0;
             that.multiplier = that.coloumnArray.includes('ccc') ? 2 : 1;
-            that.table_dimension = that.coloumnArray.includes('ccc') ? 3 : 2;
+            that.tableDimension = that.coloumnArray.includes('ccc') ? 3 : 2;
         });
     }
 }
