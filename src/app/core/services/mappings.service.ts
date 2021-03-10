@@ -435,14 +435,14 @@ export class MappingsService {
     );
   }
 
-  getMappings(pageLimit: number, pageOffset: number, sourceType: string, is3D: boolean = false): Observable<MappingsResponse> {
+  getMappings(pageLimit: number, pageOffset: number, sourceType: string, table_dimension: number = 2): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/`, {
         source_type: sourceType,
         limit: pageLimit,
         offset: pageOffset,
-        is3D
+        table_dimension
       }
     );
   }

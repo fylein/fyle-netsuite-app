@@ -11,7 +11,7 @@ export class PaginatorComponent implements OnInit {
     pageNumber: number;
     pageSize: number;
     multiplier: number;
-    is3D: boolean;
+    table_dimension: number;
     @Input() isLoading: boolean;
     @Input() count: number;
     @Input() coloumnArray: string[];
@@ -24,7 +24,7 @@ export class PaginatorComponent implements OnInit {
         const data = {
             pageSize: that.multiplier * that.pageSize,
             pageNumber: that.pageNumber,
-            is3D: that.is3D
+            table_dimension: that.table_dimension
         };
         that.getMappings.emit(data);
     }
@@ -46,7 +46,7 @@ export class PaginatorComponent implements OnInit {
             that.pageSize = that.storageService.get('mappings.pageSize') || 50;
             that.pageNumber = 0;
             that.multiplier = that.coloumnArray.includes('ccc') ? 2 : 1;
-            that.is3D = that.coloumnArray.includes('ccc');
+            that.table_dimension = that.coloumnArray.includes('ccc') ? 3 : 2;
         });
     }
 }
