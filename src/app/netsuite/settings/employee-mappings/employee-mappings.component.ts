@@ -125,12 +125,23 @@ export class EmployeeMappingsComponent implements OnInit {
     (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
   }
 
+  mappingsCheck() {
+    const that = this;
+    that.mappingsService.getGeneralMappings().subscribe(res => {
+      // Do nothing
+    }, () => {
+      that.snackBar.open('You cannot access this page yet. Please follow the onboarding steps in the dashboard or refresh your page');
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    });
+  }
+
   ngOnInit() {
     const that = this;
     that.isLoading = true;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.settingsService.getCombinedSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
+      that.mappingsCheck();
       that.isLoading = false;
       if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
         that.columnsToDisplay.push('ccc');
