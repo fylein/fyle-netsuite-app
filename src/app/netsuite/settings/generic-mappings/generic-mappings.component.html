@@ -12,9 +12,6 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         New {{ getTitle(sourceField) | titlecase }} Mapping
       </button>
-    </div>
-
-    <div class="page-info" *ngIf="!isLoading && count" fxLayoutAlign="end center">
       <mat-form-field class="simple-search" appearance="outline">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
@@ -28,7 +25,7 @@
       <zero-state message="You have no {{ getTitle(sourceField).toLowerCase() }} mappings yet"></zero-state>
     </div>
 
-    <div *ngIf="count" [hidden]="isLoading">
+    <div *ngIf="count" [hidden]="isLoading || !mappings.filteredData.length">
       <table mat-table [dataSource]="mappings" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="sourceField">
@@ -52,9 +49,10 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
+    <zero-state *ngIf="!mappings.filteredData.length && count" message="Looks like your search term doesn't match any of {{ getTitle(sourceField).toLowerCase() }}"></zero-state>
   </div>
 </div>
-<app-paginator *ngIf="count" [coloumnArray]="[]" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [coloumnArray]="[]" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

@@ -11,9 +11,6 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         Create Category Mapping
       </button>
-    </div>
-
-    <div class="page-info" *ngIf="!isLoading && count" fxLayoutAlign="end center">
       <mat-form-field class="simple-search" appearance="outline">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
@@ -22,7 +19,7 @@
         </span>
       </mat-form-field>
     </div>
-    
+
     <div *ngIf="!count && !isLoading">
       <zero-state message="You have no category mappings yet"></zero-state>
     </div>
@@ -56,8 +53,9 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
+    <zero-state *ngIf="!categoryMappingRows.filteredData.length && count" message="Looks like your search term doesn't match any of Category"></zero-state>
   </div>
-  <app-paginator *ngIf="count" [coloumnArray]="columnsToDisplay" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [coloumnArray]="columnsToDisplay" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
   
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>

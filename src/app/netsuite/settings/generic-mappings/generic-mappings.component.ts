@@ -64,6 +64,7 @@ export class GenericMappingsComponent implements OnInit {
 
   getMappings(data) {
     const that = this;
+    that.isLoading = true;
     that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, that.setting.source_field).subscribe(mappings => {
       that.mappings = new MatTableDataSource(mappings.results);
       that.count = mappings.count;
