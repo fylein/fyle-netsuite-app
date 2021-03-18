@@ -24,7 +24,7 @@
       <zero-state message="You have no category mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="count" [hidden]="isLoading">
+    <div *ngIf="count" [hidden]="isLoading || !categoryMappingRows.filteredData.length">
       <table mat-table [dataSource]="categoryMappingRows" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="category">
