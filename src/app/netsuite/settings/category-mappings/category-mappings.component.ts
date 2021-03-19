@@ -81,7 +81,7 @@ export class CategoryMappingsComponent implements OnInit {
     that.isLoading = true;
     that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.tableDimension).subscribe(response => {
       that.categoryMappings = response.results;
-      that.count = that.columnsToDisplay.includes('ccc') ?  response.count / 2 : response.count;
+      that.count = that.generalSettings.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
       const mappings = [];
 
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
@@ -126,9 +126,9 @@ export class CategoryMappingsComponent implements OnInit {
         that.columnsToDisplay.push('ccc');
       }
       const data = {
-        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
-        tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
       };
       that.getCategoryMappings(data);
     });

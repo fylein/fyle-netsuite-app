@@ -15,7 +15,7 @@
         Refresh Employee Mappings
       </button>
 
-      <mat-form-field class="simple-search" appearance="outline">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -63,7 +63,7 @@
     <zero-state *ngIf="!employeeMappingRows.filteredData.length && count" message="Looks like your search term doesn't match any of Employee"></zero-state>
 
   </div>
-  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [coloumnArray]="columnsToDisplay" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>

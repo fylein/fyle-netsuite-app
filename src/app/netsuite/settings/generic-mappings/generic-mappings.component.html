@@ -12,7 +12,7 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         New {{ getTitle(sourceField) | titlecase }} Mapping
       </button>
-      <mat-form-field class="simple-search" appearance="outline">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -52,7 +52,7 @@
     <zero-state *ngIf="!mappings.filteredData.length && count" message="Looks like your search term doesn't match any of {{ getTitle(sourceField).toLowerCase() }}"></zero-state>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [coloumnArray]="[]" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [is3D]="false" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

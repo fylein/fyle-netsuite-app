@@ -11,7 +11,7 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         Create Category Mapping
       </button>
-      <mat-form-field class="simple-search" appearance="outline">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -55,7 +55,7 @@
     </div>
     <zero-state *ngIf="!categoryMappingRows.filteredData.length && count" message="Looks like your search term doesn't match any of Category"></zero-state>
   </div>
-  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [coloumnArray]="columnsToDisplay" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="!!generalSettings.corporate_credit_card_expenses_object" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
   
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
