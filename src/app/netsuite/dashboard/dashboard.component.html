@@ -220,5 +220,56 @@
           </mat-list>
         </mat-card>
       </div>
+
+      <div class="dashboard--stats" fxLayout="row" fxLayoutAlign="center">
+        <mat-card class="dashboard--stats-card">
+          <mat-list role="list">
+            <mat-list-item role="listitem">
+              <mat-icon class="dashboard--stats-card-sync"
+                mat-list-icon
+                matTooltip="Sync now"
+                matTooltipPosition="left" (click)="syncDimension('fyle')">sync</mat-icon>
+                <mat-progress-spinner 
+                  *ngIf="fyleRefresh"
+                  matTooltip="Syncing now"
+                  matTooltipPosition="below"
+                  mode="indeterminate"
+                  diameter="20"
+                  style="margin: 0 20px 20px 10px;">
+              </mat-progress-spinner>
+              <div *ngIf="workspace.source_synced_at" mat-line>Fyle dimensions synced at</div>
+              <div *ngIf="!workspace.source_synced_at" mat-line>Fyle dimensions not synced</div>
+              <div mat-line>
+                <div class="dashboard--stats-card-desc">
+                  {{workspace.source_synced_at | date:'medium'}}
+                </div>
+  
+              </div>
+            </mat-list-item>
+            <mat-list-item role="listitem">
+              <mat-icon  
+                class="dashboard--stats-card-sync"
+                mat-list-icon
+                matTooltip="Sync now"
+                matTooltipPosition="left" (click)="syncDimension('netsuite')">sync</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="netsuiteRefresh"
+                  matTooltip="Syncing now"
+                  matTooltipPosition="below"
+                  mode="indeterminate"
+                  diameter="20"
+                  style="margin: 0 20px 20px 10px;">
+              </mat-progress-spinner>
+              <div *ngIf="workspace.destination_synced_at" mat-line>NetSuite dimensions synced at</div>
+              <div *ngIf="!workspace.destination_synced_at" mat-line>NetSuite dimensions not synced</div>
+              <div mat-line>
+                <div class="dashboard--stats-card-desc">
+                  {{workspace.destination_synced_at | date:'medium'}}
+                </div>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </div>
     </div>
   </div>

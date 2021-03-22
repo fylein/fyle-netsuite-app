@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, onErrorResumeNext } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Workspace } from 'src/app/core/models/workspace.model';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -34,6 +35,9 @@ export class DashboardComponent implements OnInit {
   workspaceId: number;
   isLoading = false;
   generalSettings: GeneralSetting;
+  workspace: Workspace;
+  fyleRefresh: boolean;
+  netsuiteRefresh: boolean;
 
   currentState = onboardingStates.initialized;
 
@@ -55,7 +59,7 @@ export class DashboardComponent implements OnInit {
     private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
-    private snackBar: MatSnackBar) {
+    private workspaceService: WorkspaceService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
@@ -161,45 +165,60 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  loadWorkspaceData() {
+    const that = this;
+    // TODO: remove promises and do with rxjs observables
+    return that.workspaceService.getWorkspaceById().toPromise().then((workspace: Workspace) => {
+      that.workspace = workspace;
+      return workspace;
+    });
+  }
+
   loadDashboardData() {
     const that = this;
     that.isLoading = true;
     // TODO: remove promises and do with rxjs observables
     return forkJoin([
       that.loadSuccessfullExpenseGroupsCount(),
-      that.loadFailedlExpenseGroupsCount()
+      that.loadFailedlExpenseGroupsCount(),
+      that.loadWorkspaceData()
     ]).toPromise().then(() => {
       that.isLoading = false;
       return true;
     });
   }
 
+  syncDimension(dimension) {
+    const that = this;
+    console.log(dimension);
+    if (dimension === 'fyle') {
+      that.fyleRefresh = true;
+      that.mappingsService.refreshFyleDimensions().subscribe((workspace: Workspace) => {
+        that.workspace = workspace;
+        that.fyleRefresh = false;
+      });
+    } else {
+      that.netsuiteRefresh = true;
+      that.mappingsService.refreshNetSuiteDimensions().subscribe((workspace: Workspace) => {
+        that.workspace = workspace;
+        that.netsuiteRefresh = false;
+      });
+    }
+  }
+
   // to be callled in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
   updateDimensionTables() {
     const that = this;
 
-    onErrorResumeNext(
-      that.mappingsService.postFyleEmployees(),
-      that.mappingsService.postFyleCategories(),
-      that.mappingsService.postFyleCostCenters(),
-      that.mappingsService.postFyleProjects(),
-      that.mappingsService.postExpenseCustomFields()
-    ).subscribe(() => {});
-
-    onErrorResumeNext(
-      that.mappingsService.postNetSuiteExpenseCategories(),
-      that.mappingsService.postNetSuiteLocations(),
-      that.mappingsService.postNetSuiteVendors(),
-      that.mappingsService.postNetSuiteCurrencies(),
-      that.mappingsService.postNetSuiteClasses(),
-      that.mappingsService.postNetSuiteDepartments(),
-      that.mappingsService.postNetSuiteEmployees(),
-      that.mappingsService.postNetSuiteAccounts(),
-      that.mappingsService.postNetsuiteExpenseCustomFields(),
-      that.mappingsService.postNetsuiteProjectFields(),
-      that.mappingsService.postNetsuiteCustomerFields()
-    ).subscribe(() => {
-      // that.snackBar.open('Data Successfully imported from NetSuite');
+    that.fyleRefresh = true;
+    that.netsuiteRefresh = true;
+    that.mappingsService.syncFyleDimensions().subscribe((workspace: Workspace) => {
+      that.workspace = workspace;
+      that.fyleRefresh = false;
+    });
+    that.mappingsService.syncNetSuiteDimensions().subscribe((workspace: Workspace) => {
+      that.workspace = workspace;
+      that.netsuiteRefresh = false;
     });
   }
 

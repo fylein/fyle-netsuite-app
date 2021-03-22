@@ -46,7 +46,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { ConnectNetsuiteComponent } from './settings/connect-netsuite/connect-netsuite.component';
 import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurations/netsuite-configurations.component';
@@ -59,6 +58,7 @@ import { GenericMappingsDialogComponent } from './settings/generic-mappings/gene
 import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
 import { CustomSegmentsDialogComponent } from './settings/netsuite-configurations/custom-segments/custom-segments-dialog/custom-segments-dialog.component';
 import { MatTooltipModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -127,7 +127,8 @@ import { MatTooltipModule } from '@angular/material';
     MatNativeDateModule,
     MatStepperModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     {

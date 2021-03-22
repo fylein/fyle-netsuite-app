@@ -107,6 +107,11 @@ $stats-desc: #545454;
         color: $fy-dashboard-stat-icon;
       }
 
+      &-sync {
+        color: $fy-dashboard-stat-icon;
+        cursor: pointer;
+      }
+
       &-desc {
         color: $stats-desc;
         opacity: .6;
