@@ -190,7 +190,7 @@ export class DashboardComponent implements OnInit {
 
   syncDimension(dimension) {
     const that = this;
-    console.log(dimension);
+
     if (dimension === 'fyle') {
       that.fyleRefresh = true;
       that.mappingsService.refreshFyleDimensions().subscribe((workspace: Workspace) => {
