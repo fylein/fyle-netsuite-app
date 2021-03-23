@@ -49,7 +49,7 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
-    <zero-state *ngIf="!mappings.filteredData.length && count" message="Looks like your search term doesn't match any of {{ getTitle(sourceField).toLowerCase() }}"></zero-state>
+    <zero-state *ngIf="!mappings.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of {{ getTitle(sourceField).charAt(0).toUpperCase() + getTitle(sourceField).slice(1) }} mappings"></zero-state>
   </div>
 </div>
 <app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [is3D]="false" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>

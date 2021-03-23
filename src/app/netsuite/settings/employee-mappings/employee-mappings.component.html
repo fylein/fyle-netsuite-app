@@ -60,7 +60,7 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
-    <zero-state *ngIf="!employeeMappingRows.filteredData.length && count" message="Looks like your search term doesn't match any of Employee"></zero-state>
+    <zero-state *ngIf="!employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
 
   </div>
   <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
