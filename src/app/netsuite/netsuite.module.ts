@@ -36,6 +36,7 @@ import { GeneralMappingsComponent } from './settings/general-mappings/general-ma
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
 import { ScheduleComponent } from './settings/schedule/schedule.component';
+import { PaginatorComponent } from './settings/paginator/paginator.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './settings/employee-mappings/employee-mappings-dialog/employee-mappings-dialog.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -88,7 +89,8 @@ import { MatTooltipModule } from '@angular/material';
     GenericMappingsComponent,
     GenericMappingsDialogComponent,
     CustomSegmentsComponent,
-    CustomSegmentsDialogComponent
+    CustomSegmentsDialogComponent,
+    PaginatorComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,

@@ -8,6 +8,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-category-mappings',
@@ -18,9 +19,10 @@ export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
   categoryMappings: Mapping[];
-  categoryMappingRows: MappingRow[];
+  categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   generalSettings: GeneralSetting;
   rowElement: Mapping;
+  count: number;
   columnsToDisplay = ['category', 'netsuite'];
 
   constructor(
@@ -44,11 +46,22 @@ export class CategoryMappingsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
-        that.getCategoryMappings();
+        const data = {
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
+          pageNumber: 0,
+          tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+        };
+        that.getCategoryMappings(data);
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       }
     });
+  }
+
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.categoryMappingRows.filter = filterValue.trim().toLowerCase();
   }
 
   showSeparateCCCField() {
@@ -63,11 +76,12 @@ export class CategoryMappingsComponent implements OnInit {
     return false;
   }
 
-  getCategoryMappings() {
+  getCategoryMappings(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getAllMappings('CATEGORY').subscribe(response => {
+    that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.tableDimension).subscribe(response => {
       that.categoryMappings = response.results;
+      that.count = that.generalSettings.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
       const mappings = [];
 
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
@@ -80,7 +94,8 @@ export class CategoryMappingsComponent implements OnInit {
           ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
         });
       });
-      that.categoryMappingRows = mappings;
+      that.categoryMappingRows = new MatTableDataSource(mappings);
+      that.categoryMappingRows.filterPredicate = that.searchByText;
       that.isLoading = false;
     }, () => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
@@ -91,6 +106,12 @@ export class CategoryMappingsComponent implements OnInit {
     const categMapping = categoryMappings.filter(mapping => mapping.source.value === categoryMapping.source.value && (mapping.destination_type === 'CCC_ACCOUNT' || mapping.destination_type === 'CCC_EXPENSE_CATEGORY'));
 
     return categMapping.length ? categMapping[0].destination.value : null;
+  }
+
+  searchByText(data: MappingRow, filterText: string) {
+    return data.fyle_value.toLowerCase().includes(filterText) ||
+    data.netsuite_value.toLowerCase().includes(filterText) ||
+    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
   }
 
   ngOnInit() {
@@ -104,9 +125,12 @@ export class CategoryMappingsComponent implements OnInit {
       if (that.showSeparateCCCField()) {
         that.columnsToDisplay.push('ccc');
       }
-
-      that.getCategoryMappings();
+      const data = {
+        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageNumber: 0,
+        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+      };
+      that.getCategoryMappings(data);
     });
   }
-
 }

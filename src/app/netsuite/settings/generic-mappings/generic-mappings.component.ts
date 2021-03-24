@@ -8,6 +8,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-generic-mappings',
@@ -18,8 +19,9 @@ export class GenericMappingsComponent implements OnInit {
   workspaceId: number;
   sourceField: string;
   isLoading: boolean;
-  mappings: Mapping[];
+  mappings: MatTableDataSource<Mapping> = new MatTableDataSource([]);
   setting: MappingSetting;
+  count: number;
   rowElement: Mapping;
   columnsToDisplay = ['sourceField', 'destinationField'];
 
@@ -37,7 +39,11 @@ export class GenericMappingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      that.getMappings();
+      const data = {
+        pageSize: that.storageService.get('mappings.pageSize') || 50,
+        pageNumber: 0
+      };
+      that.getMappings(data);
       const onboarded = that.storageService.get('onboarded');
 
       if (onboarded === false) {
@@ -46,20 +52,34 @@ export class GenericMappingsComponent implements OnInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.mappings.filter = filterValue.trim().toLowerCase();
+  }
+
   getTitle(name: string) {
     return name.replace(/_/g, ' ');
   }
 
-  getMappings() {
+  getMappings(data) {
     const that = this;
-    that.mappingsService.getAllMappings(that.setting.source_field).subscribe(mappings => {
-      that.mappings = mappings.results;
+    that.isLoading = true;
+    that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, that.setting.source_field).subscribe(mappings => {
+      that.mappings = new MatTableDataSource(mappings.results);
+      that.count = mappings.count;
+      that.mappings.filterPredicate = that.searchByText;
       that.isLoading = false;
     });
   }
 
   goToConfigurations() {
     this.router.navigate([`/workspaces/${this.workspaceId}/settings/configurations/general/`]);
+  }
+
+  searchByText(data: Mapping, filterText: string) {
+    return data.source.value.toLowerCase().includes(filterText) ||
+    data.destination.value.toLowerCase().includes(filterText);
   }
 
   ngOnInit() {
@@ -70,7 +90,11 @@ export class GenericMappingsComponent implements OnInit {
       that.sourceField = that.route.snapshot.params.source_field;
       that.settingsService.getMappingSettings(that.workspaceId).subscribe(response => {
         that.setting = response.results.filter(setting => setting.source_field === that.sourceField.toUpperCase())[0];
-        that.getMappings();
+        const data = {
+          pageSize: that.storageService.get('mappings.pageSize') || 50,
+          pageNumber: 0
+        };
+        that.getMappings(data);
       });
     });
 

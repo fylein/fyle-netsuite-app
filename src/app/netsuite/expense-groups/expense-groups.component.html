@@ -30,7 +30,7 @@
     <zero-state message="You have no expense groups yet"></zero-state>
   </div>
   
-  <div *ngIf="count" [hidden]="isLoading">
+  <div *ngIf="count" [hidden]="isLoading || !expenseGroups.filteredData.length">
     <table mat-table [dataSource]="expenseGroups" class="page-table" matSort matSortActive="created_at"
       matSortDisableClear matSortDirection="desc">  
 
@@ -83,3 +83,4 @@
     <mat-paginator [length]="count" [pageSizeOptions]="[10, 50, 100, 200]" [pageSize]="pageSize" [pageIndex]="pageNumber"
       (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
   </div>
+  <zero-state *ngIf="!expenseGroups.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Expense groups"></zero-state>
