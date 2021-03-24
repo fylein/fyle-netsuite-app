@@ -47,9 +47,9 @@ export class CategoryMappingsComponent implements OnInit {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
           pageNumber: 0,
-          tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
         };
         that.getCategoryMappings(data);
       } else {
