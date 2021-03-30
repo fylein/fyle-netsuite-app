@@ -52,7 +52,7 @@
     <zero-state *ngIf="!mappings.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of {{ getTitle(sourceField).charAt(0).toUpperCase() + getTitle(sourceField).slice(1) }} mappings"></zero-state>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [is3D]="false" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [is3D]="false" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
