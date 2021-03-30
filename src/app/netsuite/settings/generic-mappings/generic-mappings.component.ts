@@ -21,7 +21,7 @@ export class GenericMappingsComponent implements OnInit {
   isLoading: boolean;
   mappings: MatTableDataSource<Mapping> = new MatTableDataSource([]);
   setting: MappingSetting;
-  pageNumber: number = 0;
+  pageNumber = 0;
   count: number;
   rowElement: Mapping;
   columnsToDisplay = ['sourceField', 'destinationField'];

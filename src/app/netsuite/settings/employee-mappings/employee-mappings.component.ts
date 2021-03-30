@@ -26,7 +26,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: GeneralSetting;
   rowElement: Mapping;
-  pageNumber: number = 0;
+  pageNumber = 0;
   count: number;
   columnsToDisplay = ['employee_email', 'netsuite'];
 

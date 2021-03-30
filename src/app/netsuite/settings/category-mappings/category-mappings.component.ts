@@ -22,7 +22,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   generalSettings: GeneralSetting;
   rowElement: Mapping;
-  pageNumber: number = 0;
+  pageNumber = 0;
   count: number;
   columnsToDisplay = ['category', 'netsuite'];
 
