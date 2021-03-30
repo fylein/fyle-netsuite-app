@@ -8,10 +8,10 @@ import { StorageService } from 'src/app/core/services/storage.service';
     styleUrls: ['./paginator.component.scss']
 })
 export class PaginatorComponent implements OnInit {
-    pageNumber: number;
     pageSize: number;
     multiplier: number;
     tableDimension: number;
+    @Input() pageNumber: number;
     @Input() isLoading: boolean;
     @Input() count: number;
     @Input() is3D: boolean;
@@ -44,7 +44,6 @@ export class PaginatorComponent implements OnInit {
         const that = this;
         that.route.params.subscribe(val => {
             that.pageSize = that.storageService.get('mappings.pageSize') || 50;
-            that.pageNumber = 0;
             that.multiplier = that.is3D ? 2 : 1;
             that.tableDimension = that.is3D ? 3 : 2;
         });

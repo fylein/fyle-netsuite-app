@@ -26,6 +26,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: GeneralSetting;
   rowElement: Mapping;
+  pageNumber = 0;
   count: number;
   columnsToDisplay = ['employee_email', 'netsuite'];
 
@@ -54,6 +55,7 @@ export class EmployeeMappingsComponent implements OnInit {
       const pageSize = (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1);
       that.mappingsService.getMappings(pageSize, 0, 'EMPLOYEE', tableDimension).subscribe((employees) => {
         that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
+        that.pageNumber = 0;
         that.employeeMappings = employees.results;
         that.isLoading = false;
         const onboarded = that.storageService.get('onboarded');
@@ -101,6 +103,7 @@ export class EmployeeMappingsComponent implements OnInit {
     that.isLoading = true;
     that.mappingsService.getMappings(data.pageSize, data.pageNumber * data.pageSize, 'EMPLOYEE', data.tableDimension).subscribe((employees) => {
       that.employeeMappings = employees.results;
+      that.pageNumber = data.pageNumber;
       that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
       that.createEmployeeMappingsRows();
       that.isLoading = false;

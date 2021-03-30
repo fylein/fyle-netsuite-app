@@ -22,6 +22,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   generalSettings: GeneralSetting;
   rowElement: Mapping;
+  pageNumber = 0;
   count: number;
   columnsToDisplay = ['category', 'netsuite'];
 
@@ -82,6 +83,7 @@ export class CategoryMappingsComponent implements OnInit {
     that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CATEGORY', data.tableDimension).subscribe(response => {
       that.categoryMappings = response.results;
       that.count = that.generalSettings.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
+      that.pageNumber = data.pageNumber;
       const mappings = [];
 
       const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT' && mapping.destination_type !== 'CCC_EXPENSE_CATEGORY');
