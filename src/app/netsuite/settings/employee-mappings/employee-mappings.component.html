@@ -63,7 +63,7 @@
     <zero-state *ngIf="!employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
 
   </div>
-  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>
