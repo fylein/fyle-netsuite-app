@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { TaskResponse } from 'src/app/core/models/task-reponse.model';
 
 @Component({
   selector: 'app-export',
@@ -22,6 +23,8 @@ export class ExportComponent implements OnInit {
 
   isLoading: boolean;
   isExporting: boolean;
+  isProcessingExports: boolean;
+  processingExportsCount: number;
   workspaceId: number;
   exportableExpenseGroups: ExpenseGroup[];
   generalSettings: GeneralSetting;
@@ -147,15 +150,49 @@ export class ExportComponent implements OnInit {
     });
   }
 
+  getProcessingExportsCount(tasks: TaskResponse) {
+    return tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length;
+  }
 
-  ngOnInit() {
+  checkOngoingExports() {
+    const that = this;
+
+    that.isProcessingExports = true;
+    interval(3000).pipe(
+      switchMap(() => from(that.taskService.getAllTasks('ALL'))),
+      takeWhile((response) => response.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length > 0, true)
+    ).subscribe((tasks: TaskResponse) => {
+      that.processingExportsCount = that.getProcessingExportsCount(tasks);
+      if (tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length === 0) {
+        that.isProcessingExports = false;
+        that.loadExportableExpenseGroups();
+        that.snackBar.open('Export Complete');
+      }
+    });
+  }
+
+  reset() {
     const that = this;
 
     that.isExporting = false;
+    that.isLoading = true;
+
+    that.taskService.getAllTasks('ALL').subscribe((tasks: TaskResponse) => {
+      that.isLoading = false;
+      if (tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length === 0) {
+        that.loadExportableExpenseGroups();
+      } else {
+        that.processingExportsCount = that.getProcessingExportsCount(tasks);
+        that.checkOngoingExports();
+      }
+    });
+  }
+
+  ngOnInit() {
+    const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
 
-    that.isLoading = true;
-    that.loadExportableExpenseGroups();
+    that.reset();
   }
 
 }
