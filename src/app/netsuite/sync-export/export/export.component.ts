@@ -150,7 +150,7 @@ export class ExportComponent implements OnInit {
     });
   }
 
-  getProcessingExportsCount(tasks: TaskResponse) {
+  filterOngoingTasks(tasks: TaskResponse) {
     return tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length;
   }
 
@@ -160,10 +160,10 @@ export class ExportComponent implements OnInit {
     that.isProcessingExports = true;
     interval(3000).pipe(
       switchMap(() => from(that.taskService.getAllTasks('ALL'))),
-      takeWhile((response) => response.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length > 0, true)
+      takeWhile((response: TaskResponse) => that.filterOngoingTasks(response) > 0, true)
     ).subscribe((tasks: TaskResponse) => {
-      that.processingExportsCount = that.getProcessingExportsCount(tasks);
-      if (tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length === 0) {
+      that.processingExportsCount = that.filterOngoingTasks(tasks);
+      if (that.filterOngoingTasks(tasks) === 0) {
         that.isProcessingExports = false;
         that.loadExportableExpenseGroups();
         that.snackBar.open('Export Complete');
@@ -179,10 +179,10 @@ export class ExportComponent implements OnInit {
 
     that.taskService.getAllTasks('ALL').subscribe((tasks: TaskResponse) => {
       that.isLoading = false;
-      if (tasks.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES').length === 0) {
+      if (that.filterOngoingTasks(tasks) === 0) {
         that.loadExportableExpenseGroups();
       } else {
-        that.processingExportsCount = that.getProcessingExportsCount(tasks);
+        that.processingExportsCount = that.filterOngoingTasks(tasks);
         that.checkOngoingExports();
       }
     });
