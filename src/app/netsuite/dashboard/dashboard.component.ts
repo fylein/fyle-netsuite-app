@@ -188,7 +188,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  syncDimension(dimension) {
+  syncDimension(dimension: string) {
     const that = this;
 
     if (dimension === 'fyle') {
