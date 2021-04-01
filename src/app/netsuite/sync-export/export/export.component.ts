@@ -158,7 +158,7 @@ export class ExportComponent implements OnInit {
     const that = this;
 
     that.isProcessingExports = true;
-    interval(3000).pipe(
+    interval(7000).pipe(
       switchMap(() => from(that.taskService.getAllTasks('ALL'))),
       takeWhile((response: TaskResponse) => that.filterOngoingTasks(response) > 0, true)
     ).subscribe((tasks: TaskResponse) => {
