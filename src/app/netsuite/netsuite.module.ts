@@ -59,7 +59,6 @@ import { GenericMappingsDialogComponent } from './settings/generic-mappings/gene
 import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
 import { CustomSegmentsDialogComponent } from './settings/netsuite-configurations/custom-segments/custom-segments-dialog/custom-segments-dialog.component';
 import { MatTooltipModule } from '@angular/material';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -129,8 +128,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatNativeDateModule,
     MatStepperModule,
     MatProgressBarModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule
+    MatTooltipModule
   ],
   providers: [
     {

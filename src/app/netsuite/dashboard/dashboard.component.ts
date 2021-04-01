@@ -10,6 +10,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Workspace } from 'src/app/core/models/workspace.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -35,9 +36,6 @@ export class DashboardComponent implements OnInit {
   workspaceId: number;
   isLoading = false;
   generalSettings: GeneralSetting;
-  workspace: Workspace;
-  fyleRefresh: boolean;
-  netsuiteRefresh: boolean;
 
   currentState = onboardingStates.initialized;
 
@@ -58,8 +56,8 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
     private storageService: StorageService,
-    private windowReferenceService: WindowReferenceService,
-    private workspaceService: WorkspaceService) {
+    private snackBar: MatSnackBar,
+    private windowReferenceService: WindowReferenceService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
@@ -165,61 +163,34 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadWorkspaceData() {
-    const that = this;
-    // TODO: remove promises and do with rxjs observables
-    return that.workspaceService.getWorkspaceById().toPromise().then((workspace: Workspace) => {
-      that.workspace = workspace;
-      return workspace;
-    });
-  }
-
   loadDashboardData() {
     const that = this;
     that.isLoading = true;
     // TODO: remove promises and do with rxjs observables
     return forkJoin([
       that.loadSuccessfullExpenseGroupsCount(),
-      that.loadFailedlExpenseGroupsCount(),
-      that.loadWorkspaceData()
+      that.loadFailedlExpenseGroupsCount()
     ]).toPromise().then(() => {
       that.isLoading = false;
       return true;
     });
   }
 
-  syncDimension(dimension: string) {
+  syncDimension() {
     const that = this;
 
-    if (dimension === 'fyle') {
-      that.fyleRefresh = true;
-      that.mappingsService.refreshFyleDimensions().subscribe((workspace: Workspace) => {
-        that.workspace = workspace;
-        that.fyleRefresh = false;
-      });
-    } else {
-      that.netsuiteRefresh = true;
-      that.mappingsService.refreshNetSuiteDimensions().subscribe((workspace: Workspace) => {
-        that.workspace = workspace;
-        that.netsuiteRefresh = false;
-      });
-    }
+    that.mappingsService.refreshFyleDimensions().subscribe(() => {});
+    that.mappingsService.refreshNetSuiteDimensions().subscribe(() => {});
+
+    that.snackBar.open('Triggered sync of Fyle and NetSuite dimensions');
   }
 
-  // to be callled in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
+  // to be called in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
   updateDimensionTables() {
     const that = this;
 
-    that.fyleRefresh = true;
-    that.netsuiteRefresh = true;
-    that.mappingsService.syncFyleDimensions().subscribe((workspace: Workspace) => {
-      that.workspace = workspace;
-      that.fyleRefresh = false;
-    });
-    that.mappingsService.syncNetSuiteDimensions().subscribe((workspace: Workspace) => {
-      that.workspace = workspace;
-      that.netsuiteRefresh = false;
-    });
+    that.mappingsService.syncFyleDimensions().subscribe(() => {});
+    that.mappingsService.syncNetSuiteDimensions().subscribe(() => {});
   }
 
   openSchedule(event) {
