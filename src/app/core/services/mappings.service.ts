@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Cacheable, CacheBuster } from 'ngx-cacheable';
+import { Observable, from, Subject } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CustomSegment } from '../models/custom-segment.model';
@@ -12,6 +13,8 @@ import { Mapping } from '../models/mappings.model';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { Workspace } from '../models/workspace.model';
 import { WorkspaceService } from './workspace.service';
+
+const generalMappingsCache = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -455,11 +458,17 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
+  @CacheBuster({
+    cacheBusterNotifier: generalMappingsCache
+  })
   postGeneralMappings(generalMappings: GeneralMapping): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/general/`, generalMappings);
   }
 
+  @Cacheable({
+    cacheBusterObserver: generalMappingsCache
+  })
   getGeneralMappings(): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
@@ -475,13 +484,14 @@ export class MappingsService {
     );
   }
 
-  getMappings(pageLimit: number, pageOffset: number, sourceType: string): Observable<MappingsResponse> {
+  getMappings(pageLimit: number, pageOffset: number, sourceType: string, tableDimension: number = 2): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/`, {
         source_type: sourceType,
         limit: pageLimit,
-        offset: pageOffset
+        offset: pageOffset,
+        table_dimension: tableDimension
       }
     );
   }

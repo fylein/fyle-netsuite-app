@@ -17,6 +17,7 @@ export type Expense = {
   foreign_amount: number;
   foreign_currency: string;
   fund_source: string;
+  org_id: string;
   id: number;
   project: string;
   purpose: string;
