@@ -56,8 +56,8 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
     private storageService: StorageService,
-    private snackBar: MatSnackBar,
-    private windowReferenceService: WindowReferenceService) {
+    private windowReferenceService: WindowReferenceService,
+    private snackBar: MatSnackBar) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 

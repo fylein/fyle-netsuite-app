@@ -11,7 +11,6 @@ import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
 import { Mapping } from '../models/mappings.model';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
-import { Workspace } from '../models/workspace.model';
 import { WorkspaceService } from './workspace.service';
 
 const generalMappingsCache = new Subject<void>();
@@ -32,13 +31,13 @@ export class MappingsService {
   netsuiteClasses: Observable<MappingDestination[]>;
   netsuiteCategories: Observable<MappingDestination[]>;
   netsuiteCurrencies: Observable<MappingDestination[]>;
-  destinationWorkspace: Observable<Workspace>;
+  destinationWorkspace: Observable<{}>;
   fyleCategories: Observable<MappingSource[]>;
   fyleEmployees: Observable<MappingSource[]>;
   fyleProjects: Observable<MappingSource[]>;
   fyleExpenseCustomFields: Observable<MappingSource[]>;
   fyleCostCenters: Observable<MappingSource[]>;
-  sourceWorkspace: Observable<Workspace>;
+  sourceWorkspace: Observable<{}>;
 
   constructor(
     private apiService: ApiService,
@@ -274,7 +273,7 @@ export class MappingsService {
     return this.netsuiteSubsidiaries;
   }
 
-  syncNetSuiteDimensions(): Observable<Workspace> {
+  syncNetSuiteDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.destinationWorkspace) {
@@ -287,7 +286,7 @@ export class MappingsService {
     return this.destinationWorkspace;
   }
 
-  syncFyleDimensions(): Observable<Workspace> {
+  syncFyleDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sourceWorkspace) {
@@ -300,13 +299,13 @@ export class MappingsService {
     return this.sourceWorkspace;
   }
 
-  refreshNetSuiteDimensions(): Observable<Workspace> {
+  refreshNetSuiteDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh/`, {});
   }
 
-  refreshFyleDimensions(): Observable<Workspace> {
+  refreshFyleDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh/`, {});
