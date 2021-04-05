@@ -31,11 +31,13 @@ export class MappingsService {
   netsuiteClasses: Observable<MappingDestination[]>;
   netsuiteCategories: Observable<MappingDestination[]>;
   netsuiteCurrencies: Observable<MappingDestination[]>;
+  destinationWorkspace: Observable<{}>;
   fyleCategories: Observable<MappingSource[]>;
   fyleEmployees: Observable<MappingSource[]>;
   fyleProjects: Observable<MappingSource[]>;
   fyleExpenseCustomFields: Observable<MappingSource[]>;
   fyleCostCenters: Observable<MappingSource[]>;
+  sourceWorkspace: Observable<{}>;
 
   constructor(
     private apiService: ApiService,
@@ -271,6 +273,43 @@ export class MappingsService {
     return this.netsuiteSubsidiaries;
   }
 
+  syncNetSuiteDimensions() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.destinationWorkspace) {
+      this.destinationWorkspace = this.apiService.post(`/workspaces/${workspaceId}/netsuite/sync_dimensions/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.destinationWorkspace;
+  }
+
+  syncFyleDimensions() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.sourceWorkspace) {
+      this.sourceWorkspace = this.apiService.post(`/workspaces/${workspaceId}/fyle/sync_dimensions/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.sourceWorkspace;
+  }
+
+  refreshNetSuiteDimensions() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh/`, {});
+  }
+
+  refreshFyleDimensions() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh/`, {});
+  }
 
   getFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
