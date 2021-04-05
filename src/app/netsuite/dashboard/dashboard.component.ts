@@ -182,7 +182,7 @@ export class DashboardComponent implements OnInit {
     that.mappingsService.refreshFyleDimensions().subscribe(() => {});
     that.mappingsService.refreshNetSuiteDimensions().subscribe(() => {});
 
-    that.snackBar.open('Triggered sync of Fyle and NetSuite dimensions');
+    that.snackBar.open('Refreshing Fyle and NetSuite Data');
   }
 
   // to be called in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
