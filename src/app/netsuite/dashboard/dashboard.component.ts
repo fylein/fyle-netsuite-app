@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, onErrorResumeNext } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Workspace } from 'src/app/core/models/workspace.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -174,33 +176,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // to be callled in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
+  syncDimension() {
+    const that = this;
+
+    that.mappingsService.refreshFyleDimensions().subscribe(() => {});
+    that.mappingsService.refreshNetSuiteDimensions().subscribe(() => {});
+
+    that.snackBar.open('Refreshing Fyle and NetSuite Data');
+  }
+
+  // to be called in background whenever dashboard is opened for syncing fyle and netsuite data for current workspace
   updateDimensionTables() {
     const that = this;
 
-    onErrorResumeNext(
-      that.mappingsService.postFyleEmployees(),
-      that.mappingsService.postFyleCategories(),
-      that.mappingsService.postFyleCostCenters(),
-      that.mappingsService.postFyleProjects(),
-      that.mappingsService.postExpenseCustomFields()
-    ).subscribe(() => {});
-
-    onErrorResumeNext(
-      that.mappingsService.postNetSuiteExpenseCategories(),
-      that.mappingsService.postNetSuiteLocations(),
-      that.mappingsService.postNetSuiteVendors(),
-      that.mappingsService.postNetSuiteCurrencies(),
-      that.mappingsService.postNetSuiteClasses(),
-      that.mappingsService.postNetSuiteDepartments(),
-      that.mappingsService.postNetSuiteEmployees(),
-      that.mappingsService.postNetSuiteAccounts(),
-      that.mappingsService.postNetsuiteExpenseCustomFields(),
-      that.mappingsService.postNetsuiteProjectFields(),
-      that.mappingsService.postNetsuiteCustomerFields()
-    ).subscribe(() => {
-      // that.snackBar.open('Data Successfully imported from NetSuite');
-    });
+    that.mappingsService.syncFyleDimensions().subscribe(() => {});
+    that.mappingsService.syncNetSuiteDimensions().subscribe(() => {});
   }
 
   openSchedule(event) {
