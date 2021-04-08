@@ -20,7 +20,6 @@ import { TaskResponse } from 'src/app/core/models/task-reponse.model';
   styleUrls: ['./export.component.scss', '../../netsuite.component.scss']
 })
 export class ExportComponent implements OnInit {
-
   isLoading: boolean;
   isExporting: boolean;
   isProcessingExports: boolean;
@@ -30,6 +29,7 @@ export class ExportComponent implements OnInit {
   generalSettings: GeneralSetting;
   failedExpenseGroupCount = 0;
   successfulExpenseGroupCount = 0;
+  exportedCount = 0;
   windowReference: Window;
 
   constructor(
@@ -95,6 +95,7 @@ export class ExportComponent implements OnInit {
       switchMap(() => from(that.taskService.getAllTasks('ALL'))),
       takeWhile((response) => response.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length > 0, true)
     ).subscribe((res) => {
+      that.exportedCount = res.results.filter(task => (task.status !== 'IN_PROGRESS' && task.status !== 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length;
       if (res.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length === 0) {
         that.taskService.getAllTasks('FAILED').subscribe((taskResponse) => {
           that.failedExpenseGroupCount = taskResponse.count;
