@@ -38,14 +38,13 @@ export class ConnectNetsuiteComponent implements OnInit {
 
       if (netsuiteCredentials) {
         that.isLoading = true;
-        that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe( responses => {
-          if (responses) {
-            this.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {});
-          }
-          that.snackBar.open('NetSuite account connected successfully');
-          that.netsuiteConnectionDone = true;
-          that.isLoading = false;
-          that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
+        that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe(responses => {
+          that.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {
+            that.snackBar.open('NetSuite account connected successfully');
+            that.netsuiteConnectionDone = true;
+            that.isLoading = false;
+            that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
+          });
         }, err => {
           that.snackBar.open('Wrong credentials, please try again');
           that.isLoading = false;

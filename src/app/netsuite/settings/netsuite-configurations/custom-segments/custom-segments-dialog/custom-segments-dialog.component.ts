@@ -53,9 +53,9 @@ export class CustomSegmentsDialogComponent implements OnInit {
         segment_type: that.form.value.custom_field_type
       };
 
-      that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(response => {
+      that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(() => {
         that.snackBar.open('Syncing Custom Record from Netsuite');
-        that.mappingsService.postNetsuiteExpenseCustomFields(true).subscribe(res => {
+        that.mappingsService.postNetsuiteExpenseCustomFields(true).subscribe(() => {
           that.dialogRef.close();
           that.snackBar.open('Custom Record successfully added to Expense Fields');
         });

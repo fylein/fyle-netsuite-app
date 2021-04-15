@@ -252,11 +252,6 @@ export class ConfigurationComponent implements OnInit {
       ).subscribe(() => {
         that.isLoading = false;
         that.snackBar.open('Configuration saved successfully');
-        if (autoMapEmployees) {
-          setTimeout(() => {
-            that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
-          }, 1500);
-        }
         that.netsuite.getGeneralSettings();
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       });
