@@ -302,13 +302,13 @@ export class MappingsService {
   refreshNetSuiteDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh/`, {});
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {});
   }
 
   refreshFyleDimensions() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh/`, {});
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
   }
 
   getFyleEmployees(): Observable<MappingSource[]> {
