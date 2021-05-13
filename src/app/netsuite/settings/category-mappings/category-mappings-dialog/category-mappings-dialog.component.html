@@ -36,11 +36,13 @@
         </mat-form-field>
   
         <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT'">
+          <!-- credit-card-charge -->
           <strong class="mappings-dialog--label">
             Map to Corresponding NetSuite Expense Account
           </strong>
         </div>
         <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT'">
+          <!-- credit-card-charge -->
           <input type="text" formControlName="netsuiteAccount" placeholder="Netsuite Account" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">

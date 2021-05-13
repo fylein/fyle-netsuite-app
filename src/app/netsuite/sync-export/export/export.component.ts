@@ -68,6 +68,7 @@ export class ExportComponent implements OnInit {
       BILL: (filteredIds) => {
         return that.billsService.createBills(filteredIds);
       },
+      // credit-card-charge
       'EXPENSE REPORT': (filteredIds) => {
         return that.expenseReportsService.createExpenseReports(filteredIds);
       },

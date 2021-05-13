@@ -71,6 +71,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       const mappings = [];
 
       if (that.form.controls.netsuiteAccount.value && that.generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT') {
+        // credit-card-charge
         mappings.push(that.mappingsService.postMappings({
           source_type: 'CATEGORY',
           destination_type: 'ACCOUNT',
@@ -92,9 +93,11 @@ export class CategoryMappingsDialogComponent implements OnInit {
         let destinationValue = that.form.controls.cccAccount.value.value;
         let destinationId = that.form.controls.cccAccount.value.destination_id;
         let destinationType = that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? 'CCC_ACCOUNT' : 'CCC_EXPENSE_CATEGORY';
+        // credit-card-charge
 
         if (!that.form.value.cccAccount) {
           if (that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+            // credit-card-charge
             destinationValue = that.form.controls.netsuiteAccount.value.value;
             destinationId = that.form.controls.netsuiteAccount.value.destination_id;
           } else {
@@ -174,6 +177,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     that.form.controls.cccAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
       if (typeof(newValue) === 'string') {
+        // credit-card-charge
         if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
           that.cccAccounts = that.netsuiteExpenseCategories.slice();
           that.netsuiteCCCAccountOptions = that.cccAccounts.filter(netsuiteAccount => new RegExp(newValue.toLowerCase(), 'g').test(netsuiteAccount.value.toLowerCase()));
@@ -221,8 +225,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
       const netsuiteExpenseCategory = that.editMapping ? that.netsuiteExpenseCategories.filter(nsAccObj => nsAccObj.value === that.data.rowElement.netsuite_value)[0] : '';
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        // credit-card-charge
         netsuiteAccount: [netsuiteAccount, that.generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT' ? that.forbiddenSelectionValidator(that.netsuiteAccounts) : null],
         netsuiteExpenseCategory: [netsuiteExpenseCategory, that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' ? that.forbiddenSelectionValidator(that.netsuiteExpenseCategories) : null],
+        // credit-card-charge
         cccAccount: [cccAccount || '', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT' ? that.cccAccounts : that.netsuiteExpenseCategories) : null]
       });
 

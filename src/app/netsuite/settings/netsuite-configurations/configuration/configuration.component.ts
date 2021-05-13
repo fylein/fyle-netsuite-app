@@ -33,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
 
   getExpenseOptions(employeeMappedTo) {
     return {
+      // credit-card-charge
       EMPLOYEE: [
         {
           label: 'Expense Report',
@@ -57,6 +58,7 @@ export class ConfigurationComponent implements OnInit {
   }
 
   getCCCExpenseOptions(reimbursableExpenseMappedTo) {
+    // credit-card-charge
     const cccExpenseList = [
       {
         label: 'Bill',
@@ -124,6 +126,7 @@ export class ConfigurationComponent implements OnInit {
       });
 
       that.expenseOptions = [{
+        // credit-card-charge
         label: 'Bill',
         value: 'BILL'
       },
