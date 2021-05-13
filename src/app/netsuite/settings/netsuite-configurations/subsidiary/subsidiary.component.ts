@@ -46,14 +46,7 @@ export class SubsidiaryComponent implements OnInit {
     if (this.subsidiaryIsValid) {
       this.isLoading = true;
       this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
-        this.snackBar.open('Fetching Data from NetSuite. This might take a few minutes.', null, {
-          duration: 200000000
-        });
-        this.mappingsService.postNetSuiteAccounts().subscribe(() => {
-          this.isLoading = false;
-          this.snackBar.open('Data Imported from NetSuite');
-          this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
-        });
+        this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
       });
     }
   }
@@ -80,7 +73,7 @@ export class SubsidiaryComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.getNetSuiteSubsidiaries().subscribe((subsidiaries) => {
+    that.mappingsService.getNetsuiteExpenseCustomFields('SUBSIDIARY').subscribe((subsidiaries) => {
       that.netsuiteSubsidiaries = subsidiaries;
       that.getSubsidiaryMappings();
     });
