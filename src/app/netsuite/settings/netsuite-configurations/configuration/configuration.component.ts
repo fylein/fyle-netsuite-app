@@ -65,6 +65,10 @@ export class ConfigurationComponent implements OnInit {
       {
         label: 'Journal Entry',
         value: 'JOURNAL ENTRY'
+      },
+      {
+        label: 'Credit Card Charge',
+        value: 'CREDIT CARD CHARGE'
       }
     ];
 
@@ -120,6 +124,7 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
+        // TODO
       }, {
       });
 
@@ -165,6 +170,7 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false]
+        // TODO
       }, {
       });
 
@@ -212,6 +218,7 @@ export class ConfigurationComponent implements OnInit {
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
+      const autoCreateMerchant = that.generalSettingsForm.value.autoCreateMerchant;
 
       let fyleToNetSuite = false;
       let netSuiteToFyle = false;
@@ -244,10 +251,22 @@ export class ConfigurationComponent implements OnInit {
         destination_field: employeeMappingsObject
       });
 
+      const generalSettingsPayload: GeneralSetting = {
+        reimbursable_expenses_object: reimbursableExpensesObject,
+        corporate_credit_card_expenses_object: cccExpensesObject,
+        sync_fyle_to_netsuite_payments: fyleToNetSuite,
+        sync_netsuite_to_fyle_payments: netSuiteToFyle,
+        import_projects: importProjects,
+        import_categories: importCategories,
+        auto_map_employees: autoMapEmployees,
+        auto_create_destination_entity: autoCreateDestinationEntity,
+        auto_create_merchant: autoCreateMerchant
+      }
+
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, importCategories, autoMapEmployees, autoCreateDestinationEntity)
+          that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
         ]
       ).subscribe(() => {
         that.isLoading = false;
