@@ -169,7 +169,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     that.isLoading = true;
     forkJoin([
-      that.mappingsService.getFyleExpenseCustomFields('EMPLOYEE'),
+      that.mappingsService.getFyleExpenseFields('EMPLOYEE'),
       that.mappingsService.getNetsuiteExpenseCustomFields('EMPLOYEE'),
       that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
       that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),

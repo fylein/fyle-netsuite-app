@@ -119,7 +119,7 @@ export class GenericMappingsDialogComponent implements OnInit {
 
     that.isLoading = true;
     forkJoin([
-      that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field),
+      that.mappingsService.getFyleExpenseFields(that.setting.source_field),
       that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field)
     ]).subscribe((res) => {
       that.fyleAttributes = res[0];
