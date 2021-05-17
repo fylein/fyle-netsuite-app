@@ -186,7 +186,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.isLoading = false;
       that.bankAccounts = responses[0];
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
-        that.cccAccounts = responses[1].filter(account => account.detail.account_type == '_creditCard');
+        that.cccAccounts = responses[1].filter(account => account.detail.account_type === '_creditCard');
       } else {
         that.cccAccounts = responses[1];
       }

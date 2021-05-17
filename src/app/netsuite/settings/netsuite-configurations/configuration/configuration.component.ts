@@ -28,6 +28,7 @@ export class ConfigurationComponent implements OnInit {
   employeeFieldMapping: MappingSetting;
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
+  showAutoCreateMerchant: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
@@ -123,8 +124,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
-        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
-        // TODO
+        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
+        autoCreateMerchant: [that.generalSettings.auto_create_merchant]
       }, {
       });
 
@@ -155,6 +156,9 @@ export class ConfigurationComponent implements OnInit {
 
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
+        if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+          that.showAutoCreateMerchant = true;
+        }
       }
 
       that.isLoading = false;
@@ -169,8 +173,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [false],
         paymentsSync: [null],
         autoMapEmployees: [null],
-        autoCreateDestinationEntity: [false]
-        // TODO
+        autoCreateDestinationEntity: [false],
+        autoCreateMerchant: [false]
       }, {
       });
 
@@ -181,6 +185,12 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
+      });
+
+      that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
+        if (cccExpenseMappedTo === 'CREDIT CARD CHARGE') {
+          that.showAutoCreateMerchant = true;
+        }
       });
 
       that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
@@ -218,7 +228,6 @@ export class ConfigurationComponent implements OnInit {
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
-      const autoCreateMerchant = that.generalSettingsForm.value.autoCreateMerchant;
 
       let fyleToNetSuite = false;
       let netSuiteToFyle = false;
@@ -260,8 +269,8 @@ export class ConfigurationComponent implements OnInit {
         import_categories: importCategories,
         auto_map_employees: autoMapEmployees,
         auto_create_destination_entity: autoCreateDestinationEntity,
-        auto_create_merchant: autoCreateMerchant
-      }
+        auto_create_merchant: that.generalSettingsForm.value.autoCreateMerchant
+      };
 
       forkJoin(
         [
