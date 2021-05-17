@@ -125,7 +125,7 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
-        autoCreateMerchant: [that.generalSettings.auto_create_merchant]
+        autoCreateMerchant: [that.generalSettings.auto_create_merchants]
       }, {
       });
 
@@ -269,7 +269,7 @@ export class ConfigurationComponent implements OnInit {
         import_categories: importCategories,
         auto_map_employees: autoMapEmployees,
         auto_create_destination_entity: autoCreateDestinationEntity,
-        auto_create_merchant: that.generalSettingsForm.value.autoCreateMerchant
+        auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant
       };
 
       forkJoin(

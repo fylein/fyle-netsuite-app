@@ -8,7 +8,7 @@ export type GeneralSetting = {
     sync_fyle_to_netsuite_payments: boolean;
     sync_netsuite_to_fyle_payments: boolean;
     auto_create_destination_entity: boolean;
-    auto_create_merchant: boolean;
+    auto_create_merchants: boolean;
     auto_map_employees: string;
     employee_field_mapping?: string;
     project_field_mapping?: string;
