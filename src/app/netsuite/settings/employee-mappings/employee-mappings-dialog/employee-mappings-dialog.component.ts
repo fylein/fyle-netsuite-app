@@ -181,7 +181,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         that.cccObjects = res[2].filter(account => {
           // existing accounts might not have account_type, remove this later
           if (account.detail && 'account_type' in account.detail) {
-            return account.detail.account_type === '_creditCard'
+            return account.detail.account_type === '_creditCard';
           }
         });
       } else {
