@@ -19,132 +19,17 @@ const generalMappingsCache = new Subject<void>();
   providedIn: 'root',
 })
 export class MappingsService {
-  netsuiteSubsidiaries: Observable<MappingDestination[]>;
-  netsuiteAccounts: Observable<MappingDestination[]>;
-  netsuiteVendors: Observable<MappingDestination[]>;
-  netsuiteEmployees: Observable<MappingDestination[]>;
-  netsuiteExpenseCustomFields: Observable<MappingDestination[]>;
-  netsuiteProjectFields: Observable<MappingDestination[]>;
-  netsuiteCustomerFields: Observable<MappingDestination[]>;
-  netsuiteDepartments: Observable<MappingDestination[]>;
-  netsuiteLocations: Observable<MappingDestination[]>;
-  netsuiteClasses: Observable<MappingDestination[]>;
-  netsuiteCategories: Observable<MappingDestination[]>;
-  netsuiteCurrencies: Observable<MappingDestination[]>;
   destinationWorkspace: Observable<{}>;
-  fyleCategories: Observable<MappingSource[]>;
-  fyleEmployees: Observable<MappingSource[]>;
-  fyleProjects: Observable<MappingSource[]>;
-  fyleExpenseCustomFields: Observable<MappingSource[]>;
-  fyleCostCenters: Observable<MappingSource[]>;
   sourceWorkspace: Observable<{}>;
 
   constructor(
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
 
-  postFyleEmployees(): Observable<MappingSource[]> {
+  syncNetsuiteExpenseCustomFields(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    if (!this.fyleEmployees) {
-      this.fyleEmployees = this.apiService.post(`/workspaces/${workspaceId}/fyle/employees/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.fyleEmployees;
-  }
-
-  postFyleCategories(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.fyleCategories) {
-      this.fyleCategories = this.apiService.post(`/workspaces/${workspaceId}/fyle/categories/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.fyleCategories;
-  }
-
-  postFyleProjects(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.fyleProjects) {
-      this.fyleProjects = this.apiService.post(`/workspaces/${workspaceId}/fyle/projects/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.fyleProjects;
-  }
-
-  postFyleCostCenters(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.fyleCostCenters) {
-      this.fyleCostCenters = this.apiService.post(`/workspaces/${workspaceId}/fyle/cost_centers/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.fyleCostCenters;
-  }
-
-  postExpenseCustomFields(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.fyleExpenseCustomFields) {
-      this.fyleExpenseCustomFields = this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.fyleExpenseCustomFields;
-  }
-
-  postNetsuiteExpenseCustomFields(sync: boolean = false): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteExpenseCustomFields || sync) {
-      this.netsuiteExpenseCustomFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteExpenseCustomFields;
-  }
-
-  postNetsuiteProjectFields(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteProjectFields) {
-      this.netsuiteProjectFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/projects/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteProjectFields;
-  }
-
-  postNetsuiteCustomerFields(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteCustomerFields) {
-      this.netsuiteCustomerFields = this.apiService.post(`/workspaces/${workspaceId}/netsuite/customers/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteCustomerFields;
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {});
   }
 
   postNetsuiteCustomSegments(data: CustomSegment): Observable<CustomSegment> {
@@ -153,124 +38,10 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
   }
 
-  postNetSuiteVendors(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteVendors) {
-      this.netsuiteVendors = this.apiService.post(`/workspaces/${workspaceId}/netsuite/vendors/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteVendors;
-  }
-
-  postNetSuiteCurrencies(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteCurrencies) {
-      this.netsuiteCurrencies = this.apiService.post(`/workspaces/${workspaceId}/netsuite/currencies/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteCurrencies;
-  }
-
-  postNetSuiteExpenseCategories(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteCategories) {
-      this.netsuiteCategories = this.apiService.post(`/workspaces/${workspaceId}/netsuite/expense_categories/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteCategories;
-  }
-
-  postNetSuiteEmployees(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteEmployees) {
-      this.netsuiteEmployees = this.apiService.post(`/workspaces/${workspaceId}/netsuite/employees/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteEmployees;
-  }
-
-  postNetSuiteAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteAccounts) {
-      this.netsuiteAccounts = this.apiService.post(
-        `/workspaces/${workspaceId}/netsuite/accounts/`, {}
-      ).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteAccounts;
-  }
-
-  postNetSuiteClasses(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteClasses) {
-      this.netsuiteClasses = this.apiService.post(`/workspaces/${workspaceId}/netsuite/classifications/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteClasses;
-  }
-
-  postNetSuiteDepartments(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteDepartments) {
-      this.netsuiteDepartments = this.apiService.post(`/workspaces/${workspaceId}/netsuite/departments/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteDepartments;
-  }
-
-  postNetSuiteLocations(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    if (!this.netsuiteLocations) {
-      this.netsuiteLocations = this.apiService.post(`/workspaces/${workspaceId}/netsuite/locations/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteLocations;
-  }
-
-
   postNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    if (!this.netsuiteSubsidiaries) {
-      this.netsuiteSubsidiaries = this.apiService.post(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this.netsuiteSubsidiaries;
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
   syncNetSuiteDimensions() {
@@ -311,28 +82,10 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
   }
 
-  getFyleEmployees(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/employees/`, {});
-  }
-
-  getFyleExpenseFields(): Observable<ExpenseField[]> {
+  getFyleExpenseAttributes(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
-  }
-
-  getFyleCategories(): Observable<MappingSource[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/categories/`, {});
-  }
-
-  getNetSuiteVendors(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/vendors/`, {});
   }
 
   getNetSuiteFields(): Observable<ExpenseField[]> {
@@ -341,7 +94,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleExpenseCustomFields(attributeType: string): Observable<MappingSource[]> {
+  getFyleExpenseFields(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
@@ -363,100 +116,6 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_segments/`, {});
   }
 
-  getNetSuiteEmployees(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/employees/`, {});
-  }
-
-  getNetSuiteLocations(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/locations/`, {});
-  }
-
-  getNetSuiteClasses(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/classifications/`, {});
-  }
-
-  getNetSuiteDepartments(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/departments/`, {});
-  }
-
-  getExpenseAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/accounts/`, {}
-    );
-  }
-
-  getCCCExpenseAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/ccc_accounts/`, {}
-    );
-  }
-
-  getExpenseCategories(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/expense_categories/`, {}
-    );
-  }
-
-  getCCCExpenseCategories(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/ccc_expense_categories/`, {}
-    );
-  }
-
-  getBankAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/bank_accounts/`, {}
-    );
-  }
-
-  getVendorPaymentAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/vendor_payment_accounts/`, {}
-    );
-  }
-
-  getAccountsPayables(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/accounts_payables/`, {}
-    );
-  }
-
-  getCreditCardAccounts(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/netsuite/credit_card_accounts/`, {}
-    );
-  }
-
-  getNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
-  }
-
   @CacheBuster({
     cacheBusterNotifier: generalMappingsCache
   })
@@ -474,7 +133,6 @@ export class MappingsService {
       `/workspaces/${workspaceId}/mappings/general/`, {}
     );
   }
-
 
   getSubsidiaryMappings(): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
