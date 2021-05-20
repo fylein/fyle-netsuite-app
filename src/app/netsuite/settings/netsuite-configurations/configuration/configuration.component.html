@@ -101,6 +101,10 @@
         <div class="schedule--toggle-text">Auto Create Vendor / Employee on NetSuite</div>
       </mat-slide-toggle>
 
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreateMerchant" formControlName="autoCreateMerchant">
+        <div class="schedule--toggle-text">Auto Create Merchant on NetSuite for Credit Card Charge</div>
+      </mat-slide-toggle>
+
       <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
         <div class="schedule--toggle-text">Import NetSuite Categories / Accounts into Fyle</div>
       </mat-slide-toggle>
