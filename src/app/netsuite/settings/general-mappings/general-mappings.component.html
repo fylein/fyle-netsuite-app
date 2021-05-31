@@ -72,11 +72,11 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
           Default Credit Card Account
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
-          *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+          *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
           <mat-select class="general-mappings--input" placeholder="Select default credit card account for card expenses imported from Fyle"
             formControlName="cccAccounts">
             <mat-option *ngFor="let cccAccount of cccAccounts; let i = index" [value]="cccAccounts[i].destination_id">
