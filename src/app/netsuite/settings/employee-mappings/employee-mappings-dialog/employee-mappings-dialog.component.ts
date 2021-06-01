@@ -72,8 +72,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
           destination_id: that.generalSettings.employee_field_mapping === 'VENDOR' ? netsuiteVendor.destination_id : netsuiteEmployee.destination_id
         })
       ];
-
-      if (creditCardAccount || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL')) {
+      if (creditCardAccount || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT')) {
         employeeMapping.push(
           that.mappingsService.postMappings({
             source_type: 'EMPLOYEE',
@@ -199,7 +198,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         netsuiteVendor: [netsuiteVendor, that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.netsuiteVendors) : ''],
         netsuiteEmployee: [netsuiteEmployee, that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.netsuiteEmployees) : ''],
-        creditCardAccount: [defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.cccObjects) : null]
+        creditCardAccount: [defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') ? that.forbiddenSelectionValidator(that.cccObjects) : null]
       });
 
       if (that.editMapping) {
