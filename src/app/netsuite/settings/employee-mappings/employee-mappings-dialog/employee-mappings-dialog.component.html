@@ -66,12 +66,12 @@
             Please enter a valid value
           </mat-error>
         </mat-form-field>
-        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
           <strong class="mappings-dialog--label">
             Choose Credit Card Account
           </strong>
         </div>
-        <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL' && generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT'">
+        <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
           <input type="text" formControlName="creditCardAccount" placeholder="Corporate credit card account" matInput [matAutocomplete]="fyEmp">
           <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">
             <mat-option *ngFor="let option of cccOptions" [value]="option">

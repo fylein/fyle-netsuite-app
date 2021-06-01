@@ -146,7 +146,7 @@ export class EmployeeMappingsComponent implements OnInit {
       that.generalSettings = settings;
       that.mappingsCheck();
       that.isLoading = false;
-      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+      if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
         that.columnsToDisplay.push('ccc');
       }
       const data = {
