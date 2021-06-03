@@ -4,6 +4,8 @@ export type GeneralMapping = {
   id?: number;
   location_id: string;
   location_name: string;
+  department_id: string;
+  department_name: string;
   location_level: string;
   accounts_payable_id: string;
   accounts_payable_name: string;
