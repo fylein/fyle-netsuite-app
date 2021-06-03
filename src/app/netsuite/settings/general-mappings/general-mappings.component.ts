@@ -128,7 +128,7 @@ export class GeneralMappingsComponent implements OnInit {
         default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
         location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
       };
-      console.log(generalMappings);
+
       that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
         const onboarded = that.storageService.get('onboarded');
         if (onboarded === true) {
@@ -157,7 +157,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
-        netsuiteDepartments: [this.generalMappings ? this.generalMappings.department_id: ''],
+        netsuiteDepartments: [this.generalMappings ? this.generalMappings.department_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
