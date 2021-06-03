@@ -19,6 +19,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: MappingDestination[];
+  netsuiteDepartments: MappingDestination[];
   showLocationLevelOption: boolean;
   netsuiteVendors: MappingDestination[];
   accountPayableAccounts: MappingDestination[];
@@ -34,6 +35,7 @@ export class GeneralMappingsComponent implements OnInit {
   cccAccountIsValid = true;
   locationIsValid = true;
   vendorIsValid = true;
+  departmentIsValid = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,6 +59,9 @@ export class GeneralMappingsComponent implements OnInit {
     const netsuiteLocation = this.netsuiteLocations.filter(filteredLocation => filteredLocation.destination_id === locationId)[0];
 
     const netsuiteLocationLevel = formValues ? formValues.netsuiteLocationLevels : this.form.value.netsuiteLocationLevels;
+
+    const departmentId = formValues ? formValues.netsuiteDepartments : this.form.value.netsuiteDepartments;
+    const netsuiteDepartment = this.netsuiteDepartments.filter(filteredDepartment => filteredDepartment.destination_id === departmentId)[0];
 
     const accountPayableAccountId = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.form.value.accountPayableAccounts : '';
     const accountPayableAccount: MappingDestination = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.accountPayableAccounts.filter(filteredAccountsPayableAccount => filteredAccountsPayableAccount.destination_id === accountPayableAccountId)[0] : null;
@@ -94,16 +99,23 @@ export class GeneralMappingsComponent implements OnInit {
     if (locationId === null) {
       that.locationIsValid = true;
     }
-
+    if (departmentId != null) {
+      that.departmentIsValid = true;
+    }
+    if (departmentId === null) {
+      that.departmentIsValid = true;
+    }
     if (cccAccountId === null) {
       that.cccAccountIsValid = true;
     }
 
-    if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
+    if (that.locationIsValid && that.departmentIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
       that.isLoading = true;
       const generalMappings: GeneralMapping = {
         location_name: netsuiteLocation ? netsuiteLocation.value : null,
         location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
+        department_name: netsuiteDepartment ? netsuiteDepartment.value : null,
+        department_id: netsuiteDepartment ? netsuiteDepartment.destination_id : null,
         accounts_payable_name: accountPayableAccount ? accountPayableAccount.value : null,
         accounts_payable_id: accountPayableAccount ? accountPayableAccount.destination_id : null,
         reimbursable_account_name: bankAccount ? bankAccount.value : null,
@@ -116,6 +128,7 @@ export class GeneralMappingsComponent implements OnInit {
         default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
         location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
       };
+      console.log(generalMappings);
       that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
         const onboarded = that.storageService.get('onboarded');
         if (onboarded === true) {
@@ -144,6 +157,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
+        netsuiteDepartments: [this.generalMappings ? this.generalMappings.department_id: ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
@@ -158,6 +172,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [null],
         netsuiteLocations: [null],
+        netsuiteDepartments: [null],
         accountPayableAccounts: [null],
         vendorPaymentAccounts: [null],
         bankAccounts: [null],
@@ -180,7 +195,8 @@ export class GeneralMappingsComponent implements OnInit {
         that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNTS_PAYABLE'),
         that.mappingsService.getNetsuiteExpenseCustomFields('LOCATION'),
         that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR_PAYMENT_ACCOUNT')
+        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR_PAYMENT_ACCOUNT'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('DEPARTMENT')
       ]
     ).subscribe(responses => {
       that.isLoading = false;
@@ -199,6 +215,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.netsuiteLocations = responses[3];
       that.netsuiteVendors = responses[4];
       that.vendorPaymentAccounts = responses[5];
+      that.netsuiteDepartments = responses[6];
       that.getGeneralMappings();
     });
   }
