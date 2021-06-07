@@ -28,6 +28,7 @@ export class ConfigurationComponent implements OnInit {
   employeeFieldMapping: MappingSetting;
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
+  showAutoCreateMerchant: boolean;
 
   constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
@@ -65,6 +66,10 @@ export class ConfigurationComponent implements OnInit {
       {
         label: 'Journal Entry',
         value: 'JOURNAL ENTRY'
+      },
+      {
+        label: 'Credit Card Charge',
+        value: 'CREDIT CARD CHARGE'
       }
     ];
 
@@ -119,7 +124,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
-        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
+        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
+        autoCreateMerchant: [that.generalSettings.auto_create_merchants]
       }, {
       });
 
@@ -150,6 +156,9 @@ export class ConfigurationComponent implements OnInit {
 
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
+        if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+          that.showAutoCreateMerchant = true;
+        }
       }
 
       that.isLoading = false;
@@ -164,7 +173,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [false],
         paymentsSync: [null],
         autoMapEmployees: [null],
-        autoCreateDestinationEntity: [false]
+        autoCreateDestinationEntity: [false],
+        autoCreateMerchant: [false]
       }, {
       });
 
@@ -175,6 +185,12 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
         that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
         that.generalSettingsForm.controls.reimbursableExpense.reset();
+      });
+
+      that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
+        if (cccExpenseMappedTo === 'CREDIT CARD CHARGE') {
+          that.showAutoCreateMerchant = true;
+        }
       });
 
       that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
@@ -244,10 +260,22 @@ export class ConfigurationComponent implements OnInit {
         destination_field: employeeMappingsObject
       });
 
+      const generalSettingsPayload: GeneralSetting = {
+        reimbursable_expenses_object: reimbursableExpensesObject,
+        corporate_credit_card_expenses_object: cccExpensesObject,
+        sync_fyle_to_netsuite_payments: fyleToNetSuite,
+        sync_netsuite_to_fyle_payments: netSuiteToFyle,
+        import_projects: importProjects,
+        import_categories: importCategories,
+        auto_map_employees: autoMapEmployees,
+        auto_create_destination_entity: autoCreateDestinationEntity,
+        auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant
+      };
+
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, fyleToNetSuite, netSuiteToFyle, importProjects, importCategories, autoMapEmployees, autoCreateDestinationEntity)
+          that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
         ]
       ).subscribe(() => {
         that.isLoading = false;
