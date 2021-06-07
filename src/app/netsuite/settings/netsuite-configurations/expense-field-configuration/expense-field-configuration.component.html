@@ -71,11 +71,11 @@
             <mat-slide-toggle style="margin-left: 6%" floatLabel="always" appearance="outline" fxFlex="20" color="primary" class="toggle" formControlName="import_to_fyle">
             </mat-slide-toggle>
 
-            <div fxFlex="20" *ngIf="i !== 0 && expenseField.status && expenseField.status === 'INVALID'">
+            <div fxFlex="20" *ngIf="i !== 0 && expenseField.controls.destination_field.status !== 'DISABLED'">
               <img class="expense-fields--delete-icon" src="assets/images/pngs/delete.png" (click)="removeExpenseField(i)">
             </div>
 
-            <div fxFlex="20" *ngIf="!(i !== 0 && expenseField.status && expenseField.status === 'INVALID')">
+            <div fxFlex="20" *ngIf="!(i !== 0 && expenseField.controls.destination_field.status !== 'DISABLED')">
               <div [hidden]="true"></div>
             </div>
           </div>
