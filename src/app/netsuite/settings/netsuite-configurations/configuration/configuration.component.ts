@@ -129,6 +129,19 @@ export class ConfigurationComponent implements OnInit {
       }, {
       });
 
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const netsuiteProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
+      if (fyleProjectMapping.length || netsuiteProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
+
       that.expenseOptions = [{
         label: 'Bill',
         value: 'BILL'
@@ -250,7 +263,8 @@ export class ConfigurationComponent implements OnInit {
       if (importProjects) {
         mappingsSettingsPayload.push({
           source_field: 'PROJECT',
-          destination_field: 'PROJECT'
+          destination_field: 'PROJECT',
+          import_to_fyle: true
         });
       }
 
