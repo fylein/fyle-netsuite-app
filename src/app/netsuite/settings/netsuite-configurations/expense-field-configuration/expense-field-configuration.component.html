@@ -1,11 +1,11 @@
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
-  </div>
+</div>
   <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
     <div class="page-info">
       <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
         <div>
-          Please map the following Fyle fields to their NetSuite equivalent. Added fields cannot be edited or removed after saving.
+          Please map the following Fyle fields to their NetSuite equivalent. You can either select from the pre existing fields or can add new custom field.
         </div>
         <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration"
           target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row"
@@ -13,32 +13,70 @@
           more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
       </div>
     </div>
-    <form class="expense-fields--form" [formGroup]="expenseFieldsForm">
+    <div *ngIf="!isLoading" style="margin: 16px 24px;" fxLayout="row" fxLayoutAlign="start center">
+      <div style="
+        font-size: 14px;
+        border: 1px solid rgba(0, 98, 255, 4%);
+        padding: 20px;
+        background: rgba(0, 98, 255, 2%);
+        background-clip: padding-box;">
+        <mat-icon [inline]="true" class="info-icon">info</mat-icon>
+        Once saved, these mappings can neither be edited or removed.
+      </div>
+    </div>
+    <form class="expense-fields--form" [formGroup]="expenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div formArrayName="expenseFields">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <div style="font-weight: 450;font-size: 18px;margin-right: -3%;" fxFlex="25">NetSuite Fields</div>
+          <div fxFlex="10"><div [hidden]="true"></div></div>
+          <div style="font-weight: 450;font-size: 18px; margin-right: -6%" fxFlex="25">Fyle Fields</div>
+          <div style="font-weight: 450;font-size: 18px;margin-left: 9%" fxFlex="20">
+            Import to Fyle
+            <mat-icon 
+              [inline]="true"
+              class="import-info-icon"
+              matTooltip="Importing to Fyle will automatically sync all the fields from NetSuite to Fyle"
+              matTooltipPosition="after">
+              info
+            </mat-icon></div>
+        </div>
         <div class="row" *ngFor="let expenseField of expenseFieldsForm.controls.expenseFields['controls']; let i = index"
           [formGroupName]="i">
           <div fxLayout="row" fxLayoutAlign="start center">
-            <mat-form-field floatLabel="always" appearance="outline" fxFlex="35" required>
-              <mat-select placeholder="Choose Fyle Expense field" formControlName="source_field">
-                <mat-option *ngFor="let fyleExpenseField of fyleFormFieldList"
-                  [(value)]="fyleExpenseField.attribute_type">
-                  {{ fyleExpenseField.display_name | titlecase }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div fxFlex="5">
-              <img class="expense-fields--arrow-icon" src="../../../../../assets/images/pngs/arrow-right.png">
-            </div>
-            <mat-form-field floatLabel="always" fxFlex="35" appearance="outline">
-              <mat-select placeholder="Choose NetSuite equivalent" formControlName="destination_field">
+            <mat-form-field floatLabel="always" fxFlex="25" appearance="outline">
+              <mat-select class="select" placeholder="Choose NetSuite equivalent" formControlName="destination_field">
                 <mat-option *ngFor="let netsuiteField of netsuiteFormFieldList" [(value)]="netsuiteField.attribute_type">
                   {{ netsuiteField.display_name | titlecase }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-  
-            <div fxFlex="25" *ngIf="i !== 0 && !expenseField.disabled">
-              <img class="expense-fields--delete-icon" src="../../../../../assets/images/pngs/delete.png" (click)="removeExpenseField(i)">
+            <div fxFlex="10">
+              <div style="margin-left: 40px;margin-bottom: 15px;">Map to</div>
+            </div>
+            <mat-form-field floatLabel="always" appearance="outline" fxFlex="25" required>
+              <mat-select placeholder="Choose Fyle Expense field" formControlName="source_field">
+                <mat-option *ngFor="let fyleExpenseField of fyleFormFieldList"
+                  [(value)]="fyleExpenseField.attribute_type">
+                  {{ fyleExpenseField.display_name | titlecase }}
+                </mat-option>
+                <mat-option (click)="showCustomField()" [value]="'custom'">
+                  <div class="expense-fields--custom-option">
+                    <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png" (click)="showCustomField()">
+                    <div class="expense-fields--custom-option-text">{{customFieldName}}</div>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-slide-toggle style="margin-left: 6%" floatLabel="always" appearance="outline" fxFlex="20" color="primary" class="toggle" formControlName="import_to_fyle">
+            </mat-slide-toggle>
+
+            <div fxFlex="20" *ngIf="i !== 0 && expenseField.status && expenseField.status === 'INVALID'">
+              <img class="expense-fields--delete-icon" src="assets/images/pngs/delete.png" (click)="removeExpenseField(i)">
+            </div>
+
+            <div fxFlex="20" *ngIf="!(i !== 0 && expenseField.status && expenseField.status === 'INVALID')">
+              <div [hidden]="true"></div>
             </div>
           </div>
           <div class="expense-fields--errors" md-colors="{color:'warning'}"
@@ -47,8 +85,39 @@
           </div>
         </div>
       </div>
+      <div class="dashboard--stats" fxLayout="row" fxLayoutAlign="center" *ngIf="showCustomFieldName" [formGroup]="customFieldForm">
+        <mat-card class="dashboard--stats-card">
+          <mat-list role="list">
+              Add a custom field
+              <mat-form-field style="font-size: 12px; min-width: 310px; max-width: 320px; min-height: 75px; max-height: 100px;" appearance="outline">
+                <input autocomplete="off" type="text" formControlName="customFieldName" placeholder="Enter Custom Field" (input)="updateCustomFieldName($event.target.value)" matInput>
+              </mat-form-field>
+                <p *ngIf="isSystemField" style="
+                  border: 1px solid rgba(218,30,40,4%);
+                  background: rgb(218,30,40,2%);
+                  background-clip: padding-box;
+                  margin-bottom: 15px;
+                  margin-top: -15px;">
+                  <mat-icon [inline]="true" class="warning-info-icon">info</mat-icon>
+                  This field already exists. Please enter new.
+                </p>
+            <div style="margin-top: -10px;" fxLayoutAlign="start stretch">
+              <button fxLayout="row" fxLayoutAlign="start center"  style="min-width: 32px;" mat-raised-button color="basic" (click)="hideCustomField()">
+                Cancel
+              </button>
+              <div fxFlex="20" *ngIf="showCustomFieldName">
+                <div [hidden]="true"></div>
+              </div>
+              <button fxLayout="row" fxLayoutAlign="start center"  style="min-width: 32px;" mat-flat-button color="primary" (click)="saveCustomField()" [disabled]="isSystemField">
+                Done
+              </button>
+            </div>
+          </mat-list>
+        </mat-card>
+      </div>
       <div>
-        <img class="expense-fields--add-icon" src="../../../../../assets/images/pngs/add.png" *ngIf="showAddButton()" (click)="addExpenseField()">
+        <img class="expense-fields--add-icon" src="assets/images/pngs/add.png" *ngIf="showAddButton()" (click)="addExpenseField()">
+        <!-- TODO: Add another field -->
       </div>
   
       <button class="expense-fields--save-btn" mat-flat-button color="primary" [disabled]="!expenseFieldsForm.valid"
