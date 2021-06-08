@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
@@ -61,7 +60,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   showAddButton() {
     const that = this;
-    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.netsuiteFields.length)) {
+    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.netsuiteFields.length) || that.showCustomFieldName) {
       return false;
     }
     return true;

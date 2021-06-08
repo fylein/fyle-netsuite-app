@@ -96,20 +96,23 @@
                   border: 1px solid rgba(218,30,40,4%);
                   background: rgb(218,30,40,2%);
                   background-clip: padding-box;
-                  margin-bottom: 15px;
+                  margin-bottom: 19px;
                   margin-top: -15px;">
                   <mat-icon [inline]="true" class="warning-info-icon">info</mat-icon>
                   This field already exists. Please enter new.
                 </p>
             <div style="margin-top: -10px;" fxLayoutAlign="start stretch">
-              <button fxLayout="row" fxLayoutAlign="start center"  style="min-width: 32px;" mat-raised-button color="basic" (click)="hideCustomField()">
-                Cancel
-              </button>
-              <div fxFlex="20" *ngIf="showCustomFieldName">
+              <div fxFlex="10">
                 <div [hidden]="true"></div>
               </div>
-              <button fxLayout="row" fxLayoutAlign="start center"  style="min-width: 32px;" mat-flat-button color="primary" (click)="saveCustomField()" [disabled]="isSystemField">
-                Done
+              <button fxLayout="row" fxLayoutAlign="start center" style="margin-left: -10px; min-width: 120px; padding: 0px 30px;" mat-raised-button color="basic" (click)="hideCustomField()">
+                <span style="margin-left: 10px;">Cancel</span>
+              </button>
+              <div fxFlex="10">
+                <div [hidden]="true"></div>
+              </div>
+              <button fxLayout="row" fxLayoutAlign="start center" style="margin-left: -10px; min-width: 120px; padding: 0px 30px;" mat-flat-button color="primary" (click)="saveCustomField()" [disabled]="isSystemField">
+                <span style="margin-left: 10px;">Done</span>
               </button>
             </div>
           </mat-list>
