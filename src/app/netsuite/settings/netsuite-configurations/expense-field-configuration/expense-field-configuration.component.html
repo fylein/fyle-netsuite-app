@@ -115,9 +115,11 @@
           </mat-list>
         </mat-card>
       </div>
-      <div>
-        <img class="expense-fields--add-icon" src="assets/images/pngs/add.png" *ngIf="showAddButton()" (click)="addExpenseField()">
-        <!-- TODO: Add another field -->
+      <div fxLayoutAlign="start stretch" *ngIf="showAddButton()" (click)="addExpenseField()">
+        <img class="expense-fields--add-icon" src="assets/images/pngs/add.png">
+        <a style="margin-top: 4px; margin-left: 10px; color: #e91e63; cursor: pointer; font-weight: 450;">
+          Add another field
+        </a>
       </div>
   
       <button class="expense-fields--save-btn" mat-flat-button color="primary" [disabled]="!expenseFieldsForm.valid"
