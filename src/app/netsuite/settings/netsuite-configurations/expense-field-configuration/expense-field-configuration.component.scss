@@ -127,9 +127,9 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
   &--stats {
     min-width: 200px;
     &-card {
-      margin-right: 13.6%;
-      min-width: 96px;
-      max-width: 305px;
+      margin-right: 5.6%;
+      min-width: 196px;
+      max-width: 355px;
       max-height: 150px;
       min-height: 100px;
       border: 1px solid $fy-card-border;
@@ -162,5 +162,4 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
 
 .select {
   max-height: 30px;
-  // max-width: 100px;
 }
