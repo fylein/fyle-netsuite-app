@@ -8,7 +8,6 @@ import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingsService } from 'src/app/core/services/mappings.service';
-import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { AttributeCount } from 'src/app/core/models/attribute-count.model';
 
 @Component({
@@ -90,7 +89,7 @@ export class ConfigurationComponent implements OnInit {
 
   getAllSettings(projectCount: number) {
     const that = this;
-    that.isLoading = true;
+
     forkJoin(
       [
         that.settingsService.getGeneralSettings(that.workspaceId),
@@ -339,7 +338,7 @@ export class ConfigurationComponent implements OnInit {
 
     that.mappingsService.getNetsuiteAttributesCount('PROJECT').subscribe((projectCount: AttributeCount) => {
       that.getAllSettings(projectCount.count);
-    })
+    });
   }
 
 }

@@ -14,15 +14,16 @@
       </div>
     </div>
     <div *ngIf="!isLoading" style="margin: 16px 24px;" fxLayout="row" fxLayoutAlign="start center">
-      <div style="
-        font-size: 14px;
+      <div fxFlex="72" style="
+        font-size: 13.25px;
         border: 1px solid rgba(0, 98, 255, 4%);
-        padding: 20px;
+        padding: 2px;
         background: rgba(0, 98, 255, 2%);
         background-clip: padding-box;">
         <mat-icon [inline]="true" class="info-icon">info</mat-icon>
         Once saved, these mappings can neither be edited or removed.
       </div>
+      <div fxFlex="28"></div>
     </div>
     <form class="expense-fields--form" [formGroup]="expenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div formArrayName="expenseFields">
