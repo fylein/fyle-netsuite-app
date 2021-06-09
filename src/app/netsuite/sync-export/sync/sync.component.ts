@@ -47,9 +47,16 @@ export class SyncComponent implements OnInit {
       takeWhile((response) => response.results.filter(task => task.status === 'IN_PROGRESS'  && task.type === 'FETCHING_EXPENSES').length > 0, true)
     ).subscribe((res) => {
       if (res.results.filter(task => task.status === 'COMPLETE'  && task.type === 'FETCHING_EXPENSES').length === 1) {
-        that.updateLastSyncStatus();
-        that.isExpensesSyncing = false;
-        that.snackBar.open('Import Complete');
+        that.updateLastSyncStatus().subscribe((res) => {
+          that.isExpensesSyncing = false;
+          if (res[0].last_synced_at !== that.workspace.last_synced_at) {
+            that.snackBar.open('Import Complete');
+          }
+          else {
+            that.snackBar.open('No New Expense Groups Imported');
+          }
+        });
+       
       }
     });
   }
@@ -108,24 +115,21 @@ export class SyncComponent implements OnInit {
       that.updateLastSyncStatus();
     });
   }
-
-
+  
   updateLastSyncStatus() {
     const that = this;
-    that.isLoading = true;
-    forkJoin(
+    return from(forkJoin(
       [
         that.workspaceService.getWorkspaceById(),
         that.expenseGroupService.getExpenseGroupSettings()
       ]
-    )
-
-    .subscribe((res) => {
+    ).toPromise().then(res => {
       that.workspace = res[0];
       that.expenseGroupSettings = res[1];
       that.isLoading = false;
-    });
-  }
+      return res;
+  }))
+}
 
   ngOnInit() {
     const that = this;
@@ -133,7 +137,11 @@ export class SyncComponent implements OnInit {
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
 
     that.isExpensesSyncing = false;
-    this.updateLastSyncStatus();
+    this.updateLastSyncStatus().subscribe((res) => {
+      that.workspace = res[0];
+      that.expenseGroupSettings = res[1];
+      that.isLoading = false;
+    });
   }
 
 }
