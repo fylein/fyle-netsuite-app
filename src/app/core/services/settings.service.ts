@@ -76,7 +76,7 @@ export class SettingsService {
     cacheBusterNotifier: generalSettingsCache
   })
   postGeneralSettings(workspaceId: number, generalSettings: GeneralSetting): Observable<GeneralSetting> {
-    return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, generalSettings);
+    return this.apiService.post(`/workspaces/${workspaceId}/configuration/`, generalSettings);
   }
 
   @CacheBuster({
@@ -90,7 +90,7 @@ export class SettingsService {
     cacheBusterObserver: generalSettingsCache
   })
   getGeneralSettings(workspaceId: number): Observable<GeneralSetting> {
-    return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
 
   @CacheBuster({
