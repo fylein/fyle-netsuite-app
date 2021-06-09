@@ -245,7 +245,7 @@ export class ConfigurationComponent implements OnInit {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
-      const importProjects = that.generalSettingsForm.value.importProjects;
+      const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
