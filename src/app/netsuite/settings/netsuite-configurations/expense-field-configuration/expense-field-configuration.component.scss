@@ -1,11 +1,6 @@
 @import 'variables.scss';
 
 $text-error: #ff6e40;
-$fy-dashboard-text: #5e5e5e;
-$fy-dashboard-stat-icon: #a9acbc;
-$stats-desc: #545454;
-$fy-info-border: rgba(0, 98, 255, 0.04);
-$fy-info-content: rgba(0, 98, 255, 0.02);
 
 ::ng-deep .expense-fields {
   &--header {
@@ -48,8 +43,8 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
   &--delete-icon {
     text-align: center;
     cursor: pointer;
-    max-width: 24px;
-    max-height: 24px;
+    max-width: 20px;
+    max-height: 20px;
     padding-left: 10px;
     padding-bottom: 25px;
   }
@@ -81,38 +76,36 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
 
 .toggle {
   margin-bottom: 32px;
-  &--header {
-    border-bottom: 1px solid $fy-layout-background;
-  }
+  margin-left: 6%;
 }
 
 .info-icon {
   text-align: center;
-  cursor: pointer;
+  cursor: default;
   padding-left: 5px;
   padding-bottom: 5px;
-  max-width: 24px;
-  max-height: 24px;
   font-size: 20px;
+  max-height: 24px;
   vertical-align: middle;
+}
+
+.warning {
+  max-width: 24px;
+  color: #DA1E28;
+}
+
+.main {
+  max-width: 24px;
   color: #5C98E5;
 }
 
-.warning-info-icon {
-  text-align: center;
-  cursor: pointer;
-  padding-left: 5px;
-  padding-bottom: 5px;
-  max-width: 24px;
-  max-height: 24px;
-  font-size: 20px;
-  vertical-align: middle;
-  color: #DA1E28;
+.import {
+  max-width: 18px;
 }
 
 .import-info-icon {
   text-align: center;
-  cursor: pointer;
+  cursor: default;
   padding-left: 5px;
   padding-bottom: 5px;
   max-width: 20px;
@@ -121,18 +114,71 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
   vertical-align: middle;
 }
 
-.dashboard {
-  color: $fy-dashboard-text;
+.custom-field-box {
+  min-width: 85%;
+  border: 1px solid $fy-card-border;
+  margin-left: 50%;
+}
 
-  &--stats {
-    &-card {
-      min-width: 85%;
-      border: 1px solid $fy-card-border;
-      margin-left: 50%;
-    }
+.info-box {
+  margin: 16px 24px;
+}
+
+.info-box-text {
+  font-size: 13.25px;
+  border: 1px solid rgba(0, 98, 255, 4%);
+  padding: 2px;
+  background: rgba(0, 98, 255, 2%);
+  background-clip: padding-box;
+}
+
+.fields-header {
+  font-weight: 450;
+  font-size: 18px;
+  &--fyle {
+    margin-right: 11%;
   }
 }
 
-.select {
-  max-height: 30px;
+.map {
+  margin-left: 40px;
+  margin-bottom: 15px;
+}
+
+.import-toggle {
+  margin-left: 6%;
+}
+
+.custom-field-name {
+  font-size: 12px;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 75px;
+  max-height: 100px;
+  margin-top: 12px;
+}
+
+.existing-field-warning {
+  border: 1px solid rgba(218,30,40,4%);
+  background: rgb(218,30,40,2%);
+  background-clip: padding-box;
+  margin-bottom: 19px;
+  margin-top: -15px;
+}
+
+.custom-field-grp {
+  margin-top: -10px;
+}
+
+.custom-field-btn {
+  min-width: 35%;
+  padding: 0% 11%;
+}
+
+.add-row-text {
+  margin-top: 4px;
+  margin-left: 10px;
+  color: #e91e63;
+  cursor: pointer;
+  font-weight: 450;
 }
