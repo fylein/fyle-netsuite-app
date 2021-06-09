@@ -117,8 +117,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   }
 
   showCustomField() {
-    this.showCustomFieldName = true;
-    this.customFieldForm.markAllAsTouched();
+    const that = this;
+
+    that.showCustomFieldName = true;
+    that.customFieldForm.markAllAsTouched();
   }
 
   updateCustomFieldName(name: string) {
@@ -133,7 +135,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     } else {
       that.isSystemField = false;
     }
-    this.customFieldName = name;
+    that.customFieldName = name;
   }
 
   hideCustomField() {
@@ -141,8 +143,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   }
 
   saveCustomField() {
-    this.showCustomFieldName = false;
-    this.saveExpenseFields();
+    const that = this;
+
+    that.showCustomFieldName = false;
+    that.saveExpenseFields();
   }
 
   createFormFields(mappingSetting: MappingSetting[]) {
