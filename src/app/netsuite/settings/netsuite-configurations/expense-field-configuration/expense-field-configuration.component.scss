@@ -125,38 +125,10 @@ $fy-info-content: rgba(0, 98, 255, 0.02);
   color: $fy-dashboard-text;
 
   &--stats {
-    min-width: 200px;
     &-card {
-      margin-right: 5.6%;
-      min-width: 205px;
-      max-width: 355px;
-      max-height: 450px;
-      min-height: 100px;
+      min-width: 85%;
       border: 1px solid $fy-card-border;
-      margin-left: -10%;
-    }
-  }
-
-  .schedule {
-    border: solid 1px $fy-info-border;
-    background-color: $fy-info-content;
-    padding: 16px;
-    min-width: 640px;
-    border-radius: 4px;
-
-    &--info-icon {
-      color: $fy-info;
-    }
-
-    &--info-desc {
-      margin-left: 8px;
-    }
-
-    &--redirect {
-      margin-left: 24px;
-      &-icon {
-        margin-left: 8px;
-      }
+      margin-left: 50%;
     }
   }
 }
