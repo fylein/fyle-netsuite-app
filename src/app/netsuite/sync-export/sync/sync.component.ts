@@ -136,11 +136,7 @@ export class SyncComponent implements OnInit {
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
 
     that.isExpensesSyncing = false;
-    this.updateLastSyncStatus().subscribe((res) => {
-      that.workspace = res[0];
-      that.expenseGroupSettings = res[1];
-      that.isLoading = false;
-    });
+    this.updateLastSyncStatus();
   }
 
 }
