@@ -86,7 +86,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.getMappingSettings(that.workspaceId),
-        that.mappingsService.getFyleExpenseAttributes(),
+        that.mappingsService.getFyleFields(),
         that.mappingsService.getNetSuiteFields()
       ]
     ).subscribe(response => {
