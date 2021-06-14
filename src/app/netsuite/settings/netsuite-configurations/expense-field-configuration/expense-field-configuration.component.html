@@ -121,9 +121,9 @@
       </div>
     </div>
 
-    <div fxLayoutAlign="start stretch" *ngIf="showAddButton()" (click)="addExpenseField()">
-      <img class="expense-fields--add-icon" src="assets/images/pngs/add.png">
-      <a class="add-row-text">
+    <div fxLayoutAlign="start stretch" *ngIf="showAddButton()">
+      <img class="expense-fields--add-icon" src="assets/images/pngs/add.png" (click)="addExpenseField()">
+      <a class="add-row-text" (click)="addExpenseField()">
         Add another field
       </a>
     </div>
