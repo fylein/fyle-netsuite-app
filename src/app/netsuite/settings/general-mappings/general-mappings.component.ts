@@ -175,12 +175,12 @@ export class GeneralMappingsComponent implements OnInit {
     that.isLoading = true;
     forkJoin(
       [
-        that.mappingsService.getNetsuiteExpenseCustomFields('BANK_ACCOUNT'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNTS_PAYABLE'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('LOCATION'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR_PAYMENT_ACCOUNT')
+        that.mappingsService.getNetSuiteDestinationAttributes('BANK_ACCOUNT'),
+        that.mappingsService.getNetSuiteDestinationAttributes('CREDIT_CARD_ACCOUNT'),
+        that.mappingsService.getNetSuiteDestinationAttributes('ACCOUNTS_PAYABLE'),
+        that.mappingsService.getNetSuiteDestinationAttributes('LOCATION'),
+        that.mappingsService.getNetSuiteDestinationAttributes('VENDOR'),
+        that.mappingsService.getNetSuiteDestinationAttributes('VENDOR_PAYMENT_ACCOUNT')
       ]
     ).subscribe(responses => {
       that.isLoading = false;

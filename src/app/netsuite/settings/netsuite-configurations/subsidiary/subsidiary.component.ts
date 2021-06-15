@@ -73,7 +73,7 @@ export class SubsidiaryComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.getNetsuiteExpenseCustomFields('SUBSIDIARY').subscribe((subsidiaries) => {
+    that.mappingsService.getNetSuiteDestinationAttributes('SUBSIDIARY').subscribe((subsidiaries) => {
       that.netsuiteSubsidiaries = subsidiaries;
       that.getSubsidiaryMappings();
     });

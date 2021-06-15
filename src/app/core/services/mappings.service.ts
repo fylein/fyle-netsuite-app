@@ -26,22 +26,10 @@ export class MappingsService {
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
 
-  syncNetsuiteExpenseCustomFields(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {});
-  }
-
   postNetsuiteCustomSegments(data: CustomSegment): Observable<CustomSegment> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
-  }
-
-  postNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
   syncNetSuiteDimensions() {
@@ -70,10 +58,12 @@ export class MappingsService {
     return this.sourceWorkspace;
   }
 
-  refreshNetSuiteDimensions() {
+  refreshNetSuiteDimensions(dimensionsToSync: string[] = []) {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {});
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {
+      dimensions_to_sync: dimensionsToSync
+    });
   }
 
   refreshFyleDimensions() {
@@ -102,10 +92,10 @@ export class MappingsService {
     });
   }
 
-  getNetsuiteExpenseCustomFields(attributeType: string): Observable<MappingDestination[]> {
+  getNetSuiteDestinationAttributes(attributeType: string): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, {
       attribute_type: attributeType
     });
   }

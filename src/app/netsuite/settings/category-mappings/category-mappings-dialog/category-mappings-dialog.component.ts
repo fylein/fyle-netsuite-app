@@ -203,9 +203,9 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.isLoading = true;
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNT'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('CCC_ACCOUNT'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('EXPENSE_CATEGORY'),
+      that.mappingsService.getNetSuiteDestinationAttributes('ACCOUNT'),
+      that.mappingsService.getNetSuiteDestinationAttributes('CCC_ACCOUNT'),
+      that.mappingsService.getNetSuiteDestinationAttributes('EXPENSE_CATEGORY'),
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe((res) => {
       that.fyleCategories = res[0];
