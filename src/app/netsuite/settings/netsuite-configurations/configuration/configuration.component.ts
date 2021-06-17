@@ -291,7 +291,8 @@ export class ConfigurationComponent implements OnInit {
         import_categories: importCategories,
         auto_map_employees: autoMapEmployees,
         auto_create_destination_entity: autoCreateDestinationEntity,
-        auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant
+        auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
+        workspace: that.workspaceId
       };
 
       forkJoin(
