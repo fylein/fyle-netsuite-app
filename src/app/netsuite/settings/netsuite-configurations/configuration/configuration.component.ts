@@ -7,8 +7,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
-import { MappingsService } from 'src/app/core/services/mappings.service';
-import { AttributeCount } from 'src/app/core/models/attribute-count.model';
 
 @Component({
   selector: 'app-configuration',
@@ -30,7 +28,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -87,7 +85,7 @@ export class ConfigurationComponent implements OnInit {
     }[reimbursableExpenseMappedTo];
   }
 
-  getAllSettings(projectCount: number) {
+  getAllSettings() {
     const that = this;
 
     forkJoin(
@@ -128,10 +126,6 @@ export class ConfigurationComponent implements OnInit {
         autoCreateMerchant: [that.generalSettings.auto_create_merchants]
       }, {
       });
-
-      if (projectCount === 0) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
 
       const fyleProjectMapping = that.mappingSettings.filter(
         setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
@@ -194,10 +188,6 @@ export class ConfigurationComponent implements OnInit {
         autoCreateMerchant: [false]
       }, {
       });
-
-      if (projectCount === 0) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
 
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
@@ -337,9 +327,7 @@ export class ConfigurationComponent implements OnInit {
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
 
-    that.mappingsService.getNetsuiteAttributesCount('PROJECT').subscribe((projectCount: AttributeCount) => {
-      that.getAllSettings(projectCount.count);
-    });
+    that.getAllSettings();
   }
 
 }

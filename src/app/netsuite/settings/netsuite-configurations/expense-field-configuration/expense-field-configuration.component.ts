@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
@@ -32,18 +32,20 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   showCustomFieldName: boolean;
   customFieldName = 'Add custom field';
   isSystemField: boolean;
+  showAddButton: boolean;
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private netsuite: NetSuiteComponent, private windowReferenceService: WindowReferenceService) {
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private netsuite: NetSuiteComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(sourceField: string = '', destinationField: string = '', importToFyle: boolean = false) {
+  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom: boolean = false, importToFyle: boolean = false) {
     const that = this;
 
     const group = that.formBuilder.group({
       source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
       destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
-      import_to_fyle: [importToFyle]
+      import_to_fyle: [importToFyle],
+      is_custom: [isCustom]
     });
 
     if (sourceField && destinationField) {
@@ -51,16 +53,12 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       group.controls.destination_field.disable();
     }
 
-    // Save mapping setting on toggle change
-    group.controls.import_to_fyle.valueChanges.subscribe(() => {
-      that.saveExpenseFields();
-    });
     return group;
   }
 
-  showAddButton() {
+  showOrHideAddButton() {
     const that = this;
-    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.netsuiteFields.length) || that.showCustomFieldName) {
+    if (that.expenseFieldsForm.controls.expenseFields.value.length === that.netsuiteFields.length || that.showCustomFieldName) {
       return false;
     }
     return true;
@@ -68,10 +66,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   addExpenseField() {
     const that = this;
-    that.hideCustomField();
 
     that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
     that.expenseFields.push(that.createExpenseField());
+    that.showAddButton = that.showOrHideAddButton();
   }
 
   saveExpenseFields() {
@@ -88,9 +86,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
           element.is_custom = true;
           element.import_to_fyle = true;
           isCustomField = true;
-        } else {
-          element.is_custom = false;
         }
+        element.source_field = element.source_field.replace(/ /g, '_').toUpperCase();
       });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
@@ -119,6 +116,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   showCustomField() {
     const that = this;
 
+    that.showAddButton = false;
     that.showCustomFieldName = true;
     that.customFieldForm.markAllAsTouched();
   }
@@ -138,15 +136,18 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.customFieldName = name;
   }
 
-  hideCustomField() {
-    this.showCustomFieldName = false;
-  }
-
-  saveCustomField() {
+  hideCustomField(event: string) {
     const that = this;
 
     that.showCustomFieldName = false;
-    that.saveExpenseFields();
+    if (event === 'Cancel') {
+      that.removeExpenseField(that.expenseFieldsForm.getRawValue().expenseFields.length - 1);
+      that.showAddButton = that.showOrHideAddButton();
+      that.customFieldName = 'Add custom field';
+      that.customFieldForm.controls.customFieldName.reset();
+    } else {
+      that.showAddButton = false;
+    }
   }
 
   createFormFields(mappingSetting: MappingSetting[]) {
@@ -159,7 +160,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(
-        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.import_to_fyle)
+        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle)
       );
     } else {
       expenseFieldFormArray = [that.createExpenseField()];
@@ -215,6 +216,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       }).then(() => {
         return that.getNetSuiteFields();
       }).finally(() => {
+        that.showAddButton = that.showOrHideAddButton();
         that.isLoading = false;
       });
   }
