@@ -104,7 +104,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
     // remove custom field option from the Fyle fields drop down if the corresponding row is deleted
     if (sourceField && sourceField !== 'PROJECT' && sourceField !== 'COST_CENTER') {
-      that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField)
+      that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField);
     }
     that.showAddButton = that.showOrHideAddButton();
   }
@@ -146,7 +146,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         display_name: that.customFieldForm.value.customFieldName
       });
 
-      const formValuesArray = <FormArray> that.expenseFieldsForm.get('expenseFields');
+      const formValuesArray = that.expenseFieldsForm.get('expenseFields') as FormArray;
       formValuesArray.controls[lastAddedMappingIndex].get('source_field').setValue(customFieldName);
       formValuesArray.controls[lastAddedMappingIndex].get('is_custom').setValue(true);
       formValuesArray.controls[lastAddedMappingIndex].get('import_to_fyle').setValue(true);
