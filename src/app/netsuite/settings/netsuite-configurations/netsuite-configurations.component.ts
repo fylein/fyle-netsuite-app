@@ -70,7 +70,7 @@ export class NetsuiteConfigurationsComponent implements OnInit {
       }
       forkJoin(
         [
-          that.mappingsService.getFyleExpenseAttributes(),
+          that.mappingsService.getFyleFields(),
           that.settingsService.getGeneralSettings(that.workspaceId),
         ]
       ).subscribe(result => {
