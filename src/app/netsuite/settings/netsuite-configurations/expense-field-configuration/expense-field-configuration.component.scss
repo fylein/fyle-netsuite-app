@@ -182,3 +182,11 @@ $text-error: #ff6e40;
   cursor: pointer;
   font-weight: 450;
 }
+
+.read-more-link {
+  margin-left: 8px;
+  margin-bottom: 1.5%;
+  &--icon {
+    height: auto;
+  }
+}
