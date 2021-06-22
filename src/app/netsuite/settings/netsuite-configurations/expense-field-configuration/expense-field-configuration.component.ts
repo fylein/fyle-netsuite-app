@@ -193,7 +193,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   getFyleFields() {
     const that = this;
 
-    return that.mappingsService.getFyleExpenseAttributes().toPromise().then((fyleFields: ExpenseField[]) => {
+    return that.mappingsService.getFyleFields().toPromise().then((fyleFields: ExpenseField[]) => {
       that.fyleExpenseFields = fyleFields;
 
       return fyleFields;

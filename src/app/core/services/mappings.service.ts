@@ -83,10 +83,10 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
   }
 
-  getFyleExpenseAttributes(): Observable<ExpenseField[]> {
+  getFyleFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/fyle_fields/`, {});
   }
 
   getNetSuiteFields(): Observable<ExpenseField[]> {
@@ -95,10 +95,10 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleExpenseFields(attributeType: string): Observable<MappingSource[]> {
+  getFyleExpenseAttributes(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, {
       attribute_type: attributeType
     });
   }
