@@ -277,7 +277,6 @@ export class ConfigurationComponent implements OnInit {
         corporate_credit_card_expenses_object: cccExpensesObject,
         sync_fyle_to_netsuite_payments: fyleToNetSuite,
         sync_netsuite_to_fyle_payments: netSuiteToFyle,
-        import_projects: importProjects,
         import_categories: importCategories,
         auto_map_employees: autoMapEmployees,
         auto_create_destination_entity: autoCreateDestinationEntity,
