@@ -5,16 +5,17 @@ import { WorkspaceService } from './workspace.service';
 @Injectable({
   providedIn: 'root',
 })
-export class BillsService {
+export class ExportsService {
   constructor(
     private apiService: ApiService,
     private workspaceService: WorkspaceService) {}
 
-  createBills(expenseGroupIds: number[]) {
+  triggerExports(expenseGroupIds: number[], exportType: string) {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(
-      `/workspaces/${workspaceId}/netsuite/bills/trigger/`, {
-        expense_group_ids: expenseGroupIds
+      `/workspaces/${workspaceId}/netsuite/exports/trigger/`, {
+        expense_group_ids: expenseGroupIds,
+        export_type: exportType
       }
     );
   }
