@@ -108,7 +108,7 @@ export class ConfigurationComponent implements OnInit {
 
       let importProjects = false;
       if (projectFieldMapping.length) {
-        importProjects = true;
+        importProjects = projectFieldMapping[0].import_to_fyle;
       }
 
       that.employeeFieldMapping = employeeFieldMapping;
