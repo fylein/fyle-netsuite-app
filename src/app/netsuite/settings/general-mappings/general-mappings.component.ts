@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
@@ -99,7 +99,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.cccAccountIsValid = true;
     }
 
-    if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
+    if (that.form.valid) {
       that.isLoading = true;
       const generalMappings: GeneralMapping = {
         location_name: netsuiteLocation ? netsuiteLocation.value : null,
@@ -134,6 +134,41 @@ export class GeneralMappingsComponent implements OnInit {
     }
   }
 
+  setMandatoryFields() {
+    const that = this;
+    if (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+      that.form.controls.accountPayableAccounts.setValidators(Validators.required);
+    }
+
+    if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
+      that.form.controls.bankAccounts.setValidators(Validators.required);
+    }
+
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+      that.form.controls.cccAccounts.setValidators(Validators.required);
+    }
+
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+      that.form.controls.netsuiteVendors.setValidators(Validators.required);
+    }
+
+    if (that.generalSettings.sync_fyle_to_netsuite_payments) {
+      that.form.controls.vendorPaymentAccounts.setValidators(Validators.required);
+    }
+  }
+
+  isFieldMandatory(controlName: string) {
+    const abstractControl = this.form.controls[controlName];
+    if (abstractControl.validator) {
+      const validator = abstractControl.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
@@ -150,6 +185,9 @@ export class GeneralMappingsComponent implements OnInit {
         cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
+
+      that.setMandatoryFields();
+
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
         that.checkLocationLevel(locationMappedTo);
       });
