@@ -28,12 +28,6 @@ export class GeneralMappingsComponent implements OnInit {
   generalMappings: GeneralMapping;
   generalSettings: GeneralSetting;
   isLoading: boolean;
-  accountsPayableIsValid = true;
-  vendorPaymentAccountIsValid = true;
-  bankAccountIsValid = true;
-  cccAccountIsValid = true;
-  locationIsValid = true;
-  vendorIsValid = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,10 +41,6 @@ export class GeneralMappingsComponent implements OnInit {
 
   submit() {
     const that = this;
-    that.accountsPayableIsValid = false;
-    that.bankAccountIsValid = false;
-    that.cccAccountIsValid = false;
-    that.vendorPaymentAccountIsValid = false;
     const formValues = this.form.getRawValue();
 
     const locationId = formValues ? formValues.netsuiteLocations : this.form.value.netsuiteLocations;
@@ -72,32 +62,6 @@ export class GeneralMappingsComponent implements OnInit {
 
     const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
     const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
-
-    if (accountPayableAccountId != null) {
-      that.accountsPayableIsValid = true;
-    }
-    if (bankAccountId != null) {
-      that.bankAccountIsValid = true;
-    }
-    if (vendorPaymentAccountId != null) {
-      that.vendorPaymentAccountIsValid = true;
-    }
-    if (cccAccountId != null) {
-      that.cccAccountIsValid = true;
-    }
-    if (defaultVendorId != null) {
-      that.vendorIsValid = true;
-    }
-    if (locationId != null) {
-      that.locationIsValid = true;
-    }
-    if (locationId === null) {
-      that.locationIsValid = true;
-    }
-
-    if (cccAccountId === null) {
-      that.cccAccountIsValid = true;
-    }
 
     if (that.form.valid) {
       that.isLoading = true;
@@ -202,6 +166,9 @@ export class GeneralMappingsComponent implements OnInit {
         cccAccounts: [null],
         netsuiteVendors: [null]
       });
+
+      that.setMandatoryFields();
+
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
         that.checkLocationLevel(locationMappedTo);
       });
