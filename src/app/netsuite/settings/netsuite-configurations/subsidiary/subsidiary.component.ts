@@ -25,24 +25,18 @@ export class SubsidiaryComponent implements OnInit {
               private settingsService: SettingsService,
               private mappingsService: MappingsService,
               private route: ActivatedRoute,
-              private router: Router,
-              private snackBar: MatSnackBar) {}
+              private router: Router) {}
 
   submit() {
     const that = this;
 
-    if (that.subsidiaryForm.valid) {
-      const subsidiaryId = this.subsidiaryForm.value.netsuiteSubsidiaries;
-      const netsuiteSubsidiary = this.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
+    const subsidiaryId = that.subsidiaryForm.value.netsuiteSubsidiaries;
+    const netsuiteSubsidiary = that.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
 
-      this.isLoading = true;
-      this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
-        this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
-      });
-    } else {
-      that.snackBar.open('Please fill up the form with valid values');
-      that.subsidiaryForm.markAllAsTouched();
-    }
+    that.isLoading = true;
+    that.settingsService.postSubsidiaryMappings(that.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    });
   }
 
   getSubsidiaryMappings() {

@@ -126,7 +126,7 @@
         </div>
       </mat-slide-toggle>
 
-      <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
+      <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>
     </div>

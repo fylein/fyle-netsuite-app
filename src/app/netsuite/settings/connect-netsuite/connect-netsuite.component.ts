@@ -30,29 +30,24 @@ export class ConnectNetsuiteComponent implements OnInit {
   save() {
     const that = this;
 
-    if (that.connectNetSuiteForm.valid) {
-      const netsuiteCredentials: NetSuiteCredentials = {
-        ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
-        ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
-        ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
-      };
+    const netsuiteCredentials: NetSuiteCredentials = {
+      ns_account_id: that.nsAccountId || that.connectNetSuiteForm.value.nsAccountId.toUpperCase(),
+      ns_token_id: that.connectNetSuiteForm.value.nsTokenId,
+      ns_token_secret: that.connectNetSuiteForm.value.nsTokenSecret
+    };
 
-      that.isLoading = true;
-      that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe(responses => {
-        that.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {
-          that.snackBar.open('NetSuite account connected successfully');
-          that.netsuiteConnectionDone = true;
-          that.isLoading = false;
-          that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
-        });
-      }, () => {
-        that.snackBar.open('Wrong credentials, please try again');
+    that.isLoading = true;
+    that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe(responses => {
+      that.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {
+        that.snackBar.open('NetSuite account connected successfully');
+        that.netsuiteConnectionDone = true;
         that.isLoading = false;
+        that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
       });
-    } else {
-      that.snackBar.open('Please fill all the fields');
-      that.connectNetSuiteForm.markAllAsTouched();
-    }
+    }, () => {
+      that.snackBar.open('Wrong credentials, please try again');
+      that.isLoading = false;
+    });
   }
 
   reconnectNetsuite() {

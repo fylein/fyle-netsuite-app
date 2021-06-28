@@ -63,39 +63,34 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
     const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
-    if (that.form.valid) {
-      that.isLoading = true;
-      const generalMappings: GeneralMapping = {
-        location_name: netsuiteLocation ? netsuiteLocation.value : null,
-        location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
-        accounts_payable_name: accountPayableAccount ? accountPayableAccount.value : null,
-        accounts_payable_id: accountPayableAccount ? accountPayableAccount.destination_id : null,
-        reimbursable_account_name: bankAccount ? bankAccount.value : null,
-        reimbursable_account_id: bankAccount ? bankAccount.destination_id : null,
-        default_ccc_account_name: cccAccount ? cccAccount.value : null,
-        default_ccc_account_id: cccAccount ? cccAccount.destination_id : null,
-        vendor_payment_account_name: vendorPaymentAccount ? vendorPaymentAccount.value : null,
-        vendor_payment_account_id: vendorPaymentAccount ? vendorPaymentAccount.destination_id : null,
-        default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
-        default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
-        location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
-      };
-      that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
-        const onboarded = that.storageService.get('onboarded');
-        if (onboarded === true) {
-          that.getGeneralMappings();
-        } else {
-          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-        }
-      }, error => {
-        that.isLoading = false;
-        that.snackBar.open('Please fill up the form with valid values');
-        that.form.markAllAsTouched();
-      });
-    } else {
+    that.isLoading = true;
+    const generalMappings: GeneralMapping = {
+      location_name: netsuiteLocation ? netsuiteLocation.value : null,
+      location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
+      accounts_payable_name: accountPayableAccount ? accountPayableAccount.value : null,
+      accounts_payable_id: accountPayableAccount ? accountPayableAccount.destination_id : null,
+      reimbursable_account_name: bankAccount ? bankAccount.value : null,
+      reimbursable_account_id: bankAccount ? bankAccount.destination_id : null,
+      default_ccc_account_name: cccAccount ? cccAccount.value : null,
+      default_ccc_account_id: cccAccount ? cccAccount.destination_id : null,
+      vendor_payment_account_name: vendorPaymentAccount ? vendorPaymentAccount.value : null,
+      vendor_payment_account_id: vendorPaymentAccount ? vendorPaymentAccount.destination_id : null,
+      default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
+      default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
+      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
+    };
+    that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
+      const onboarded = that.storageService.get('onboarded');
+      if (onboarded === true) {
+        that.getGeneralMappings();
+      } else {
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      }
+    }, () => {
+      that.isLoading = false;
       that.snackBar.open('Please fill up the form with valid values');
       that.form.markAllAsTouched();
-    }
+    });
   }
 
   setMandatoryFields() {
