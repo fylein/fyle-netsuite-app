@@ -25,6 +25,7 @@
             <strong>
               Repeat every
             </strong>
+            <mandatory-field></mandatory-field>
           </div>
           <mat-form-field floatLabel="always" appearance="outline" required>
             <mat-select placeholder="Select hours" formControlName="hours">
@@ -33,10 +34,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <mandatory-error-message customName="Please select the frequency hours" *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
 
         </div>
       </mat-card>
-      <button *ngIf="form.controls.scheduleEnabled.value" class="schedule--save-btn" mat-flat-button color="primary"
+      <button [disabled]="!form.valid" *ngIf="form.controls.scheduleEnabled.value" class="schedule--save-btn" mat-flat-button color="primary"
         type="submit" (click)="submit()">
         Save
       </button>
