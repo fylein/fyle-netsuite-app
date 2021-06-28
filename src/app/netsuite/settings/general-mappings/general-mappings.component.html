@@ -49,7 +49,7 @@
          </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Vendor Payables Account
-          <mandatory-field *ngIf="isFieldMandatory('account payable accounts')"></mandatory-field>
+          <mandatory-field *ngIf="isFieldMandatory('accountPayableAccounts')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
@@ -120,7 +120,7 @@
         <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
       </div>
 
-      <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+      <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>
     </form>

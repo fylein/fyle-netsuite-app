@@ -29,29 +29,35 @@
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           NetSuite Account ID
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="text" formControlName="nsAccountId" placeholder="Enter Account ID" matInput>
       </mat-form-field>
+      <mandatory-error-message customName="Please enter a Account ID" *ngIf="connectNetSuiteForm.controls.nsAccountId.touched && !connectNetSuiteForm.controls.nsAccountId.valid"></mandatory-error-message>
 
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           NetSuite Token ID
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="text" formControlName="nsTokenId" placeholder="Enter Token ID" matInput>
       </mat-form-field>
+      <mandatory-error-message customName="Please enter a Token ID" *ngIf="connectNetSuiteForm.controls.nsTokenId.touched && !connectNetSuiteForm.controls.nsTokenId.valid"></mandatory-error-message>
 
       <div class="mat-body-strong">
           <strong class="mappings-dialog--label">
             NetSuite Token Secret
+            <mandatory-field></mandatory-field>
           </strong>
         </div>
         <mat-form-field class="mappings-dialog--form-element" appearance="outline">
           <input required type="password" formControlName="nsTokenSecret" placeholder="Enter Token Secret" matInput>
         </mat-form-field>
+        <mandatory-error-message customName="Please enter a Token Secret" *ngIf="connectNetSuiteForm.controls.nsTokenSecret.touched && !connectNetSuiteForm.controls.nsTokenSecret.valid"></mandatory-error-message>
 
       <button [disabled]="isSaveDisabled || !connectNetSuiteForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save

@@ -1,3 +1,4 @@
 <div class="required-error">
-    Please select a {{listName | titlecase}} from the list
+    <span *ngIf="listName">Please select a {{ listName | titlecase }} from the list</span>
+    <span *ngIf="customName">{{ customName }}</span>
 </div>

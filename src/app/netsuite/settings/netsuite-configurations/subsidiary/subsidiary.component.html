@@ -24,7 +24,7 @@
           </mat-select>
         </mat-form-field>
         <mandatory-error-message listName="subsidiary" *ngIf="subsidiaryForm.controls.netsuiteSubsidiaries.touched && !subsidiaryForm.controls.netsuiteSubsidiaries.valid"></mandatory-error-message>
-        <button [disabled]="subsidiaryMappingDone" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+        <button [disabled]="subsidiaryMappingDone || !subsidiaryForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
           Save
         </button>
       </div>
