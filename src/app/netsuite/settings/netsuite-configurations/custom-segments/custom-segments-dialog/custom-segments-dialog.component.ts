@@ -44,29 +44,23 @@ export class CustomSegmentsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
+    that.isLoading = true;
+    const customFields: CustomSegment = {
+      internal_id: that.form.value.internal_id,
+      script_id: that.form.value.script_id,
+      segment_type: that.form.value.custom_field_type
+    };
 
-    if (that.form.valid) {
-      that.isLoading = true;
-      const customFields: CustomSegment = {
-        internal_id: that.form.value.internal_id,
-        script_id: that.form.value.script_id,
-        segment_type: that.form.value.custom_field_type
-      };
-
-      that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(() => {
-        that.snackBar.open('Syncing Custom Record from Netsuite');
-        that.mappingsService.syncNetsuiteExpenseCustomFields().subscribe(() => {
-          that.dialogRef.close();
-          that.snackBar.open('Custom Record successfully added to Expense Fields');
-        });
-      }, (err) => {
-        that.snackBar.open('Invalid Custom Record fields, please try again');
-        that.isLoading = false;
+    that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(() => {
+      that.snackBar.open('Syncing Custom Record from Netsuite');
+      that.mappingsService.syncNetsuiteExpenseCustomFields().subscribe(() => {
+        that.dialogRef.close();
+        that.snackBar.open('Custom Record successfully added to Expense Fields');
       });
-    } else {
-      that.snackBar.open('Please fill all required fields');
-      that.form.markAllAsTouched();
-    }
+    }, () => {
+      that.snackBar.open('Invalid Custom Record fields, please try again');
+      that.isLoading = false;
+    });
   }
 
   ngOnInit() {
