@@ -155,7 +155,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
         that.checkLocationLevel(locationMappedTo);
       });
-    }, error => {
+    }, () => {
       that.isLoading = false;
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [null],
