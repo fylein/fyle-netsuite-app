@@ -109,7 +109,24 @@ export class MappingsService {
         groupedAttributes[attribute.attribute_type] = group;
 
         return groupedAttributes;
-      }, {});
+      }, {
+        VENDOR_PAYMENT_ACCOUNT: [],
+        VENDOR: [],
+        CLASS: [],
+        ACCOUNTS_PAYABLE: [],
+        EMPLOYEE: [],
+        ACCOUNT: [],
+        SUBSIDIARY: [],
+        CCC_EXPENSE_CATEGORY: [],
+        CURRENCY: [],
+        CCC_ACCOUNT: [],
+        DEPARTMENT: [],
+        PROJECT: [],
+        LOCATION: [],
+        EXPENSE_CATEGORY: [],
+        BANK_ACCOUNT: [],
+        CREDIT_CARD_ACCOUNT: [],
+      });
     }));
   }
 

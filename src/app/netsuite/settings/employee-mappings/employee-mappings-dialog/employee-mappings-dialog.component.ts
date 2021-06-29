@@ -164,13 +164,31 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     that.setupCCCAutocompleteWatcher();
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+    const attributes = [];
+
+    if (that.generalSettings.employee_field_mapping === 'VENDOR') {
+      attributes.push('VENDOR');
+    } else if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
+      attributes.push('EMPLOYEE');
+    }
+
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+      attributes.push('CREDIT_CARD_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
   reset() {
     const that = this;
-
     that.isLoading = true;
+
+    const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
-      that.mappingsService.getGroupedNetSuiteDestinationAttributes(['VENDOR', 'CREDIT_CARD_ACCOUNT', 'EMPLOYEE']),
+      that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes),
       that.mappingsService.getGeneralMappings()
     ]).subscribe(res => {
       that.fyleEmployees = res[0];
