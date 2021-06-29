@@ -188,7 +188,7 @@ export class GeneralMappingsComponent implements OnInit {
       attributes.push('VENDOR');
     }
     if (that.generalSettings.sync_fyle_to_netsuite_payments) {
-      attributes.push('VENDOR_PAYMENT_ACCOUNT')
+      attributes.push('VENDOR_PAYMENT_ACCOUNT');
     }
 
     return attributes;
