@@ -171,10 +171,35 @@ export class GeneralMappingsComponent implements OnInit {
     });
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+
+    const attributes = ['LOCATION'];
+    if (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+      attributes.push('ACCOUNTS_PAYABLE');
+    }
+    if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
+      attributes.push('BANK_ACCOUNT');
+    }
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+      attributes.push('CREDIT_CARD_ACCOUNT');
+    }
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+      attributes.push('VENDOR');
+    }
+    if (that.generalSettings.sync_fyle_to_netsuite_payments) {
+      attributes.push('VENDOR_PAYMENT_ACCOUNT')
+    }
+
+    return attributes;
+  }
+
   reset() {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getGroupedNetSuiteDestinationAttributes(['BANK_ACCOUNT', 'CREDIT_CARD_ACCOUNT', 'ACCOUNTS_PAYABLE', 'LOCATION', 'VENDOR', 'VENDOR_PAYMENT_ACCOUNT']).subscribe((response: GroupedDestinationAttributes) => {
+
+    const attributes = that.getAttributesFilteredByConfig();
+    that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes).subscribe((response: GroupedDestinationAttributes) => {
       that.isLoading = false;
       that.bankAccounts = response.BANK_ACCOUNT;
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
