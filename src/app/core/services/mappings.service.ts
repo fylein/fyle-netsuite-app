@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CustomSegment } from '../models/custom-segment.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
+import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
@@ -92,12 +93,24 @@ export class MappingsService {
     });
   }
 
-  getNetSuiteDestinationAttributes(attributeType: string): Observable<MappingDestination[]> {
+  getNetSuiteDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, {
-      attribute_type: attributeType
+      attribute_types: attributeTypes
     });
+  }
+
+  getGroupedNetSuiteDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
+    return from(this.getNetSuiteDestinationAttributes(attributeTypes).toPromise().then(response => {
+      return response.reduce((groupedAttributes, attribute) => {
+        const group = groupedAttributes[attribute.attribute_type] || [];
+        group.push(attribute);
+        groupedAttributes[attribute.attribute_type] = group;
+
+        return groupedAttributes;
+      }, {});
+    }));
   }
 
   getNetsuiteExpenseSegments(): Observable<CustomSegment[]> {

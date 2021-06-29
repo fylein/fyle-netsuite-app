@@ -170,25 +170,25 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     that.isLoading = true;
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
-      that.mappingsService.getNetSuiteDestinationAttributes('EMPLOYEE'),
-      that.mappingsService.getNetSuiteDestinationAttributes('CREDIT_CARD_ACCOUNT'),
-      that.mappingsService.getNetSuiteDestinationAttributes('VENDOR'),
+      that.mappingsService.getGroupedNetSuiteDestinationAttributes(['VENDOR', 'CREDIT_CARD_ACCOUNT', 'EMPLOYEE']),
       that.mappingsService.getGeneralMappings()
-    ]).subscribe((res) => {
+    ]).subscribe(res => {
       that.fyleEmployees = res[0];
-      that.netsuiteEmployees = res[1];
+      that.netsuiteEmployees = res[1].EMPLOYEE;
+
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
-        that.cccObjects = res[2].filter(account => {
+        that.cccObjects = res[1].CREDIT_CARD_ACCOUNT.filter(account => {
           // existing accounts might not have account_type, remove this later
           if (account.detail && 'account_type' in account.detail) {
             return account.detail.account_type === '_creditCard';
           }
         });
       } else {
-        that.cccObjects = res[2];
+        that.cccObjects = res[1].CREDIT_CARD_ACCOUNT;
       }
-      that.netsuiteVendors = res[3];
-      that.generalMappings = res[4];
+
+      that.netsuiteVendors = res[1].VENDOR;
+      that.generalMappings = res[2];
 
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
