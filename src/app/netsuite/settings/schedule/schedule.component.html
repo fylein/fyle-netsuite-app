@@ -34,7 +34,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mandatory-error-message customName="Please select the frequency hours" *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
+          <mandatory-error-message customErrorMessage="Please select the frequency hours" *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
 
         </div>
       </mat-card>

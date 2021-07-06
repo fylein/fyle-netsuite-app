@@ -23,7 +23,7 @@
         <mat-form-field class="mappings-dialog--form-element" appearance="outline">
           <input required type="text" formControlName="script_id" placeholder="NetSuite Script Id" matInput>
         </mat-form-field>
-        <mandatory-error-message customName="Please enter a NetSuite Script ID" *ngIf="form.controls.script_id.touched && !form.controls.script_id.valid"></mandatory-error-message>
+        <mandatory-error-message inputName="NetSuite Script ID" *ngIf="form.controls.script_id.touched && !form.controls.script_id.valid"></mandatory-error-message>
 
         <div class="mat-body-strong">
           <strong class="mappings-dialog--label">
@@ -34,7 +34,7 @@
         <mat-form-field class="mappings-dialog--form-element" appearance="outline">
           <input required type="text" formControlName="internal_id" placeholder="Custom Record / Field Internal Id" matInput>
         </mat-form-field>
-        <mandatory-error-message customName="Please enter Custom Record / Field Internal Id" *ngIf="form.controls.internal_id.touched && !form.controls.internal_id.valid"></mandatory-error-message>
+        <mandatory-error-message inputName="Custom Record / Field Internal Id" *ngIf="form.controls.internal_id.touched && !form.controls.internal_id.valid"></mandatory-error-message>
 
         <div class="mat-body-strong">
           <strong class="mappings-dialog--label">
