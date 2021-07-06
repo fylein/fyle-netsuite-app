@@ -273,6 +273,18 @@ export class ConfigurationComponent implements OnInit {
           destination_field: 'PROJECT',
           import_to_fyle: true
         });
+      } else {
+        const projectFieldMapping = that.mappingSettings.filter(
+          setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+        );
+
+        if (projectFieldMapping.length) {
+          mappingsSettingsPayload.push({
+            source_field: 'PROJECT',
+            destination_field: 'PROJECT',
+            import_to_fyle: false
+          });
+        }
       }
 
       that.isLoading = true;
