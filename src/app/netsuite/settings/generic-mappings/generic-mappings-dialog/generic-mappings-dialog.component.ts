@@ -116,24 +116,11 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    let netsuitePromise;
-
-    if (that.setting.destination_field === 'CLASS') {
-      netsuitePromise = that.mappingsService.getNetSuiteClasses();
-    } else if (that.setting.destination_field === 'DEPARTMENT') {
-      netsuitePromise = that.mappingsService.getNetSuiteDepartments();
-    } else if (that.setting.destination_field === 'ACCOUNT') {
-      netsuitePromise = that.mappingsService.getExpenseAccounts();
-    } else if (that.setting.destination_field === 'LOCATION') {
-      netsuitePromise = that.mappingsService.getNetSuiteLocations();
-    } else {
-      netsuitePromise = that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field);
-    }
 
     that.isLoading = true;
     forkJoin([
-      that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field),
-      netsuitePromise
+      that.mappingsService.getFyleExpenseAttributes(that.setting.source_field),
+      that.mappingsService.getNetsuiteExpenseCustomFields(that.setting.destination_field)
     ]).subscribe((res) => {
       that.fyleAttributes = res[0];
       that.netsuiteElements = res[1];

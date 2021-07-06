@@ -13,6 +13,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
+import { CreditCardChargesService } from 'src/app/core/services/credit-card-charges.service';
 
 @Component({
   selector: 'app-export',
@@ -33,6 +34,7 @@ export class ExportComponent implements OnInit {
   windowReference: Window;
 
   constructor(
+    private creditCardChargesService: CreditCardChargesService,
     private route: ActivatedRoute,
     private taskService: TasksService,
     private expenseGroupService: ExpenseGroupsService,
@@ -73,6 +75,9 @@ export class ExportComponent implements OnInit {
       },
       'JOURNAL ENTRY': (filteredIds) => {
         return that.journalEntriesService.createJournalEntries(filteredIds);
+      },
+      'CREDIT CARD CHARGE': (filteredIds) => {
+        return that.creditCardChargesService.createCreditCardCharges(filteredIds);
       }
     };
 

@@ -44,6 +44,7 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
   }
+
   submit() {
     const that = this;
     that.accountsPayableIsValid = false;
@@ -69,8 +70,8 @@ export class GeneralMappingsComponent implements OnInit {
     const cccAccountId = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.form.value.cccAccounts : '';
     const cccAccount = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.cccAccounts.filter(filteredCCCAccount => filteredCCCAccount.destination_id === cccAccountId)[0] : '';
 
-    const defaultVendorId = that.generalSettings.corporate_credit_card_expenses_object === 'BILL' ? that.form.value.netsuiteVendors : '';
-    const defaultVendor: MappingDestination = that.generalSettings.corporate_credit_card_expenses_object === 'BILL' ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
+    const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
+    const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
     if (accountPayableAccountId != null) {
       that.accountsPayableIsValid = true;
@@ -88,14 +89,14 @@ export class GeneralMappingsComponent implements OnInit {
       that.vendorIsValid = true;
     }
     if (locationId != null) {
-      this.locationIsValid = true;
+      that.locationIsValid = true;
     }
     if (locationId === null) {
-      this.locationIsValid = true;
+      that.locationIsValid = true;
     }
 
     if (cccAccountId === null) {
-      this.cccAccountIsValid = true;
+      that.cccAccountIsValid = true;
     }
 
     if (that.locationIsValid && that.vendorIsValid && that.accountsPayableIsValid && that.bankAccountIsValid && that.cccAccountIsValid && that.vendorPaymentAccountIsValid) {
@@ -115,7 +116,7 @@ export class GeneralMappingsComponent implements OnInit {
         default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
         location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
       };
-      this.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
+      that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
         const onboarded = that.storageService.get('onboarded');
         if (onboarded === true) {
           that.getGeneralMappings();
@@ -132,6 +133,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.markAllAsTouched();
     }
   }
+
   getGeneralMappings() {
     const that = this;
     that.isLoading = true;
@@ -173,17 +175,26 @@ export class GeneralMappingsComponent implements OnInit {
     that.isLoading = true;
     forkJoin(
       [
-        that.mappingsService.getBankAccounts(),
-        that.mappingsService.getCreditCardAccounts(),
-        that.mappingsService.getAccountsPayables(),
-        that.mappingsService.getNetSuiteLocations(),
-        that.mappingsService.getNetSuiteVendors(),
-        that.mappingsService.getVendorPaymentAccounts()
+        that.mappingsService.getNetsuiteExpenseCustomFields('BANK_ACCOUNT'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNTS_PAYABLE'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('LOCATION'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
+        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR_PAYMENT_ACCOUNT')
       ]
     ).subscribe(responses => {
       that.isLoading = false;
       that.bankAccounts = responses[0];
-      that.cccAccounts = responses[1];
+      if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+        that.cccAccounts = responses[1].filter(account => {
+          // existing accounts might not have account_type, remove this later
+          if (account.detail && 'account_type' in account.detail) {
+            return account.detail.account_type === '_creditCard';
+          }
+        });
+      } else {
+        that.cccAccounts = responses[1];
+      }
       that.accountPayableAccounts = responses[2];
       that.netsuiteLocations = responses[3];
       that.netsuiteVendors = responses[4];

@@ -165,7 +165,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
           CREATING_JOURNAL_ENTRY: {
             type: 'journal',
             getId: (task) => task.detail.internalId
-          }
+          },
+          CREATING_CREDIT_CARD_CHARGE: {
+            type: 'cardchrg',
+            getId: (task) => task.detail.internalId
+          },
         };
 
         that.openInNetSuite(typeMap[completeTask.type].type, typeMap[completeTask.type].getId(completeTask));

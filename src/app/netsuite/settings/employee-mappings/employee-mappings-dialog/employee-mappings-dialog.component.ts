@@ -169,15 +169,24 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     that.isLoading = true;
     forkJoin([
-      that.mappingsService.getFyleEmployees(),
-      that.mappingsService.getNetSuiteEmployees(),
-      that.mappingsService.getCreditCardAccounts(),
-      that.mappingsService.getNetSuiteVendors(),
+      that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
+      that.mappingsService.getNetsuiteExpenseCustomFields('EMPLOYEE'),
+      that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
+      that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
       that.mappingsService.getGeneralMappings()
     ]).subscribe((res) => {
       that.fyleEmployees = res[0];
       that.netsuiteEmployees = res[1];
-      that.cccObjects = res[2];
+      if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+        that.cccObjects = res[2].filter(account => {
+          // existing accounts might not have account_type, remove this later
+          if (account.detail && 'account_type' in account.detail) {
+            return account.detail.account_type === '_creditCard';
+          }
+        });
+      } else {
+        that.cccObjects = res[2];
+      }
       that.netsuiteVendors = res[3];
       that.generalMappings = res[4];
 
