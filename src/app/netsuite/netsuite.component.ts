@@ -9,6 +9,7 @@ import { WindowReferenceService } from '../core/services/window.service';
 import { Workspace } from '../core/models/workspace.model';
 import { UserProfile } from '../core/models/user-profile.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
+import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-netsuite',
@@ -37,13 +38,27 @@ export class NetSuiteComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
+  refreshDashboardMappingSettings(mappingSettings: MappingSetting[]) {
+    const that = this;
+
+    that.mappingSettings = mappingSettings.filter(
+      setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
+    );
+    that.isLoading = false;
+  }
+
   getGeneralSettings() {
     const that = this;
-    that.settingsService.getMappingSettings(that.workspace.id).subscribe((response) => {
-      that.mappingSettings = response.results.filter(
-        setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
-      );
-      that.isLoading = false;
+    that.getMappingSettings().then((mappingSettings: MappingSetting[]) => {
+      that.refreshDashboardMappingSettings(mappingSettings);
+    });
+  }
+
+  getMappingSettings() {
+    const that = this;
+
+    return that.settingsService.getMappingSettings(that.workspace.id).toPromise().then((mappingSetting: MappingSettingResponse) => {
+      return mappingSetting.results;
     }, () => {
       that.isLoading = false;
     });

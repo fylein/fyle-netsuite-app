@@ -3,6 +3,7 @@ import { Cacheable, CacheBuster } from 'ngx-cacheable';
 import { Observable, from, Subject } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
+import { AttributeCount } from '../models/attribute-count.model';
 import { CustomSegment } from '../models/custom-segment.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
@@ -98,6 +99,14 @@ export class MappingsService {
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, {
       attribute_types: attributeTypes
+    });
+  }
+
+  getNetsuiteAttributesCount(attributeType: string): Observable<AttributeCount> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/attributes/count/`, {
+      attribute_type: attributeType
     });
   }
 
