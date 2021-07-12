@@ -34,27 +34,22 @@ export class ScheduleComponent implements OnInit {
         scheduleEnabled: settings.enabled
       });
       that.isLoading = false;
-    }, (error) => {
+    }, () => {
       that.isLoading = false;
     });
   }
 
   submit() {
     const that = this;
-    if (that.form.valid) {
-      const hours = this.form.value.hours;
-      const scheduleEnabled = this.form.value.scheduleEnabled;
+    const hours = that.form.value.hours;
+    const scheduleEnabled = that.form.value.scheduleEnabled;
 
-      that.isLoading = true;
-      that.settingsService.postSettings(that.workspaceId, hours, scheduleEnabled).subscribe(response => {
-        that.isLoading = false;
-        that.snackBar.open('Scheduling saved');
-        that.getSettings();
-      });
-    } else {
-      that.snackBar.open('Form has invalid fields');
-      that.form.markAllAsTouched();
-    }
+    that.isLoading = true;
+    that.settingsService.postSettings(that.workspaceId, hours, scheduleEnabled).subscribe(() => {
+      that.isLoading = false;
+      that.snackBar.open('Schedule saved');
+      that.getSettings();
+    });
   }
 
   ngOnInit() {
@@ -72,14 +67,14 @@ export class ScheduleComponent implements OnInit {
       if (!newValue && oldValue !== newValue) {
         if (that.settings) {
           that.isLoading = true;
-          that.settingsService.postSettings(that.workspaceId, 0, false).subscribe(response => {
+          that.settingsService.postSettings(that.workspaceId, 0, false).subscribe(() => {
             that.isLoading = false;
             that.snackBar.open('Scheduling turned off');
             that.getSettings();
           });
         }
       }
-    }, err => {
+    }, () => {
       that.snackBar.open('Something went wrong');
     });
 
