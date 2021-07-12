@@ -5,9 +5,9 @@
 <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="page-info">
     <div class="page-info--description">
-      Please map the following Fyle fields to their NetSuite equivalent. You can either select from the pre existing
+      Please map Netsuite fields to a Fyle equivalent. You can either map fields from NetSuite to an existing
       <br>
-      fields or can add new custom field.
+      field in Fyle or can create new Fyle field.
       <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration"
         target="_blank" rel="noopener noreferrer" class="read-more-link">
         Read more
@@ -20,6 +20,7 @@
     <div fxFlex="75" class="info-box-text">
       <mat-icon [inline]="true" class="info-icon main">info</mat-icon>
       Once saved, these mappings can neither be edited or removed.
+      Please reach out to <a href="mailto: support@fylehq.com">support@fylehq.com</a> if you wish to make any changes to the settings.
     </div>
     <div fxFlex="25"></div>
   </div>
@@ -44,7 +45,7 @@
         [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field floatLabel="always" fxFlex="38" appearance="outline">
-            <mat-select placeholder="Choose NetSuite equivalent" formControlName="destination_field">
+            <mat-select placeholder="Choose NetSuite field" formControlName="destination_field">
               <mat-option *ngFor="let netsuiteField of netsuiteFormFieldList" [(value)]="netsuiteField.attribute_type">
                 {{ netsuiteField.display_name | titlecase }}
               </mat-option>
@@ -54,7 +55,7 @@
             <div class="map">Map to</div>
           </div>
           <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-            <mat-select [placeholder]="customFieldName || 'Choose Fyle Expense field'" formControlName="source_field">
+            <mat-select [placeholder]="customFieldName || 'Create Fyle Expense field'" formControlName="source_field">
               <mat-option *ngFor="let fyleExpenseField of fyleExpenseFields"
                 [(value)]="fyleExpenseField.attribute_type">
                 {{ fyleExpenseField.display_name | titlecase }}

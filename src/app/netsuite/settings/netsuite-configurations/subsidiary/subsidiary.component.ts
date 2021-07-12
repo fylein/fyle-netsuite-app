@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../../core/services/mappings.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
@@ -18,7 +18,6 @@ export class SubsidiaryComponent implements OnInit {
   workspaceId: number;
   netsuiteSubsidiaries: MappingDestination[];
   isLoading: boolean;
-  subsidiaryIsValid = true;
   subsidiaryMappings: SubsidiaryMapping;
   subsidiaryMappingDone = false;
 
@@ -26,29 +25,18 @@ export class SubsidiaryComponent implements OnInit {
               private settingsService: SettingsService,
               private mappingsService: MappingsService,
               private route: ActivatedRoute,
-              private router: Router,
-              private snackBar: MatSnackBar) {
-                this.subsidiaryForm = this.formBuilder.group({
-                  netsuiteSubsidiaries: new FormControl('')
-              });
-  }
+              private router: Router) {}
 
   submit() {
-    this.subsidiaryIsValid = false;
+    const that = this;
 
-    const subsidiaryId = this.subsidiaryForm.value.netsuiteSubsidiaries;
-    const netsuiteSubsidiary = this.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
+    const subsidiaryId = that.subsidiaryForm.value.netsuiteSubsidiaries;
+    const netsuiteSubsidiary = that.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
 
-    if (subsidiaryId) {
-      this.subsidiaryIsValid = true;
-    }
-
-    if (this.subsidiaryIsValid) {
-      this.isLoading = true;
-      this.settingsService.postSubsidiaryMappings(this.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
-        this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
-      });
-    }
+    that.isLoading = true;
+    that.settingsService.postSubsidiaryMappings(that.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    });
   }
 
   getSubsidiaryMappings() {
@@ -61,10 +49,10 @@ export class SubsidiaryComponent implements OnInit {
         netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.internal_id : '']
       });
       that.subsidiaryForm.controls.netsuiteSubsidiaries.disable();
-    }, error => {
+    }, () => {
       that.isLoading = false;
       that.subsidiaryForm = that.formBuilder.group({
-        netsuiteSubsidiaries: []
+        netsuiteSubsidiaries: ['', Validators.required]
       });
     });
   }
