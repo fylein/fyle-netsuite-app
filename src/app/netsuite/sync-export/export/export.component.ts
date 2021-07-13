@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
-import { BillsService } from 'src/app/core/services/bills.service';
-import { JournalEntriesService } from '../../../core/services/journal-entries.service';
-import { ExpenseReportsService } from '../../../core/services/expense-reports.service';
 import { TasksService } from 'src/app/core/services/tasks.service';
 import { interval, from, forkJoin } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
@@ -13,7 +10,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
-import { CreditCardChargesService } from 'src/app/core/services/credit-card-charges.service';
+import { ExportsService } from 'src/app/core/services/exports.service';
 
 @Component({
   selector: 'app-export',
@@ -34,55 +31,15 @@ export class ExportComponent implements OnInit {
   windowReference: Window;
 
   constructor(
-    private creditCardChargesService: CreditCardChargesService,
     private route: ActivatedRoute,
     private taskService: TasksService,
     private expenseGroupService: ExpenseGroupsService,
-    private journalEntriesService: JournalEntriesService,
-    private billsService: BillsService,
-    private expenseReportsService: ExpenseReportsService,
     private snackBar: MatSnackBar,
+    private exportsService: ExportsService,
     private settingsService: SettingsService,
     private windowReferenceService: WindowReferenceService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
-
-  exportReimbursableExpenses(reimbursableExpensesObject) {
-    const that = this;
-    const handlerMap = {
-      BILL: (filteredIds) => {
-        return that.billsService.createBills(filteredIds);
-      },
-      'EXPENSE REPORT': (filteredIds) => {
-        return that.expenseReportsService.createExpenseReports(filteredIds);
-      },
-      'JOURNAL ENTRY': (filteredIds) => {
-        return that.journalEntriesService.createJournalEntries(filteredIds);
-      }
-    };
-
-    return handlerMap[reimbursableExpensesObject] || handlerMap['JOURNAL ENTRY'];
-  }
-
-  exportCCCExpenses(corporateCreditCardExpensesObject) {
-    const that = this;
-    const handlerMap = {
-      BILL: (filteredIds) => {
-        return that.billsService.createBills(filteredIds);
-      },
-      'EXPENSE REPORT': (filteredIds) => {
-        return that.expenseReportsService.createExpenseReports(filteredIds);
-      },
-      'JOURNAL ENTRY': (filteredIds) => {
-        return that.journalEntriesService.createJournalEntries(filteredIds);
-      },
-      'CREDIT CARD CHARGE': (filteredIds) => {
-        return that.creditCardChargesService.createCreditCardCharges(filteredIds);
-      }
-    };
-
-    return handlerMap[corporateCreditCardExpensesObject] || handlerMap['JOURNAL ENTRY'];
-  }
 
   openFailedExports() {
     const that = this;
@@ -123,7 +80,7 @@ export class ExportComponent implements OnInit {
       if (that.generalSettings.reimbursable_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'PERSONAL').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportReimbursableExpenses(that.generalSettings.reimbursable_expenses_object)(filteredIds));
+          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.reimbursable_expenses_object));
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
       }
@@ -131,7 +88,7 @@ export class ExportComponent implements OnInit {
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'CCC').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportCCCExpenses(that.generalSettings.corporate_credit_card_expenses_object)(filteredIds));
+          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.corporate_credit_card_expenses_object));
 
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }

@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destination-attributes';
 
 @Component({
   selector: 'app-general-mappings',
@@ -170,35 +171,51 @@ export class GeneralMappingsComponent implements OnInit {
     });
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+
+    const attributes = ['LOCATION'];
+    if (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+      attributes.push('ACCOUNTS_PAYABLE');
+    }
+    if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
+      attributes.push('BANK_ACCOUNT');
+    }
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+      attributes.push('CREDIT_CARD_ACCOUNT');
+    }
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+      attributes.push('VENDOR');
+    }
+    if (that.generalSettings.sync_fyle_to_netsuite_payments) {
+      attributes.push('VENDOR_PAYMENT_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
   reset() {
     const that = this;
     that.isLoading = true;
-    forkJoin(
-      [
-        that.mappingsService.getNetsuiteExpenseCustomFields('BANK_ACCOUNT'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNTS_PAYABLE'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('LOCATION'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
-        that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR_PAYMENT_ACCOUNT')
-      ]
-    ).subscribe(responses => {
+
+    const attributes = that.getAttributesFilteredByConfig();
+    that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes).subscribe((response: GroupedDestinationAttributes) => {
       that.isLoading = false;
-      that.bankAccounts = responses[0];
+      that.bankAccounts = response.BANK_ACCOUNT;
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
-        that.cccAccounts = responses[1].filter(account => {
+        that.cccAccounts = response.CREDIT_CARD_ACCOUNT.filter(account => {
           // existing accounts might not have account_type, remove this later
           if (account.detail && 'account_type' in account.detail) {
             return account.detail.account_type === '_creditCard';
           }
         });
       } else {
-        that.cccAccounts = responses[1];
+        that.cccAccounts = response.CREDIT_CARD_ACCOUNT;
       }
-      that.accountPayableAccounts = responses[2];
-      that.netsuiteLocations = responses[3];
-      that.netsuiteVendors = responses[4];
-      that.vendorPaymentAccounts = responses[5];
+      that.accountPayableAccounts = response.ACCOUNTS_PAYABLE;
+      that.netsuiteLocations = response.LOCATION;
+      that.netsuiteVendors = response.VENDOR;
+      that.vendorPaymentAccounts = response.VENDOR_PAYMENT_ACCOUNT;
       that.getGeneralMappings();
     });
   }

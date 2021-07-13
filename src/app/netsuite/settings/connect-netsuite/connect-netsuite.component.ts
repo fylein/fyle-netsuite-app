@@ -38,7 +38,7 @@ export class ConnectNetsuiteComponent implements OnInit {
 
     that.isLoading = true;
     that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe(responses => {
-      that.mappingsService.postNetSuiteSubsidiaries().subscribe(() => {
+      that.mappingsService.refreshNetSuiteDimensions(['subsidiaries']).subscribe(() => {
         that.snackBar.open('NetSuite account connected successfully');
         that.netsuiteConnectionDone = true;
         that.isLoading = false;
