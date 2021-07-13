@@ -169,7 +169,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     }
 
     that.customFieldForm.controls.customFieldName.reset();
-    that.customFieldName = 'Choose Fyle Expense field';
+    that.customFieldName = 'Create Fyle Expense field';
     that.showAddButton = that.showOrHideAddButton();
   }
 
