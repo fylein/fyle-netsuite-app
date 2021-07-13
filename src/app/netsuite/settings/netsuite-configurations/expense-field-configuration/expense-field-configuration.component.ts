@@ -29,7 +29,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   netsuiteFormFieldList: ExpenseField[];
   windowReference: Window;
   showCustomFieldName: boolean;
-  customFieldName = 'Choose Fyle Expense field';
+  customFieldName = 'Create Fyle Expense field';
   isSystemField: boolean;
   showAddButton: boolean;
 
