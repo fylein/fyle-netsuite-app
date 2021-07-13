@@ -55,7 +55,7 @@
             <div class="map">Map to</div>
           </div>
           <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-            <mat-select [placeholder]="customFieldName || 'Create Fyle Expense field'" formControlName="source_field">
+            <mat-select [placeholder]="customFieldName || 'Choose Fyle Expense field'" formControlName="source_field">
               <mat-option *ngFor="let fyleExpenseField of fyleExpenseFields"
                 [(value)]="fyleExpenseField.attribute_type">
                 {{ fyleExpenseField.display_name | titlecase }}
