@@ -9,6 +9,7 @@ import { GeneralSetting } from '../models/general-setting.model';
 import { MappingSettingResponse } from '../models/mapping-setting-response.model';
 import { ScheduleSettings } from '../models/schedule-settings.model';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
+import { WorkspaceService } from './workspace.service';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
@@ -20,27 +21,31 @@ const subsidiaryMappingCache = new Subject<void>();
   providedIn: 'root',
 })
 export class SettingsService {
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private workspaceService: WorkspaceService) { }
 
   @Cacheable({
     cacheBusterObserver: fyleCredentialsCache
   })
-  getFyleCredentials(workspaceId: number): Observable<FyleCredentials> {
-    return this.apiService.get('/workspaces/' + workspaceId + '/credentials/fyle/', {});
+  getFyleCredentials(): Observable<FyleCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/credentials/fyle/`, {});
   }
 
   @Cacheable({
     cacheBusterObserver: netsuiteCredentialsCache
   })
-  getNetSuiteCredentials(workspaceId: number): Observable<NetSuiteCredentials> {
-    return this.apiService.get('/workspaces/' + workspaceId + '/credentials/netsuite/', {});
+  getNetSuiteCredentials(): Observable<NetSuiteCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/credentials/netsuite/`, {});
   }
 
   @CacheBuster({
     cacheBusterNotifier: fyleCredentialsCache
   })
   connectFyle(workspaceId: number, authorizationCode: string): Observable<FyleCredentials> {
-    return this.apiService.post('/workspaces/' + workspaceId + '/connect_fyle/authorization_code/', {
+    return this.apiService.post(`/workspaces/${workspaceId}/connect_fyle/authorization_code/`, {
       code: authorizationCode
     });
   }
@@ -48,27 +53,35 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: netsuiteCredentialsCache
   })
-  connectNetSuite(workspaceId: number, netsuiteCredentials: NetSuiteCredentials): Observable<NetSuiteCredentials> {
+  connectNetSuite(netsuiteCredentials: NetSuiteCredentials): Observable<NetSuiteCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
     globalCacheBusterNotifier.next();
-    return this.apiService.post('/workspaces/' + workspaceId + '/connect_netsuite/tba/', netsuiteCredentials
+
+    return this.apiService.post(`/workspaces/${workspaceId}/connect_netsuite/tba/`, netsuiteCredentials
     );
   }
 
-  postSettings(workspaceId: number, intervalHours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+  postSettings(intervalHours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       hours: intervalHours,
       schedule_enabled: scheduleEnabled
     });
   }
 
-  getSettings(workspaceId: number): Observable<ScheduleSettings> {
+  getSettings(): Observable<ScheduleSettings> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.get(`/workspaces/${workspaceId}/schedule/`, {});
   }
 
   @Cacheable({
     cacheBusterObserver: mappingsSettingsCache
   })
-  getMappingSettings(workspaceId: number): Observable<MappingSettingResponse> {
+  getMappingSettings(): Observable<MappingSettingResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.get(`/workspaces/${workspaceId}/mappings/settings/`, {});
   }
 
@@ -89,29 +102,30 @@ export class SettingsService {
   @Cacheable({
     cacheBusterObserver: generalSettingsCache
   })
-  getGeneralSettings(workspaceId: number): Observable<GeneralSetting> {
+  getGeneralSettings(): Observable<GeneralSetting> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
 
   @CacheBuster({
     cacheBusterNotifier: subsidiaryMappingCache
   })
-  postSubsidiaryMappings(workspaceId: number, internalId: string, subsidiaryName: string): Observable<SubsidiaryMapping> {
-    return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, {
-      subsidiary_name: subsidiaryName,
-      internal_id: internalId
-    });
+  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping): Observable<SubsidiaryMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
   }
 
   @Cacheable({
     cacheBusterObserver: merge(generalSettingsCache, generalSettingsCache)
   })
-  getCombinedSettings(workspaceId: number): Observable<GeneralSetting> {
+  getCombinedSettings(): Observable<GeneralSetting> {
     // TODO: remove promises and do with rxjs observables
     return from(forkJoin(
       [
-        this.getGeneralSettings(workspaceId),
-        this.getMappingSettings(workspaceId)
+        this.getGeneralSettings(),
+        this.getMappingSettings()
       ]
     ).toPromise().then(responses => {
       const generalSettings: GeneralSetting = responses[0];

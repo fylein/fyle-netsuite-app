@@ -78,7 +78,8 @@ export class GeneralMappingsComponent implements OnInit {
       vendor_payment_account_id: vendorPaymentAccount ? vendorPaymentAccount.destination_id : null,
       default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
-      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null
+      location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
       const onboarded = that.storageService.get('onboarded');
@@ -233,7 +234,7 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe(settings => {
+    that.settingsService.getCombinedSettings().subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
       that.reset();
