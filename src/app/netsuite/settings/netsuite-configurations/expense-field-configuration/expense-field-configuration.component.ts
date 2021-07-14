@@ -197,7 +197,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   getMappingSettings() {
     const that = this;
 
-    return that.settingsService.getMappingSettings(that.workspaceId).toPromise().then((mappingSetting: MappingSettingResponse) => {
+    return that.settingsService.getMappingSettings().toPromise().then((mappingSetting: MappingSettingResponse) => {
       that.createFormFields(mappingSetting.results);
 
       return mappingSetting;

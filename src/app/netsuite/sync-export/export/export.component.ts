@@ -73,7 +73,7 @@ export class ExportComponent implements OnInit {
   createNetSuiteItems() {
     const that = this;
     that.isExporting = true;
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getCombinedSettings().subscribe((settings) => {
       that.generalSettings = settings;
       const promises = [];
       let allFilteredIds = [];
