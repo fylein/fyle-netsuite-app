@@ -56,19 +56,17 @@ export class SyncComponent implements OnInit {
 
   getDescription() {
     const that = this;
-    const allowedFields = ['vendor', 'claim_number', 'settlement_id', 'category'];
+    const allowedFields = ['claim_number', 'settlement_id', 'expense_id'];
 
     const expensesGroupedByList = [];
     that.expenseGroupSettings.reimbursable_expense_group_fields.forEach(element => {
       if (allowedFields.indexOf(element) >= 0) {
-        if (element === 'vendor') {
-          element = 'Merchant';
-        } else if (element === 'claim_number') {
-          element = 'Expense Report';
+        if (element === 'claim_number') {
+          element = 'Report';
+        } else if (element === 'expense_id') {
+          element = 'Expense';
         } else if (element === 'settlement_id') {
           element = 'Payment';
-        } else if (element === 'category') {
-          element = 'Category';
         }
         expensesGroupedByList.push(element);
       }
