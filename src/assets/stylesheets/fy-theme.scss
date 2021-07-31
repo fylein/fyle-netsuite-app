@@ -1,4 +1,5 @@
-@include mat-core();
+@use '~@angular/material' as mat;
+@include mat.core();
 
 // warning color palette
 $fy-warning: (
@@ -34,13 +35,13 @@ $fy-warning: (
     )
 );
 // mat-palette accepts $palette-name, main, lighter and darker variants
-$fy-theme-primary: mat-palette($mat-pink);
-$fy-theme-accent: mat-palette($mat-gray);
-$fy-theme-warn: mat-palette($fy-warning);
+$fy-theme-primary: mat.define-palette(mat.$pink-palette);
+$fy-theme-accent: mat.define-palette(mat.$gray-palette);
+$fy-theme-warn: mat.define-palette($fy-warning);
 
 
 // create theme (use mat-dark-theme for themes with dark backgrounds)
-$fy-theme: mat-light-theme(
+$fy-theme: mat.define-light-theme(
     $fy-theme-primary,
     $fy-theme-accent,
     $fy-theme-warn

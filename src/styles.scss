@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@use '~@angular/material' as mat;
 @import '~normalize.css';
-@import '~@angular/material/theming';
 @import './assets/stylesheets/fy-theme.scss';
 @import 'variables.scss';
 @import './assets/stylesheets/utility.scss';
@@ -17,7 +17,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-@include angular-material-theme($fy-theme);  
+@include mat.all-component-themes($fy-theme);  
  
 // some issue is there with mat select options going transparent
 .mat-select-panel {
