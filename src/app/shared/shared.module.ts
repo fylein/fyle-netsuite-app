@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from './loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ZeroStateComponent } from './zero-state/zero-state.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MandatoryFieldComponent } from './mandatory-field/mandatory-field.component';
 import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandatory-error-message.component';
@@ -20,7 +20,7 @@ import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandat
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
-    FlexLayoutModule,
+    FlexModule,
     MatButtonModule
   ],
   exports: [
