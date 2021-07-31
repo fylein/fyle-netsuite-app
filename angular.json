@@ -131,14 +131,17 @@
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "fyle-netsuite-app:serve"
+            "protractorConfig": "e2e/protractor.conf.js"
           },
           "configurations": {
             "production": {
               "devServerTarget": "fyle-netsuite-app:serve:production"
+            },
+            "development": {
+              "devServerTarget": "fyle-netsuite-app:serve:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }
