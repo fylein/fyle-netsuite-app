@@ -8,7 +8,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { ExpenseField } from 'src/app/core/models/expense-field.model';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-response.model';
 
 @Component({

@@ -8,7 +8,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-category-mappings',
