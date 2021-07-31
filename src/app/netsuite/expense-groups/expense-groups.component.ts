@@ -142,9 +142,9 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   }
 
   openInNetSuiteHandler(clickedExpenseGroup: ExpenseGroup) {
-    // tslint:disable-next-line: deprecation
+    // eslint-disable-next-line import/no-deprecated
     event.preventDefault();
-    // tslint:disable-next-line: deprecation
+    // eslint-disable-next-line import/no-deprecated
     event.stopPropagation();
     const that = this;
     that.isLoading = true;

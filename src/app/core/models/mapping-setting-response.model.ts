@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 import { MappingSetting } from "./mapping-setting.model";
 
 export type MappingSettingResponse = {

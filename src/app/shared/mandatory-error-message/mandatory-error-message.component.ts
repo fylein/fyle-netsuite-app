@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mandatory-error-message',
   templateUrl: './mandatory-error-message.component.html',
   styleUrls: ['./mandatory-error-message.component.scss']

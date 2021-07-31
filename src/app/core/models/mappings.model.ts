@@ -1,7 +1,7 @@
 import { MappingDestination } from './mapping-destination.model';
 import { MappingSource } from './mapping-source.model';
 
-/* tslint:disable */
+/* eslint-disable */
 // TODO: Use something for serialization / deserialization
 export type Mapping = {
   id?: number;

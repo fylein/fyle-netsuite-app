@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 // TODO: Use something for serialization / deserialization
 export type MappingError = {
   expense_group_id: number;

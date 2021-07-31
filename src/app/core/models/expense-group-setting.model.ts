@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 export type ExpenseGroupSetting = {
   id: number;
   reimbursable_expense_group_fields: string[];

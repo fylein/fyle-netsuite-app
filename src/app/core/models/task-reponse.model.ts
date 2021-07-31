@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 // TODO: Use something for serialization / deserialization
 import { Task } from './task.model';
 

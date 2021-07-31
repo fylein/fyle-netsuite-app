@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'zero-state',
   templateUrl: './zero-state.component.html',
   styleUrls: ['./zero-state.component.scss']
@@ -17,8 +17,11 @@ export class ZeroStateComponent implements OnInit {
     this.linkClick.emit(this.link);
   }
 
-  constructor() { }
+  constructor() {
+    // do nothing.
+  }
 
   ngOnInit() {
+    // do nothing.
   }
 }

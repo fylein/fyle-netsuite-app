@@ -186,7 +186,7 @@ export class MappingsService {
     const limit = 500;
     const offset = 0;
 
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line prefer-const
     let allMappingsResponse;
 
     return from(this.getAllMappingsInternal(limit, offset, sourceType, allMappingsResponse));

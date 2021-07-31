@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    // do nothing.
+  }
 
   ngOnInit(): void {
+    // do nothing.
   }
 
 }

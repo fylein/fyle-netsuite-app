@@ -32,7 +32,7 @@ export class ExpenseGroupsService {
     const limit = 500;
     const offset = 0;
     // this would require to create a default object - not much benefit in doing so imho @Dhar
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line prefer-const
     let allExpenseGroupsResponse;
 
     return from(this.getAllExpenseGroupsInternal(limit, offset, state, allExpenseGroupsResponse));

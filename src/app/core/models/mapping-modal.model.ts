@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 import { MappingRow } from "./mapping-row.model";
 import { MappingSetting } from "./mapping-setting.model";
 

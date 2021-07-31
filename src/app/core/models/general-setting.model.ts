@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 export type GeneralSetting = {
     id?: number;
     reimbursable_expenses_object: string;

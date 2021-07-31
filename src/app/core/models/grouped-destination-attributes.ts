@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 import { MappingDestination } from "./mapping-destination.model";
 
 export type GroupedDestinationAttributes = {
