@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CategoryMappingsDialogComponent } from './category-mappings-dialog.component';
 
@@ -6,7 +6,7 @@ describe('CategoryMappingsDialogComponent', () => {
   let component: CategoryMappingsDialogComponent;
   let fixture: ComponentFixture<CategoryMappingsDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CategoryMappingsDialogComponent ]
     })

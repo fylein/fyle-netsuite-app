@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CustomSegmentsComponent } from './custom-segments.component';
 
@@ -6,7 +6,7 @@ describe('CustomSegmentsComponent', () => {
   let component: CustomSegmentsComponent;
   let fixture: ComponentFixture<CustomSegmentsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CustomSegmentsComponent ]
     })

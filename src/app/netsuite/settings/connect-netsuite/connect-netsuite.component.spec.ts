@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConnectNetsuiteComponent } from './connect-netsuite.component';
 
@@ -6,7 +6,7 @@ describe('ConnectNetsuiteComponent', () => {
   let component: ConnectNetsuiteComponent;
   let fixture: ComponentFixture<ConnectNetsuiteComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ConnectNetsuiteComponent ]
     })

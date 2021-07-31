@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MandatoryErrorMessageComponent } from './mandatory-error-message.component';
 
@@ -6,7 +6,7 @@ describe('MandatoryErrorMessageComponent', () => {
   let component: MandatoryErrorMessageComponent;
   let fixture: ComponentFixture<MandatoryErrorMessageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MandatoryErrorMessageComponent ]
     })

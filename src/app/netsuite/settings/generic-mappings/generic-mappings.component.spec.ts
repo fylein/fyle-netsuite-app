@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GenericMappingsComponent } from './generic-mappings.component';
 
@@ -6,7 +6,7 @@ describe('GenericMappingsComponent', () => {
   let component: GenericMappingsComponent;
   let fixture: ComponentFixture<GenericMappingsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GenericMappingsComponent ]
     })

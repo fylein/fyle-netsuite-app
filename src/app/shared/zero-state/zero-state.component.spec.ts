@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ZeroStateComponent } from './zero-state.component';
 
@@ -6,7 +6,7 @@ describe('ZeroStateComponent', () => {
   let component: ZeroStateComponent;
   let fixture: ComponentFixture<ZeroStateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ZeroStateComponent ]
     })
