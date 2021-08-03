@@ -21,14 +21,11 @@ save() {
 
   that.isLoading = true;
 
-  const expensesGroupedBy = that.importExpensesForm.value.expenseGroupConfiguration;
+  const expensesGroupedBy = [that.importExpensesForm.value.expenseGroupConfiguration];
   const expenseState = that.importExpensesForm.value.expenseState;
   const exportDateType = that.importExpensesForm.value.exportDate;
 
-  const groupingField = [];
-  groupingField.push(expensesGroupedBy);
-
-  this.expenseGroupsService.createExpenseGroupsSettings(groupingField, expenseState, exportDateType).subscribe(response => {
+  this.expenseGroupsService.createExpenseGroupsSettings(expensesGroupedBy, expenseState, exportDateType).subscribe(response => {
     that.dialogRef.close();
   });
 }
