@@ -17,11 +17,9 @@ export class ZeroStateComponent implements OnInit {
     this.linkClick.emit(this.link);
   }
 
-  constructor() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  constructor() {} // Do nothing.
 
-  ngOnInit() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  ngOnInit() {} // Do nothing.
 }

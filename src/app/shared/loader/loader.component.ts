@@ -7,12 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoaderComponent implements OnInit {
 
-  constructor() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  constructor() {}
 
-  ngOnInit() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  ngOnInit() {}
 
 }

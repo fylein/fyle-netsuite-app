@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
     this.authService.redirectToLogin();
   }
 
-  ngOnInit() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  ngOnInit() {}
 }

@@ -7,12 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthComponent implements OnInit {
 
-  constructor() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  constructor() {}
 
-  ngOnInit() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  ngOnInit() {}
 
 }

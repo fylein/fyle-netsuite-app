@@ -14,7 +14,6 @@ export class LogoutComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
-  ngOnInit() {
-    // do nothing.
-  }
+  // eslint-disable-next-line
+  ngOnInit() {}
 }
