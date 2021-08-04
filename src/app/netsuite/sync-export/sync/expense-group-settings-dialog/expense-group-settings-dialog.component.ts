@@ -42,8 +42,6 @@ getExpenseGroupSettings() {
       configuration = 'claim_number';
     } else if (reimbursableFields.includes('settlement_id')) {
       configuration = 'settlement_id';
-    } else if (reimbursableFields.includes('expense_id')) {
-      configuration = 'expense_id';
     }
 
     that.isLoading = false;
