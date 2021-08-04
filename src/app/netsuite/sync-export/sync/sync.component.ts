@@ -62,7 +62,7 @@ export class SyncComponent implements OnInit {
     that.expenseGroupSettings.reimbursable_expense_group_fields.forEach(element => {
       if (allowedFields.indexOf(element) >= 0) {
         if (element === 'claim_number') {
-          element = 'Report';
+          element = 'Expense Report';
         } else if (element === 'expense_id') {
           element = 'Expense';
         } else if (element === 'settlement_id') {
