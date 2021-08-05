@@ -52,7 +52,6 @@ export class SyncComponent implements OnInit {
     ).subscribe((res) => {
       if (!res.results.length) {
         that.updateLastSyncStatus().subscribe((response) => {
-          that.isExpensesSyncing = false;
           if (response[0].last_synced_at !== lastSyncedAt) {
             that.snackBar.open('Import Complete');
           } else {
