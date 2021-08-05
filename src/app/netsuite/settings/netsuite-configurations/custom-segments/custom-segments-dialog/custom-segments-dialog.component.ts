@@ -48,15 +48,13 @@ export class CustomSegmentsDialogComponent implements OnInit {
     const customFields: CustomSegment = {
       internal_id: that.form.value.internal_id,
       script_id: that.form.value.script_id,
-      segment_type: that.form.value.custom_field_type
+      segment_type: that.form.value.custom_field_type,
+      workspace: that.workSpaceId
     };
 
     that.mappingsService.postNetsuiteCustomSegments(customFields).subscribe(() => {
-      that.snackBar.open('Syncing Custom Record from Netsuite');
-      that.mappingsService.refreshNetSuiteDimensions(['custom_segments']).subscribe(() => {
-        that.dialogRef.close();
-        that.snackBar.open('Custom Record successfully added to Expense Fields');
-      });
+      that.dialogRef.close();
+      that.snackBar.open('Custom Record successfully added to Expense Fields');
     }, () => {
       that.snackBar.open('Invalid Custom Record fields, please try again');
       that.isLoading = false;
