@@ -49,18 +49,18 @@ export class SyncComponent implements OnInit {
     interval(3000).pipe(
       switchMap(() => from(that.taskService.getAllTasks(taskStatus, [], taskType))),
       takeWhile((response) => response.results.filter(task => task.status === 'IN_PROGRESS'  && task.type === 'FETCHING_EXPENSES').length > 0, true)
-    ).subscribe((res) => {        
+    ).subscribe((res) => {
       if (!res.results.length) {
         that.updateLastSyncStatus().subscribe((response) => {
           that.isExpensesSyncing = false;
           if (response[0].last_synced_at !== lastSyncedAt) {
             that.snackBar.open('Import Complete');
           } else {
-            that.snackBar.open('No New Expense Groups Imported');
+            const expenseState = that.expenseGroupSettings.expense_state.toLowerCase().replace('_', ' ');
+            that.snackBar.open(`No new expense group imported kindly check your fyle account to see if there are any expenses in the ${expenseState} state`);
           }
         });
         that.isExpensesSyncing = false;
-        that.snackBar.open('Import Complete');
       }
     });
   }
