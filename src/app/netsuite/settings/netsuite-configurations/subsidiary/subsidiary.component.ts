@@ -32,9 +32,15 @@ export class SubsidiaryComponent implements OnInit {
 
     const subsidiaryId = that.subsidiaryForm.value.netsuiteSubsidiaries;
     const netsuiteSubsidiary = that.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
-
     that.isLoading = true;
-    that.settingsService.postSubsidiaryMappings(that.workspaceId, netsuiteSubsidiary.destination_id, netsuiteSubsidiary.value).subscribe(response => {
+
+    const subsidiaryMappingPayload: SubsidiaryMapping = {
+      subsidiary_name: netsuiteSubsidiary.value,
+      internal_id: netsuiteSubsidiary.destination_id,
+      workspace: that.workspaceId
+    };
+
+    that.settingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });
   }

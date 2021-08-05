@@ -64,14 +64,14 @@ export class NetsuiteConfigurationsComponent implements OnInit {
 
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'SUBSIDIARY';
 
-    that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe(response => {
+    that.settingsService.getNetSuiteCredentials().subscribe(response => {
       if (response) {
         that.netsuiteConnectionDone = true;
       }
       forkJoin(
         [
           that.mappingsService.getFyleFields(),
-          that.settingsService.getGeneralSettings(that.workspaceId),
+          that.settingsService.getGeneralSettings()
         ]
       ).subscribe(result => {
         that.fyleFields = result[0];

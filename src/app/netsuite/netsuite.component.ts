@@ -57,7 +57,7 @@ export class NetSuiteComponent implements OnInit {
   getMappingSettings() {
     const that = this;
 
-    return that.settingsService.getMappingSettings(that.workspace.id).toPromise().then((mappingSetting: MappingSettingResponse) => {
+    return that.settingsService.getMappingSettings().toPromise().then((mappingSetting: MappingSettingResponse) => {
       return mappingSetting.results;
     }, () => {
       that.isLoading = false;
@@ -88,8 +88,8 @@ export class NetSuiteComponent implements OnInit {
 
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspace.id),
-        that.settingsService.getMappingSettings(that.workspace.id)
+        that.settingsService.getGeneralSettings(),
+        that.settingsService.getMappingSettings()
       ]
     ).toPromise();
   }
@@ -134,7 +134,7 @@ export class NetSuiteComponent implements OnInit {
     const that = this;
     const workspaceId = this.storageService.get('workspaceId');
     if (workspaceId) {
-      that.settingsService.getNetSuiteCredentials(workspaceId).subscribe(credentials => {
+      that.settingsService.getNetSuiteCredentials().subscribe(credentials => {
         if (credentials) {
           that.netsuiteConnected = true;
         }

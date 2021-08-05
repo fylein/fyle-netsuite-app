@@ -120,7 +120,7 @@ export class CategoryMappingsComponent implements OnInit {
     const that = this;
     this.isLoading = true;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
+    that.settingsService.getGeneralSettings().subscribe(settings => {
       that.generalSettings = settings;
       this.isLoading = false;
 

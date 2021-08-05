@@ -17,5 +17,5 @@ export type GeneralMapping = {
   default_ccc_vendor_name: string;
   created_at?: Date;
   updated_at?: Date;
-  workspace?: number;
+  workspace: number;
 };

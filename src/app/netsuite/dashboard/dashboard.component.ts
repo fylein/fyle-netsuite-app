@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
   // TODO: remove promises and do with rxjs observables
   checkFyleLoginStatus() {
     const that = this;
-    return that.settingsService.getFyleCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getFyleCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.fyleConnected;
       return credentials;
     });
@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
   // TODO: remove promises and do with rxjs observables
   getNetSuiteStatus() {
     const that = this;
-    return that.settingsService.getNetSuiteCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getNetSuiteCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.netsuiteConnected;
       return credentials;
     });
@@ -96,8 +96,8 @@ export class DashboardComponent implements OnInit {
     const that = this;
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getGeneralSettings(),
+        that.settingsService.getMappingSettings()
       ]
     ).subscribe((res) => {
       that.generalSettings = res[0];

@@ -9,6 +9,7 @@ import { TasksService } from 'src/app/core/services/tasks.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Subscription } from 'rxjs';
+import { Task } from 'src/app/core/models/task.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -97,7 +98,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     let cachedPageSize = that.storageService.get('expense-groups.pageSize') || 10;
     that.pageSize = +that.route.snapshot.queryParams.page_size || cachedPageSize;
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getCombinedSettings().subscribe((settings) => {
       if (that.state === 'COMPLETE') {
         that.columnsToDisplay = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
       } else {
@@ -148,11 +149,10 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     const that = this;
     that.isLoading = true;
-    that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe(tasks => {
+    that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe((taskLog: Task) => {
       that.isLoading = false;
-      const completeTask = tasks.filter(task => task.status === 'COMPLETE')[0];
 
-      if (completeTask) {
+      if (taskLog.status === 'COMPLETE') {
         const typeMap = {
           CREATING_BILL: {
             type: 'vendbill',
@@ -172,7 +172,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
           },
         };
 
-        that.openInNetSuite(typeMap[completeTask.type].type, typeMap[completeTask.type].getId(completeTask));
+        that.openInNetSuite(typeMap[taskLog.type].type, typeMap[taskLog.type].getId(taskLog));
       }
     });
   }
@@ -187,7 +187,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.reset();
     this.expenseGroups.filterPredicate = this.searchByText;
-    this.settingsService.getNetSuiteCredentials(this.workspaceId).subscribe(creds => {
+    this.settingsService.getNetSuiteCredentials().subscribe(creds => {
       this.storageService.set('nsAccountId', (creds.ns_account_id).toLowerCase());
     });
   }

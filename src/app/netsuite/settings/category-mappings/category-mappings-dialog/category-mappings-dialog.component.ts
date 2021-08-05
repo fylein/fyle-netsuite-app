@@ -251,7 +251,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     }
 
     that.isLoading = true;
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings: GeneralSetting) => {
+    that.settingsService.getGeneralSettings().subscribe((settings: GeneralSetting) => {
       that.generalSettings = settings;
       that.reset();
     });
