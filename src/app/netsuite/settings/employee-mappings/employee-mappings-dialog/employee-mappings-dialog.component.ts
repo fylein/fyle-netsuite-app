@@ -164,31 +164,49 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     that.setupCCCAutocompleteWatcher();
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+    const attributes = [];
+
+    if (that.generalSettings.employee_field_mapping === 'VENDOR') {
+      attributes.push('VENDOR');
+    } else if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
+      attributes.push('EMPLOYEE');
+    }
+
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+      attributes.push('CREDIT_CARD_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
   reset() {
     const that = this;
-
     that.isLoading = true;
+
+    const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
-      that.mappingsService.getFyleExpenseFields('EMPLOYEE'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('EMPLOYEE'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('CREDIT_CARD_ACCOUNT'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('VENDOR'),
+      that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
+      that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes),
       that.mappingsService.getGeneralMappings()
-    ]).subscribe((res) => {
+    ]).subscribe(res => {
       that.fyleEmployees = res[0];
-      that.netsuiteEmployees = res[1];
+      that.netsuiteEmployees = res[1].EMPLOYEE;
+
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
-        that.cccObjects = res[2].filter(account => {
+        that.cccObjects = res[1].CREDIT_CARD_ACCOUNT.filter(account => {
           // existing accounts might not have account_type, remove this later
           if (account.detail && 'account_type' in account.detail) {
             return account.detail.account_type === '_creditCard';
           }
         });
       } else {
-        that.cccObjects = res[2];
+        that.cccObjects = res[1].CREDIT_CARD_ACCOUNT;
       }
-      that.netsuiteVendors = res[3];
-      that.generalMappings = res[4];
+
+      that.netsuiteVendors = res[1].VENDOR;
+      that.generalMappings = res[2];
 
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
       const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
@@ -219,7 +237,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
-    that.settingsService.getCombinedSettings(that.workSpaceId).subscribe(settings => {
+    that.settingsService.getCombinedSettings().subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
       that.reset();

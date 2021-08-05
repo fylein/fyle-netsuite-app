@@ -43,11 +43,14 @@ export class SyncComponent implements OnInit {
   checkSyncStatus() {
     const that = this;
     const lastSyncedAt = that.workspace.last_synced_at;
+    const taskType = ['FETCHING_EXPENSES'];
+    const taskStatus = ['IN_PROGRESS', 'ENQUEUED'];
+
     interval(3000).pipe(
-      switchMap(() => from(that.taskService.getAllTasks('ALL'))),
+      switchMap(() => from(that.taskService.getAllTasks(taskStatus, [], taskType))),
       takeWhile((response) => response.results.filter(task => task.status === 'IN_PROGRESS'  && task.type === 'FETCHING_EXPENSES').length > 0, true)
-    ).subscribe((res) => {
-      if (res.results.filter(task => task.status === 'COMPLETE'  && task.type === 'FETCHING_EXPENSES').length === 1) {
+    ).subscribe((res) => {        
+      if (!res.results.length) {
         that.updateLastSyncStatus().subscribe((response) => {
           that.isExpensesSyncing = false;
           if (response[0].last_synced_at !== lastSyncedAt) {
@@ -56,6 +59,8 @@ export class SyncComponent implements OnInit {
             that.snackBar.open('No New Expense Groups Imported');
           }
         });
+        that.isExpensesSyncing = false;
+        that.snackBar.open('Import Complete');
       }
     });
   }

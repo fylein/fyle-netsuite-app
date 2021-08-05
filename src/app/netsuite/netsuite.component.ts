@@ -9,6 +9,7 @@ import { WindowReferenceService } from '../core/services/window.service';
 import { Workspace } from '../core/models/workspace.model';
 import { UserProfile } from '../core/models/user-profile.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
+import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-netsuite',
@@ -37,13 +38,27 @@ export class NetSuiteComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
+  refreshDashboardMappingSettings(mappingSettings: MappingSetting[]) {
+    const that = this;
+
+    that.mappingSettings = mappingSettings.filter(
+      setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
+    );
+    that.isLoading = false;
+  }
+
   getGeneralSettings() {
     const that = this;
-    that.settingsService.getMappingSettings(that.workspace.id).subscribe((response) => {
-      that.mappingSettings = response.results.filter(
-        setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
-      );
-      that.isLoading = false;
+    that.getMappingSettings().then((mappingSettings: MappingSetting[]) => {
+      that.refreshDashboardMappingSettings(mappingSettings);
+    });
+  }
+
+  getMappingSettings() {
+    const that = this;
+
+    return that.settingsService.getMappingSettings().toPromise().then((mappingSetting: MappingSettingResponse) => {
+      return mappingSetting.results;
     }, () => {
       that.isLoading = false;
     });
@@ -73,8 +88,8 @@ export class NetSuiteComponent implements OnInit {
 
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspace.id),
-        that.settingsService.getMappingSettings(that.workspace.id)
+        that.settingsService.getGeneralSettings(),
+        that.settingsService.getMappingSettings()
       ]
     ).toPromise();
   }
@@ -119,7 +134,7 @@ export class NetSuiteComponent implements OnInit {
     const that = this;
     const workspaceId = this.storageService.get('workspaceId');
     if (workspaceId) {
-      that.settingsService.getNetSuiteCredentials(workspaceId).subscribe(credentials => {
+      that.settingsService.getNetSuiteCredentials().subscribe(credentials => {
         if (credentials) {
           that.netsuiteConnected = true;
         }

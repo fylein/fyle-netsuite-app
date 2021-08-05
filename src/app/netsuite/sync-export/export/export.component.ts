@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
-import { BillsService } from 'src/app/core/services/bills.service';
-import { JournalEntriesService } from '../../../core/services/journal-entries.service';
-import { ExpenseReportsService } from '../../../core/services/expense-reports.service';
 import { TasksService } from 'src/app/core/services/tasks.service';
 import { interval, from, forkJoin } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
@@ -13,7 +10,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
-import { CreditCardChargesService } from 'src/app/core/services/credit-card-charges.service';
+import { ExportsService } from 'src/app/core/services/exports.service';
 
 @Component({
   selector: 'app-export',
@@ -21,7 +18,6 @@ import { CreditCardChargesService } from 'src/app/core/services/credit-card-char
   styleUrls: ['./export.component.scss', '../../netsuite.component.scss']
 })
 export class ExportComponent implements OnInit {
-
   isLoading: boolean;
   isExporting: boolean;
   isProcessingExports: boolean;
@@ -31,58 +27,19 @@ export class ExportComponent implements OnInit {
   generalSettings: GeneralSetting;
   failedExpenseGroupCount = 0;
   successfulExpenseGroupCount = 0;
+  exportedCount = 0;
   windowReference: Window;
 
   constructor(
-    private creditCardChargesService: CreditCardChargesService,
     private route: ActivatedRoute,
     private taskService: TasksService,
     private expenseGroupService: ExpenseGroupsService,
-    private journalEntriesService: JournalEntriesService,
-    private billsService: BillsService,
-    private expenseReportsService: ExpenseReportsService,
     private snackBar: MatSnackBar,
+    private exportsService: ExportsService,
     private settingsService: SettingsService,
     private windowReferenceService: WindowReferenceService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
-
-  exportReimbursableExpenses(reimbursableExpensesObject) {
-    const that = this;
-    const handlerMap = {
-      BILL: (filteredIds) => {
-        return that.billsService.createBills(filteredIds);
-      },
-      'EXPENSE REPORT': (filteredIds) => {
-        return that.expenseReportsService.createExpenseReports(filteredIds);
-      },
-      'JOURNAL ENTRY': (filteredIds) => {
-        return that.journalEntriesService.createJournalEntries(filteredIds);
-      }
-    };
-
-    return handlerMap[reimbursableExpensesObject] || handlerMap['JOURNAL ENTRY'];
-  }
-
-  exportCCCExpenses(corporateCreditCardExpensesObject) {
-    const that = this;
-    const handlerMap = {
-      BILL: (filteredIds) => {
-        return that.billsService.createBills(filteredIds);
-      },
-      'EXPENSE REPORT': (filteredIds) => {
-        return that.expenseReportsService.createExpenseReports(filteredIds);
-      },
-      'JOURNAL ENTRY': (filteredIds) => {
-        return that.journalEntriesService.createJournalEntries(filteredIds);
-      },
-      'CREDIT CARD CHARGE': (filteredIds) => {
-        return that.creditCardChargesService.createCreditCardCharges(filteredIds);
-      }
-    };
-
-    return handlerMap[corporateCreditCardExpensesObject] || handlerMap['JOURNAL ENTRY'];
-  }
 
   openFailedExports() {
     const that = this;
@@ -96,12 +53,15 @@ export class ExportComponent implements OnInit {
 
   checkResultsOfExport(filteredIds: number[]) {
     const that = this;
+    const taskType = ['CREATING_BILL', 'CREATING_EXPENSE_REPORT', 'CREATING_CREDIT_CARD_CHARGE', 'CREATING_JOURNAL_ENTRY'];
+    const taskStatus = ['IN_PROGRESS', 'ENQUEUED', 'COMPLETE', 'FAILED', 'FATAL'];
     interval(3000).pipe(
-      switchMap(() => from(that.taskService.getAllTasks('ALL'))),
+      switchMap(() => from(that.taskService.getAllTasks(taskStatus, filteredIds, taskType))),
       takeWhile((response) => response.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length > 0, true)
     ).subscribe((res) => {
+      that.exportedCount = res.results.filter(task => (task.status !== 'IN_PROGRESS' && task.status !== 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length;
       if (res.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length === 0) {
-        that.taskService.getAllTasks('FAILED').subscribe((taskResponse) => {
+        that.taskService.getAllTasks(['FAILED']).subscribe((taskResponse) => {
           that.failedExpenseGroupCount = taskResponse.count;
           that.successfulExpenseGroupCount = filteredIds.length - that.failedExpenseGroupCount;
           that.isExporting = false;
@@ -115,14 +75,14 @@ export class ExportComponent implements OnInit {
   createNetSuiteItems() {
     const that = this;
     that.isExporting = true;
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getCombinedSettings().subscribe((settings) => {
       that.generalSettings = settings;
       const promises = [];
       let allFilteredIds = [];
       if (that.generalSettings.reimbursable_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'PERSONAL').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportReimbursableExpenses(that.generalSettings.reimbursable_expenses_object)(filteredIds));
+          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.reimbursable_expenses_object));
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
       }
@@ -130,7 +90,7 @@ export class ExportComponent implements OnInit {
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'CCC').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportCCCExpenses(that.generalSettings.corporate_credit_card_expenses_object)(filteredIds));
+          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.corporate_credit_card_expenses_object));
 
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
@@ -164,7 +124,7 @@ export class ExportComponent implements OnInit {
 
     that.isProcessingExports = true;
     interval(7000).pipe(
-      switchMap(() => from(that.taskService.getAllTasks('ALL'))),
+      switchMap(() => from(that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED']))),
       takeWhile((response: TaskResponse) => that.filterOngoingTasks(response) > 0, true)
     ).subscribe((tasks: TaskResponse) => {
       that.processingExportsCount = that.filterOngoingTasks(tasks);
@@ -182,7 +142,7 @@ export class ExportComponent implements OnInit {
     that.isExporting = false;
     that.isLoading = true;
 
-    that.taskService.getAllTasks('ALL').subscribe((tasks: TaskResponse) => {
+    that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED']).subscribe((tasks: TaskResponse) => {
       that.isLoading = false;
       if (that.filterOngoingTasks(tasks) === 0) {
         that.loadExportableExpenseGroups();

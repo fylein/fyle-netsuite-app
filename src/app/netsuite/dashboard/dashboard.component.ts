@@ -11,6 +11,7 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Workspace } from 'src/app/core/models/workspace.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Count } from 'src/app/core/models/count.model';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -68,7 +69,7 @@ export class DashboardComponent implements OnInit {
   // TODO: remove promises and do with rxjs observables
   checkFyleLoginStatus() {
     const that = this;
-    return that.settingsService.getFyleCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getFyleCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.fyleConnected;
       return credentials;
     });
@@ -77,7 +78,7 @@ export class DashboardComponent implements OnInit {
   // TODO: remove promises and do with rxjs observables
   getNetSuiteStatus() {
     const that = this;
-    return that.settingsService.getNetSuiteCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getNetSuiteCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.netsuiteConnected;
       return credentials;
     });
@@ -95,8 +96,8 @@ export class DashboardComponent implements OnInit {
     const that = this;
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getGeneralSettings(),
+        that.settingsService.getMappingSettings()
       ]
     ).subscribe((res) => {
       that.generalSettings = res[0];
@@ -148,8 +149,8 @@ export class DashboardComponent implements OnInit {
   loadSuccessfullExpenseGroupsCount() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupService.getAllExpenseGroups('COMPLETE').toPromise().then((res) => {
-      that.successfulExpenseGroupsCount = res.results.length;
+    return that.expenseGroupService.getExpenseGroupCountByState('COMPLETE').toPromise().then((res: Count) => {
+      that.successfulExpenseGroupsCount = res.count;
       return res;
     });
   }
@@ -157,8 +158,8 @@ export class DashboardComponent implements OnInit {
   loadFailedlExpenseGroupsCount() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    return that.expenseGroupService.getAllExpenseGroups('FAILED').toPromise().then((res) => {
-      that.failedExpenseGroupsCount = res.results.length;
+    return that.expenseGroupService.getExpenseGroupCountByState('FAILED').toPromise().then((res: Count) => {
+      that.failedExpenseGroupsCount = res.count;
       return res;
     });
   }

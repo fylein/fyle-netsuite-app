@@ -192,27 +192,35 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.setupNetSuiteExpenseCategoryWatchers();
   }
 
-  ngOnInit() {
+  getAttributesFilteredByConfig() {
     const that = this;
-    that.workspaceId = that.data.workspaceId;
+    const attributes = [];
 
-    if (that.data.rowElement) {
-      that.editMapping = true;
+    if (that.generalSettings.reimbursable_expenses_object !== 'EXPENSE REPORT') {
+      attributes.push('ACCOUNT');
+    } else if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT') {
+      attributes.push('EXPENSE_CATEGORY');
     }
 
-    that.isLoading = true;
+    if (that.showSeparateCCCField()) {
+      attributes.push('CCC_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
+  reset() {
+    const that = this;
+
+    const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
-      that.mappingsService.getFyleExpenseFields('CATEGORY'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('ACCOUNT'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('CCC_ACCOUNT'),
-      that.mappingsService.getNetsuiteExpenseCustomFields('EXPENSE_CATEGORY'),
-      that.settingsService.getGeneralSettings(that.workspaceId)
+      that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
+      that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes)
     ]).subscribe((res) => {
       that.fyleCategories = res[0];
-      that.netsuiteAccounts = res[1];
-      that.cccAccounts = res[2];
-      that.netsuiteExpenseCategories = res[3];
-      that.generalSettings = res[4];
+      that.netsuiteAccounts = res[1].ACCOUNT;
+      that.cccAccounts = res[1].CCC_ACCOUNT;
+      that.netsuiteExpenseCategories = res[1].EXPENSE_CATEGORY;
 
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
@@ -231,6 +239,21 @@ export class CategoryMappingsDialogComponent implements OnInit {
       }
 
       that.setupAutocompleteWatchers();
+    });
+  }
+
+  ngOnInit() {
+    const that = this;
+    that.workspaceId = that.data.workspaceId;
+
+    if (that.data.rowElement) {
+      that.editMapping = true;
+    }
+
+    that.isLoading = true;
+    that.settingsService.getGeneralSettings().subscribe((settings: GeneralSetting) => {
+      that.generalSettings = settings;
+      that.reset();
     });
   }
 }

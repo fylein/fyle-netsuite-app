@@ -59,9 +59,7 @@ export class ViewExpenseGroupComponent implements OnInit {
       that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId)
     ]).subscribe(response => {
       that.expenseGroup = response[0];
-      if (response[1].length) {
-        that.status = response[1][0].status;
-      }
+      that.status = response[1].status;
 
       that.isLoading = false;
     });

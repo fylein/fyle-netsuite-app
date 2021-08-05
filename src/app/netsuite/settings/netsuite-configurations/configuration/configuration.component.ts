@@ -4,11 +4,9 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageService } from 'src/app/core/services/storage.service';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
-import { Mapping } from 'src/app/core/models/mappings.model';
 
 @Component({
   selector: 'app-configuration',
@@ -18,7 +16,6 @@ import { Mapping } from 'src/app/core/models/mappings.model';
 export class ConfigurationComponent implements OnInit {
 
   isLoading: boolean;
-  isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string}[];
@@ -30,7 +27,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
 
-  constructor(private formBuilder: FormBuilder, private storageService: StorageService,  private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -89,11 +86,11 @@ export class ConfigurationComponent implements OnInit {
 
   getAllSettings() {
     const that = this;
-    that.isLoading = true;
+
     forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getGeneralSettings(),
+        that.settingsService.getMappingSettings()
       ]
     ).subscribe(responses => {
       that.generalSettings = responses[0];
@@ -103,6 +100,15 @@ export class ConfigurationComponent implements OnInit {
         setting => (setting.source_field === 'EMPLOYEE') &&
           (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
       )[0];
+
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      let importProjects = false;
+      if (projectFieldMapping.length) {
+        importProjects = projectFieldMapping[0].import_to_fyle;
+      }
 
       that.employeeFieldMapping = employeeFieldMapping;
 
@@ -120,7 +126,7 @@ export class ConfigurationComponent implements OnInit {
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
-        importProjects: [that.generalSettings.import_projects],
+        importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
@@ -128,6 +134,19 @@ export class ConfigurationComponent implements OnInit {
         autoCreateMerchant: [that.generalSettings.auto_create_merchants]
       }, {
       });
+
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const netsuiteProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
+      if (fyleProjectMapping.length || netsuiteProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
 
       that.expenseOptions = [{
         label: 'Bill',
@@ -162,7 +181,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.isLoading = false;
-    }, error => {
+    }, () => {
       that.mappingSettings = [];
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
@@ -202,91 +221,101 @@ export class ConfigurationComponent implements OnInit {
 
   save() {
     const that = this;
-    if (that.generalSettingsForm.valid) {
-      const mappingsSettingsPayload: MappingSetting[] = [{
-        destination_field: 'ACCOUNT',
-        source_field: 'CATEGORY'
-      },
-      {
-        destination_field: 'CCC_ACCOUNT',
-        source_field: 'CATEGORY'
-      },
-      {
-        destination_field: 'EXPENSE_CATEGORY',
-        source_field: 'CATEGORY'
-      },
-      {
-        destination_field: 'CCC_EXPENSE_CATEGORY',
-        source_field: 'CATEGORY'
-      }
-    ];
 
-      const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
-      const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
-      const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
-      const importProjects = that.generalSettingsForm.value.importProjects;
-      const importCategories = that.generalSettingsForm.value.importCategories;
-      const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
-      const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
+    const mappingsSettingsPayload: MappingSetting[] = [{
+      destination_field: 'ACCOUNT',
+      source_field: 'CATEGORY'
+    },
+    {
+      destination_field: 'CCC_ACCOUNT',
+      source_field: 'CATEGORY'
+    },
+    {
+      destination_field: 'EXPENSE_CATEGORY',
+      source_field: 'CATEGORY'
+    },
+    {
+      destination_field: 'CCC_EXPENSE_CATEGORY',
+      source_field: 'CATEGORY'
+    }
+  ];
 
-      let fyleToNetSuite = false;
-      let netSuiteToFyle = false;
+    const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
+    const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
+    const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
+    const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
+    const importCategories = that.generalSettingsForm.value.importCategories;
+    const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
+    const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
-      if (that.generalSettingsForm.controls.paymentsSync.value) {
-        fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
-        netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
-      }
+    let fyleToNetSuite = false;
+    let netSuiteToFyle = false;
 
-      if (cccExpensesObject) {
-        const destinationField = 'CREDIT_CARD_ACCOUNT';
-        const sourceField = 'EMPLOYEE';
+    if (that.generalSettingsForm.controls.paymentsSync.value) {
+      fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
+      netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
+    }
 
-        mappingsSettingsPayload.push({
-          source_field: sourceField,
-          destination_field: destinationField
-        });
-      }
+    if (cccExpensesObject) {
+      const destinationField = 'CREDIT_CARD_ACCOUNT';
+      const sourceField = 'EMPLOYEE';
 
-      if (importProjects) {
-        mappingsSettingsPayload.push({
-          source_field: 'PROJECT',
-          destination_field: 'PROJECT'
-        });
-      }
-
-      that.isLoading = true;
       mappingsSettingsPayload.push({
-        source_field: 'EMPLOYEE',
-        destination_field: employeeMappingsObject
+        source_field: sourceField,
+        destination_field: destinationField
       });
+    }
 
-      const generalSettingsPayload: GeneralSetting = {
-        reimbursable_expenses_object: reimbursableExpensesObject,
-        corporate_credit_card_expenses_object: cccExpensesObject,
-        sync_fyle_to_netsuite_payments: fyleToNetSuite,
-        sync_netsuite_to_fyle_payments: netSuiteToFyle,
-        import_projects: importProjects,
-        import_categories: importCategories,
-        auto_map_employees: autoMapEmployees,
-        auto_create_destination_entity: autoCreateDestinationEntity,
-        auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant
-      };
-
-      forkJoin(
-        [
-          that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
-        ]
-      ).subscribe(() => {
-        that.isLoading = false;
-        that.snackBar.open('Configuration saved successfully');
-        that.netsuite.getGeneralSettings();
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    if (importProjects) {
+      mappingsSettingsPayload.push({
+        source_field: 'PROJECT',
+        destination_field: 'PROJECT',
+        import_to_fyle: true
       });
     } else {
-      that.snackBar.open('Form has invalid fields');
-      that.generalSettingsForm.markAllAsTouched();
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      if (projectFieldMapping.length) {
+        mappingsSettingsPayload.push({
+          source_field: 'PROJECT',
+          destination_field: 'PROJECT',
+          import_to_fyle: false
+        });
+      }
     }
+
+    that.isLoading = true;
+    mappingsSettingsPayload.push({
+      source_field: 'EMPLOYEE',
+      destination_field: employeeMappingsObject
+    });
+
+    const generalSettingsPayload: GeneralSetting = {
+      reimbursable_expenses_object: reimbursableExpensesObject,
+      corporate_credit_card_expenses_object: cccExpensesObject,
+      sync_fyle_to_netsuite_payments: fyleToNetSuite,
+      sync_netsuite_to_fyle_payments: netSuiteToFyle,
+      import_projects: false,
+      import_categories: importCategories,
+      auto_map_employees: autoMapEmployees,
+      auto_create_destination_entity: autoCreateDestinationEntity,
+      auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
+      workspace: that.workspaceId
+    };
+
+    forkJoin(
+      [
+        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
+        that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
+      ]
+    ).subscribe(() => {
+      that.isLoading = false;
+      that.snackBar.open('Configuration saved successfully');
+      that.netsuite.getGeneralSettings();
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    });
   }
 
   showPaymentsandProjectFields(reimbursableExpensesObject) {
@@ -310,8 +339,9 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    that.isSaveDisabled = false;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
+    that.isLoading = true;
+
     that.getAllSettings();
   }
 

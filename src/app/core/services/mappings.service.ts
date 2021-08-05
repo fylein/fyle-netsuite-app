@@ -3,9 +3,11 @@ import { Cacheable, CacheBuster } from 'ngx-cacheable';
 import { Observable, from, Subject } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
+import { AttributeCount } from '../models/attribute-count.model';
 import { CustomSegment } from '../models/custom-segment.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
+import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
@@ -26,22 +28,10 @@ export class MappingsService {
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
 
-  syncNetsuiteExpenseCustomFields(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {});
-  }
-
   postNetsuiteCustomSegments(data: CustomSegment): Observable<CustomSegment> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/netsuite/custom_segments/`, data);
-  }
-
-  postNetSuiteSubsidiaries(): Observable<MappingDestination[]> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/subsidiaries/`, {});
   }
 
   syncNetSuiteDimensions() {
@@ -70,10 +60,12 @@ export class MappingsService {
     return this.sourceWorkspace;
   }
 
-  refreshNetSuiteDimensions() {
+  refreshNetSuiteDimensions(dimensionsToSync: string[] = []) {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {});
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {
+      dimensions_to_sync: dimensionsToSync
+    });
   }
 
   refreshFyleDimensions() {
@@ -82,10 +74,10 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
   }
 
-  getFyleExpenseAttributes(): Observable<ExpenseField[]> {
+  getFyleFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/fyle_fields/`, {});
   }
 
   getNetSuiteFields(): Observable<ExpenseField[]> {
@@ -94,20 +86,57 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleExpenseFields(attributeType: string): Observable<MappingSource[]> {
+  getFyleExpenseAttributes(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, {
       attribute_type: attributeType
     });
   }
 
-  getNetsuiteExpenseCustomFields(attributeType: string): Observable<MappingDestination[]> {
+  getNetSuiteDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/custom_fields/`, {
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, {
+      attribute_types: attributeTypes
+    });
+  }
+
+  getNetsuiteAttributesCount(attributeType: string): Observable<AttributeCount> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/attributes/count/`, {
       attribute_type: attributeType
     });
+  }
+
+  getGroupedNetSuiteDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
+    return from(this.getNetSuiteDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
+      return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
+        const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
+        group.push(attribute);
+        groupedAttributes[attribute.attribute_type] = group;
+
+        return groupedAttributes;
+      }, {
+        VENDOR_PAYMENT_ACCOUNT: [],
+        VENDOR: [],
+        CLASS: [],
+        ACCOUNTS_PAYABLE: [],
+        EMPLOYEE: [],
+        ACCOUNT: [],
+        SUBSIDIARY: [],
+        CCC_EXPENSE_CATEGORY: [],
+        CURRENCY: [],
+        CCC_ACCOUNT: [],
+        DEPARTMENT: [],
+        PROJECT: [],
+        LOCATION: [],
+        EXPENSE_CATEGORY: [],
+        BANK_ACCOUNT: [],
+        CREDIT_CARD_ACCOUNT: [],
+      });
+    }));
   }
 
   getNetsuiteExpenseSegments(): Observable<CustomSegment[]> {

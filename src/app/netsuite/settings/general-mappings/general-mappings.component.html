@@ -49,6 +49,7 @@
          </mat-form-field>
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Vendor Payables Account
+          <mandatory-field *ngIf="isFieldMandatory('accountPayableAccounts')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
@@ -60,9 +61,11 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mandatory-error-message listName="vendor payables account" *ngIf="form.controls.accountPayableAccounts.touched && !form.controls.accountPayableAccounts.valid"></mandatory-error-message>
 
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
           Employee Payables Account
+          <mandatory-field *ngIf="isFieldMandatory('bankAccounts')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
@@ -72,8 +75,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mandatory-error-message listName="employee payables account" *ngIf="form.controls.bankAccounts.touched && !form.controls.bankAccounts.valid"></mandatory-error-message>
         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
           Default Credit Card Account
+          <mandatory-field *ngIf="isFieldMandatory('cccAccounts')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
@@ -84,8 +89,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mandatory-error-message listName="default credit card account" *ngIf="form.controls.cccAccounts.touched && !form.controls.cccAccounts.valid"></mandatory-error-message>
         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'">
           Default Credit Card Vendor
+          <mandatory-field *ngIf="isFieldMandatory('netsuiteVendors')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'">
@@ -96,21 +103,24 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mandatory-error-message listName="vendor" *ngIf="form.controls.netsuiteVendors.touched && !form.controls.netsuiteVendors.valid"></mandatory-error-message>
         <div class="mat-body-strong" *ngIf="generalSettings.sync_fyle_to_netsuite_payments">
           Payment Bank Account
+          <mandatory-field *ngIf="isFieldMandatory('vendorPaymentAccounts')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.sync_fyle_to_netsuite_payments">
-          <mat-select class="general-mappings--input" placeholder="Select payment Account"
+          <mat-select class="general-mappings--input" placeholder="Select Payment Account"
             formControlName="vendorPaymentAccounts">
             <mat-option *ngFor="let bankAccount of vendorPaymentAccounts; let i = index" [value]="vendorPaymentAccounts[i].destination_id">
               {{vendorPaymentAccounts[i].value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
       </div>
 
-      <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+      <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>
     </form>
