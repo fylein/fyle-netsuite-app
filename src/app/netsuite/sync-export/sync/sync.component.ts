@@ -57,7 +57,9 @@ export class SyncComponent implements OnInit {
             that.snackBar.open('Import Complete');
           } else {
             const expenseState = that.expenseGroupSettings.expense_state.toLowerCase().replace('_', ' ');
-            that.snackBar.open(`No new expense group imported kindly check your fyle account to see if there are any expenses in the ${expenseState} state`);
+            that.snackBar.open(`No new expense group imported kindly check your fyle account to see if there are any expenses in the ${expenseState} state`, null, {
+              duration: 5000
+            });
           }
         });
         that.isExpensesSyncing = false;
