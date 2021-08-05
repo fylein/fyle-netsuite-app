@@ -37,7 +37,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     };
 
     that.isLoading = true;
-    that.settingsService.connectNetSuite(that.workspaceId, netsuiteCredentials).subscribe(responses => {
+    that.settingsService.connectNetSuite(netsuiteCredentials).subscribe(responses => {
       that.mappingsService.refreshNetSuiteDimensions(['subsidiaries']).subscribe(() => {
         that.snackBar.open('NetSuite account connected successfully');
         that.netsuiteConnectionDone = true;
@@ -59,7 +59,7 @@ export class ConnectNetsuiteComponent implements OnInit {
     that.isSaveDisabled = false;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getNetSuiteCredentials(that.workspaceId).subscribe((res) => {
+    that.settingsService.getNetSuiteCredentials().subscribe((res) => {
       that.netsuiteConnectionDone = true;
       that.nsAccountId = res.ns_account_id;
       that.connectNetSuiteForm = that.formBuilder.group({
