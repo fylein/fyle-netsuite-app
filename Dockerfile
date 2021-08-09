@@ -1,5 +1,5 @@
 # base image
-FROM node:14.17.4 as build
+FROM node:14.17.4-slim as build
 
 RUN apt-get update && apt-get install nginx vim -y --no-install-recommends git
 
