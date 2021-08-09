@@ -24,14 +24,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/stylesheets/variables.scss",
-              "src/styles.scss"
+              {
+                "input": "src/assets/stylesheets/variables.scss",
+                "inject": true
+              },
+              {
+                "input": "src/styles.scss",
+                "inject": true
+              }
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/assets/stylesheets"
-              ]
-            },
             "scripts": [],
             "buildOptimizer": false
           },

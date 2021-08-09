@@ -1,5 +1,5 @@
 # base image
-FROM node:12.4.0-slim as build
+FROM node:14.17.4 as build
 
 RUN apt-get update && apt-get install nginx vim -y --no-install-recommends git
 
@@ -18,7 +18,7 @@ RUN npm install @angular-builders/custom-webpack@8.4.1
 COPY . /app
 
 # generate build
-RUN ng build --prod --output-path=dist
+RUN ng build --configuration production --output-path=dist
 
 ############
 ### prod ###
