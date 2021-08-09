@@ -2,7 +2,7 @@
 @use '~@angular/material' as mat;
 @import '~normalize.css';
 @import './assets/stylesheets/fy-theme.scss';
-@import 'variables.scss';
+@import 'src/assets/stylesheets/variables.scss';
 @import './assets/stylesheets/utility.scss';
 
 $fy-nav-hover: rgba(0, 0, 0, 0.039);

@@ -1,5 +1,3 @@
-source /fyle-netsuite-app/setup.sh
-
 if [[ $OSTYPE == darwin* ]]
 then
   SED_EXTRA_ARGS='""';
