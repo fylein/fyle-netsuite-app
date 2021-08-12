@@ -12,7 +12,7 @@ platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
-if (environment.app_url === 'https://netsuite.fyleapps.tech') {
+if (environment.app_url === 'https://netsuite.fyleapps.com') {
   const script = document.createElement('script');
   script.type = 'text/javascript';
   script.innerHTML = `
