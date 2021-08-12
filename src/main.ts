@@ -14,7 +14,7 @@ platformBrowserDynamic()
 
 if (environment.app_url === environment.hotjar_whitelist_url) {
   const script = document.createElement('script');
-  const hotjarId = environment.hotjar_id; 
+  const hotjarId = environment.hotjar_id;
   script.type = 'text/javascript';
   script.innerHTML = `
     (function(h,o,t,j,a,r){
