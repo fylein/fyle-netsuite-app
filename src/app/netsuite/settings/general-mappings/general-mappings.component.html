@@ -95,7 +95,7 @@
           <mandatory-field *ngIf="isFieldMandatory('netsuiteVendors')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
-          *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'">
+          *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || (generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' && !generalSettings.auto_create_merchants)">
           <mat-select class="general-mappings--input" placeholder="Select default credit card Vendor for card expenses imported from Fyle"
             formControlName="netsuiteVendors">
             <mat-option *ngFor="let cccAccount of netsuiteVendors; let i = index" [value]="netsuiteVendors[i].destination_id">
