@@ -109,7 +109,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.controls.cccAccounts.setValidators(Validators.required);
     }
 
-    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' && !that.generalSettings.auto_create_merchants)) {
       that.form.controls.netsuiteVendors.setValidators(Validators.required);
     }
 
