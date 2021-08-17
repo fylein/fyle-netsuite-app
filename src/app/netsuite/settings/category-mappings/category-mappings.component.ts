@@ -47,9 +47,8 @@ export class CategoryMappingsComponent implements OnInit {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
-          pageNumber: 0,
-          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+          pageSize: that.storageService.get('mappings.pageSize') || 50,
+          pageNumber: 0
         };
         that.getCategoryMappings(data);
       } else {
@@ -108,9 +107,8 @@ export class CategoryMappingsComponent implements OnInit {
         that.columnsToDisplay.push('ccc');
       }
       const data = {
-        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
-        pageNumber: 0,
-        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+        pageSize: that.storageService.get('mappings.pageSize') || 50,
+        pageNumber: 0
       };
       that.getCategoryMappings(data);
     });
