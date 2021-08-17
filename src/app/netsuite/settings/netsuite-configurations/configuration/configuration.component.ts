@@ -269,6 +269,7 @@ export class ConfigurationComponent implements OnInit {
     };
 
     const postSettings = [];
+
     postSettings.push(that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload));
     if (mappingsSettingsPayload.length) {
       postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload));
