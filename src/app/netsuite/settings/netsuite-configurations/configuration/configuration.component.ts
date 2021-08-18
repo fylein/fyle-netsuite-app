@@ -232,6 +232,16 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
+    if (cccExpensesObject) {
+      const destinationField = 'CREDIT_CARD_ACCOUNT';
+      const sourceField = 'EMPLOYEE';
+
+      mappingsSettingsPayload.push({
+        source_field: sourceField,
+        destination_field: destinationField
+      });
+    }
+
     if (importProjects) {
       mappingsSettingsPayload.push({
         source_field: 'PROJECT',
