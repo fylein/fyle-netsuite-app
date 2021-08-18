@@ -24,6 +24,7 @@ export class GeneralMappingsComponent implements OnInit {
   netsuiteVendors: MappingDestination[];
   accountPayableAccounts: MappingDestination[];
   bankAccounts: MappingDestination[];
+  taxItems: MappingDestination[];
   vendorPaymentAccounts: MappingDestination[];
   cccAccounts: MappingDestination[];
   generalMappings: GeneralMapping;
@@ -192,6 +193,10 @@ export class GeneralMappingsComponent implements OnInit {
       attributes.push('VENDOR_PAYMENT_ACCOUNT');
     }
 
+    if (that.generalSettings) {
+      attributes.push('TAX_ITEM');
+    }
+
     return attributes;
   }
 
@@ -217,6 +222,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.netsuiteLocations = response.LOCATION;
       that.netsuiteVendors = response.VENDOR;
       that.vendorPaymentAccounts = response.VENDOR_PAYMENT_ACCOUNT;
+      that.taxItems = response.TAX_ITEM;
       that.getGeneralMappings();
     });
   }

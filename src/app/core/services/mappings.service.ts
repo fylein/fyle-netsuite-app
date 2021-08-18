@@ -131,6 +131,7 @@ export class MappingsService {
         CCC_ACCOUNT: [],
         DEPARTMENT: [],
         PROJECT: [],
+        TAX_ITEM: [],
         LOCATION: [],
         EXPENSE_CATEGORY: [],
         BANK_ACCOUNT: [],
