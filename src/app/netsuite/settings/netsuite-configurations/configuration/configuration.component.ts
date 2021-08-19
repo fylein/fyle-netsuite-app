@@ -248,6 +248,7 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
+    // TODO: remove this when employee mapping is migrated
     if (cccExpensesObject) {
       const destinationField = 'CREDIT_CARD_ACCOUNT';
       const sourceField = 'EMPLOYEE';
@@ -277,6 +278,12 @@ export class ConfigurationComponent implements OnInit {
         });
       }
     }
+
+    // TODO: remove this when employee mapping is migrated
+    mappingsSettingsPayload.push({
+      source_field: 'EMPLOYEE',
+      destination_field: employeeMappingsObject
+    });
 
     that.isLoading = true;
 
