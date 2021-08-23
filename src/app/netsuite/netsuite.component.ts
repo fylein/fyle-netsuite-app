@@ -10,6 +10,7 @@ import { Workspace } from '../core/models/workspace.model';
 import { UserProfile } from '../core/models/user-profile.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
+import { TrackingService } from '../core/services/tracking.service';
 
 @Component({
   selector: 'app-netsuite',
@@ -34,7 +35,8 @@ export class NetSuiteComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
-    private windowReferenceService: WindowReferenceService) {
+    private windowReferenceService: WindowReferenceService,
+    private trackingService: TrackingService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
@@ -66,6 +68,7 @@ export class NetSuiteComponent implements OnInit {
 
   switchWorkspace() {
     this.authService.switchWorkspace();
+    this.trackingService.onSwitchWorkspace();
   }
 
   getSettingsAndNavigate() {
@@ -120,6 +123,7 @@ export class NetSuiteComponent implements OnInit {
     that.workspaceService.getWorkspaces(that.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length > 0) {
         that.workspace = workspaces[0];
+        that.setUserIdentity(that.user.employee_email, {workspaceId : workspaces[0].id});
         that.getSettingsAndNavigate();
       } else {
         that.workspaceService.createWorkspace().subscribe(workspace => {
@@ -130,6 +134,15 @@ export class NetSuiteComponent implements OnInit {
     });
   }
 
+  setUserIdentity(email: string, properties) {
+    const that = this;
+    that.trackingService.onSignIn(email, properties);
+  }
+
+  onSignOut() {
+    const that = this;
+    that.trackingService.onSignOut();
+  }
   getNetSuiteStatus() {
     const that = this;
     const workspaceId = this.storageService.get('workspaceId');

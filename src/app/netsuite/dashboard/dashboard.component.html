@@ -44,7 +44,8 @@
             </div>
             <div routerLink="../settings/netsuite/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.fyleConnected"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}">
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}"
+              (click)="onConnectNetSuite()">
               Connect NetSuite
             </div>
           </div>
@@ -57,7 +58,8 @@
             </div>
             <div routerLink="../settings/configurations/subsidiary/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.netsuiteConnected"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.netsuiteConnected}">
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.netsuiteConnected}"
+              (click)="onSelectSubsidiary()">
               Select Subsidiary
             </div>
           </div>
@@ -77,7 +79,8 @@
             </div>
             <div routerLink="../settings/configurations/general/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.subsidiaryMappingDone"
-            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.subsidiaryMappingDone}">
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.subsidiaryMappingDone}"
+            (click)="onMapFyleFieldsToNetSuiteFields()">
               Go to Configurations
             </div>
           </div>
@@ -97,7 +100,8 @@
             </div>
             <div routerLink="../settings/general/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.configurationsDone"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.configurationsDone}">
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.configurationsDone}"
+              (click)="onMapBankAccounts()">
               Go to General Mappings
             </div>
           </div>
@@ -110,7 +114,8 @@
             </div>
             <div routerLink="../settings/employee/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.generalMappingsDone"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}">
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}"
+              (click)="onMapEmployees()">
               Go to Employee Mappings
             </div>
           </div>
@@ -121,7 +126,8 @@
             </div>
             <div routerLink="../settings/category/mappings/" class="onboarding-stepper--navigation cursor-pointer"
               *ngIf="currentState === allOnboardingStates.employeeMappingsDone"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.employeeMappingsDone}">
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.employeeMappingsDone}"
+              (click)="onMapCategories()">
               Go to Category Mappings
             </div>
           </div>
