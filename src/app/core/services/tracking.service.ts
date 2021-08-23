@@ -35,7 +35,7 @@ export class TrackingService {
   }
 
   connectNetSuite(properties= {}) {
-    this.eventTrack('Connect NetSuite Online', properties);
+    this.eventTrack('Connect NetSuite', properties);
   }
 
   selectSubsidiary(properties= {}) {
