@@ -68,28 +68,28 @@ export class DashboardComponent implements OnInit {
     this.windowReference.location.href = `${FYLE_URL}/app/developers/#/oauth/authorize?client_id=${FYLE_CLIENT_ID}&redirect_uri=${APP_URL}/workspaces/fyle/callback&response_type=code&state=${this.workspaceId}`;
   }
 
-  onConnectNetSuite() {
-    this.trackingService.connectNetSuite();
+  onConnectNetSuitePageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Connect NetSuite', onboarding);
   }
 
-  onSelectSubsidiary() {
-    this.trackingService.selectSubsidiary();
+  onSelectSubsidiaryPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Select Subsidiary', onboarding);
   }
 
-  onMapFyleFieldsToNetSuiteFields() {
-    this.trackingService.mapFyleFieldsToNetSuiteFields();
+  onConfigurationsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Configurations', onboarding);
   }
 
-  onMapBankAccounts() {
-    this.trackingService.mapBankAccounts();
+  onGeneralMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Genral Mappings', onboarding);
   }
 
-  onMapEmployees() {
-    this.trackingService.mapEmployees();
+  onEmployeeMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Employee Mappings', onboarding);
   }
 
-  onMapCategories() {
-    this.trackingService.mapCategories();
+  onCategoryMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Category Mappings', onboarding);
   }
 
   // TODO: remove promises and do with rxjs observables

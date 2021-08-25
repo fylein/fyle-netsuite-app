@@ -15,7 +15,7 @@ export class TrackingService {
     return (window as any).analytics;
   }
 
-  eventTrack(action, properties) {
+  eventTrack(action: string, properties= {}) {
     properties = {
       ...properties,
       Asset: 'NetSuite Web'
@@ -25,45 +25,28 @@ export class TrackingService {
     }
   }
 
-  onSignIn(email: string, properties) {
+  onSignIn(email: string, workspaceId: number, properties) {
     if (this.tracking) {
       this.tracking.identify(email, {
+        workspaceId,
       });
       this.identityEmail = email;
     }
     this.eventTrack('Sign In', properties);
   }
 
-  connectNetSuite(properties= {}) {
-    this.eventTrack('Connect NetSuite', properties);
+  onPageVisit(page: string, onboarding: boolean= false) {
+    let event = `Visited ${page} Page`;
+    event = onboarding ? `Onboarding: ${event}` : event;
+    this.eventTrack(event);
   }
 
-  selectSubsidiary(properties= {}) {
-    this.eventTrack('Select Subsidiary', properties);
+  onSignOut() {
+    this.eventTrack('Sign Out');
   }
 
-  mapFyleFieldsToNetSuiteFields(properties= {}) {
-    this.eventTrack('Map Fyle Fields To NetSuite Fields', properties);
-  }
-
-  mapBankAccounts(properties= {}) {
-    this.eventTrack('Map Bank Accounts', properties);
-  }
-
-  mapEmployees(properties= {}) {
-    this.eventTrack('Map Employees', properties);
-  }
-
-  mapCategories(properties= {}) {
-    this.eventTrack('Map Categories', properties);
-  }
-
-  onSignOut(properties= {}) {
-    this.eventTrack('Sign Out', properties);
-  }
-
-  onSwitchWorkspace(properties= {}) {
-    this.eventTrack('Switching Workspace', properties);
+  onSwitchWorkspace() {
+    this.eventTrack('Switching Workspace');
   }
 }
 
