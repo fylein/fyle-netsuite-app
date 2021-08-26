@@ -12,6 +12,7 @@ import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Workspace } from 'src/app/core/models/workspace.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Count } from 'src/app/core/models/count.model';
+import { TrackingService } from 'src/app/core/services/tracking.service';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -58,12 +59,37 @@ export class DashboardComponent implements OnInit {
     private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private trackingService: TrackingService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
   connectFyle() {
     this.windowReference.location.href = `${FYLE_URL}/app/developers/#/oauth/authorize?client_id=${FYLE_CLIENT_ID}&redirect_uri=${APP_URL}/workspaces/fyle/callback&response_type=code&state=${this.workspaceId}`;
+  }
+
+  onConnectNetSuitePageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Connect NetSuite', onboarding);
+  }
+
+  onSelectSubsidiaryPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Select Subsidiary', onboarding);
+  }
+
+  onConfigurationsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Configurations', onboarding);
+  }
+
+  onGeneralMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Genral Mappings', onboarding);
+  }
+
+  onEmployeeMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Employee Mappings', onboarding);
+  }
+
+  onCategoryMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Category Mappings', onboarding);
   }
 
   // TODO: remove promises and do with rxjs observables
