@@ -4,7 +4,10 @@ import { Observable, from, Subject } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
+import { CategoryMappingsResponse } from '../models/category-mapping-response.model';
+import { CategoryMapping } from '../models/category-mapping.model';
 import { CustomSegment } from '../models/custom-segment.model';
+import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
@@ -126,9 +129,7 @@ export class MappingsService {
         EMPLOYEE: [],
         ACCOUNT: [],
         SUBSIDIARY: [],
-        CCC_EXPENSE_CATEGORY: [],
         CURRENCY: [],
-        CCC_ACCOUNT: [],
         DEPARTMENT: [],
         PROJECT: [],
         LOCATION: [],
@@ -212,6 +213,21 @@ export class MappingsService {
   postMappings(mapping: Mapping): Observable<Mapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/`, mapping);
+  }
+
+  getCategoryMappings(pageLimit: number, pageOffset: number): Observable<CategoryMappingsResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/category/`, {
+        limit: pageLimit,
+        offset: pageOffset
+      }
+    );
+  }
+
+  postCategoryMappings(mapping: CategoryMapping): Observable<Mapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/category/`, mapping);
   }
 
   triggerAutoMapEmployees() {

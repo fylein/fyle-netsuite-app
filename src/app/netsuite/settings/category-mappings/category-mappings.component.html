@@ -30,22 +30,22 @@
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef> Category </th>
           <td mat-cell *matCellDef="let element">
-            {{element.fyle_value}}
-            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.auto_mapped">bolt</mat-icon>
+            {{element.source_category.value}}
+            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
           </td>
         </ng-container>
   
         <ng-container matColumnDef="netsuite">
           <th mat-header-cell *matHeaderCellDef> {{generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT'? 'Netsuite Expense Category': 'Netsuite Account'}} </th>
           <td mat-cell *matCellDef="let element">
-            {{element.netsuite_value}}
+            {{generalSettings?.reimbursable_expenses_object == 'EXPENSE REPORT' ? element.destination_expense_head?.value : element.destination_account?.value}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ccc">
           <th mat-header-cell *matHeaderCellDef> Credit Card Expense {{generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT'? 'Category': 'Account'}} </th>
           <td mat-cell *matCellDef="let element">
-            {{element.ccc_value}}
+            {{generalSettings?.corporate_credit_card_expenses_object == 'EXPENSE REPORT' ? element.destination_expense_head?.value : element.destination_account?.value}}
           </td>
         </ng-container>
   
@@ -55,7 +55,7 @@
     </div>
     <zero-state *ngIf="!categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
   </div>
-  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="!!generalSettings.corporate_credit_card_expenses_object" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
+  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
   
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
