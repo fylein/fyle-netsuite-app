@@ -254,6 +254,8 @@ export class ConfigurationComponent implements OnInit {
 
     that.isLoading = true;
 
+    that.isLoading = true;
+
     const generalSettingsPayload: GeneralSetting = {
       employee_field_mapping: employeeMappingsObject,
       reimbursable_expenses_object: reimbursableExpensesObject,
