@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import * as Sentry from '@sentry/angular';
 
-if (!environment.production) {
+if (environment.sentry_dsn) {
   Sentry.init({
     dsn: environment.sentry_dsn,
     release: 'v1',
