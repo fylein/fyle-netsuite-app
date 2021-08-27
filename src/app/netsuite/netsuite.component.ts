@@ -12,7 +12,7 @@ import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { TrackingService } from '../core/services/tracking.service';
 import * as Sentry from '@sentry/angular';
-import { TokenError } from '@angular/compiler/src/ml_parser/lexer';
+
 @Component({
   selector: 'app-netsuite',
   templateUrl: './netsuite.component.html',

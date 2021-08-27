@@ -5,14 +5,17 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import * as Sentry from '@sentry/angular';
 
-Sentry.init({
-  dsn: environment.sentry_dsn,
-  release: 'v1',
-  ignoreErrors: [
-    'Non-Error exception captured'
-  ],
-  tracesSampleRate: 0.5,
-});
+if(!environment.production) {
+  Sentry.init({
+    dsn: environment.sentry_dsn,
+    release: 'v1',
+    ignoreErrors: [
+      'Non-Error exception captured'
+    ],
+    tracesSampleRate: 0.5,
+  });
+}
+
 
 if (environment.production) {
   enableProdMode();
