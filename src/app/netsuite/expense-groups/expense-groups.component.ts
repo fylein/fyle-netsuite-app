@@ -98,7 +98,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     let cachedPageSize = that.storageService.get('expense-groups.pageSize') || 10;
     that.pageSize = +that.route.snapshot.queryParams.page_size || cachedPageSize;
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
-    that.settingsService.getCombinedSettings().subscribe((settings) => {
+    that.settingsService.getGeneralSettings().subscribe((settings) => {
       if (that.state === 'COMPLETE') {
         that.columnsToDisplay = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
       } else {
