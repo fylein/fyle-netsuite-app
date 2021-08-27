@@ -10,9 +10,7 @@ export type GeneralSetting = {
     auto_create_destination_entity: boolean;
     auto_create_merchants: boolean;
     auto_map_employees: string;
-    employee_field_mapping?: string;
-    project_field_mapping?: string;
-    cost_center_field_mapping?: string;
+    employee_field_mapping: string;
     created_at?: Date;
     updated_at?: Date;
     workspace?: number;
