@@ -12,7 +12,7 @@ if (environment.sentry_dsn) {
     ignoreErrors: [
       'Non-Error exception captured'
     ],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.5,
   });
 }
 
