@@ -167,6 +167,7 @@ export class NetSuiteComponent implements OnInit {
   }
 
   onEmployeeMappingsPageVisit() {
+    throw new Error('testing error');
     this.trackingService.onPageVisit('Employee Mappings');
   }
 
