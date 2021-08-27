@@ -10,6 +10,8 @@ import { Workspace } from '../core/models/workspace.model';
 import { UserProfile } from '../core/models/user-profile.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
+import { MappingsService } from '../core/services/mappings.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-netsuite',
@@ -26,6 +28,7 @@ export class NetSuiteComponent implements OnInit {
   mappingSettings: MappingSetting[];
   showSwitchOrg = false;
   navDisabled = true;
+  showRefreshIcon: boolean;
   windowReference: Window;
 
   constructor(
@@ -33,6 +36,8 @@ export class NetSuiteComponent implements OnInit {
     private settingsService: SettingsService,
     private router: Router,
     private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
@@ -142,9 +147,20 @@ export class NetSuiteComponent implements OnInit {
     }
   }
 
+  hideRefreshIconVisibility() {
+    this.showRefreshIcon = false;
+  }
+
+  syncDimension() {
+    const that = this;
+    that.mappingsService.refreshDimension();
+    that.snackBar.open('Refreshing Fyle and Quickbooks Data');
+  }
+
   ngOnInit() {
     const that = this;
     const onboarded = that.storageService.get('onboarded');
+    that.showRefreshIcon = !onboarded;
     that.navDisabled = onboarded !== true;
     that.orgsCount = that.authService.getOrgCount();
     that.setupWorkspace();
