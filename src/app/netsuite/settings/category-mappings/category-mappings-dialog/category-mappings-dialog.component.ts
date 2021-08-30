@@ -94,9 +94,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
         that.snackBar.open('Category Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
+<<<<<<< HEAD
       }, () => {
         that.isLoading = false;
         that.snackBar.open('Error saving Category Mapping');
+=======
+>>>>>>> master
       });
     } else {
       that.snackBar.open('Form has invalid fields');

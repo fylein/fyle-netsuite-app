@@ -53,7 +53,7 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  getCCCExpenseOptions(reimbursableExpenseMappedTo) {
+  getCCCExpenseOptions(reimbursableExpenseMappedTo: string) {
     const cccExpenseList = [
       {
         label: 'Bill',
@@ -251,8 +251,6 @@ export class ConfigurationComponent implements OnInit {
         });
       }
     }
-
-    that.isLoading = true;
 
     that.isLoading = true;
 
