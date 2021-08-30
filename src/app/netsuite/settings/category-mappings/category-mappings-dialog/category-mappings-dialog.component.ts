@@ -52,14 +52,18 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
     return (control: AbstractControl): {[key: string]: object} | null => {
-      const forbidden = !options.some((option) => {
-        return option && control.value && control.value.id && option.id === control.value.id;
-      });
-      return forbidden ? {
-        forbiddenOption: {
-          value: control.value
-        }
-      } : null;
+      if (control.value) {
+        const forbidden = !options.some((option) => {
+          return option && control.value && control.value.id && option.id === control.value.id;
+        });
+        return forbidden ? {
+          forbiddenOption: {
+            value: control.value
+          }
+        } : null;
+      }
+
+      return null;
     };
   }
 
