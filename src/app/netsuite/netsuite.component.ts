@@ -13,6 +13,7 @@ import { MappingSettingResponse } from '../core/models/mapping-setting-response.
 import { MappingsService } from '../core/services/mappings.service';
 import { MatSnackBar } from '@angular/material';
 import { TrackingService } from '../core/services/tracking.service';
+import * as Sentry from '@sentry/angular';
 
 @Component({
   selector: 'app-netsuite',
@@ -74,6 +75,7 @@ export class NetSuiteComponent implements OnInit {
   switchWorkspace() {
     this.authService.switchWorkspace();
     this.trackingService.onSwitchWorkspace();
+    Sentry.configureScope(scope => scope.setUser(null));
   }
 
   getSettingsAndNavigate() {
@@ -141,10 +143,15 @@ export class NetSuiteComponent implements OnInit {
   }
 
   setUserIdentity(email: string, workspaceId: number, properties) {
+    Sentry.setUser({
+      email,
+      workspaceId,
+    });
     this.trackingService.onSignIn(email, workspaceId, properties);
   }
 
   onSignOut() {
+    Sentry.configureScope(scope => scope.setUser(null));
     this.trackingService.onSignOut();
   }
 
@@ -161,6 +168,7 @@ export class NetSuiteComponent implements OnInit {
   }
 
   onGeneralMappingsPageVisit() {
+    throw new Error('Netsuite App error');
     this.trackingService.onPageVisit('Genral Mappings');
   }
 
