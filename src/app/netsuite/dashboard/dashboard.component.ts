@@ -8,10 +8,9 @@ import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.servi
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
-import { WorkspaceService } from 'src/app/core/services/workspace.service';
-import { Workspace } from 'src/app/core/models/workspace.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Count } from 'src/app/core/models/count.model';
+import { CategoryMappingsResponse } from 'src/app/core/models/category-mapping-response.model';
 import { TrackingService } from 'src/app/core/services/tracking.service';
 
 const FYLE_URL = environment.fyle_url;
@@ -162,13 +161,13 @@ export class DashboardComponent implements OnInit {
   getCategoryMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    return that.mappingsService.getMappings(1, 0, 'CATEGORY').toPromise().then((res) => {
-      if (res.results.length > 0) {
+    return that.mappingsService.getCategoryMappings(1, 0).toPromise().then((categoryMappingResponse: CategoryMappingsResponse) => {
+      if (categoryMappingResponse.results.length > 0) {
         that.currentState = onboardingStates.categoryMappingsDone;
       } else {
         throw new Error('cateogry mappings have no entries');
       }
-      return res;
+      return categoryMappingResponse;
     });
   }
 
