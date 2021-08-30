@@ -191,7 +191,7 @@ export class NetSuiteComponent implements OnInit {
   syncDimension() {
     const that = this;
     that.mappingsService.refreshDimension();
-    that.snackBar.open('Refreshing Fyle and Quickbooks Data');
+    that.snackBar.open('Refreshing Fyle and NetSuite Data');
   }
 
   ngOnInit() {
