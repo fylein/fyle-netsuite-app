@@ -116,45 +116,4 @@ export class SettingsService {
 
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
   }
-
-  @Cacheable({
-    cacheBusterObserver: merge(generalSettingsCache, generalSettingsCache)
-  })
-  getCombinedSettings(): Observable<GeneralSetting> {
-    // TODO: remove promises and do with rxjs observables
-    return from(forkJoin(
-      [
-        this.getGeneralSettings(),
-        this.getMappingSettings()
-      ]
-    ).toPromise().then(responses => {
-      const generalSettings: GeneralSetting = responses[0];
-      const mappingSettings = responses[1].results;
-
-      const employeeFieldMapping = mappingSettings.filter(
-        setting => (setting.source_field === 'EMPLOYEE') &&
-        (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
-      )[0];
-
-      const projectFieldMapping = mappingSettings.filter(
-        settings => settings.source_field === 'PROJECT'
-      )[0];
-
-      const costCenterFieldMapping = mappingSettings.filter(
-        settings => settings.source_field === 'COST_CENTER'
-      )[0];
-
-      generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
-
-      if (projectFieldMapping) {
-        generalSettings.project_field_mapping = projectFieldMapping.destination_field;
-      }
-
-      if (costCenterFieldMapping) {
-        generalSettings.cost_center_field_mapping = costCenterFieldMapping.destination_field;
-      }
-
-      return generalSettings;
-    }));
-  }
 }
