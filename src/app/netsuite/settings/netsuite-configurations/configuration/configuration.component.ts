@@ -53,7 +53,7 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  getCCCExpenseOptions(reimbursableExpenseMappedTo) {
+  getCCCExpenseOptions(reimbursableExpenseMappedTo: string) {
     const cccExpenseList = [
       {
         label: 'Bill',
@@ -214,23 +214,7 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
 
-    const mappingsSettingsPayload: MappingSetting[] = [{
-      destination_field: 'ACCOUNT',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'CCC_ACCOUNT',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'EXPENSE_CATEGORY',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'CCC_EXPENSE_CATEGORY',
-      source_field: 'CATEGORY'
-    }
-  ];
+    const mappingsSettingsPayload: MappingSetting[] = [];
 
     const reimbursableExpensesObject = that.generalSettingsForm.getRawValue().reimbursableExpense;
     const cccExpensesObject = that.generalSettingsForm.getRawValue().cccExpense;
@@ -301,12 +285,14 @@ export class ConfigurationComponent implements OnInit {
       workspace: that.workspaceId
     };
 
-    forkJoin(
-      [
-        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
-      ]
-    ).subscribe(() => {
+    const postSettings = [];
+
+    postSettings.push(that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload));
+    if (mappingsSettingsPayload.length) {
+      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload));
+    }
+
+    forkJoin(postSettings).subscribe(() => {
       that.isLoading = false;
       that.snackBar.open('Configuration saved successfully');
       that.netsuite.getGeneralSettings();
