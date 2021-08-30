@@ -7,4 +7,5 @@ export const environment = {
     api_url: 'NETSUITE API URL',
     app_url: 'ANGULAR APP URL',
     hotjar_id : 'HOTJAR_ID',
+    sentry_dsn: 'SENTRY_DSN'
 }
