@@ -168,7 +168,6 @@ export class NetSuiteComponent implements OnInit {
   }
 
   onGeneralMappingsPageVisit() {
-    throw new Error('Netsuite App error');
     this.trackingService.onPageVisit('Genral Mappings');
   }
 
