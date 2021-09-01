@@ -15,7 +15,7 @@
         Refresh Employee Mappings
       </button>
 
-      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count && employeeMappings.length">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -24,11 +24,11 @@
       </mat-form-field>
     </div>
 
-    <div class="mat-h2" *ngIf="!count && !isLoading">
+    <div class="mat-h2" *ngIf="(!count || !employeeMappings.length) && !isLoading">
       <zero-state message="You have no employee mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="count" [hidden]="isLoading || !employeeMappingRows.filteredData.length">
+    <div *ngIf="count && employeeMappings.length" [hidden]="isLoading || !employeeMappingRows.filteredData.length">
       <table mat-table [dataSource]="employeeMappingRows" class="page-table">
         <ng-container matColumnDef="employee_email">
           <th mat-header-cell *matHeaderCellDef> Employee Email </th>
@@ -60,10 +60,10 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
-    <zero-state *ngIf="employeeMappingRows && !employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
+    <zero-state *ngIf="employeeMappings.length && !employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
 
   </div>
-  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="false" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
+  <app-paginator *ngIf="count && employeeMappings.length" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="false" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>
