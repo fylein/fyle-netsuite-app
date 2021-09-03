@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
 import { TasksService } from 'src/app/core/services/tasks.service';
+import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExpenseGroupSettingsDialogComponent } from './expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,8 +26,9 @@ export class SyncComponent implements OnInit {
   isEmployeesSyncing: boolean;
   errorOccurred = false;
   expenseGroupSettings: ExpenseGroupSetting;
+  dialogWidth: string;
 
-  constructor(private expenseGroupService: ExpenseGroupsService, private route: ActivatedRoute, private taskService: TasksService, private snackBar: MatSnackBar, private workspaceService: WorkspaceService, public dialog: MatDialog) { }
+  constructor(private expenseGroupService: ExpenseGroupsService, private route: ActivatedRoute, private taskService: TasksService, private settingsService: SettingsService, private snackBar: MatSnackBar, private workspaceService: WorkspaceService, public dialog: MatDialog) { }
 
   syncExpenses() {
     const that = this;
@@ -68,9 +70,9 @@ export class SyncComponent implements OnInit {
 
   getDescription() {
     const that = this;
-    const allowedFields = ['claim_number', 'settlement_id'];
+    const allowedFields = ['claim_number', 'settlement_id', 'expense_id'];
 
-    const expensesGroupedByList = [];
+    const reimbursableExpensesGroupedByList = [];
     that.expenseGroupSettings.reimbursable_expense_group_fields.forEach(element => {
       if (allowedFields.indexOf(element) >= 0) {
         if (element === 'claim_number') {
@@ -78,35 +80,73 @@ export class SyncComponent implements OnInit {
         } else if (element === 'settlement_id') {
           element = 'Payment';
         }
-        expensesGroupedByList.push(element);
+        reimbursableExpensesGroupedByList.push(element);
       }
     });
 
-    const expensesGroup = expensesGroupedByList.join(', ');
-    const expenseState: string = that.expenseGroupSettings.expense_state;
-    let exportDateConfiguration;
+    const cccExpensesGroupedByList = [];
+    that.expenseGroupSettings.corporate_credit_card_expense_group_fields.forEach(element => {
+      if (allowedFields.indexOf(element) >= 0) {
+        if (element === 'claim_number') {
+          element = 'Expense Report';
+        } else if (element === 'settlement_id') {
+          element = 'Payment';
+        } else if (element === 'expense_id') {
+          element = 'Expense';
+        }
+        cccExpensesGroupedByList.push(element);
+      }
+    });
 
-    if (that.expenseGroupSettings.export_date_type === 'spent_at') {
-      exportDateConfiguration = 'Spend Date';
-    } else if (that.expenseGroupSettings.export_date_type === 'approved_at') {
-      exportDateConfiguration = 'Approval Date';
-    } else if (that.expenseGroupSettings.export_date_type === 'verified_at') {
-      exportDateConfiguration = 'Verification Date';
-    } else if (that.expenseGroupSettings.export_date_type === 'last_spent_at') {
-      exportDateConfiguration = 'Last Spend Date';
+    const reimbursableExpensesGroup = reimbursableExpensesGroupedByList.join(', ');
+    const cccExpensesGroup = cccExpensesGroupedByList.join(', ');
+
+    const expenseState: string = that.expenseGroupSettings.expense_state;
+
+    let reimbursableExportDateConfiguration = null;
+    let cccExportDateConfiguration = null;
+
+    if (that.expenseGroupSettings.reimbursable_export_date_type === 'spent_at') {
+      reimbursableExportDateConfiguration = 'Spend Date';
+    } else if (that.expenseGroupSettings.reimbursable_export_date_type === 'approved_at') {
+      reimbursableExportDateConfiguration = 'Approval Date';
+    } else if (that.expenseGroupSettings.reimbursable_export_date_type === 'verified_at') {
+      reimbursableExportDateConfiguration = 'Verification Date';
+    } else if (that.expenseGroupSettings.reimbursable_export_date_type === 'last_spent_at') {
+      reimbursableExportDateConfiguration = 'Last Spend Date';
+    }
+
+    if (that.expenseGroupSettings.ccc_export_date_type === 'spent_at') {
+      cccExportDateConfiguration = 'Spend Date';
+    } else if (that.expenseGroupSettings.ccc_export_date_type === 'approved_at') {
+      cccExportDateConfiguration = 'Approval Date';
+    } else if (that.expenseGroupSettings.ccc_export_date_type === 'verified_at') {
+      cccExportDateConfiguration = 'Verification Date';
+    } else if (that.expenseGroupSettings.ccc_export_date_type === 'last_spent_at') {
+      cccExportDateConfiguration = 'Last Spend Date';
     }
 
     return {
-      expensesGroupedBy: expensesGroup,
+      reimbursableExpensesGroupedBy: reimbursableExpensesGroup,
+      cccExpensesGroupedBy: cccExpensesGroup,
       expenseState: expenseState.replace(/_/g, ' '),
-      exportDateType: exportDateConfiguration
+      reimbursableExportDateType: reimbursableExportDateConfiguration,
+      cccExportDateType: cccExportDateConfiguration
     };
   }
 
   open() {
     const that = this;
+    that.dialogWidth = '450px';
+
+    that.settingsService.getGeneralSettings().subscribe(response => {
+      if (response.corporate_credit_card_expenses_object) {
+        that.dialogWidth = '750px';
+      }
+    });
+
     const dialogRef = that.dialog.open(ExpenseGroupSettingsDialogComponent, {
-      width: '450px',
+      width: that.dialogWidth,
       data: {
         workspaceId: that.workspaceId
       }
