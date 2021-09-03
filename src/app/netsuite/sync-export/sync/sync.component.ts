@@ -79,6 +79,8 @@ export class SyncComponent implements OnInit {
           element = 'Expense Report';
         } else if (element === 'settlement_id') {
           element = 'Payment';
+        } else if (element === 'expense_id') {
+          element = 'Expense';
         }
         reimbursableExpensesGroupedByList.push(element);
       }
