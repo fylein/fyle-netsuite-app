@@ -9,6 +9,7 @@ WORKDIR /app
 # commit_hash
 ARG release
 ENV RELEASE=${release}
+RUN echo "Release: ${release}"
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
