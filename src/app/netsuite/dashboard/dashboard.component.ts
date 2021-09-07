@@ -11,6 +11,7 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Count } from 'src/app/core/models/count.model';
 import { CategoryMappingsResponse } from 'src/app/core/models/category-mapping-response.model';
+import { NetSuiteComponent } from '../netsuite.component';
 import { TrackingService } from 'src/app/core/services/tracking.service';
 
 const FYLE_URL = environment.fyle_url;
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
     private settingsService: SettingsService,
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
+    private netsuite: NetSuiteComponent,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
     private snackBar: MatSnackBar,
@@ -147,7 +149,7 @@ export class DashboardComponent implements OnInit {
       that.currentState = onboardingStates.employeeMappingsDone;
       return;
     } else {
-      return that.mappingsService.getMappings(1, 0, 'EMPLOYEE').toPromise().then((res) => {
+      return that.mappingsService.getEmployeeMappings(1, 0).toPromise().then((res) => {
         if (res.results.length > 0) {
           that.currentState = onboardingStates.employeeMappingsDone;
         } else {
@@ -205,9 +207,7 @@ export class DashboardComponent implements OnInit {
   syncDimension() {
     const that = this;
 
-    that.mappingsService.refreshFyleDimensions().subscribe(() => {});
-    that.mappingsService.refreshNetSuiteDimensions().subscribe(() => {});
-
+    that.mappingsService.refreshDimension();
     that.snackBar.open('Refreshing Fyle and NetSuite Data');
   }
 
@@ -253,6 +253,7 @@ export class DashboardComponent implements OnInit {
         }).then(() => {
           that.currentState = onboardingStates.isOnboarded;
           that.storageService.set('onboarded', true);
+          that.netsuite.hideRefreshIconVisibility();
           return that.loadDashboardData();
         }).catch(() => {
           // do nothing as this just means some steps are left
