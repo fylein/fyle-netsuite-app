@@ -11,7 +11,7 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         Create Category Mapping
       </button>
-      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count && categoryMappings.length">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -20,11 +20,11 @@
       </mat-form-field>
     </div>
 
-    <div *ngIf="!count && !isLoading">
+    <div *ngIf="(!count || !categoryMappings.length) && !isLoading">
       <zero-state message="You have no category mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="count" [hidden]="isLoading || !categoryMappingRows.filteredData.length">
+    <div *ngIf="count && categoryMappings.length" [hidden]="isLoading || !categoryMappingRows.filteredData.length">
       <table mat-table [dataSource]="categoryMappingRows" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="category">
@@ -53,9 +53,9 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
-    <zero-state *ngIf="!categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
+    <zero-state *ngIf="categoryMappings.length && !categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
   </div>
-  <app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
+  <app-paginator *ngIf="count && categoryMappings.length" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" (getMappings)="getCategoryMappings($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
   
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>

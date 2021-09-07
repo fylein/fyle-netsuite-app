@@ -8,6 +8,7 @@ import { CategoryMappingsResponse } from '../models/category-mapping-response.mo
 import { CategoryMapping } from '../models/category-mapping.model';
 import { CustomSegment } from '../models/custom-segment.model';
 import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
+import { EmployeeMapping } from '../models/employee-mapping.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
@@ -71,10 +72,11 @@ export class MappingsService {
     });
   }
 
-  refreshFyleDimensions() {
+  refreshDimension() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
+    this.apiService.post(`/workspaces/${workspaceId}/netsuite/refresh_dimensions/`, {}).subscribe();
+    this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {}).subscribe();
   }
 
   getFyleFields(): Observable<ExpenseField[]> {
@@ -183,6 +185,16 @@ export class MappingsService {
     );
   }
 
+  getEmployeeMappings(pageLimit: number, pageOffset: number): Observable<EmployeeMappingsResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/employee/`, {
+        limit: pageLimit,
+        offset: pageOffset
+      }
+    );
+  }
+
   getAllMappings(sourceType: string): Observable<MappingsResponse> {
     const limit = 500;
     const offset = 0;
@@ -233,5 +245,10 @@ export class MappingsService {
   triggerAutoMapEmployees() {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
+  }
+
+  postEmployeeMappings(employeeMapping: EmployeeMapping): Observable<EmployeeMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/employee/`, employeeMapping);
   }
 }
