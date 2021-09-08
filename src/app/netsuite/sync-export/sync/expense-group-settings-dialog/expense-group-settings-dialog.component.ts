@@ -16,6 +16,8 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   expenseGroupSettings: ExpenseGroupSetting;
   workspaceGeneralSettings: GeneralSetting;
   isLoading: boolean;
+  exportDateOptions: { label: string, value: string }[];
+  expenseGroupingFieldOptions: { label: string, value: string }[];
 
   constructor(private formBuilder: FormBuilder, private expenseGroupsService: ExpenseGroupsService, private settingsService: SettingsService, private dialogRef: MatDialogRef<ExpenseGroupSettingsDialogComponent>) { }
 
@@ -24,13 +26,21 @@ save() {
 
   that.isLoading = true;
 
-  const reimbursibleExpensesGroupedBy = [that.importExpensesForm.value.reimbursibleExpenseGroupConfiguration];
-  const cccExpensesGroupedBy = [that.importExpensesForm.value.cccExpenseGroupConfiguration];
+  const reimbursableExpensesGroupedBy = [that.importExpensesForm.value.reimbursableExpenseGroupConfiguration];
+  const cccExpensesGroupedBy = [that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration];
   const expenseState = that.importExpensesForm.value.expenseState;
   const reimbursableExportDateType = that.importExpensesForm.value.reimbursableExportDate;
   const cccExportDateType = that.importExpensesForm.value.cccExportDate;
 
-  this.expenseGroupsService.createExpenseGroupsSettings(reimbursibleExpensesGroupedBy, cccExpensesGroupedBy, expenseState, reimbursableExportDateType, cccExportDateType).subscribe(response => {
+  const expenseGroupSettingsPayload: ExpenseGroupSetting = {
+    reimbursable_expense_group_fields: reimbursableExpensesGroupedBy,
+    corporate_credit_card_expense_group_fields: cccExpensesGroupedBy,
+    expense_state: expenseState,
+    reimbursable_export_date_type: reimbursableExportDateType,
+    ccc_export_date_type: cccExportDateType
+  };
+
+  this.expenseGroupsService.createExpenseGroupsSettings(expenseGroupSettingsPayload).subscribe(response => {
     that.dialogRef.close();
   });
 }
@@ -41,31 +51,13 @@ getExpenseGroupSettings() {
     that.expenseGroupSettings = response;
 
     const reimbursableFields = that.expenseGroupSettings.reimbursable_expense_group_fields;
-    let reimbursibleConfiguration = null;
-
-    if (reimbursableFields.includes('claim_number')) {
-      reimbursibleConfiguration = 'claim_number';
-    } else if (reimbursableFields.includes('settlement_id')) {
-      reimbursibleConfiguration = 'settlement_id';
-    } else if (reimbursableFields.includes('expense_id')) {
-      reimbursibleConfiguration = 'expense_id';
-    }
 
     const cccFields = that.expenseGroupSettings.corporate_credit_card_expense_group_fields;
-    let cccConfiguration = null;
-
-    if (cccFields.includes('claim_number')) {
-      cccConfiguration = 'claim_number';
-    } else if (cccFields.includes('settlement_id')) {
-      cccConfiguration = 'settlement_id';
-    } else if (cccFields.includes('expense_id')) {
-      cccConfiguration = 'expense_id';
-    }
 
     that.isLoading = false;
     that.importExpensesForm = that.formBuilder.group({
-      reimbursibleExpenseGroupConfiguration: [ reimbursibleConfiguration ],
-      cccExpenseGroupConfiguration: [ cccConfiguration ],
+      reimbursableExpenseGroupConfiguration: [ that.getFieldConfiguration(reimbursableFields) ],
+      cccExpenseGroupConfiguration: [ that.getFieldConfiguration(cccFields) ],
       expenseState: [ that.expenseGroupSettings.expense_state, [ Validators.required ]],
       reimbursableExportDate: [ that.expenseGroupSettings.reimbursable_export_date_type],
       cccExportDate: [ that.expenseGroupSettings.ccc_export_date_type]
@@ -75,24 +67,69 @@ getExpenseGroupSettings() {
   });
 }
 
+getFieldConfiguration(fieldType) {
+  let fieldConfiguration = null;
+  if (fieldType.includes('expense_id')) {
+    fieldConfiguration = 'expense_id';
+  } else if (fieldType.includes('claim_number')) {
+    fieldConfiguration = 'claim_number';
+  } else if (fieldType.includes('settlement_id')) {
+    fieldConfiguration = 'settlement_id';
+  }
+  return fieldConfiguration;
+}
+
 showCCCGroups() {
   const that = this;
-
-  that.settingsService.getGeneralSettings().subscribe(response => {
-    that.workspaceGeneralSettings = response;
-  });
-
-  if (that.workspaceGeneralSettings.corporate_credit_card_expenses_object) {
-    return true;
-  } else {
-    return false;
-  }
+  return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
 }
 
 ngOnInit() {
   const that = this;
 
   that.isLoading = true;
+
+  that.exportDateOptions = [
+    {
+      label: 'Current Date',
+      value: 'current_date'
+    },
+    {
+      label: 'Verification Date',
+      value: 'verified_at'
+    },
+    {
+      label: 'Spend Date',
+      value: 'spent_at'
+    },
+    {
+      label: 'Approval Date',
+      value: 'approved_at'
+    },
+    {
+      label: 'Last Spend Date',
+      value: 'last_spent_at'
+    }
+  ];
+
+  that.expenseGroupingFieldOptions = [
+    {
+      label: 'Expense Report',
+      value: 'claim_number'
+    },
+    {
+      label: 'Payment',
+      value: 'settlement_id'
+    },
+    {
+      label: 'Expense',
+      value: 'expense_id'
+    }
+  ];
+
+  that.settingsService.getGeneralSettings().subscribe(response => {
+    that.workspaceGeneralSettings = response;
+  });
 
   that.getExpenseGroupSettings();
 

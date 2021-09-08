@@ -43,15 +43,9 @@ export class ExpenseGroupsService {
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_group_settings/`, {});
   }
 
-  createExpenseGroupsSettings(reimbursibleExpensesGroupedBy: string[], cccExpensesGroupedBy: string[], expenseState: string[], reimbursableExportDateType: string, cccExportDateType: string): Observable<ExpenseGroupSetting> {
+  createExpenseGroupsSettings(expenseGroupSettingsPayload: ExpenseGroupSetting): Observable<ExpenseGroupSetting> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_group_settings/`, {
-      reimbursable_expense_group_fields: reimbursibleExpensesGroupedBy,
-      corporate_credit_card_expense_group_fields: cccExpensesGroupedBy,
-      expense_state: expenseState,
-      reimbursable_export_date_type: reimbursableExportDateType,
-      ccc_export_date_type: cccExportDateType
-    });
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_group_settings/`, expenseGroupSettingsPayload);
   }
 
 
