@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { ExpenseField } from 'src/app/core/models/expense-field.model';
-import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
 
 @Component({
   selector: 'app-netsuite-configurations',
@@ -16,7 +15,7 @@ export class NetsuiteConfigurationsComponent implements OnInit {
 
   state: string;
   workspaceId: number;
-  isParentLoading: boolean = true;
+  isParentLoading = true;
   fyleFields: ExpenseField[];
   generalSettings: GeneralSetting;
 

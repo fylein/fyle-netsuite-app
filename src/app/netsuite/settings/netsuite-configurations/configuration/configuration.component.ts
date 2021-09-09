@@ -99,6 +99,23 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  setupProjectsField() {
+    const that = this;
+
+    const fyleProjectMapping = that.mappingSettings.filter(
+      setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+    );
+
+    const netsuiteProjectMapping = that.mappingSettings.filter(
+      setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+    );
+
+    // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
+    if (fyleProjectMapping.length || netsuiteProjectMapping.length) {
+      that.generalSettingsForm.controls.importProjects.disable();
+    }
+  }
+
   setupFieldWatchers() {
     const that = this;
 
@@ -132,7 +149,7 @@ export class ConfigurationComponent implements OnInit {
 
       if (that.generalSettings && that.generalSettings.sync_fyle_to_netsuite_payments && !that.showPaymentsandProjectsField) {
         that.generalSettingsForm.controls.paymentsSync.setValue(false);
-      } 
+      }
     });
 
     // Auto Create Merchant
@@ -142,18 +159,7 @@ export class ConfigurationComponent implements OnInit {
       }
     });
 
-    const fyleProjectMapping = that.mappingSettings.filter(
-      setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
-    );
-
-    const netsuiteProjectMapping = that.mappingSettings.filter(
-      setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
-    );
-
-    // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
-    if (fyleProjectMapping.length || netsuiteProjectMapping.length) {
-      that.generalSettingsForm.controls.importProjects.disable();
-    }
+    that.setupProjectsField();
   }
 
   getAllSettings() {
@@ -304,7 +310,7 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
-    const generalSettingsPayload: GeneralSetting = {
+    return {
       employee_field_mapping: that.generalSettingsForm.value.employees,
       reimbursable_expenses_object: that.generalSettingsForm.value.reimbursableExpense,
       corporate_credit_card_expenses_object: that.generalSettingsForm.value.cccExpense ? that.generalSettingsForm.value.cccExpense : null,
@@ -317,8 +323,6 @@ export class ConfigurationComponent implements OnInit {
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
       workspace: that.workspaceId
     };
-
-    return generalSettingsPayload;
   }
 
   constructMappingSettingsPayload(): MappingSetting[] {
