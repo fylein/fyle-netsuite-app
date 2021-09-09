@@ -5,11 +5,11 @@ import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
-import { TasksService } from 'src/app/core/services/tasks.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Subscription } from 'rxjs';
-import { Task } from 'src/app/core/models/task.model';
+import { ExpenseGroupResponse } from 'src/app/core/models/expense-group-response.model';
+import { NetSuiteErrorLog } from 'src/app/core/models/netsuite-error-log.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -26,12 +26,23 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   pageNumber = 0;
   pageSize: number;
   columnsToDisplay = ['employee', 'expensetype'];
+  exportTypeRedirectionMap = {
+    'vendorBill': 'vendbill',
+    'expenseReport': 'exprept',
+    'journalEntry': 'journal',
+    'chargeCard': 'cardchrg'
+  };
+  exportTypeDisplayNameMap = {
+    'vendorBill': 'Bill',
+    'expenseReport': 'Expense Report',
+    'journalEntry': 'Journal Entry',
+    'chargeCard': 'Credit Card Charge'
+  };
   windowReference: Window;
   routerEventSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private taskService: TasksService,
     private expenseGroupService: ExpenseGroupsService,
     private router: Router,
     private settingsService: SettingsService,
@@ -77,12 +88,24 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
+  generateExportTypeAndRedirection(responseLogs: NetSuiteErrorLog): [string, string] {
+    const exportType = responseLogs.type || 'chargeCard';
+
+    return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+  }
+
   getPaginatedExpenseGroups() {
-    return this.expenseGroupService.getExpenseGroups(this.pageSize, this.pageNumber * this.pageSize, this.state).subscribe(expenseGroups => {
-      this.count = expenseGroups.count;
-      this.expenseGroups = new MatTableDataSource(expenseGroups.results);
-      this.expenseGroups.filterPredicate = this.searchByText;
-      this.isLoading = false;
+    const that = this;
+
+    return that.expenseGroupService.getExpenseGroups(that.pageSize, that.pageNumber * that.pageSize, that.state).subscribe((expenseGroups: ExpenseGroupResponse) => {
+      that.count = expenseGroups.count;
+      expenseGroups.results.forEach(expenseGroup => {
+        const [exportType, _] = that.generateExportTypeAndRedirection(expenseGroup.response_logs);
+        expenseGroup.export_type = exportType;
+      });
+      that.expenseGroups = new MatTableDataSource(expenseGroups.results);
+      that.expenseGroups.filterPredicate = that.searchByText;
+      that.isLoading = false;
       return expenseGroups;
     });
   }
@@ -137,7 +160,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  openInNetSuite(type, id) {
+  openInNetSuite(type: string, id: string) {
     const nsAccountId = JSON.parse(localStorage.getItem('nsAccountId'));
     this.windowReference.open(`https://${nsAccountId}.app.netsuite.com/app/accounting/transactions/${type}.nl?id=${id}`, '_blank');
   }
@@ -148,33 +171,9 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: deprecation
     event.stopPropagation();
     const that = this;
-    that.isLoading = true;
-    that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe((taskLog: Task) => {
-      that.isLoading = false;
+    const [_, exportRedirection] = that.generateExportTypeAndRedirection(clickedExpenseGroup.response_logs);
 
-      if (taskLog.status === 'COMPLETE') {
-        const typeMap = {
-          CREATING_BILL: {
-            type: 'vendbill',
-            getId: (task) => task.detail.internalId
-          },
-          CREATING_EXPENSE_REPORT: {
-            type: 'exprept',
-            getId: (task) => task.detail.internalId
-          },
-          CREATING_JOURNAL_ENTRY: {
-            type: 'journal',
-            getId: (task) => task.detail.internalId
-          },
-          CREATING_CREDIT_CARD_CHARGE: {
-            type: 'cardchrg',
-            getId: (task) => task.detail.internalId
-          },
-        };
-
-        that.openInNetSuite(typeMap[taskLog.type].type, typeMap[taskLog.type].getId(taskLog));
-      }
-    });
+    that.openInNetSuite(exportRedirection, clickedExpenseGroup.response_logs.internalId);
   }
 
   searchByText(data: ExpenseGroup, filterText: string) {
