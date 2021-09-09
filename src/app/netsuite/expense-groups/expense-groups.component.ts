@@ -27,16 +27,16 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   pageSize: number;
   columnsToDisplay = ['employee', 'expensetype'];
   exportTypeRedirectionMap = {
-    'vendorBill': 'vendbill',
-    'expenseReport': 'exprept',
-    'journalEntry': 'journal',
-    'chargeCard': 'cardchrg'
+    vendorBill: 'vendbill',
+    expenseReport: 'exprept',
+    journalEntry: 'journal',
+    chargeCard: 'cardchrg'
   };
   exportTypeDisplayNameMap = {
-    'vendorBill': 'Bill',
-    'expenseReport': 'Expense Report',
-    'journalEntry': 'Journal Entry',
-    'chargeCard': 'Credit Card Charge'
+    vendorBill: 'Bill',
+    expenseReport: 'Expense Report',
+    journalEntry: 'Journal Entry',
+    chargeCard: 'Credit Card Charge'
   };
   windowReference: Window;
   routerEventSubscription: Subscription;
