@@ -48,7 +48,7 @@ export class ApiService {
         httpOptions
       )
       .pipe(catchError(error => {
-        return this.handleError(error, 'GET');
+        return this.handleError(error, 'POST');
       }));
   }
   // Having any here is ok
@@ -63,7 +63,7 @@ export class ApiService {
         {params}
       )
       .pipe(catchError(error => {
-        return this.handleError(error, 'POST');
+        return this.handleError(error, 'GET');
       }));
   }
 }
