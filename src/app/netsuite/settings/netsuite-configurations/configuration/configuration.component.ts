@@ -132,6 +132,7 @@ export class ConfigurationComponent implements OnInit {
     that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
       that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
       that.generalSettingsForm.controls.reimbursableExpense.reset();
+      that.generalSettingsForm.controls.cccExpense.reset();
 
       if (that.generalSettings) {
         that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
@@ -296,6 +297,9 @@ export class ConfigurationComponent implements OnInit {
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       }
+    }, () => {
+      that.isLoading = false;
+      that.snackBar.open('Saving configurations failed');
     });
   }
 
