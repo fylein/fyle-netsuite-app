@@ -1,6 +1,6 @@
 /* tslint:disable */
 
-export type NetSuiteErrorLog = {
+export type NetSuiteResponseLog = {
   name: string;
   type: string;
   externalId: string;

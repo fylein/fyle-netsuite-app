@@ -9,7 +9,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Subscription } from 'rxjs';
 import { ExpenseGroupResponse } from 'src/app/core/models/expense-group-response.model';
-import { NetSuiteErrorLog } from 'src/app/core/models/netsuite-error-log.model';
+import { NetSuiteResponseLog } from 'src/app/core/models/netsuite-response-log.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -88,7 +88,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateExportTypeAndRedirection(responseLogs: NetSuiteErrorLog): [string, string] {
+  generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog): [string, string] {
     const exportType = responseLogs.type || 'chargeCard';
 
     return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
