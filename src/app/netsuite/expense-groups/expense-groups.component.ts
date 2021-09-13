@@ -89,9 +89,13 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   }
 
   generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog): [string, string] {
-    const exportType = responseLogs.type || 'chargeCard';
+    if (responseLogs) {
+      const exportType = responseLogs.type || 'chargeCard';
 
-    return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+      return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+    }
+
+    return [null, null];
   }
 
   getPaginatedExpenseGroups() {
