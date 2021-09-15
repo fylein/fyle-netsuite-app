@@ -94,7 +94,6 @@ export class ConfigurationComponent implements OnInit {
       ]
     ).subscribe(responses => {
       that.generalSettings = responses[0];
-      console.log("response", responses[0])
       that.mappingSettings = responses[1].results;
 
       const employeeFieldMapping = that.mappingSettings.filter(
@@ -129,7 +128,7 @@ export class ConfigurationComponent implements OnInit {
         employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
         importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
-        importTaxDetails: [that.generalSettings.import_taxitems],
+        importTaxDetails: [that.generalSettings.import_tax_items],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
@@ -300,7 +299,7 @@ export class ConfigurationComponent implements OnInit {
       mappingsSettingsPayload.push({
         source_field: 'TAX_GROUP',
         destination_field: 'TAX_ITEM',
-      })
+      });
     }
 
     const generalSettingsPayload: GeneralSetting = {
@@ -310,14 +309,12 @@ export class ConfigurationComponent implements OnInit {
       sync_netsuite_to_fyle_payments: netSuiteToFyle,
       import_projects: false,
       import_categories: importCategories,
-      import_taxitems: importTaxDetails,
+      import_tax_items: importTaxDetails,
       auto_map_employees: autoMapEmployees,
       auto_create_destination_entity: autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
       workspace: that.workspaceId
     };
-
-    console.log("general", generalSettingsPayload);
 
     forkJoin(
       [
