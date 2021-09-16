@@ -118,8 +118,17 @@
         <div class="schedule--toggle-text">Auto Create Merchant on NetSuite for Credit Card Charge</div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
-        <div class="schedule--toggle-text">Import NetSuite Categories / Accounts into Fyle</div>
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="showImportCategories" formControlName="importCategories">
+        <div class="schedule--toggle-text">
+          Import NetSuite {{generalSettingsForm.value.reimbursableExpense === 'EXPENSE REPORT' ? 'Categories' : 'Accounts'}} into Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            [matTooltip]="'Import Expense ' + (generalSettingsForm.value.reimbursableExpense === 'EXPENSE REPORT' ? 'categories' : 'accounts') + ' from NetSuite ' + (generalSettingsForm.value.reimbursableExpense !== 'EXPENSE REPORT' ? 'GL ' : '') + 'as categories in Fyle'"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
 
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showPaymentsandProjectsField" formControlName="importProjects">

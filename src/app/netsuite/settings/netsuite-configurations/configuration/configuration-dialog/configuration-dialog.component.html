@@ -79,6 +79,15 @@
         </div>
       </div>
     </div>
+
+    <div class="configurations-dialog--info-box" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="additionalWarning">
+      <div fxFlex="4">
+        <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
+      </div>
+      <div fxFlex="96">
+        {{additionalWarning}}
+      </div>
+    </div>
   </mat-dialog-content>
   
   <mat-dialog-actions align="end">

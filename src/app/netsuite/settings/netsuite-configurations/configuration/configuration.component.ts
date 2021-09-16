@@ -28,6 +28,7 @@ export class ConfigurationComponent implements OnInit {
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
+  showImportCategories:  boolean;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
@@ -93,6 +94,7 @@ export class ConfigurationComponent implements OnInit {
     that.expenseOptions = that.getExpenseOptions(that.generalSettings.employee_field_mapping);
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
+    that.showImportCategories = true;
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
@@ -116,6 +118,49 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  setupEmployeeFieldWatcher() {
+    const that = this;
+
+    that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
+      that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
+      that.generalSettingsForm.controls.reimbursableExpense.reset();
+      that.showImportCategories = false;
+      that.generalSettingsForm.controls.cccExpense.reset();
+
+      if (that.generalSettings) {
+        that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
+
+        if (that.generalSettings.auto_create_destination_entity && !that.showAutoCreate) {
+          that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
+        }
+      }
+    });
+  }
+
+  setupReimbursableFieldWatcher() {
+    const that = this;
+
+    that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+      that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
+      that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
+
+      if (reimbursableExpenseMappedTo) {
+        if (!that.showImportCategories) {
+          that.showImportCategories = true;
+        }
+
+        if (that.generalSettings && that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' && reimbursableExpenseMappedTo !== 'EXPENSE REPORT') {
+          // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
+          that.generalSettingsForm.controls.importCategories.setValue(false);
+        }
+      }
+
+      if (that.generalSettings && that.generalSettings.sync_fyle_to_netsuite_payments && !that.showPaymentsandProjectsField) {
+        that.generalSettingsForm.controls.paymentsSync.setValue(false);
+      }
+    });
+  }
+
   setupFieldWatchers() {
     const that = this;
 
@@ -129,29 +174,10 @@ export class ConfigurationComponent implements OnInit {
     });
 
     // Employee field Mapping
-    that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
-      that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
-      that.generalSettingsForm.controls.reimbursableExpense.reset();
-      that.generalSettingsForm.controls.cccExpense.reset();
-
-      if (that.generalSettings) {
-        that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
-
-        if (that.generalSettings.auto_create_destination_entity && !that.showAutoCreate) {
-          that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
-        }
-      }
-    });
+    that.setupEmployeeFieldWatcher();
 
     // Reimbursable Expense Mapping
-    that.generalSettingsForm.controls.reimbursableExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-      that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
-      that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
-
-      if (that.generalSettings && that.generalSettings.sync_fyle_to_netsuite_payments && !that.showPaymentsandProjectsField) {
-        that.generalSettingsForm.controls.paymentsSync.setValue(false);
-      }
-    });
+    that.setupReimbursableFieldWatcher();
 
     // Auto Create Merchant
     that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {

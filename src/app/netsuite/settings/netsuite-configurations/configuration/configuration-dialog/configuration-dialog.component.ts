@@ -10,6 +10,7 @@ import { UpdatedConfiguration } from 'src/app/core/models/updated-configuration'
 export class ConfigurationDialogComponent implements OnInit {
   updatedConfiguration: UpdatedConfiguration;
   customStyle: object = {};
+  additionalWarning: string;
 
   constructor(public dialogRef: MatDialogRef<ConfigurationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: UpdatedConfiguration) { }
 
@@ -32,11 +33,17 @@ export class ConfigurationDialogComponent implements OnInit {
     });
   }
 
-  updateStyle() {
+  setup() {
     const that = this;
 
     if (that.updatedConfiguration.cccExpense && that.updatedConfiguration.cccExpense.oldValue !== 'CREDIT CARD CHARGE') {
       that.customStyle = {'margin-right': '10%'};
+    }
+
+    if (that.updatedConfiguration.reimburseExpense && that.updatedConfiguration.reimburseExpense.oldValue === 'EXPENSE REPORT' && that.updatedConfiguration.reimburseExpense.newValue !== 'EXPENSE REPORT') {
+      let exportType = that.updatedConfiguration.reimburseExpense.newValue;
+      exportType = exportType.charAt(0).toUpperCase() + exportType.substr(1).toLowerCase();
+      that.additionalWarning = `${exportType} would require an Expense account for successful export. You can import this by enabling the toggle below or creating a manual map from the Category mapping section.`;
     }
   }
 
@@ -44,7 +51,7 @@ export class ConfigurationDialogComponent implements OnInit {
     const that = this;
 
     that.updatedConfiguration = that.data;
-    that.updateStyle();
+    that.setup();
   }
 
 }
