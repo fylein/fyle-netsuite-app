@@ -154,6 +154,8 @@ export class ConfigurationComponent implements OnInit {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
           that.generalSettingsForm.controls.importCategories.setValue(false);
         }
+      } else {
+        that.generalSettingsForm.controls.cccExpense.reset();
       }
 
       if (that.generalSettings && that.generalSettings.sync_fyle_to_netsuite_payments && !that.showPaymentsandProjectsField) {
