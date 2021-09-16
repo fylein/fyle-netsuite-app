@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UpdatedConfiguration } from '../models/updated-configuration';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +49,7 @@ export class TrackingService {
     this.eventTrack('Switching Workspace');
   }
 
-  onUpdateConfiguration(updatedConfiguration: UpdatedConfiguration) {
+  onUpdateConfiguration(updatedConfiguration) {
     this.eventTrack('Configurations update', updatedConfiguration);
   }
 }

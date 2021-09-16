@@ -257,8 +257,11 @@ export class ConfigurationComponent implements OnInit {
       width: '750px',
       data: updatedConfigurations
     });
-    const trackingProperties = updatedConfigurations;
-    trackingProperties.acceptedChanges = false;
+    const trackingProperties = {
+      oldConfigurations: that.generalSettings,
+      newConfigurations: generalSettingsPayload,
+      acceptedChanges: false
+    };
 
     dialogRef.afterClosed().subscribe(data => {
       if (data.accpetedChanges) {
