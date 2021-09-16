@@ -10,6 +10,7 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdatedConfiguration } from 'src/app/core/models/updated-configuration';
 import { ConfigurationDialogComponent } from './configuration-dialog/configuration-dialog.component';
+import { TrackingService } from 'src/app/core/services/tracking.service';
 
 @Component({
   selector: 'app-configuration',
@@ -30,7 +31,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   showImportCategories:  boolean;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -256,11 +257,15 @@ export class ConfigurationComponent implements OnInit {
       width: '750px',
       data: updatedConfigurations
     });
+    const trackingProperties = updatedConfigurations;
+    trackingProperties.acceptedChanges = false;
 
     dialogRef.afterClosed().subscribe(data => {
       if (data.accpetedChanges) {
         that.postConfigurationsAndMappingSettings(generalSettingsPayload, mappingSettingsPayload, true, data.redirectToEmployeeMappings);
+        trackingProperties.acceptedChanges = true;
       }
+      that.trackingService.onUpdateConfiguration(trackingProperties);
     });
   }
 

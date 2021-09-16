@@ -12,5 +12,6 @@ export type UpdatedConfiguration = {
     oldValue: string,
     newValue: string
   },
-  autoCreateDestinationEntity: boolean
+  autoCreateDestinationEntity: boolean,
+  acceptedChanges?: boolean
 };
