@@ -29,7 +29,7 @@ export class ConfigurationComponent implements OnInit {
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
-  showImportCategories:  boolean;
+  showImportCategories: boolean;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
