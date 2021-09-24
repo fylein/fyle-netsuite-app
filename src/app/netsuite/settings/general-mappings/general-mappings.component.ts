@@ -233,7 +233,7 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getCombinedSettings().subscribe(settings => {
+    that.settingsService.getGeneralSettings().subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
       that.reset();

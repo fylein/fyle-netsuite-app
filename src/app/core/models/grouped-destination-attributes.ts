@@ -9,9 +9,7 @@ export type GroupedDestinationAttributes = {
     EMPLOYEE?: MappingDestination[];
     ACCOUNT?: MappingDestination[];
     SUBSIDIARY?: MappingDestination[];
-    CCC_EXPENSE_CATEGORY?: MappingDestination[];
     CURRENCY?: MappingDestination[];
-    CCC_ACCOUNT?: MappingDestination[];
     DEPARTMENT?: MappingDestination[];
     PROJECT?: MappingDestination[];
     TAX_ITEM?: MappingDestination[];

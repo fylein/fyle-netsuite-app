@@ -12,6 +12,7 @@ import { MappingSource } from 'src/app/core/models/mapping-source.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
+import { EmployeeMapping } from 'src/app/core/models/employee-mapping.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -56,44 +57,37 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.form.controls.fyleEmployee.value;
-    const netsuiteVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.netsuiteVendor : '';
-    const netsuiteEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.netsuiteEmployee : '';
-    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.generalMappings.default_ccc_account_name;
-    const creditCardAccountId = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.destination_id : that.generalMappings.default_ccc_account_id;
+    const fyleEmployee = that.form.getRawValue().fyleEmployee;
+    const netsuiteVendor = that.form.getRawValue().netsuiteVendor;
+    const netsuiteEmployee = that.form.getRawValue().netsuiteEmployee;
+    const creditCardAccount = that.form.getRawValue().creditCardAccount;
 
-    if (that.form.valid && (netsuiteVendor || netsuiteEmployee)) {
-      const employeeMapping = [
-        that.mappingsService.postMappings({
-          source_type: 'EMPLOYEE',
-          destination_type: that.generalSettings.employee_field_mapping,
-          source_value: fyleEmployee.value,
-          destination_value: that.generalSettings.employee_field_mapping === 'VENDOR' ? netsuiteVendor.value : netsuiteEmployee.value,
-          destination_id: that.generalSettings.employee_field_mapping === 'VENDOR' ? netsuiteVendor.destination_id : netsuiteEmployee.destination_id
-        })
-      ];
-
-      if (creditCardAccount || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL')) {
-        employeeMapping.push(
-          that.mappingsService.postMappings({
-            source_type: 'EMPLOYEE',
-            destination_type: 'CREDIT_CARD_ACCOUNT',
-            source_value: fyleEmployee.value,
-            destination_value: creditCardAccount,
-            destination_id: creditCardAccountId
-          })
-        );
-      }
+    if (that.form.valid && (netsuiteVendor || netsuiteEmployee || creditCardAccount)) {
+      const employeeMapping: EmployeeMapping = {
+        source_employee: {
+          id: fyleEmployee.id
+        },
+        destination_vendor: {
+          id: netsuiteVendor ? netsuiteVendor.id : null
+        },
+        destination_employee: {
+          id: netsuiteEmployee ? netsuiteEmployee.id : null
+        },
+        destination_card_account: {
+          id: creditCardAccount ? creditCardAccount.id : null
+        },
+        workspace: that.workSpaceId
+      };
       that.isLoading = true;
-      forkJoin(employeeMapping).subscribe(responses => {
-        that.snackBar.open('Mapping saved successfully');
+
+      that.mappingsService.postEmployeeMappings(employeeMapping).subscribe(() => {
+        that.snackBar.open('Employee Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
       }, err => {
         that.snackBar.open('Something went wrong');
         that.isLoading = false;
       });
-
     } else {
       that.snackBar.open('Form has invalid fields');
       that.form.markAllAsTouched();
@@ -102,14 +96,18 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: object } | null => {
-      const forbidden = !options.some((option) => {
-        return control.value.id && option.id === control.value.id;
-      });
-      return forbidden ? {
-        forbiddenOption: {
-          value: control.value
-        }
-      } : null;
+      if (control.value) {
+        const forbidden = !options.some((option) => {
+          return control.value && control.value.id && option && option.id === control.value.id;
+        });
+        return forbidden ? {
+          forbiddenOption: {
+            value: control.value
+          }
+        } : null;
+      }
+
+      return null;
     };
   }
 
@@ -208,10 +206,10 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       that.netsuiteVendors = res[1].VENDOR;
       that.generalMappings = res[2];
 
-      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
-      const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => vendor.value === that.data.rowElement.netsuite_value)[0] : '';
-      const netsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => employee.value === that.data.rowElement.netsuite_value)[0] : '';
-      const defaultCCCObj = that.editMapping ? that.cccObjects.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : that.cccObjects.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_account_name)[0];
+      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.employeeMappingRow.source_employee.value)[0] : '';
+      const netsuiteVendor = that.editMapping ? that.netsuiteVendors.filter(vendor => that.data.employeeMappingRow.destination_vendor && vendor.value === that.data.employeeMappingRow.destination_vendor.value)[0] : '';
+      const netsuiteEmployee = that.editMapping ? that.netsuiteEmployees.filter(employee => that.data.employeeMappingRow.destination_employee && employee.value === that.data.employeeMappingRow.destination_employee.value)[0] : '';
+      const defaultCCCObj = that.editMapping ? that.cccObjects.filter(cccObj => that.data.employeeMappingRow.destination_card_account && cccObj.value === that.data.employeeMappingRow.destination_card_account.value)[0] : that.cccObjects.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_account_name)[0];
       that.isLoading = false;
       that.form = that.formBuilder.group({
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
@@ -231,13 +229,13 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
 
-    if (that.data.rowElement) {
+    if (that.data.employeeMappingRow) {
       that.editMapping = true;
     }
 
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
-    that.settingsService.getCombinedSettings().subscribe(settings => {
+    that.settingsService.getGeneralSettings().subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
       that.reset();

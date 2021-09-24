@@ -24,7 +24,6 @@ export class ConfigurationComponent implements OnInit {
   workspaceId: number;
   generalSettings: GeneralSetting;
   mappingSettings: MappingSetting[];
-  employeeFieldMapping: MappingSetting;
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
@@ -57,7 +56,7 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
-  getCCCExpenseOptions(reimbursableExpenseMappedTo) {
+  getCCCExpenseOptions(reimbursableExpenseMappedTo: string) {
     const cccExpenseList = [
       {
         label: 'Bill',
@@ -99,11 +98,6 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettings = responses[0];
       that.mappingSettings = responses[1].results;
 
-      const employeeFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'EMPLOYEE') &&
-          (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
-      )[0];
-
       const projectFieldMapping = that.mappingSettings.filter(
         setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
       );
@@ -113,10 +107,8 @@ export class ConfigurationComponent implements OnInit {
         importProjects = projectFieldMapping[0].import_to_fyle;
       }
 
-      that.employeeFieldMapping = employeeFieldMapping;
-
       that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
-      that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
+      that.expenseOptions = that.getExpenseOptions(that.generalSettings.employee_field_mapping);
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_netsuite_payments) {
@@ -128,7 +120,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimbursableExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
-        employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
+        employees: [that.generalSettings ? that.generalSettings.employee_field_mapping : ''],
         importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
         importTaxDetails: [that.generalSettings.import_tax_items],
@@ -184,7 +176,7 @@ export class ConfigurationComponent implements OnInit {
         }
       }
 
-      if (that.netsuiteSubsidiaryCountry === '_australia') {
+      if (that.netsuiteSubsidiaryCountry === '_unitedStates') {
         that.generalSettingsForm.controls.importTaxDetails.disable();
       }
 
@@ -225,7 +217,7 @@ export class ConfigurationComponent implements OnInit {
         that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
       });
 
-      if (that.netsuiteSubsidiaryCountry === '_australia') {
+      if (that.netsuiteSubsidiaryCountry === '_unitedStates') {
         that.generalSettingsForm.controls.importTaxDetails.disable();
       }
 
@@ -236,27 +228,11 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
 
-    const mappingsSettingsPayload: MappingSetting[] = [{
-      destination_field: 'ACCOUNT',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'CCC_ACCOUNT',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'EXPENSE_CATEGORY',
-      source_field: 'CATEGORY'
-    },
-    {
-      destination_field: 'CCC_EXPENSE_CATEGORY',
-      source_field: 'CATEGORY'
-    }
-  ];
+    const mappingsSettingsPayload: MappingSetting[] = [];
 
-    const reimbursableExpensesObject = that.generalSettingsForm.value.reimbursableExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
-    const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
-    const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
+    const reimbursableExpensesObject = that.generalSettingsForm.getRawValue().reimbursableExpense;
+    const cccExpensesObject = that.generalSettingsForm.getRawValue().cccExpense;
+    const employeeMappingsObject = that.generalSettingsForm.getRawValue().employees;
     const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
     const importCategories = that.generalSettingsForm.value.importCategories;
     const importTaxDetails = that.generalSettingsForm.value.importTaxDetails ? that.generalSettingsForm.value.importTaxDetails : false;
@@ -269,16 +245,6 @@ export class ConfigurationComponent implements OnInit {
     if (that.generalSettingsForm.controls.paymentsSync.value) {
       fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
-    }
-
-    if (cccExpensesObject) {
-      const destinationField = 'CREDIT_CARD_ACCOUNT';
-      const sourceField = 'EMPLOYEE';
-
-      mappingsSettingsPayload.push({
-        source_field: sourceField,
-        destination_field: destinationField
-      });
     }
 
     if (importProjects) {
@@ -302,10 +268,6 @@ export class ConfigurationComponent implements OnInit {
     }
 
     that.isLoading = true;
-    mappingsSettingsPayload.push({
-      source_field: 'EMPLOYEE',
-      destination_field: employeeMappingsObject
-    });
 
     if (importTaxDetails) {
       mappingsSettingsPayload.push({
@@ -315,6 +277,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     const generalSettingsPayload: GeneralSetting = {
+      employee_field_mapping: employeeMappingsObject,
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: cccExpensesObject,
       sync_fyle_to_netsuite_payments: fyleToNetSuite,
@@ -328,12 +291,14 @@ export class ConfigurationComponent implements OnInit {
       workspace: that.workspaceId
     };
 
-    forkJoin(
-      [
-        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload)
-      ]
-    ).subscribe(() => {
+    const postSettings = [];
+
+    postSettings.push(that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload));
+    if (mappingsSettingsPayload.length) {
+      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload));
+    }
+
+    forkJoin(postSettings).subscribe(() => {
       that.isLoading = false;
       that.snackBar.open('Configuration saved successfully');
       that.netsuite.getGeneralSettings();
