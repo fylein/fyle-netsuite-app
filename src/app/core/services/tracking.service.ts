@@ -48,5 +48,9 @@ export class TrackingService {
   onSwitchWorkspace() {
     this.eventTrack('Switching Workspace');
   }
+
+  onUpdateConfiguration(updatedConfiguration) {
+    this.eventTrack('Configurations update', updatedConfiguration);
+  }
 }
 

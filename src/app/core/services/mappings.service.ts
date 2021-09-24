@@ -20,6 +20,7 @@ import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { WorkspaceService } from './workspace.service';
 
 const generalMappingsCache = new Subject<void>();
+const subsidiaryMappingCache$ = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -166,11 +167,23 @@ export class MappingsService {
     );
   }
 
+  @Cacheable({
+    cacheBusterObserver: subsidiaryMappingCache$
+  })
   getSubsidiaryMappings(): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/subsidiaries/`, {}
     );
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: subsidiaryMappingCache$
+  })
+  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping): Observable<SubsidiaryMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
   }
 
   getMappings(pageLimit: number, pageOffset: number, sourceType: string, tableDimension: number = 2): Observable<MappingsResponse> {
