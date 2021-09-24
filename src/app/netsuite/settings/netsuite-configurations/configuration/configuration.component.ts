@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingsService } from 'src/app/core/services/mappings.service';
+import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
 
 @Component({
   selector: 'app-configuration',
@@ -26,8 +28,9 @@ export class ConfigurationComponent implements OnInit {
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
+  netsuiteSubsidiaryCountry: string;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -94,7 +97,6 @@ export class ConfigurationComponent implements OnInit {
       ]
     ).subscribe(responses => {
       that.generalSettings = responses[0];
-      console.log("response", responses[0])
       that.mappingSettings = responses[1].results;
 
       const employeeFieldMapping = that.mappingSettings.filter(
@@ -182,10 +184,13 @@ export class ConfigurationComponent implements OnInit {
         }
       }
 
+      if (that.netsuiteSubsidiaryCountry === '_australia') {
+        that.generalSettingsForm.controls.importTaxDetails.disable();
+      }
+
       that.isLoading = false;
     }, () => {
       that.mappingSettings = [];
-      that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
@@ -219,6 +224,12 @@ export class ConfigurationComponent implements OnInit {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
         that.showPaymentsandProjectFields(reimbursableExpenseMappedTo);
       });
+
+      if (that.netsuiteSubsidiaryCountry === '_australia') {
+        that.generalSettingsForm.controls.importTaxDetails.disable();
+      }
+
+      that.isLoading = false;
     });
   }
 
@@ -300,7 +311,7 @@ export class ConfigurationComponent implements OnInit {
       mappingsSettingsPayload.push({
         source_field: 'TAX_GROUP',
         destination_field: 'TAX_ITEM',
-      })
+      });
     }
 
     const generalSettingsPayload: GeneralSetting = {
@@ -316,8 +327,6 @@ export class ConfigurationComponent implements OnInit {
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
       workspace: that.workspaceId
     };
-
-    console.log("general", generalSettingsPayload);
 
     forkJoin(
       [
@@ -351,12 +360,31 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  getSubsdiaryCountryName() {
+    const that = this;
+    return that.mappingsService.getSubsidiaryMappings().toPromise().then((response) => {
+      if (response.country_name) {
+        return response.country_name;
+      } else {
+        return that.settingsService.postCountryDetails().toPromise().then((subsdiary: SubsidiaryMapping) => {
+          return subsdiary.country_name;
+        }).catch(() => {
+          return '';
+        });
+      }
+    });
+  }
+
+
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
 
-    that.getAllSettings();
+    that.getSubsdiaryCountryName().then((res) => {
+      that.netsuiteSubsidiaryCountry = res;
+      that.getAllSettings();
+    });
   }
 
 }

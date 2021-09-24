@@ -111,10 +111,19 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: subsidiaryMappingCache
   })
-  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping): Observable<SubsidiaryMapping> {
+  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping = null): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: subsidiaryMappingCache
+  })
+  postCountryDetails(): Observable<SubsidiaryMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/post_country/`, {});
   }
 
   @Cacheable({
