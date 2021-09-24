@@ -118,20 +118,6 @@
           </mat-select>
         </mat-form-field>
         <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
-        <div class="mat-body-strong" *ngIf="generalSettings.import_taxitems">
-          Default Tax Group
-          <mandatory-field *ngIf="isFieldMandatory('vendorPaymentAccounts')"></mandatory-field>
-        </div>
-        <mat-form-field floatLabel="always" appearance="outline" required
-          *ngIf="generalSettings.import_taxitems">
-          <mat-select class="general-mappings--input" placeholder="Select Tax Group"
-            formControlName="vendorPaymentAccounts">
-            <mat-option *ngFor="let taxItem of taxItems; let i = index" [value]="taxItems[i].destination_id">
-              {{taxItems[i].value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
       </div>
       <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
