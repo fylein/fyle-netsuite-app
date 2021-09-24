@@ -65,6 +65,7 @@ export class ExportComponent implements OnInit {
           that.failedExpenseGroupCount = taskResponse.count;
           that.successfulExpenseGroupCount = filteredIds.length - that.failedExpenseGroupCount;
           that.isExporting = false;
+          that.exportedCount = 0;
           that.loadExportableExpenseGroups();
           that.snackBar.open('Export Complete');
         });
@@ -75,6 +76,8 @@ export class ExportComponent implements OnInit {
   createNetSuiteItems() {
     const that = this;
     that.isExporting = true;
+    that.failedExpenseGroupCount = 0;
+    that.successfulExpenseGroupCount = 0;
     that.settingsService.getGeneralSettings().subscribe((settings) => {
       that.generalSettings = settings;
       const promises = [];

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
@@ -38,6 +37,29 @@ export class GeneralMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private snackBar: MatSnackBar,
     private storageService: StorageService) {
+  }
+
+  redirectHandler() {
+    const that = this;
+
+    that.route.queryParams.subscribe(params => {
+      if (params.redirect_to_employee_mappings) {
+        setTimeout(() => {
+          const destination = that.generalSettings.employee_field_mapping.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+          that.snackBar.open(`To ensure successful export, map Fyle Employees to ${destination}s in NetSuite`, '', {
+            duration: 7000
+          });
+          return that.router.navigateByUrl(`workspaces/${that.workspaceId}/settings/employee/mappings`);
+        }, 1000);
+      } else {
+        const onboarded = that.storageService.get('onboarded');
+        if (!onboarded) {
+          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        } else {
+          that.isLoading = false;
+        }
+      }
+    });
   }
 
   submit() {
@@ -82,12 +104,8 @@ export class GeneralMappingsComponent implements OnInit {
       workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
-      const onboarded = that.storageService.get('onboarded');
-      if (onboarded === true) {
-        that.getGeneralMappings();
-      } else {
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-      }
+      that.snackBar.open('General Mappings saved successfully');
+      that.redirectHandler();
     }, () => {
       that.isLoading = false;
       that.snackBar.open('Please fill up the form with valid values');
@@ -116,6 +134,10 @@ export class GeneralMappingsComponent implements OnInit {
     if (that.generalSettings.sync_fyle_to_netsuite_payments) {
       that.form.controls.vendorPaymentAccounts.setValidators(Validators.required);
     }
+
+    if (that.generalMappings) {
+      that.form.markAllAsTouched();
+    }
   }
 
   isFieldMandatory(controlName: string) {
@@ -137,13 +159,17 @@ export class GeneralMappingsComponent implements OnInit {
       that.generalMappings = generalMappings;
       that.isLoading = false;
       that.checkLocationLevel(that.generalMappings.location_id);
+
+      // if CCC export is updated to Credit Card Charge, we limit the CCC account choices with _creditCard account type
+      const defaultCCCAccount = that.cccAccounts.filter(cccAccount => cccAccount.destination_id === generalMappings.default_ccc_account_id);
+
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
         netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
-        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
+        cccAccounts: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
       });
 

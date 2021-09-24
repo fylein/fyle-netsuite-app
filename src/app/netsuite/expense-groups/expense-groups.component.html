@@ -47,12 +47,8 @@
       <ng-container matColumnDef="export">
         <th mat-header-cell *matHeaderCellDef> Exported to NetSuite as </th>
         <td mat-cell *matCellDef="let element">
-          <div *ngIf="element.fund_source === 'PERSONAL'">
-            {{settings.reimbursable_expenses_object | titlecase}}
-          </div>
-  
-          <div *ngIf="element.fund_source !== 'PERSONAL'">
-            {{settings.corporate_credit_card_expenses_object | titlecase}}
+          <div>
+            {{element.export_type | titlecase}}
           </div>
         </td>
       </ng-container>
@@ -60,7 +56,7 @@
       <ng-container matColumnDef="expensetype">
         <th mat-header-cell *matHeaderCellDef> Expense Type </th>
         <td mat-cell *matCellDef="let element">
-          {{element.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card'  }}
+          {{element.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card' }}
         </td>
       </ng-container>
   
