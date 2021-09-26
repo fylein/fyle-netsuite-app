@@ -90,6 +90,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
+        that.snackBar.open('Expense Fields mapping saved successfully');
         that.netsuite.refreshDashboardMappingSettings(mappingSetting);
         that.createFormFields(mappingSetting);
         if (hasCustomField) {

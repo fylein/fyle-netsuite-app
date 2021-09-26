@@ -40,7 +40,7 @@ export class SubsidiaryComponent implements OnInit {
       workspace: that.workspaceId
     };
 
-    that.settingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
+    that.mappingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });
   }
