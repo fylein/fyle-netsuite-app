@@ -36,6 +36,7 @@ export class SubsidiaryComponent implements OnInit {
     const subsidiaryMappingPayload: SubsidiaryMapping = {
       subsidiary_name: netsuiteSubsidiary.value,
       internal_id: netsuiteSubsidiary.destination_id,
+      country_name: netsuiteSubsidiary.detail.country,
       workspace: that.workspaceId
     };
 

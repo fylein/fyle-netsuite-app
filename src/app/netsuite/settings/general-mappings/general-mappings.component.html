@@ -119,7 +119,6 @@
         </mat-form-field>
         <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
       </div>
-
       <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>
