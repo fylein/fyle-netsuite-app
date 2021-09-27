@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingsService } from 'src/app/core/services/mappings.service';
+import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdatedConfiguration } from 'src/app/core/models/updated-configuration';
 import { ConfigurationDialogComponent } from './configuration-dialog/configuration-dialog.component';
@@ -29,9 +31,10 @@ export class ConfigurationComponent implements OnInit {
   showPaymentsandProjectsField: boolean;
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
+  netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
   getExpenseOptions(employeeMappedTo) {
     return {
@@ -189,6 +192,10 @@ export class ConfigurationComponent implements OnInit {
     });
 
     that.setupProjectsField();
+
+    if (that.netsuiteSubsidiaryCountry === '_unitedStates') {
+      that.generalSettingsForm.controls.importTaxDetails.disable();
+    }
   }
 
   getAllSettings() {
@@ -225,6 +232,7 @@ export class ConfigurationComponent implements OnInit {
         employees: [that.generalSettings ? that.generalSettings.employee_field_mapping : '', Validators.required],
         importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
+        importTaxDetails: [that.generalSettings.import_tax_items],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
@@ -235,13 +243,13 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
     }, () => {
       that.mappingSettings = [];
-      that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         employees: ['', Validators.required],
         reimbursableExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
         importCategories: [false],
+        importTaxDetails: [false],
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
@@ -249,6 +257,8 @@ export class ConfigurationComponent implements OnInit {
       });
 
       that.setupFieldWatchers();
+      that.isLoading = false;
+
     });
   }
 
@@ -357,6 +367,7 @@ export class ConfigurationComponent implements OnInit {
       sync_netsuite_to_fyle_payments: netSuiteToFyle,
       import_projects: false,
       import_categories: that.generalSettingsForm.value.importCategories,
+      import_tax_items: that.generalSettingsForm.value.importTaxDetails,
       auto_map_employees: that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null,
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
@@ -369,6 +380,7 @@ export class ConfigurationComponent implements OnInit {
 
     const mappingSettingsPayload: MappingSetting[] = [];
     const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
+    const importTaxDetails = that.generalSettingsForm.value.importTaxDetails ? that.generalSettingsForm.value.importTaxDetails : false;
 
     if (importProjects) {
       mappingSettingsPayload.push({
@@ -388,6 +400,13 @@ export class ConfigurationComponent implements OnInit {
           import_to_fyle: false
         });
       }
+    }
+
+    if (importTaxDetails) {
+      mappingSettingsPayload.push({
+        source_field: 'TAX_GROUP',
+        destination_field: 'TAX_ITEM',
+      });
     }
 
     return mappingSettingsPayload;
@@ -427,12 +446,31 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  getSubsdiaryCountryName() {
+    const that = this;
+    return that.mappingsService.getSubsidiaryMappings().toPromise().then((response) => {
+      if (response.country_name) {
+        return response.country_name;
+      } else {
+        return that.settingsService.postCountryDetails().toPromise().then((subsdiary: SubsidiaryMapping) => {
+          return subsdiary.country_name;
+        }).catch(() => {
+          return '';
+        });
+      }
+    });
+  }
+
+
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
 
-    that.getAllSettings();
+    that.getSubsdiaryCountryName().then((res) => {
+      that.netsuiteSubsidiaryCountry = res;
+      that.getAllSettings();
+    });
   }
 
 }

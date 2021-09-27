@@ -135,6 +135,7 @@ export class MappingsService {
         CURRENCY: [],
         DEPARTMENT: [],
         PROJECT: [],
+        TAX_ITEM: [],
         LOCATION: [],
         EXPENSE_CATEGORY: [],
         BANK_ACCOUNT: [],
