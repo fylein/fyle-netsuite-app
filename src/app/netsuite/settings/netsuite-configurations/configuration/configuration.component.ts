@@ -367,7 +367,7 @@ export class ConfigurationComponent implements OnInit {
       sync_netsuite_to_fyle_payments: netSuiteToFyle,
       import_projects: false,
       import_categories: that.generalSettingsForm.value.importCategories,
-      import_tax_items: that.generalSettingsForm.value.importTaxDetails,
+      import_tax_items: that.generalSettingsForm.value.importTaxDetails ? that.generalSettingsForm.value.importTaxDetails : false,
       auto_map_employees: that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null,
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
