@@ -168,9 +168,6 @@ export class MappingsService {
     );
   }
 
-  @Cacheable({
-    cacheBusterObserver: subsidiaryMappingCache$
-  })
   getSubsidiaryMappings(): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(

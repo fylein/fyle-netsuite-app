@@ -32,6 +32,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreate: boolean;
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
+  isTaxDisable: boolean;
   showImportCategories: boolean;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
@@ -194,6 +195,7 @@ export class ConfigurationComponent implements OnInit {
     that.setupProjectsField();
 
     if (that.netsuiteSubsidiaryCountry === '_unitedStates') {
+      that.isTaxDisable == true;
       that.generalSettingsForm.controls.importTaxDetails.disable();
     }
   }
