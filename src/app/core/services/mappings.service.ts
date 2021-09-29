@@ -168,6 +168,9 @@ export class MappingsService {
     );
   }
 
+  @Cacheable({
+    cacheBusterObserver: subsidiaryMappingCache$
+  })
   getSubsidiaryMappings(): Observable<SubsidiaryMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
@@ -182,6 +185,15 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: subsidiaryMappingCache$
+  })
+  postCountryDetails(): Observable<SubsidiaryMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/post_country/`, {});
   }
 
   getMappings(pageLimit: number, pageOffset: number, sourceType: string, tableDimension: number = 2): Observable<MappingsResponse> {
