@@ -107,22 +107,4 @@ export class SettingsService {
 
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
-
-  @CacheBuster({
-    cacheBusterNotifier: subsidiaryMappingCache$
-  })
-  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping = null): Observable<SubsidiaryMapping> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
-  }
-
-  @CacheBuster({
-    cacheBusterNotifier: subsidiaryMappingCache$
-  })
-  postCountryDetails(): Observable<SubsidiaryMapping> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/mappings/post_country/`, {});
-  }
 }

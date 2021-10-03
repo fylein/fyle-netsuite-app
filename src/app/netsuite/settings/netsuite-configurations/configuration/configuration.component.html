@@ -131,10 +131,6 @@
         </div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="importTaxDetails">
-        <div class="schedule--toggle-text">Import NetSuite Tax Details to Fyle</div>
-      </mat-slide-toggle>
-
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showPaymentsandProjectsField" formControlName="importProjects">
         <div class="schedule--toggle-text">
           Import NetSuite Projects / Customers into Fyle
@@ -142,6 +138,18 @@
             [inline]="true"
             class="info-icon"
             matTooltip="Projects / Customers will not be imported if count is more than 5000"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="netsuiteSubsidiaryCountry !== '_unitedStates'" formControlName="importTaxDetails">
+        <div class="schedule--toggle-text">Import NetSuite Tax Details to Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Import Tax Codes from Netsuite as Tax Groups in Fyle"
             matTooltipPosition="after">
               info
           </mat-icon>
