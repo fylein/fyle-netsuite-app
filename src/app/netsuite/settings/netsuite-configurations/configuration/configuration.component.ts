@@ -452,7 +452,7 @@ export class ConfigurationComponent implements OnInit {
       if (response.country_name) {
         return response.country_name;
       } else {
-        return that.settingsService.postCountryDetails().toPromise().then((subsdiary: SubsidiaryMapping) => {
+        return that.mappingsService.postCountryDetails().toPromise().then((subsdiary: SubsidiaryMapping) => {
           return subsdiary.country_name;
         }).catch(() => {
           return '';
@@ -460,7 +460,6 @@ export class ConfigurationComponent implements OnInit {
       }
     });
   }
-
 
   ngOnInit() {
     const that = this;
