@@ -92,7 +92,7 @@ export class GenericMappingsComponent implements OnInit {
       that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
       that.sourceField = that.route.snapshot.params.source_field;
       if (that.sourceField === 'tax_group') {
-        that.docLink = 'https://intercom.help/fyleapp/en/articles/5623259-importing-tax-code-from-netsuite-to-fyle';
+        that.docLink = 'https://www.fylehq.com/help/en/articles/5623259-importing-tax-code-from-netsuite-to-fyle';
       } else {
         that.docLink = 'https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration';
       }
