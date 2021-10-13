@@ -156,6 +156,18 @@
         </div>
       </mat-slide-toggle>
 
+      <mat-slide-toggle color="primary" class="schedule" formControlName="changeAccountingPeriod">
+        <div class="schedule--toggle-text">Export to next open period
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="If the accounting period is closed, the report will be exported at the earliest next open accounting period."
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
       <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>
