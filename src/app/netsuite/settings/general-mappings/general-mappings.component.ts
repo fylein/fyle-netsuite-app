@@ -101,6 +101,7 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
       location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      use_employee_department: that.form.value.useDefaultEmployeeDepartment,
       workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
@@ -170,7 +171,8 @@ export class GeneralMappingsComponent implements OnInit {
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_ccc_account_id : ''],
-        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
+        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : ''],
+        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false]
       });
 
       that.setMandatoryFields();
@@ -187,7 +189,8 @@ export class GeneralMappingsComponent implements OnInit {
         vendorPaymentAccounts: [null],
         bankAccounts: [null],
         cccAccounts: [null],
-        netsuiteVendors: [null]
+        netsuiteVendors: [null],
+        useDefaultEmployeeDepartment: [false]
       });
 
       that.setMandatoryFields();
