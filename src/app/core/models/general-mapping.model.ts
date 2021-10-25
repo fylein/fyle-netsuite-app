@@ -16,6 +16,8 @@ export type GeneralMapping = {
   default_ccc_vendor_id: string;
   default_ccc_vendor_name: string;
   use_employee_department: boolean;
+  use_employee_class: boolean;
+  use_employee_location: boolean;
   created_at?: Date;
   updated_at?: Date;
   workspace: number;

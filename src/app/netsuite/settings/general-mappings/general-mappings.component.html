@@ -130,6 +130,30 @@
             </mat-icon>
           </div>
         </mat-slide-toggle>
+
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeClass" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Class
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Class assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Location
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Location assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
       </div>
       <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save

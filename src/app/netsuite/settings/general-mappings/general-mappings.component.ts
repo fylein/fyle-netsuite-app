@@ -102,6 +102,8 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
       location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
       use_employee_department: that.form.value.useDefaultEmployeeDepartment,
+      use_employee_class: that.form.value.useDefaultEmployeeClass,
+      use_employee_location: that.form.value.useDefaultEmployeeLocation,
       workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
@@ -172,7 +174,9 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : ''],
-        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false]
+        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false],
+        useDefaultEmployeeClass: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_class : false],
+        useDefaultEmployeeLocation: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_location : false]
       });
 
       that.setMandatoryFields();
@@ -190,7 +194,9 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [null],
         cccAccounts: [null],
         netsuiteVendors: [null],
-        useDefaultEmployeeDepartment: [false]
+        useDefaultEmployeeDepartment: [false],
+        useDefaultEmployeeClass: [false],
+        useDefaultEmployeeLocation: [false]
       });
 
       that.setMandatoryFields();
