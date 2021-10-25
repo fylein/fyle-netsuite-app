@@ -86,6 +86,11 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
     const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
+    let departmentLevel = null;
+    if (that.form.value.useDefaultEmployeeDepartment) {
+      departmentLevel = formValues.netsuiteDepartmentLevels ? formValues.netsuiteDepartmentLevels : 'ALL';
+    }
+
     that.isLoading = true;
     const generalMappings: GeneralMapping = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
@@ -101,6 +106,7 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
       location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      department_level: departmentLevel,
       use_employee_department: that.form.value.useDefaultEmployeeDepartment,
       use_employee_class: that.form.value.useDefaultEmployeeClass,
       use_employee_location: that.form.value.useDefaultEmployeeLocation,
@@ -176,7 +182,8 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : ''],
         useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false],
         useDefaultEmployeeClass: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_class : false],
-        useDefaultEmployeeLocation: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_location : false]
+        useDefaultEmployeeLocation: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_location : false],
+        netsuiteDepartmentLevels : [this.generalMappings ? this.generalMappings.department_level : ''],
       });
 
       that.setMandatoryFields();
@@ -196,7 +203,8 @@ export class GeneralMappingsComponent implements OnInit {
         netsuiteVendors: [null],
         useDefaultEmployeeDepartment: [false],
         useDefaultEmployeeClass: [false],
-        useDefaultEmployeeLocation: [false]
+        useDefaultEmployeeLocation: [false],
+        netsuiteDepartmentLevels: [null]
       });
 
       that.setMandatoryFields();
