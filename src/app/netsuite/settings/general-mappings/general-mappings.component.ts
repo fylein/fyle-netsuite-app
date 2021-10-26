@@ -56,6 +56,7 @@ export class GeneralMappingsComponent implements OnInit {
         if (!onboarded) {
           that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
         } else {
+          that.setupFormFields(that.generalMappings);
           that.isLoading = false;
         }
       }
@@ -86,6 +87,11 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
     const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
+    let departmentLevel = null;
+    if (that.form.value.useDefaultEmployeeDepartment) {
+      departmentLevel = formValues.netsuiteDepartmentLevels ? formValues.netsuiteDepartmentLevels : 'ALL';
+    }
+
     that.isLoading = true;
     const generalMappings: GeneralMapping = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
@@ -101,10 +107,14 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
       location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      department_level: departmentLevel,
       use_employee_department: that.form.value.useDefaultEmployeeDepartment,
+      use_employee_class: that.form.value.useDefaultEmployeeClass,
+      use_employee_location: that.form.value.useDefaultEmployeeLocation,
       workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
+      that.generalMappings = generalMappings;
       that.snackBar.open('General Mappings saved successfully');
       that.redirectHandler();
     }, () => {
@@ -153,35 +163,30 @@ export class GeneralMappingsComponent implements OnInit {
     return false;
   }
 
-  getGeneralMappings() {
+  setupFormFields(generalMappings: GeneralMapping = null) {
     const that = this;
-    that.isLoading = true;
-    that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
+
+    if (generalMappings) {
       that.generalMappings = generalMappings;
-      that.isLoading = false;
       that.checkLocationLevel(that.generalMappings.location_id);
 
       // if CCC export is updated to Credit Card Charge, we limit the CCC account choices with _creditCard account type
       const defaultCCCAccount = that.cccAccounts.filter(cccAccount => cccAccount.destination_id === generalMappings.default_ccc_account_id);
 
       that.form = that.formBuilder.group({
-        netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
-        netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
+        netsuiteLocationLevels : [that.generalMappings ? that.generalMappings.location_level : ''],
+        netsuiteLocations: [that.generalMappings ? that.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
         cccAccounts: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_ccc_account_id : ''],
         netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : ''],
-        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false]
+        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false],
+        useDefaultEmployeeClass: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_class : false],
+        useDefaultEmployeeLocation: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_location : false],
+        netsuiteDepartmentLevels : [that.generalMappings ? that.generalMappings.department_level : ''],
       });
-
-      that.setMandatoryFields();
-
-      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.checkLocationLevel(locationMappedTo);
-      });
-    }, () => {
-      that.isLoading = false;
+    } else {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [null],
         netsuiteLocations: [null],
@@ -190,14 +195,29 @@ export class GeneralMappingsComponent implements OnInit {
         bankAccounts: [null],
         cccAccounts: [null],
         netsuiteVendors: [null],
-        useDefaultEmployeeDepartment: [false]
+        useDefaultEmployeeDepartment: [false],
+        useDefaultEmployeeClass: [false],
+        useDefaultEmployeeLocation: [false],
+        netsuiteDepartmentLevels: [null]
       });
+    }
 
-      that.setMandatoryFields();
+    that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+      that.checkLocationLevel(locationMappedTo);
+    });
 
-      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.checkLocationLevel(locationMappedTo);
-      });
+    that.setMandatoryFields();
+
+    that.isLoading = false;
+  }
+
+  getGeneralMappings() {
+    const that = this;
+    that.isLoading = true;
+    that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
+      that.setupFormFields(generalMappings);
+    }, () => {
+      that.setupFormFields();
     });
   }
 
