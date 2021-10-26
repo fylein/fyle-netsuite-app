@@ -213,7 +213,6 @@ export class GeneralMappingsComponent implements OnInit {
 
   getGeneralMappings() {
     const that = this;
-    that.isLoading = true;
     that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
       that.setupFormFields(generalMappings);
     }, () => {
@@ -246,11 +245,9 @@ export class GeneralMappingsComponent implements OnInit {
 
   reset() {
     const that = this;
-    that.isLoading = true;
 
     const attributes = that.getAttributesFilteredByConfig();
     that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes).subscribe((response: GroupedDestinationAttributes) => {
-      that.isLoading = false;
       that.bankAccounts = response.BANK_ACCOUNT;
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
         that.cccAccounts = response.CREDIT_CARD_ACCOUNT.filter(account => {
@@ -285,7 +282,6 @@ export class GeneralMappingsComponent implements OnInit {
     that.isLoading = true;
     that.settingsService.getGeneralSettings().subscribe(settings => {
       that.generalSettings = settings;
-      that.isLoading = false;
       that.reset();
     });
   }
