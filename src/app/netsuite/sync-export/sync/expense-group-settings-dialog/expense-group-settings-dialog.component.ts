@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { StorageService } from 'src/app/core/services/storage.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ExpenseGroupSetting } from 'src/app/core/models/expense-group-setting.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
@@ -18,8 +19,9 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   isLoading: boolean;
   exportDateOptions: { label: string, value: string }[];
   expenseGroupingFieldOptions: { label: string, value: string }[];
+  workspaceId: number;
 
-  constructor(private formBuilder: FormBuilder, private expenseGroupsService: ExpenseGroupsService, private settingsService: SettingsService, private dialogRef: MatDialogRef<ExpenseGroupSettingsDialogComponent>) { }
+  constructor(private formBuilder: FormBuilder, private expenseGroupsService: ExpenseGroupsService, private settingsService: SettingsService, private storageService: StorageService, private dialogRef: MatDialogRef<ExpenseGroupSettingsDialogComponent>) { }
 
 save() {
   const that = this;
@@ -30,7 +32,7 @@ save() {
   const cccExpensesGroupedBy = [that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration];
   const expenseState = that.importExpensesForm.value.expenseState;
   const reimbursableExportDateType = that.importExpensesForm.value.reimbursableExportDate;
-  const cccExportDateType = that.importExpensesForm.value.cccExportDate;
+  const cccExportDateType = that.importExpensesForm.getRawValue().cccExportDate;
 
   const expenseGroupSettingsPayload: ExpenseGroupSetting = {
     reimbursable_expense_group_fields: reimbursableExpensesGroupedBy,
@@ -63,6 +65,11 @@ getExpenseGroupSettings() {
       cccExportDate: [ that.expenseGroupSettings.ccc_export_date_type]
     });
 
+    if (that.workspaceGeneralSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+      that.importExpensesForm.controls.cccExpenseGroupConfiguration.disable();
+      that.importExpensesForm.controls.cccExportDate.disable();
+    }
+
     that.isLoading = false;
   });
 }
@@ -86,6 +93,8 @@ showCCCGroups() {
 
 ngOnInit() {
   const that = this;
+
+  that.workspaceId = that.storageService.get('workspaceId');
 
   that.isLoading = true;
 
@@ -129,10 +138,8 @@ ngOnInit() {
 
   that.settingsService.getGeneralSettings().subscribe(response => {
     that.workspaceGeneralSettings = response;
+    that.getExpenseGroupSettings();
   });
-
-  that.getExpenseGroupSettings();
-
 }
 
 }
