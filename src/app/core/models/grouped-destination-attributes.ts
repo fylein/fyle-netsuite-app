@@ -12,6 +12,7 @@ export type GroupedDestinationAttributes = {
     CURRENCY?: MappingDestination[];
     DEPARTMENT?: MappingDestination[];
     PROJECT?: MappingDestination[];
+    TAX_ITEM?: MappingDestination[];
     LOCATION?: MappingDestination[];
     EXPENSE_CATEGORY?: MappingDestination[];
     BANK_ACCOUNT?: MappingDestination[];

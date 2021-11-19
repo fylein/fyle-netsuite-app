@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../../core/services/mappings.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
 
@@ -37,10 +36,11 @@ export class SubsidiaryComponent implements OnInit {
     const subsidiaryMappingPayload: SubsidiaryMapping = {
       subsidiary_name: netsuiteSubsidiary.value,
       internal_id: netsuiteSubsidiary.destination_id,
+      country_name: netsuiteSubsidiary.detail.country,
       workspace: that.workspaceId
     };
 
-    that.settingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
+    that.mappingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, merge, forkJoin, from } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
 import { Cacheable, CacheBuster, globalCacheBusterNotifier } from 'ngx-cacheable';
 import { FyleCredentials } from '../models/fyle-credentials.model';
@@ -8,14 +8,14 @@ import { MappingSetting } from '../models/mapping-setting.model';
 import { GeneralSetting } from '../models/general-setting.model';
 import { MappingSettingResponse } from '../models/mapping-setting-response.model';
 import { ScheduleSettings } from '../models/schedule-settings.model';
-import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { WorkspaceService } from './workspace.service';
+import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
 const generalSettingsCache = new Subject<void>();
 const mappingsSettingsCache = new Subject<void>();
-const subsidiaryMappingCache = new Subject<void>();
+const subsidiaryMappingCache$ = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -106,14 +106,5 @@ export class SettingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
-  }
-
-  @CacheBuster({
-    cacheBusterNotifier: subsidiaryMappingCache
-  })
-  postSubsidiaryMappings(subsidiaryMappingPayload: SubsidiaryMapping): Observable<SubsidiaryMapping> {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.post(`/workspaces/${workspaceId}/mappings/subsidiaries/`, subsidiaryMappingPayload);
   }
 }

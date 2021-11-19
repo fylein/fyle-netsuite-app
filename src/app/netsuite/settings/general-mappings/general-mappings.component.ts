@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from 'src/app/core/services/storage.service';
@@ -40,6 +39,30 @@ export class GeneralMappingsComponent implements OnInit {
     private storageService: StorageService) {
   }
 
+  redirectHandler() {
+    const that = this;
+
+    that.route.queryParams.subscribe(params => {
+      if (params.redirect_to_employee_mappings) {
+        setTimeout(() => {
+          const destination = that.generalSettings.employee_field_mapping.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+          that.snackBar.open(`To ensure successful export, map Fyle Employees to ${destination}s in NetSuite`, '', {
+            duration: 7000
+          });
+          return that.router.navigateByUrl(`workspaces/${that.workspaceId}/settings/employee/mappings`);
+        }, 1000);
+      } else {
+        const onboarded = that.storageService.get('onboarded');
+        if (!onboarded) {
+          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        } else {
+          that.setupFormFields(that.generalMappings);
+          that.isLoading = false;
+        }
+      }
+    });
+  }
+
   submit() {
     const that = this;
     const formValues = this.form.getRawValue();
@@ -64,6 +87,11 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
     const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
+    let departmentLevel = null;
+    if (that.form.value.useDefaultEmployeeDepartment) {
+      departmentLevel = formValues.netsuiteDepartmentLevels ? formValues.netsuiteDepartmentLevels : 'ALL';
+    }
+
     that.isLoading = true;
     const generalMappings: GeneralMapping = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
@@ -79,15 +107,16 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_vendor_name: defaultVendor ? defaultVendor.value : null,
       default_ccc_vendor_id: defaultVendor ? defaultVendor.destination_id : null,
       location_level: (netsuiteLocation && netsuiteLocationLevel) ? netsuiteLocationLevel : (netsuiteLocation) ? 'ALL'  : null,
+      department_level: departmentLevel,
+      use_employee_department: that.form.value.useDefaultEmployeeDepartment,
+      use_employee_class: that.form.value.useDefaultEmployeeClass,
+      use_employee_location: that.form.value.useDefaultEmployeeLocation,
       workspace: that.workspaceId
     };
     that.mappingsService.postGeneralMappings(generalMappings).subscribe(() => {
-      const onboarded = that.storageService.get('onboarded');
-      if (onboarded === true) {
-        that.getGeneralMappings();
-      } else {
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-      }
+      that.generalMappings = generalMappings;
+      that.snackBar.open('General Mappings saved successfully');
+      that.redirectHandler();
     }, () => {
       that.isLoading = false;
       that.snackBar.open('Please fill up the form with valid values');
@@ -116,6 +145,10 @@ export class GeneralMappingsComponent implements OnInit {
     if (that.generalSettings.sync_fyle_to_netsuite_payments) {
       that.form.controls.vendorPaymentAccounts.setValidators(Validators.required);
     }
+
+    if (that.generalMappings) {
+      that.form.markAllAsTouched();
+    }
   }
 
   isFieldMandatory(controlName: string) {
@@ -130,30 +163,30 @@ export class GeneralMappingsComponent implements OnInit {
     return false;
   }
 
-  getGeneralMappings() {
+  setupFormFields(generalMappings: GeneralMapping = null) {
     const that = this;
-    that.isLoading = true;
-    that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
+
+    if (generalMappings) {
       that.generalMappings = generalMappings;
-      that.isLoading = false;
       that.checkLocationLevel(that.generalMappings.location_id);
+
+      // if CCC export is updated to Credit Card Charge, we limit the CCC account choices with _creditCard account type
+      const defaultCCCAccount = that.cccAccounts.filter(cccAccount => cccAccount.destination_id === generalMappings.default_ccc_account_id);
+
       that.form = that.formBuilder.group({
-        netsuiteLocationLevels : [this.generalMappings ? this.generalMappings.location_level : ''],
-        netsuiteLocations: [this.generalMappings ? this.generalMappings.location_id : ''],
+        netsuiteLocationLevels : [that.generalMappings ? that.generalMappings.location_level : ''],
+        netsuiteLocations: [that.generalMappings ? that.generalMappings.location_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
         bankAccounts: [that.generalMappings ? that.generalMappings.reimbursable_account_id : ''],
-        cccAccounts: [that.generalMappings ? that.generalMappings.default_ccc_account_id : ''],
-        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : '']
+        cccAccounts: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_ccc_account_id : ''],
+        netsuiteVendors: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : ''],
+        useDefaultEmployeeDepartment: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_department : false],
+        useDefaultEmployeeClass: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_class : false],
+        useDefaultEmployeeLocation: [that.generalMappings && that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.generalMappings.use_employee_location : false],
+        netsuiteDepartmentLevels : [that.generalMappings ? that.generalMappings.department_level : ''],
       });
-
-      that.setMandatoryFields();
-
-      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.checkLocationLevel(locationMappedTo);
-      });
-    }, () => {
-      that.isLoading = false;
+    } else {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [null],
         netsuiteLocations: [null],
@@ -161,14 +194,29 @@ export class GeneralMappingsComponent implements OnInit {
         vendorPaymentAccounts: [null],
         bankAccounts: [null],
         cccAccounts: [null],
-        netsuiteVendors: [null]
+        netsuiteVendors: [null],
+        useDefaultEmployeeDepartment: [false],
+        useDefaultEmployeeClass: [false],
+        useDefaultEmployeeLocation: [false],
+        netsuiteDepartmentLevels: [null]
       });
+    }
 
-      that.setMandatoryFields();
+    that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
+      that.checkLocationLevel(locationMappedTo);
+    });
 
-      that.form.controls.netsuiteLocations.valueChanges.subscribe((locationMappedTo) => {
-        that.checkLocationLevel(locationMappedTo);
-      });
+    that.setMandatoryFields();
+
+    that.isLoading = false;
+  }
+
+  getGeneralMappings() {
+    const that = this;
+    that.mappingsService.getGeneralMappings().subscribe(generalMappings => {
+      that.setupFormFields(generalMappings);
+    }, () => {
+      that.setupFormFields();
     });
   }
 
@@ -197,11 +245,9 @@ export class GeneralMappingsComponent implements OnInit {
 
   reset() {
     const that = this;
-    that.isLoading = true;
 
     const attributes = that.getAttributesFilteredByConfig();
     that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes).subscribe((response: GroupedDestinationAttributes) => {
-      that.isLoading = false;
       that.bankAccounts = response.BANK_ACCOUNT;
       if (that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
         that.cccAccounts = response.CREDIT_CARD_ACCOUNT.filter(account => {
@@ -236,7 +282,6 @@ export class GeneralMappingsComponent implements OnInit {
     that.isLoading = true;
     that.settingsService.getGeneralSettings().subscribe(settings => {
       that.generalSettings = settings;
-      that.isLoading = false;
       that.reset();
     });
   }

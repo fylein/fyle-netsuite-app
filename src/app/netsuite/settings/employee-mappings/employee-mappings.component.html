@@ -6,7 +6,7 @@
     </div>
     <div class="page-info">
       <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
-        Map Employee items from Fyle to their counterparts on NetSuite. <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
+        Map Employees from Fyle to their equivalents in NetSuite. <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
       </div>
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         Create Employee Mapping
@@ -15,7 +15,7 @@
         Refresh Employee Mappings
       </button>
 
-      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count && employeeMappings.length">
         <mat-label>Search</mat-label>
         <input matInput (keyup)="applyFilter($event)">
         <span matPrefix>
@@ -24,17 +24,17 @@
       </mat-form-field>
     </div>
 
-    <div class="mat-h2" *ngIf="!count && !isLoading">
+    <div class="mat-h2" *ngIf="(!count || !employeeMappings.length) && !isLoading">
       <zero-state message="You have no employee mappings yet"></zero-state>
     </div>
   
-    <div *ngIf="count" [hidden]="isLoading || !employeeMappingRows.filteredData.length">
+    <div *ngIf="count && employeeMappings.length" [hidden]="isLoading || !employeeMappingRows.filteredData.length">
       <table mat-table [dataSource]="employeeMappingRows" class="page-table">
         <ng-container matColumnDef="employee_email">
           <th mat-header-cell *matHeaderCellDef> Employee Email </th>
           <td mat-cell *matCellDef="let element">
-            {{element.fyle_value}}
-            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.auto_mapped">bolt</mat-icon>
+            {{element.source_employee.value}}
+            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.source_employee.auto_mapped && (generalSettings?.employee_field_mapping === 'EMPLOYEE' ? element.destination_employee : element.destination_vendor)">bolt</mat-icon>
           </td>
         </ng-container>
   
@@ -44,7 +44,7 @@
             <span *ngIf="generalSettings?.employee_field_mapping == 'EMPLOYEE'">Employee Name</span>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{element.netsuite_value}}
+            {{generalSettings?.employee_field_mapping == 'VENDOR' ? element.destination_vendor?.value : element.destination_employee?.value}}
           </td>
         </ng-container>
   
@@ -52,7 +52,7 @@
         <ng-container matColumnDef="ccc">
           <th mat-header-cell *matHeaderCellDef> Credit Card</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.ccc_value }}
+            {{element.destination_card_account ? element.destination_card_account?.value : null}}
           </td>
         </ng-container>
   
@@ -60,10 +60,10 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="open(row)"></tr>
       </table>
     </div>
-    <zero-state *ngIf="!employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
+    <zero-state *ngIf="employeeMappings.length && !employeeMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Employee mappings"></zero-state>
 
   </div>
-  <app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
+  <app-paginator *ngIf="count && employeeMappings.length" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="false" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading" [pageNumber]="pageNumber"></app-paginator>
   <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
     <app-loader></app-loader>
   </div>

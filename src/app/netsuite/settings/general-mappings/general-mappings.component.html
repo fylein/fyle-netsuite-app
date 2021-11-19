@@ -14,7 +14,7 @@
         <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
       </div>
     </div>
-    <form class="general-mappings--form" [formGroup]="form" (ngSubmit)="submit()">
+    <form class="general-mappings--form" [formGroup]="form">
       <div fxLayout="column" fxLayoutAlign="start stretch">
         <div class="mat-body-strong" *ngIf="netsuiteLocations.length">
           NetSuite Location
@@ -118,8 +118,60 @@
           </mat-select>
         </mat-form-field>
         <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
-      </div>
 
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Department
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Department assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+
+        <div class="mat-body-strong" *ngIf="form.value.useDefaultEmployeeDepartment">
+          Select NetSuite Department Level
+         </div>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="form.value.useDefaultEmployeeDepartment" required>
+          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Department Level" formControlName="netsuiteDepartmentLevels">
+            <mat-option value="TRANSACTION_BODY">
+               Transaction Body
+             </mat-option>
+             <mat-option value="TRANSACTION_LINE">
+               Transaction Line
+             </mat-option>
+             <mat-option value="ALL">
+               All
+             </mat-option>
+           </mat-select>
+         </mat-form-field>
+
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeClass" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Class
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Class assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Location
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Location assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+      </div>
       <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
         Save
       </button>

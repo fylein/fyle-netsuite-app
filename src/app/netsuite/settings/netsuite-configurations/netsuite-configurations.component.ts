@@ -15,32 +15,16 @@ export class NetsuiteConfigurationsComponent implements OnInit {
 
   state: string;
   workspaceId: number;
-  isParentLoading: boolean;
+  isParentLoading = true;
   fyleFields: ExpenseField[];
   generalSettings: GeneralSetting;
-  netsuiteConnection: boolean;
-  netsuiteConnectionDone: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }
 
-  changeState(state) {
+  changeState(state: string) {
     const that = this;
-    if (that.state === 'GENERAL') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'SUBSIDIARY') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'EXPENSE_FIELDS') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'CUSTOM_SEGMENTS') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
+    that.state = state;
+    that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
   }
 
   showExpenseFields() {
@@ -53,21 +37,12 @@ export class NetsuiteConfigurationsComponent implements OnInit {
     return false;
   }
 
-  ngOnInit() {
+  reset() {
     const that = this;
 
-    that.isParentLoading = true;
+    that.mappingsService.getSubsidiaryMappings().subscribe(() => {
+      that.state = that.route.snapshot.firstChild ? that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL' : 'GENERAL';
 
-    that.netsuiteConnection = false;
-
-    that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-
-    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'SUBSIDIARY';
-
-    that.settingsService.getNetSuiteCredentials().subscribe(response => {
-      if (response) {
-        that.netsuiteConnectionDone = true;
-      }
       forkJoin(
         [
           that.mappingsService.getFyleFields(),
@@ -76,11 +51,23 @@ export class NetsuiteConfigurationsComponent implements OnInit {
       ).subscribe(result => {
         that.fyleFields = result[0];
         that.generalSettings = result[1];
+        that.changeState(that.state);
         that.isParentLoading = false;
       }, () => {
+        that.changeState(that.state);
         that.isParentLoading = false;
       });
-
+    }, () => {
+      that.state = that.route.snapshot.firstChild ? that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'SUBSIDIARY' : 'SUBSIDIARY';
+      that.changeState(that.state);
+      that.isParentLoading = false;
     });
+  }
+
+  ngOnInit() {
+    const that = this;
+    that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
+
+    that.reset();
   }
 }

@@ -51,10 +51,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
   }
 
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: object} | null => {
+    return (control: AbstractControl): { [key: string]: object } | null => {
       if (control.value) {
         const forbidden = !options.some((option) => {
-          return option && control.value && control.value.id && option.id === control.value.id;
+          return control.value && control.value.id && option && option.id === control.value.id;
         });
         return forbidden ? {
           forbiddenOption: {
@@ -94,6 +94,9 @@ export class CategoryMappingsDialogComponent implements OnInit {
         that.snackBar.open('Category Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
+      }, () => {
+        that.isLoading = false;
+        that.snackBar.open('Error saving Category Mapping');
       });
     } else {
       that.snackBar.open('Form has invalid fields');
@@ -133,13 +136,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   showSeparateCCCField() {
     const that = this;
-    if (that.generalSettings.corporate_credit_card_expenses_object) {
-      if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' || that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE REPORT') {
-        if (that.generalSettings.reimbursable_expenses_object !== that.generalSettings.corporate_credit_card_expenses_object) {
-          return true;
-        }
-      }
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.reimbursable_expenses_object === 'EXPENSE REPORT' &&  that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE REPORT') {
+      return true;
     }
+
     return false;
   }
 

@@ -90,6 +90,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
+        that.snackBar.open('Expense Fields mapping saved successfully');
         that.netsuite.refreshDashboardMappingSettings(mappingSetting);
         that.createFormFields(mappingSetting);
         if (hasCustomField) {
@@ -177,7 +178,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const that = this;
 
     that.mappingSettings = mappingSetting.filter(
-      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY'
+      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'TAX_GROUP'
     );
 
     let expenseFieldFormArray;
