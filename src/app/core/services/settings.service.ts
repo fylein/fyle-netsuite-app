@@ -93,6 +93,15 @@ export class SettingsService {
   }
 
   @CacheBuster({
+    cacheBusterNotifier: generalSettingsCache
+  })
+  patchGeneralSettings(workspaceId: number, memoStructure: string[]): Observable<GeneralSetting> {
+    return this.apiService.patch(`/workspaces/${workspaceId}/configuration/`, {
+      memo_structure: memoStructure
+    });
+  }
+
+  @CacheBuster({
     cacheBusterNotifier: mappingsSettingsCache
   })
   postMappingSettings(workspaceId: number, mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {

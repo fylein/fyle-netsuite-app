@@ -60,6 +60,8 @@ import { CustomSegmentsComponent } from './settings/netsuite-configurations/cust
 import { CustomSegmentsDialogComponent } from './settings/netsuite-configurations/custom-segments/custom-segments-dialog/custom-segments-dialog.component';
 import { MatTooltipModule } from '@angular/material';
 import { ConfigurationDialogComponent } from './settings/netsuite-configurations/configuration/configuration-dialog/configuration-dialog.component';
+import { MemoStructureComponent } from './settings/netsuite-configurations/memo-structure/memo-structure.component';
+import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,8 @@ import { ConfigurationDialogComponent } from './settings/netsuite-configurations
     CustomSegmentsComponent,
     CustomSegmentsDialogComponent,
     PaginatorComponent,
-    ConfigurationDialogComponent
+    ConfigurationDialogComponent,
+    MemoStructureComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
@@ -131,7 +134,8 @@ import { ConfigurationDialogComponent } from './settings/netsuite-configurations
     MatNativeDateModule,
     MatStepperModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
   ],
   providers: [
     {

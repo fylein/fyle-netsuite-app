@@ -24,6 +24,7 @@ import { NetsuiteConfigurationsComponent } from './settings/netsuite-configurati
 import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configurations/expense-field-configuration/expense-field-configuration.component';
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
 import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
+import { MemoStructureComponent } from './settings/netsuite-configurations/memo-structure/memo-structure.component';
 
 
 const routes: Routes = [{
@@ -93,6 +94,10 @@ const routes: Routes = [{
             {
               path: 'expense_fields',
               component: ExpenseFieldConfigurationComponent
+            },
+            {
+              path: 'memo_structure',
+              component: MemoStructureComponent
             },
             {
               path: 'custom_segments',
