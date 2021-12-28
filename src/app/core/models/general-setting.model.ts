@@ -13,6 +13,7 @@ export type GeneralSetting = {
     auto_create_merchants: boolean;
     auto_map_employees: string;
     employee_field_mapping: string;
+    memo_structure?: string[];
     created_at?: Date;
     updated_at?: Date;
     workspace?: number;
