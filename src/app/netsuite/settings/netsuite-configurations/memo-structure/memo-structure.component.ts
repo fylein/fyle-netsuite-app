@@ -104,7 +104,7 @@ export class MemoStructureComponent implements OnInit {
     const that = this;
     that.isLoading = true;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
-    that.defaultMemoFields = ['employee_email', 'merchant', 'purpose', 'category', 'spent_on', 'report_number'];
+    that.defaultMemoFields = ['employee_email', 'category', 'merchant', 'spent_on', 'report_number', 'purpose'];
     that.getMemoStructureSettings();
   }
 }
