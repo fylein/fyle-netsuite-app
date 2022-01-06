@@ -52,5 +52,9 @@ export class TrackingService {
   onUpdateConfiguration(updatedConfiguration) {
     this.eventTrack('Configurations update', updatedConfiguration);
   }
+
+  onModifyMemo(selectedFields) {
+    this.eventTrack('Modifying Memo', selectedFields);
+  }
 }
 
