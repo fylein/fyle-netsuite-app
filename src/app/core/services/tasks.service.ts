@@ -32,7 +32,7 @@ export class TasksService {
     }
 
     if (next) {
-      return this.apiService.get(next.split('api')[1], {});
+      return this.apiService.get(next.split('api')[2], {});
     } else {
       return this.apiService.get(
         `/workspaces/${workspaceId}/tasks/all/`, apiParams
