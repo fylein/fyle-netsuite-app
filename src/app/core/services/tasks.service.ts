@@ -21,10 +21,13 @@ export class TasksService {
       offset,
       status
     };
-    if (expenseGroupIds && taskType) {
+    if (expenseGroupIds) {
       const expenseKey = 'expense_group_ids';
-      const typeKey = 'task_type';
       apiParams[expenseKey] = expenseGroupIds;
+    }
+
+    if (taskType) {
+      const typeKey = 'task_type';
       apiParams[typeKey] = taskType;
     }
 
@@ -38,7 +41,8 @@ export class TasksService {
   }
 
   getAllTasks(status: string[], expenseGroupIds: number[] = null, taskType: string[] = null): Observable<TaskResponse> {
-    const limit = 500;
+    // TODO: change limit
+    const limit = 3;
     const allTasks: TaskResponse = {
       count: 0,
       next: null,

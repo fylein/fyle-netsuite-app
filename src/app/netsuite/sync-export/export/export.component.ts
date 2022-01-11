@@ -12,6 +12,8 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
 import { ExportsService } from 'src/app/core/services/exports.service';
 
+const EXPORTS_TASK_TYPE = ['CREATING_BILL', 'CREATING_EXPENSE_REPORT', 'CREATING_CREDIT_CARD_CHARGE', 'CREATING_JOURNAL_ENTRY'];
+
 @Component({
   selector: 'app-export',
   templateUrl: './export.component.html',
@@ -53,15 +55,14 @@ export class ExportComponent implements OnInit {
 
   checkResultsOfExport(filteredIds: number[]) {
     const that = this;
-    const taskType = ['CREATING_BILL', 'CREATING_EXPENSE_REPORT', 'CREATING_CREDIT_CARD_CHARGE', 'CREATING_JOURNAL_ENTRY'];
     const taskStatus = ['IN_PROGRESS', 'ENQUEUED', 'COMPLETE', 'FAILED', 'FATAL'];
     interval(3000).pipe(
-      switchMap(() => from(that.taskService.getAllTasks(taskStatus, filteredIds, taskType))),
+      switchMap(() => from(that.taskService.getAllTasks(taskStatus, filteredIds, EXPORTS_TASK_TYPE))),
       takeWhile((response) => response.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length > 0, true)
     ).subscribe((res) => {
       that.exportedCount = res.results.filter(task => (task.status !== 'IN_PROGRESS' && task.status !== 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length;
       if (res.results.filter(task => (task.status === 'IN_PROGRESS' || task.status === 'ENQUEUED') && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length === 0) {
-        that.taskService.getAllTasks(['FAILED']).subscribe((taskResponse) => {
+        that.taskService.getAllTasks(['FAILED', 'FATAL'], filteredIds, EXPORTS_TASK_TYPE).subscribe((taskResponse) => {
           that.failedExpenseGroupCount = taskResponse.count;
           that.successfulExpenseGroupCount = filteredIds.length - that.failedExpenseGroupCount;
           that.isExporting = false;
@@ -127,7 +128,7 @@ export class ExportComponent implements OnInit {
 
     that.isProcessingExports = true;
     interval(7000).pipe(
-      switchMap(() => from(that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED']))),
+      switchMap(() => from(that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED'], null, EXPORTS_TASK_TYPE))),
       takeWhile((response: TaskResponse) => that.filterOngoingTasks(response) > 0, true)
     ).subscribe((tasks: TaskResponse) => {
       that.processingExportsCount = that.filterOngoingTasks(tasks);
@@ -145,7 +146,7 @@ export class ExportComponent implements OnInit {
     that.isExporting = false;
     that.isLoading = true;
 
-    that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED']).subscribe((tasks: TaskResponse) => {
+    that.taskService.getAllTasks(['IN_PROGRESS', 'ENQUEUED'], null, EXPORTS_TASK_TYPE).subscribe((tasks: TaskResponse) => {
       that.isLoading = false;
       if (that.filterOngoingTasks(tasks) === 0) {
         that.loadExportableExpenseGroups();
