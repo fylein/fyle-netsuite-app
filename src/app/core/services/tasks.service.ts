@@ -21,15 +21,18 @@ export class TasksService {
       offset,
       status
     };
-    if (expenseGroupIds && taskType) {
+    if (expenseGroupIds) {
       const expenseKey = 'expense_group_ids';
-      const typeKey = 'task_type';
       apiParams[expenseKey] = expenseGroupIds;
+    }
+
+    if (taskType) {
+      const typeKey = 'task_type';
       apiParams[typeKey] = taskType;
     }
 
     if (next) {
-      return this.apiService.get(next.split('api')[1], {});
+      return this.apiService.get(next.split('api')[2], {});
     } else {
       return this.apiService.get(
         `/workspaces/${workspaceId}/tasks/all/`, apiParams
