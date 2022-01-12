@@ -41,8 +41,7 @@ export class TasksService {
   }
 
   getAllTasks(status: string[], expenseGroupIds: number[] = null, taskType: string[] = null): Observable<TaskResponse> {
-    // TODO: change limit
-    const limit = 3;
+    const limit = 500;
     const allTasks: TaskResponse = {
       count: 0,
       next: null,
