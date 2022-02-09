@@ -55,12 +55,18 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     return mappingObject ? mappingObject.value : '';
   }
 
+  showCreditCardAccountDialogue() {
+    if (!this.generalSettings.map_fyle_cards_netsuite_account && (this.workSpaceId === 189)) {
+      return true;
+    }
+  }
+
   submit() {
     const that = this;
     const fyleEmployee = that.form.getRawValue().fyleEmployee;
     const netsuiteVendor = that.form.getRawValue().netsuiteVendor;
     const netsuiteEmployee = that.form.getRawValue().netsuiteEmployee;
-    const creditCardAccount = that.form.getRawValue().creditCardAccount;
+    const creditCardAccount = that.form.getRawValue().creditCardAccount ? that.form.getRawValue().creditCardAccount : null;
 
     if (that.form.valid && (netsuiteVendor || netsuiteEmployee || creditCardAccount)) {
       const employeeMapping: EmployeeMapping = {

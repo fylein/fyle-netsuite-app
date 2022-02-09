@@ -133,7 +133,7 @@ export class EmployeeMappingsComponent implements OnInit {
       that.generalSettings = settings;
       that.mappingsCheck();
       that.isLoading = false;
-      if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
+      if (!that.generalSettings.map_fyle_cards_netsuite_account && that.workspaceId == 189) {
         that.columnsToDisplay.push('ccc');
       }
       const data = {

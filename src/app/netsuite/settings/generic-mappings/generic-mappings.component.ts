@@ -91,6 +91,7 @@ export class GenericMappingsComponent implements OnInit {
       that.isLoading = true;
       that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
       that.sourceField = that.route.snapshot.params.source_field;
+      console.log(that.sourceField)
       if (that.sourceField === 'tax_group') {
         that.docLink = 'https://www.fylehq.com/help/en/articles/5623259-importing-tax-code-from-netsuite-to-fyle';
       } else {
@@ -98,7 +99,9 @@ export class GenericMappingsComponent implements OnInit {
       }
 
       that.settingsService.getMappingSettings().subscribe(response => {
+        console.log(response)
         that.setting = response.results.filter(setting => setting.source_field === that.sourceField.toUpperCase())[0];
+        console.log(that.setting)
         const data = {
           pageSize: that.storageService.get('mappings.pageSize') || 50,
           pageNumber: 0

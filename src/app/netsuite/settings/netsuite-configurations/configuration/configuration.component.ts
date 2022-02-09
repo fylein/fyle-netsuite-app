@@ -33,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
+  enableCardsMapping: boolean;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
@@ -237,7 +238,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
-        autoCreateMerchant: [that.generalSettings.auto_create_merchants]
+        autoCreateMerchant: [that.generalSettings.auto_create_merchants],
+        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account]
       });
 
       that.setupFieldWatchers();
@@ -255,7 +257,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
-        autoCreateMerchant: [false]
+        autoCreateMerchant: [false],
+        enableCardsMapping: [false]
       });
 
       that.setupFieldWatchers();
@@ -356,9 +359,19 @@ export class ConfigurationComponent implements OnInit {
     let fyleToNetSuite = false;
     let netSuiteToFyle = false;
 
+    let cardsMapping = false;
+
     if (that.generalSettingsForm.controls.paymentsSync.value) {
       fyleToNetSuite = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_netsuite_payments' ? true : false;
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
+    }
+
+    if ((this.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL') && this.generalSettingsForm.value.enableCardsMapping) {
+      cardsMapping = true;
+    }
+
+    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '171') {
+      cardsMapping = true;
     }
 
     return {
@@ -374,6 +387,7 @@ export class ConfigurationComponent implements OnInit {
       auto_map_employees: that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null,
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
+      map_fyle_cards_netsuite_account: cardsMapping,
       workspace: that.workspaceId
     };
   }
@@ -384,7 +398,7 @@ export class ConfigurationComponent implements OnInit {
     const mappingSettingsPayload: MappingSetting[] = [];
     const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
     const importTaxDetails = that.generalSettingsForm.value.importTaxDetails ? that.generalSettingsForm.value.importTaxDetails : false;
-
+  
     if (importProjects) {
       mappingSettingsPayload.push({
         source_field: 'PROJECT',
@@ -412,6 +426,13 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
+    if ((this.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL') && this.generalSettingsForm.value.enableCardsMapping) {
+      mappingSettingsPayload.push({
+        source_field: 'CORPORATE_CARD',
+        destination_field: 'CREDIT_CARD_ACCOUNT'
+      });
+    }
+  
     return mappingSettingsPayload;
   }
 
@@ -420,6 +441,25 @@ export class ConfigurationComponent implements OnInit {
 
     const generalSettingsPayload: GeneralSetting = that.constructConfigurationsPayload();
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
+
+    let cardsMapping = false;
+
+    if (that.generalSettingsForm.value.enableCardsMapping && (that.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL')) {
+      cardsMapping = true;
+    }
+
+    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '171' && that.workspaceId.toString() !== '284') {
+      cardsMapping = true;
+    }
+
+    if (cardsMapping) {
+      mappingSettingsPayload.push(
+        {
+          source_field: 'CORPORATE_CARD',
+          destination_field: 'CREDIT_CARD_ACCOUNT'
+        }
+      );
+    }
 
     // Open dialog conditionally
     if (that.generalSettings && (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping || that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object || that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object)) {
@@ -436,6 +476,15 @@ export class ConfigurationComponent implements OnInit {
       that.showPaymentsandProjectsField = true;
     } else {
       that.showPaymentsandProjectsField = false;
+    }
+  }
+
+  showQBOCardsMapping() {
+    const that = this;
+    if (that.workspaceId.toString() === '171') {
+      return true;
+    } else {
+      return false;
     }
   }
 
