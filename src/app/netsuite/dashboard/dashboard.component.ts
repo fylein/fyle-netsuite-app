@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onCardsMappingsPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Cards Mappings', onboarding)
+    this.trackingService.onPageVisit('Cards Mappings', onboarding);
   }
 
   onEmployeeMappingsPageVisit(onboarding: boolean = false) {
@@ -160,24 +160,19 @@ export class DashboardComponent implements OnInit {
       pageSize: that.storageService.get('mappings.pageSize') || 50,
       pageNumber: 0
     };
-    console.log('nilesh', that.showCardsMapping)
     if (that.generalSettings && that.showCardsMapping) {
-      console.log('spdfihsdpfih')
       if (that.generalSettings.skip_cards_mapping) {
-        console.log('sdfhsodifhoidsg')
         that.currentState = onboardingStates.cardsMappingDone;
       } else {
         return that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, 'CORPORATE_CARD').toPromise().then((res) => {
-            console.log('papa', res)
             if (res.results.length > 0) {
-              console.log('nilesh')
               that.currentState = onboardingStates.cardsMappingDone;
-            } else if (!that.generalSettings.corporate_credit_card_expenses_object || that.generalSettings.corporate_credit_card_expenses_object == 'BILL') {
+            } else if (!that.generalSettings.corporate_credit_card_expenses_object || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
               that.currentState = onboardingStates.cardsMappingDone;
             } else if (!that.generalSettings.skip_cards_mapping) {
               throw new Error('card mappings have no entries');
             }
-        })
+        });
       }
     }
   }
@@ -273,7 +268,7 @@ export class DashboardComponent implements OnInit {
         that.generalSettings = generalSetting;
         that.currentState = onboardingStates.cardsMappingDone;
         that.isLoading = false;
-      })
+      });
     }
   }
 

@@ -108,7 +108,7 @@ export class SettingsService {
     return this.apiService.patch(`/workspaces/${workspaceId}/configuration/`, {
       map_fyle_cards_netsuite_account: true,
       skip_cards_mapping: true
-    })
+    });
   }
 
   @CacheBuster({
