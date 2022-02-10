@@ -24,7 +24,7 @@ export class ConfigurationComponent implements OnInit {
   isLoading: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
-  cccExpenseOptions: { label: string, value: string}[];
+  cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
   generalSettings: GeneralSetting;
   mappingSettings: MappingSetting[];
@@ -321,19 +321,21 @@ export class ConfigurationComponent implements OnInit {
 
   postConfigurationsAndMappingSettings(generalSettingsPayload: GeneralSetting, mappingSettingsPayload: MappingSetting[], redirectToGeneralMappings: boolean = false, redirectToEmployeeMappings: boolean = false) {
     const that = this;
-
     that.isLoading = true;
-    const postSettings = [];
 
-    postSettings.push(that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload));
-    if (mappingSettingsPayload.length) {
-      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload));
-    }
+    that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload).subscribe(() => {
+      if (mappingSettingsPayload.length) {
+        that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload).subscribe(() => {
+          that.isLoading = false;
+          that.snackBar.open('Configuration saved successfully');
+          that.netsuite.getGeneralSettings();
+        });
+      } else {
+          that.isLoading = false;
+          that.snackBar.open('Configuration saved successfully');
+          that.netsuite.getGeneralSettings();
+      }
 
-    forkJoin(postSettings).subscribe(() => {
-      that.isLoading = false;
-      that.snackBar.open('Configuration saved successfully');
-      that.netsuite.getGeneralSettings();
       if (redirectToGeneralMappings) {
         if (redirectToEmployeeMappings) {
           // add redirect_to_employee_mappings query param
