@@ -371,7 +371,7 @@ export class ConfigurationComponent implements OnInit {
       that.cardsMapping = true;
     }
 
-    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '171') {
+    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '189') {
       that.cardsMapping = true;
     }
 
@@ -461,9 +461,9 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
-  showQBOCardsMapping() {
+  showNetsuiteCardsMapping() {
     const that = this;
-    if (that.workspaceId.toString() === '171') {
+    if (that.workspaceId.toString() === '189') {
       return true;
     } else {
       return false;
