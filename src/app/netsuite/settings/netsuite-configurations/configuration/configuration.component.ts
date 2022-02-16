@@ -24,7 +24,7 @@ export class ConfigurationComponent implements OnInit {
   isLoading: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
-  cccExpenseOptions: { label: string, value: string}[];
+  cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
   generalSettings: GeneralSetting;
   mappingSettings: MappingSetting[];
@@ -33,6 +33,8 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
+  enableCardsMapping: boolean;
+  cardsMapping = false;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
@@ -237,7 +239,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
-        autoCreateMerchant: [that.generalSettings.auto_create_merchants]
+        autoCreateMerchant: [that.generalSettings.auto_create_merchants],
+        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account]
       });
 
       that.setupFieldWatchers();
@@ -255,7 +258,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
-        autoCreateMerchant: [false]
+        autoCreateMerchant: [false],
+        enableCardsMapping: [false]
       });
 
       that.setupFieldWatchers();
@@ -317,19 +321,21 @@ export class ConfigurationComponent implements OnInit {
 
   postConfigurationsAndMappingSettings(generalSettingsPayload: GeneralSetting, mappingSettingsPayload: MappingSetting[], redirectToGeneralMappings: boolean = false, redirectToEmployeeMappings: boolean = false) {
     const that = this;
-
     that.isLoading = true;
-    const postSettings = [];
 
-    postSettings.push(that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload));
-    if (mappingSettingsPayload.length) {
-      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload));
-    }
+    that.settingsService.postGeneralSettings(that.workspaceId, generalSettingsPayload).subscribe(() => {
+      if (mappingSettingsPayload.length) {
+        that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload).subscribe(() => {
+          that.isLoading = false;
+          that.snackBar.open('Configuration saved successfully');
+          that.netsuite.getGeneralSettings();
+        });
+      } else {
+          that.isLoading = false;
+          that.snackBar.open('Configuration saved successfully');
+          that.netsuite.getGeneralSettings();
+      }
 
-    forkJoin(postSettings).subscribe(() => {
-      that.isLoading = false;
-      that.snackBar.open('Configuration saved successfully');
-      that.netsuite.getGeneralSettings();
       if (redirectToGeneralMappings) {
         if (redirectToEmployeeMappings) {
           // add redirect_to_employee_mappings query param
@@ -361,6 +367,14 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
+    if ((this.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL') && this.generalSettingsForm.value.enableCardsMapping) {
+      that.cardsMapping = true;
+    }
+
+    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '189') {
+      that.cardsMapping = true;
+    }
+
     return {
       employee_field_mapping: that.generalSettingsForm.value.employees,
       reimbursable_expenses_object: that.generalSettingsForm.value.reimbursableExpense,
@@ -374,6 +388,7 @@ export class ConfigurationComponent implements OnInit {
       auto_map_employees: that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null,
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
+      map_fyle_cards_netsuite_account: that.cardsMapping,
       workspace: that.workspaceId
     };
   }
@@ -412,6 +427,13 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
+    if (that.cardsMapping) {
+      mappingSettingsPayload.push({
+        source_field: 'CORPORATE_CARD',
+        destination_field: 'CREDIT_CARD_ACCOUNT'
+      });
+    }
+
     return mappingSettingsPayload;
   }
 
@@ -436,6 +458,15 @@ export class ConfigurationComponent implements OnInit {
       that.showPaymentsandProjectsField = true;
     } else {
       that.showPaymentsandProjectsField = false;
+    }
+  }
+
+  showNetsuiteCardsMapping() {
+    const that = this;
+    if (that.workspaceId.toString() === '189') {
+      return true;
+    } else {
+      return false;
     }
   }
 

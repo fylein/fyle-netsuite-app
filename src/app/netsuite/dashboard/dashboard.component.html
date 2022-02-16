@@ -25,7 +25,7 @@
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
-                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.fyleConnected || currentState === allOnboardingStates.netsuiteConnected || currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.fyleConnected || currentState === allOnboardingStates.netsuiteConnected || currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Connect to Fyle Account</div>
             </div>
@@ -38,7 +38,7 @@
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
-                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.netsuiteConnected || currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.netsuiteConnected || currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Connect to NetSuite Account</div>
             </div>
@@ -52,7 +52,7 @@
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
-                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.subsidiaryMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Select NetSuite Subsidiary</div>
             </div>
@@ -73,7 +73,7 @@
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
-                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone || currentState === allOnboardingStates.cardsMappingDone}">
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Fyle fields to NetSuite fields</div>
             </div>
@@ -94,7 +94,7 @@
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
-                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
                 check_circle</mat-icon>
               <div class="onboarding-stepper--desc">Map Bank Accounts</div>
             </div>
@@ -106,6 +106,24 @@
             </div>
           </div>
           <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showCardsMapping">
+              <mat-icon class="onboarding-stepper--check"
+                [ngClass]="{'onboarding-stepper--check__complete': (generalSettings && generalSettings.skip_cards_mapping) || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
+                check_circle</mat-icon>
+              <div class="onboarding-stepper--desc">Map Corporate Cards</div>
+            </div>
+            <div (click)="onCardsMappingsPageVisit(true)" class="onboarding-stepper--navigation cursor-pointer"
+              *ngIf="currentState === allOnboardingStates.generalMappingsDone && showCardsMapping && (generalSettings && !generalSettings.skip_cards_mapping)"
+              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}">
+              <span class="cards-mapping" routerLink="../settings/corporate_card/mappings/">
+                Go to Cards Mappings
+              </span>
+              <span (click)="skipCardsMapping()">
+                Skip
+              </span>
+            </div>
+          </div>
+          <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="onboarding-stepper--check"
                 [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.employeeMappingsDone}">
@@ -113,8 +131,8 @@
               <div class="onboarding-stepper--desc">Map Employees</div>
             </div>
             <div routerLink="../settings/employee/mappings/" class="onboarding-stepper--navigation cursor-pointer"
-              *ngIf="currentState === allOnboardingStates.generalMappingsDone"
-              [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}"
+              *ngIf="(showCardsMapping && currentState === allOnboardingStates.cardsMappingDone) || (!showCardsMapping && currentState === allOnboardingStates.generalMappingsDone)"
+              [ngClass]="{'onboarding-stepper--navigation__active': (showCardsMapping && currentState === allOnboardingStates.cardsMappingDone) || (!showCardsMapping && currentState === allOnboardingStates.generalMappingsDone)}"
               (click)="onEmployeeMappingsPageVisit(true)">
               Go to Employee Mappings
             </div>
