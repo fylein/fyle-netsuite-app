@@ -371,7 +371,7 @@ export class ConfigurationComponent implements OnInit {
       that.cardsMapping = true;
     }
 
-    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '189') {
+    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '168') {
       that.cardsMapping = true;
     }
 
@@ -463,7 +463,7 @@ export class ConfigurationComponent implements OnInit {
 
   showNetsuiteCardsMapping() {
     const that = this;
-    if (that.workspaceId.toString() === '189') {
+    if (that.workspaceId.toString() === '168') {
       return true;
     } else {
       return false;

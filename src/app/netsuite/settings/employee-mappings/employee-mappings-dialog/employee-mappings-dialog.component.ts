@@ -56,7 +56,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   }
 
   showCreditCardAccountDialogue() {
-    if (!this.generalSettings.map_fyle_cards_netsuite_account && (this.workSpaceId.toString() === '189')) {
+    if (!this.generalSettings.map_fyle_cards_netsuite_account && (this.workSpaceId.toString() === '168')) {
       return true;
     }
   }
