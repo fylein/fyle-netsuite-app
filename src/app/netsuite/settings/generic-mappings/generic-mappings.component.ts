@@ -97,8 +97,8 @@ export class GenericMappingsComponent implements OnInit {
         that.docLink = 'https://www.fylehq.com/help/en/articles/5623259-importing-tax-code-from-netsuite-to-fyle';
       }
 
-      if (that.sourceField == 'corporate_card') {
-        that.docLink = 'https://help.fylehq.com/en/articles/5987925-mapping-corporate-credit-cards-in-fyle-to-credit-card-accounts-in-netsuite'
+      if (that.sourceField === 'corporate_card') {
+        that.docLink = 'https://help.fylehq.com/en/articles/5987925-mapping-corporate-credit-cards-in-fyle-to-credit-card-accounts-in-netsuite';
       }
 
       that.settingsService.getMappingSettings().subscribe(response => {
