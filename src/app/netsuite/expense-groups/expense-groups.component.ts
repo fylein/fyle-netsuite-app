@@ -94,21 +94,22 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   }
 
   generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog, expenseGroupId: number): [string, string] {
-    var ccType = 'chargeCard';
-
-    this.taskService.getTasksByExpenseGroupId(expenseGroupId).subscribe((task: Task) => {
-      if (task.type === 'CREATING_CREDIT_CARD_REFUND') {
-        ccType = 'chargeCardRefund';
-      }
-    });
-
-    if (responseLogs) {
-      const exportType = responseLogs.type || ccType;
-
-      return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+    let exportType = null;
+    if (responseLogs && !responseLogs.type) {
+      this.taskService.getTasksByExpenseGroupId(expenseGroupId).subscribe((task: Task) => {
+        if (task.type === 'CREATING_CREDIT_CARD_REFUND') {
+          exportType = 'chargeCardRefund';
+        } else {
+          exportType = 'chargeCard';
+        }
+      });
+    } else if (responseLogs && responseLogs.type) {
+      exportType = responseLogs.type;
+    } else {
+      exportType = null;
     }
 
-    return [null, null];
+    return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
   }
 
   getPaginatedExpenseGroups() {
