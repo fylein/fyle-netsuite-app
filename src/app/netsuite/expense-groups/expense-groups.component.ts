@@ -92,7 +92,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog): [string, string] {
     if (responseLogs) {
-      const exportType = responseLogs.type;
+      const exportType = responseLogs.type || 'chargeCard';
 
       return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
     }
