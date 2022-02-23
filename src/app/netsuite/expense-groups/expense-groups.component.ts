@@ -5,8 +5,6 @@ import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
-import { TasksService } from 'src/app/core/services/tasks.service';
-import { Task } from 'src/app/core/models/task.model';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Subscription } from 'rxjs';
@@ -50,7 +48,6 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     private expenseGroupService: ExpenseGroupsService,
     private router: Router,
     private settingsService: SettingsService,
-    private taskService: TasksService,
     private windowReferenceService: WindowReferenceService,
     private storageService: StorageService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
@@ -93,23 +90,13 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog, expenseGroupId: number): [string, string] {
-    let exportType = null;
-    if (responseLogs && !responseLogs.type) {
-      this.taskService.getTasksByExpenseGroupId(expenseGroupId).subscribe((task: Task) => {
-        if (task.type === 'CREATING_CREDIT_CARD_REFUND') {
-          exportType = 'chargeCardRefund';
-        } else {
-          exportType = 'chargeCard';
-        }
-      });
-    } else if (responseLogs && responseLogs.type) {
-      exportType = responseLogs.type;
-    } else {
-      exportType = null;
-    }
+  generateExportTypeAndRedirection(responseLogs: NetSuiteResponseLog): [string, string] {
+    if (responseLogs) {
+      const exportType = responseLogs.type;
 
-    return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+      return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
+    }
+    return [null, null];
   }
 
   getPaginatedExpenseGroups() {
@@ -118,7 +105,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     return that.expenseGroupService.getExpenseGroups(that.pageSize, that.pageNumber * that.pageSize, that.state).subscribe((expenseGroups: ExpenseGroupResponse) => {
       that.count = expenseGroups.count;
       expenseGroups.results.forEach(expenseGroup => {
-        const [exportType, _] = that.generateExportTypeAndRedirection(expenseGroup.response_logs, expenseGroup.id);
+        const [exportType, _] = that.generateExportTypeAndRedirection(expenseGroup.response_logs);
         expenseGroup.export_type = exportType;
       });
       that.expenseGroups = new MatTableDataSource(expenseGroups.results);
@@ -189,7 +176,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: deprecation
     event.stopPropagation();
     const that = this;
-    const [_, exportRedirection] = that.generateExportTypeAndRedirection(clickedExpenseGroup.response_logs, clickedExpenseGroup.id);
+    const [_, exportRedirection] = that.generateExportTypeAndRedirection(clickedExpenseGroup.response_logs);
 
     that.openInNetSuite(exportRedirection, clickedExpenseGroup.response_logs.internalId);
   }
