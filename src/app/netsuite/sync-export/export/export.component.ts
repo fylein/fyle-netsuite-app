@@ -12,7 +12,7 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
 import { ExportsService } from 'src/app/core/services/exports.service';
 
-const EXPORTS_TASK_TYPE = ['CREATING_BILL', 'CREATING_EXPENSE_REPORT', 'CREATING_CREDIT_CARD_CHARGE', 'CREATING_JOURNAL_ENTRY'];
+const EXPORTS_TASK_TYPE = ['CREATING_BILL', 'CREATING_EXPENSE_REPORT', 'CREATING_CREDIT_CARD_CHARGE', 'CREATING_CREDIT_CARD_REFUND', 'CREATING_JOURNAL_ENTRY'];
 
 @Component({
   selector: 'app-export',
