@@ -30,13 +30,15 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     vendorBill: 'vendbill',
     expenseReport: 'exprept',
     journalEntry: 'journal',
-    chargeCard: 'cardchrg'
+    chargeCard: 'cardchrg',
+    chargeCardRefund: 'cardrfnd'
   };
   exportTypeDisplayNameMap = {
     vendorBill: 'Bill',
     expenseReport: 'Expense Report',
     journalEntry: 'Journal Entry',
-    chargeCard: 'Credit Card Charge'
+    chargeCard: 'Credit Card Charge',
+    chargeCardRefund: 'Credit Card Refund'
   };
   windowReference: Window;
   routerEventSubscription: Subscription;
@@ -94,7 +96,6 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
       return [this.exportTypeDisplayNameMap[exportType], this.exportTypeRedirectionMap[exportType]];
     }
-
     return [null, null];
   }
 
