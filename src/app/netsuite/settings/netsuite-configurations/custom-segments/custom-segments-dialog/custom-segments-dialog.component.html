@@ -51,6 +51,9 @@
           <mat-option [value]="'CUSTOM_RECORD'">
             Custom Record
           </mat-option>
+          <mat-option [value]="'CUSTOM_SEGMENT'">
+            Custom Segment
+          </mat-option>
         </mat-select>
       </mat-form-field>
       <mandatory-error-message listName="custom field type" *ngIf="form.controls.custom_field_type.touched && !form.controls.custom_field_type.valid"></mandatory-error-message>
