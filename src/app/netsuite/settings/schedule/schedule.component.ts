@@ -39,8 +39,8 @@ export class ScheduleComponent implements OnInit {
       that.workspaceService.getWorkspaceAdmins().subscribe((admins) => {
         that.workspaceAdmins = admins;
         that.settingsService.getSettings().subscribe((setting) => {
-          setting['added_emails'].forEach(element => {
-            that.workspaceAdmins.push(element)
+          setting.added_emails.forEach(element => {
+            that.workspaceAdmins.push(element);
           });
         });
         that.form.setValue({
@@ -48,8 +48,6 @@ export class ScheduleComponent implements OnInit {
           scheduleEnabled: settings.enabled,
           emails: settings.selected_email
         });
-        console.log('form', that.form.value.emails)
-        console.log(that.workspaceAdmins)
         that.isLoading = false;
       });
     }, () => {
@@ -61,10 +59,10 @@ export class ScheduleComponent implements OnInit {
     const that = this;
     const hours = that.form.value.hours;
     const scheduleEnabled = that.form.value.scheduleEnabled;
-    const selected_emails = that.form.value.emails
+    const selectedEmails = that.form.value.emails;
 
     that.isLoading = true;
-    that.settingsService.postSettings(hours, scheduleEnabled, selected_emails , null).subscribe(() => {
+    that.settingsService.postSettings(hours, scheduleEnabled, selectedEmails , null).subscribe(() => {
       that.isLoading = false;
       that.snackBar.open('Schedule saved');
       that.getSettings();
@@ -84,7 +82,7 @@ export class ScheduleComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      that.getSettings()
+      that.getSettings();
     });
   }
 

@@ -24,8 +24,8 @@ export class WorkspaceService {
   }
 
   getWorkspaceAdmins(): Observable<[]> {
-    const workspaceId =  this.getWorkspaceId()
-    return this.apiService.get(`/workspaces/${workspaceId}/admins/`, {})
+    const workspaceId =  this.getWorkspaceId();
+    return this.apiService.get(`/workspaces/${workspaceId}/admins/`, {});
   }
 
   getWorkspaceById(): Observable<Workspace> {

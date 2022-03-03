@@ -25,12 +25,12 @@ export class AddEmailDialogComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
-    const admin_data = {
-      'name': that.form.value.adminName,
-      'email': that.form.value.adminEmail
-    }
+    const adminData = {
+      name: that.form.value.adminName,
+      email: that.form.value.adminEmail
+    };
 
-    that.settingsService.postSettings(that.data['hours'], that.data['schedulenabled'], null, admin_data).subscribe(() => {
+    that.settingsService.postSettings(that.data.hours, that.data.schedule_enabled, null, adminData).subscribe(() => {
       that.isLoading = false;
       that.dialogRef.close();
     });
