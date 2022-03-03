@@ -15,7 +15,7 @@ import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandat
     LoaderComponent,
     ZeroStateComponent,
     MandatoryFieldComponent,
-    MandatoryErrorMessageComponent
+    MandatoryErrorMessageComponent,
   ],
   imports: [
     CommonModule,

@@ -62,6 +62,7 @@ import { MatTooltipModule } from '@angular/material';
 import { ConfigurationDialogComponent } from './settings/netsuite-configurations/configuration/configuration-dialog/configuration-dialog.component';
 import { MemoStructureComponent } from './settings/netsuite-configurations/memo-structure/memo-structure.component';
 import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/add-email-dialog.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop
     CustomSegmentsDialogComponent,
     PaginatorComponent,
     ConfigurationDialogComponent,
-    MemoStructureComponent
+    MemoStructureComponent,
+    AddEmailDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
@@ -102,7 +104,8 @@ import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsDialogComponent,
     CustomSegmentsDialogComponent,
-    ConfigurationDialogComponent
+    ConfigurationDialogComponent,
+    AddEmailDialogComponent
   ],
   imports: [
     CommonModule,

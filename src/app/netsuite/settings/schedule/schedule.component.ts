@@ -6,11 +6,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
 import { pairwise } from 'rxjs/internal/operators/pairwise';
 import { ScheduleSettings } from 'src/app/core/models/schedule-settings.model';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddEmailDialogComponent } from './add-email-dialog/add-email-dialog.component';
+
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss', '../../netsuite.component.scss']
+  styleUrls: ['./schedule.component.scss', '../../netsuite.component.scss', '../netsuite-configurations/expense-field-configuration/expense-field-configuration.component.scss']
 })
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
@@ -18,22 +22,36 @@ export class ScheduleComponent implements OnInit {
   isLoading = false;
   hours = [...Array(24).keys()].map(day => day + 1);
   settings: ScheduleSettings;
+  workspaceAdmins: any;
   constructor(
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,
+    private workspaceService: WorkspaceService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) { }
 
   getSettings() {
     const that = this;
     that.isLoading = true;
     that.settingsService.getSettings().subscribe((settings) => {
       that.settings = settings;
-      that.form.setValue({
-        hours: settings.interval_hours,
-        scheduleEnabled: settings.enabled
+      that.workspaceService.getWorkspaceAdmins().subscribe((admins) => {
+        that.workspaceAdmins = admins;
+        that.settingsService.getSettings().subscribe((setting) => {
+          setting['added_emails'].forEach(element => {
+            that.workspaceAdmins.push(element)
+          });
+        });
+        that.form.setValue({
+          hours: settings.interval_hours,
+          scheduleEnabled: settings.enabled,
+          emails: settings.selected_email
+        });
+        console.log('form', that.form.value.emails)
+        console.log(that.workspaceAdmins)
+        that.isLoading = false;
       });
-      that.isLoading = false;
     }, () => {
       that.isLoading = false;
     });
@@ -43,12 +61,30 @@ export class ScheduleComponent implements OnInit {
     const that = this;
     const hours = that.form.value.hours;
     const scheduleEnabled = that.form.value.scheduleEnabled;
+    const selected_emails = that.form.value.emails
 
     that.isLoading = true;
-    that.settingsService.postSettings(hours, scheduleEnabled).subscribe(() => {
+    that.settingsService.postSettings(hours, scheduleEnabled, selected_emails , null).subscribe(() => {
       that.isLoading = false;
       that.snackBar.open('Schedule saved');
       that.getSettings();
+    });
+  }
+
+  open() {
+    const that = this;
+
+    const dialogRef = that.dialog.open(AddEmailDialogComponent, {
+      width: '467px',
+      data: {
+        workspaceId: that.workspaceId,
+        hours: that.form.value.hours,
+        schedulenabled: that.form.value.scheduleEnabled
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      that.getSettings()
     });
   }
 
@@ -57,7 +93,8 @@ export class ScheduleComponent implements OnInit {
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.form = that.formBuilder.group({
       hours: ['', Validators.required],
-      scheduleEnabled: [false]
+      scheduleEnabled: [false],
+      emails: []
     });
 
     that.form.controls.scheduleEnabled.valueChanges.pipe(
@@ -67,7 +104,7 @@ export class ScheduleComponent implements OnInit {
       if (!newValue && oldValue !== newValue) {
         if (that.settings) {
           that.isLoading = true;
-          that.settingsService.postSettings(0, false).subscribe(() => {
+          that.settingsService.postSettings(0, false, [], []).subscribe(() => {
             that.isLoading = false;
             that.snackBar.open('Scheduling turned off');
             that.getSettings();

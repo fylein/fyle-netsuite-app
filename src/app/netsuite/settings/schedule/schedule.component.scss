@@ -2,20 +2,109 @@
 
 $fy-panel: #f5f5f5;
 
+.multiline-mat-option.mat-option {
+  white-space: normal;
+  line-height: normal;
+  height: unset;
+  padding-top: 0.9em;
+  padding-bottom: 0.9em;
+} 
+
+.example-additional-selection {
+  opacity: 0.75;
+  font-size: 0.85rem;
+  align-items: center;
+  margin-left: 5px;
+}
+
 .schedule {
   &--header {
     border-bottom: 1px solid $fy-layout-background;
+    color: $fy-nav-text;
+    padding: 30px 23px;
+    margin: 0;
+  }
+
+  &--header-title {
+    font-family: 'Aktiv Grotesk';
+    font-style: bold;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    color: #2C304E;
+    margin-top: 15px;
+  }
+
+  &--header-info {
+    font-family: 'Aktiv Grotesk';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: #5A5D72;
+    margin-top: 5px;
   }
 
   &--toggle-text {
     font-size: 14px;
   }
 
+  &--bottom-name {
+    font-family: 'Aktiv Grotesk';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    color: #A9ACBC;
+
+  }
+
+  &--bottom-email {
+    font-family: 'Aktiv Grotesk';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+
+    color: #414562;
+  }
+
   &--form {
     color: $fy-nav-text;
+    font-family: 'Aktiv Grotesk';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  &--span-or {
+    margin-left: 25px;
+  }
+
+  &--frequency {
     margin: 24px;
     max-width: 360px;
-    font-size: 14px;
+  }
+
+  &--toggle {
+    padding-left: 300px;
+  }
+
+  &--desc {
+    width: 350px;
+  }
+
+  &--dropdown {
+    width: 320px;
+    padding-top: 10px;
+
+  }
+
+  &--select {
+    border-bottom: 1px solid $fy-layout-background;
+    padding: 10px 23px;
+    
   }
 
   &--inner-form {
@@ -27,5 +116,10 @@ $fy-panel: #f5f5f5;
 
   &--save-btn {
     max-width: 120px;
+    margin: 20px;
+  }
+
+  &--add-btn {
+    margin-left: 20px;
   }
 }
