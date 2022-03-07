@@ -14,9 +14,9 @@
           <div class="schedule--toggle-text">Enabled</div>
         </mat-slide-toggle>
       </div>
-      <div>
+      <div class="schedule--header-info">
         Set up an automatic process for importing expense groups
-        <div fxLayout="row" class="schedule--header-info">
+        <div fxLayout="row">
           from Fyle and exporting them to Sage Intacct.
           <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" target="_blank"
             rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
@@ -47,7 +47,7 @@
         </div>
 
 
-        <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
+        <div *ngIf="form.controls.hours.value" fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
             <mandatory-field></mandatory-field>
@@ -56,22 +56,31 @@
             one to get email notifications
             on</span>
           
-            <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
-              <mat-form-field class="schedule--dropdown" appearance="outline" required>
+            <div fxLayout="row" class="schedule--header-title"  fxLayoutAlign="start center">
+              <mat-form-field   class="schedule--dropdown" appearance="outline" required>
                 <mat-select placeholder="Select Admins" formControlName="emails" multiple>
                   <mat-select-trigger>
-                    {{form.value.emails ? form.value.emails[0] : ''}}
-                    <span *ngIf="form.value.emails?.length > 1" class="example-additional-selection">
-                      (+{{form.value.emails.length - 1}} {{form.value.emails?.length === 2 ? 'other' : 'others'}})
-                    </span>              
+                    <div fxLayout="row">
+                      <div fxLayout="row" fxLayoutAlign="space-around center" class="selected-email">
+                          {{form.value.emails ? form.value.emails[0] : ''}}
+                        <div fxLayout="column" class = "vertical"></div>
+                        <mat-icon class="mat-icon-close">close</mat-icon>
+                      </div>
+                      <div *ngIf="form.value.emails?.length > 1" class="example-additional-selection">
+                        <div class="email-number">
+                          +{{form.value.emails.length - 1}}
+                        </div>
+                      </div>
+                      <mat-icon  *ngIf="form.value.emails?.length > 1" class="close">close</mat-icon>
+                    </div>
                   </mat-select-trigger>              
                   <mat-option *ngFor="let hour of workspaceAdmins" class="multiline-mat-option" [value]="hour.email">
                     <div fxLayout="column" fxLayoutAlign="end start">
-                      <div>
-                        {{hour.email}}
+                      <div >
+                        {{hour.name}}
                       </div>
                       <div class="schedule--bottom-name">
-                        {{hour.name}}
+                        {{hour.email}}
                       </div>
                     </div>
                   </mat-option>
@@ -82,8 +91,8 @@
               <span class="schedule--span-or">or</span>
               
               <div fxLayout="row" class="schedule--add-btn" fxLayoutAlign="start stretch">
-                <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png">
-                <button type="button"  mat-flat-button (click)="open()">
+                <img class="expense-fields--add-custom-icon"  src="assets/images/pngs/add.png">
+                <button type="button"  color="primary" mat-flat-button (click)="open()">
                   Add new email address
                 </button>
               </div>

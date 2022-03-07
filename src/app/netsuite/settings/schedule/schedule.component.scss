@@ -8,13 +8,65 @@ $fy-panel: #f5f5f5;
   height: unset;
   padding-top: 0.9em;
   padding-bottom: 0.9em;
-} 
+}
+
+// :host ::ng-deep .mat-form-field-type-mat-select .mat-form-field-flex {
+//   height: 40px;
+// }
+
+.close {
+  margin: 3px 10px 0px 10px;
+  height: 30px;
+  color: #A9ACBC;
+}
+
+.mat-icon-close {
+  height: 8.75;
+  width: 8.75;
+  color: #A9ACBC;
+}
+
+.vertical {
+  border-left: 1px solid #DFDFE2;
+  height: 30px;
+  margin-left: 50px;
+}
+
+.selected-email {
+  width: 218px;
+  height: 30px;
+  background-color: #FFFFFF;
+  border: 1px solid #DFDFE2;
+  box-sizing: border-box;
+  border-radius: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 8px 0px 12px;
+}
+
 
 .example-additional-selection {
-  opacity: 0.75;
-  font-size: 0.85rem;
-  align-items: center;
   margin-left: 5px;
+  margin-top: 2px;
+  width: 27px;
+  height: 27px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.0016em;
+  color: #5A5D72;
+  background-color: #F5F5F5;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.email-number {
+  margin-top: 6px;
+  height: 30px;
+}
+
+.select-trigger {
+  width: 20px;
 }
 
 .schedule {
@@ -26,23 +78,21 @@ $fy-panel: #f5f5f5;
   }
 
   &--header-title {
-    font-family: 'Aktiv Grotesk';
-    font-style: bold;
+    font-style: normal;
     font-weight: 500;
-    font-size: 15px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 17.92px;
     color: #2C304E;
     margin-top: 15px;
   }
 
   &--header-info {
-    font-family: 'Aktiv Grotesk';
     font-style: normal;
-    font-weight: normal;
+    font-weight: 400;
     font-size: 14px;
-    line-height: 18px;
-    color: #5A5D72;
+    line-height: 17.92px;
     margin-top: 5px;
+    color:  $fy-nav-text;
   }
 
   &--toggle-text {
@@ -50,28 +100,24 @@ $fy-panel: #f5f5f5;
   }
 
   &--bottom-name {
-    font-family: 'Aktiv Grotesk';
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    color: #A9ACBC;
+    color:  $fy-nav-text;
 
   }
 
   &--bottom-email {
-    font-family: 'Aktiv Grotesk';
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 18px;
-
     color: #414562;
   }
 
   &--form {
     color: $fy-nav-text;
-    font-family: 'Aktiv Grotesk';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -105,13 +151,6 @@ $fy-panel: #f5f5f5;
     border-bottom: 1px solid $fy-layout-background;
     padding: 10px 23px;
     
-  }
-
-  &--inner-form {
-    background-color: $fy-panel;
-    border-radius: 4px;
-    padding: 12px;
-    margin: 16px 0;
   }
 
   &--save-btn {

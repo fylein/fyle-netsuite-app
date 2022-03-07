@@ -14,7 +14,7 @@ import { AddEmailDialogComponent } from './add-email-dialog/add-email-dialog.com
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss', '../../netsuite.component.scss', '../netsuite-configurations/expense-field-configuration/expense-field-configuration.component.scss']
+  styleUrls: ['./schedule.component.scss', '../../netsuite.component.scss', '../netsuite-configurations/expense-field-configuration/expense-field-configuration.component.scss'],
 })
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
@@ -77,7 +77,8 @@ export class ScheduleComponent implements OnInit {
       data: {
         workspaceId: that.workspaceId,
         hours: that.form.value.hours,
-        schedulenabled: that.form.value.scheduleEnabled
+        schedulEnabled: that.form.value.scheduleEnabled,
+        selectedEmails: that.form.value.emails
       }
     });
 
@@ -102,7 +103,7 @@ export class ScheduleComponent implements OnInit {
       if (!newValue && oldValue !== newValue) {
         if (that.settings) {
           that.isLoading = true;
-          that.settingsService.postSettings(0, false, [], []).subscribe(() => {
+          that.settingsService.postSettings(0, false, null, null).subscribe(() => {
             that.isLoading = false;
             that.snackBar.open('Scheduling turned off');
             that.getSettings();
@@ -111,6 +112,10 @@ export class ScheduleComponent implements OnInit {
       }
     }, () => {
       that.snackBar.open('Something went wrong');
+    });
+
+    that.workspaceService.getWorkspaceAdmins().subscribe((admins) => {
+      that.workspaceAdmins = admins;
     });
 
     that.getSettings();
