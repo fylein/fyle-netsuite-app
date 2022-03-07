@@ -55,50 +55,48 @@
           <span class="schedule--header-info">You can select one or more email address from the given list, or add new
             one to get email notifications
             on</span>
-          
-            <div fxLayout="row" class="schedule--header-title"  fxLayoutAlign="start center">
-              <mat-form-field   class="schedule--dropdown" appearance="outline" required>
-                <mat-select placeholder="Select Admins" formControlName="emails" multiple>
-                  <mat-select-trigger>
-                    <div fxLayout="row">
-                      <div fxLayout="row" fxLayoutAlign="space-around center" class="selected-email">
-                          {{form.value.emails ? form.value.emails[0] : ''}}
-                        <div fxLayout="column" class = "vertical"></div>
-                        <mat-icon class="mat-icon-close">close</mat-icon>
-                      </div>
-                      <div *ngIf="form.value.emails?.length > 1" class="example-additional-selection">
-                        <div class="email-number">
-                          +{{form.value.emails.length - 1}}
-                        </div>
-                      </div>
-                      <mat-icon  *ngIf="form.value.emails?.length > 1" class="close">close</mat-icon>
-                    </div>
-                  </mat-select-trigger>              
-                  <mat-option *ngFor="let hour of workspaceAdmins" class="multiline-mat-option" [value]="hour.email">
-                    <div fxLayout="column" fxLayoutAlign="end start">
-                      <div >
-                        {{hour.name}}
-                      </div>
-                      <div class="schedule--bottom-name">
-                        {{hour.email}}
+
+          <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
+            <mat-form-field class="schedule--dropdown" appearance="outline" required>
+              <mat-select placeholder="Select Admins" formControlName="emails" multiple>
+                <mat-select-trigger>
+                  <div fxLayout="row">
+                    <div fxLayout="row" fxLayoutAlign="space-between center" class="selected-email">
+                      {{form.value.emails ? form.value.emails[0] : ''}}
+                      <div fxLayout="column" class="vertical"></div>
+                      <div class="mat-icon-close">
+                        <mat-icon>close</mat-icon>
                       </div>
                     </div>
-                  </mat-option>
-                </mat-select>
-                
-              </mat-form-field>
-              
-              <span class="schedule--span-or">or</span>
-              
-              <div fxLayout="row" class="schedule--add-btn" fxLayoutAlign="start stretch">
-                <img class="expense-fields--add-custom-icon"  src="assets/images/pngs/add.png">
-                <button type="button"  color="primary" mat-flat-button (click)="open()">
-                  Add new email address
-                </button>
-              </div>
-             
+                    <div *ngIf="form.value.emails?.length > 1" class="example-additional-selection">
+                      <div class="email-number">
+                        +{{form.value.emails.length - 1}}
+                      </div>
+                    </div>
+                  </div>
+                </mat-select-trigger>
+                <mat-option *ngFor="let hour of workspaceAdmins" class="multiline-mat-option" [value]="hour.email">
+                  <div fxLayout="column" fxLayoutAlign="end start">
+                    <div>
+                      {{hour.name}}
+                    </div>
+                    <div class="schedule--bottom-name">
+                      {{hour.email}}
+                    </div>
+                  </div>
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+
+            <span class="schedule--span-or">or</span>
+
+            <div fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
+              <img class="schedule--add-btn" src="assets/images/pngs/add.png">
+              <span class="schedule--span-or">Add new email address</span>
             </div>
-          
+          </div>
+
 
         </div>
 
