@@ -1,13 +1,13 @@
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
 </div>
-<div *ngIf="!isLoading">
+<div class="hesodfsd" *ngIf="!isLoading">
   <div class="schedule--header mat-h2">
     Automated Import/Export
   </div>
 
   <form class="schedule--form" [formGroup]="form">
-    <div class="schedule--header">
+    <div class="schedule--select">
       <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
         Enable Automated Import-Export
         <mat-slide-toggle color="primary" class="schedule--toggle" formControlName="scheduleEnabled">
@@ -58,7 +58,7 @@
 
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field class="schedule--dropdown" appearance="outline" required>
-              <mat-select  placeholder="Select Admins" disableOptionCentering panelClass="myPanelClass" formControlName="emails" multiple>
+              <mat-select placeholder="Select Admins" disableOptionCentering panelClass="myPanelClass" formControlName="emails" multiple>
                 <app-simple-search-select [form]="form"></app-simple-search-select>
                 <mat-select-trigger>
                   <div fxLayout="row">

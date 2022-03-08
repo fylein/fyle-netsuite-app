@@ -16,6 +16,11 @@ $fy-panel: #f5f5f5;
   transform: translateY(1px) !important;
 }
 
+.hesodfsd {
+  height: 100vh;
+  position: relative;
+}
+
 
 .close {
   height: 18px;
@@ -46,6 +51,7 @@ $fy-panel: #f5f5f5;
   font-size: 12px;
   line-height: 20px;
   margin-top: 2px;
+  z-index: 1000;
 }
 
 .example-additional-selection {
@@ -60,6 +66,7 @@ $fy-panel: #f5f5f5;
   border-radius: 15px;
   margin-left: 10px;
   margin-top: 1px;
+
 }
 
 .email-number {
@@ -127,6 +134,12 @@ $fy-panel: #f5f5f5;
     margin-left: 5px;
     margin-bottom: 8px;
     margin-right: 25px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+
+
+    color: #2C304E;
   }
 
   &--frequency {
@@ -162,5 +175,6 @@ $fy-panel: #f5f5f5;
     margin-bottom: 8px;
     height: 16px;
     width: 16px;
+    font-style: bold;
   }
 }

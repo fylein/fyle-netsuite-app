@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, NgModel } from '@angular/forms';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { ScheduleSettings } from 'src/app/core/models/schedule-settings.model';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEmailDialogComponent } from './add-email-dialog/add-email-dialog.component';
+import { MatSelect } from '@angular/material';
 
 
 @Component({
@@ -23,13 +24,15 @@ export class ScheduleComponent implements OnInit {
   hours = [...Array(24).keys()].map(day => day + 1);
   settings: ScheduleSettings;
   workspaceAdmins: any;
+
   constructor(
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,
     private workspaceService: WorkspaceService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog
+    ) { }
 
   getSettings() {
     const that = this;
