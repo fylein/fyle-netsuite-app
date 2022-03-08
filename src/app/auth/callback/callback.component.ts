@@ -41,18 +41,17 @@ export class CallbackComponent implements OnInit {
             that.storageService.set('email', response.user.email);
             that.storageService.set('access_token', response.access_token);
             that.storageService.set('refresh_token', response.refresh_token);
+            const user = {
+              employee_email: response.user['email'],
+              full_name: response.user["full_name"],
+              org_id: response.user["org_id"],
+              org_name: response.user["org_name"]
+            };
+            that.storageService.set('user', user);
             forkJoin([
-              that.authService.getUserProfile(),
               that.authService.getFyleOrgs()
             ]).subscribe(responses => {
-              const user = {
-                employee_email: responses[0].data.user.email,
-                full_name: responses[0].data.user.full_name,
-                org_id: responses[0].data.org.id,
-                org_name: responses[0].data.org.name
-              };
-              that.storageService.set('user', user);
-              that.storageService.set('orgsCount', responses[1].length);
+              that.storageService.set('orgsCount', responses[0].length);
               that.router.navigate(['/workspaces']);
             });
           },
