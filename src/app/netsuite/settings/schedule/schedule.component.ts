@@ -46,7 +46,8 @@ export class ScheduleComponent implements OnInit {
         that.form.setValue({
           hours: settings.interval_hours,
           scheduleEnabled: settings.enabled,
-          emails: settings.selected_email
+          emails: settings.selected_email,
+          searchOption: ''
         });
         that.isLoading = false;
       });
@@ -93,7 +94,8 @@ export class ScheduleComponent implements OnInit {
     that.form = that.formBuilder.group({
       hours: ['', Validators.required],
       scheduleEnabled: [false],
-      emails: []
+      emails: [],
+      searchOption: [],
     });
 
     that.form.controls.scheduleEnabled.valueChanges.pipe(
