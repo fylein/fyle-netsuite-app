@@ -24,6 +24,19 @@ body {
   background-color: $fy-white;
 }
 
+.myPanelClass { 
+  margin-top: 35px !important;
+  min-width: 320px !important;
+  margin-left: 30px;
+}
+
+.simpleSelect {
+  margin-top: 35px !important;
+  min-width: 320px !important;
+  margin-left: 8px;
+}
+
+
 .mat-option:hover {
   background-color: $fy-nav-hover;
 }
