@@ -16,12 +16,6 @@ $fy-panel: #f5f5f5;
   transform: translateY(1px) !important;
 }
 
-.hesodfsd {
-  height: 100vh;
-  position: relative;
-}
-
-
 .close {
   height: 18px;
   color: #a9acbc;
@@ -41,6 +35,7 @@ $fy-panel: #f5f5f5;
   margin-left: 10px;
 }
 
+
 .selected-email {
   height: 22px;
   background-color: #ffffff;
@@ -51,7 +46,6 @@ $fy-panel: #f5f5f5;
   font-size: 12px;
   line-height: 20px;
   margin-top: 2px;
-  z-index: 1000;
 }
 
 .example-additional-selection {
@@ -66,7 +60,6 @@ $fy-panel: #f5f5f5;
   border-radius: 15px;
   margin-left: 10px;
   margin-top: 1px;
-
 }
 
 .email-number {

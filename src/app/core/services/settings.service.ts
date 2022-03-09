@@ -61,7 +61,7 @@ export class SettingsService {
     );
   }
 
-  postSettings(intervalHours: number, scheduleEnabled: boolean, selectedEmail: any, addedEmail: any): Observable<ScheduleSettings> {
+  postSettings(intervalHours: number, scheduleEnabled: boolean, selectedEmail: string[], addedEmail: {}): Observable<ScheduleSettings> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {

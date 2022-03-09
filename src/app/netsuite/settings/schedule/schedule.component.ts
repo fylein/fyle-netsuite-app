@@ -23,7 +23,7 @@ export class ScheduleComponent implements OnInit {
   isLoading = false;
   hours = [...Array(24).keys()].map(day => day + 1);
   settings: ScheduleSettings;
-  workspaceAdmins: any;
+  workspaceAdmins: [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,6 +57,22 @@ export class ScheduleComponent implements OnInit {
     }, () => {
       that.isLoading = false;
     });
+  }
+
+  clearSearchText(): void {
+    const that = this;
+    that.form.controls.searchOption.patchValue(null);
+  }
+
+  delete(event: Event, email: string, deleteAll: boolean = false) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (deleteAll) {
+      this.form.controls.emails.patchValue(null);
+    } else {
+      const emails = this.form.value.emails.filter(value => value !== email);
+      this.form.controls.emails.patchValue(emails);
+    }
   }
 
   submit() {
