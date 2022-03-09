@@ -22,8 +22,6 @@ $fy-panel: #f5f5f5;
 }
 
 .mat-icon-close {
-  height: 9;
-  width: 9;
   color: #a9acbc;
   padding-left: 5px;
   padding-top: 5px;
@@ -35,7 +33,6 @@ $fy-panel: #f5f5f5;
   margin-left: 10px;
 }
 
-
 .selected-email {
   height: 22px;
   background-color: #ffffff;
@@ -46,6 +43,14 @@ $fy-panel: #f5f5f5;
   font-size: 12px;
   line-height: 20px;
   margin-top: 2px;
+}
+
+.delele-all-icon {
+  width: 11.67px;
+  height: 11.67px;
+  margin-top: 1px;
+  margin-left: 4px;
+  color: #5a5d72;
 }
 
 .example-additional-selection {
@@ -73,7 +78,6 @@ $fy-panel: #f5f5f5;
   padding-top: 0.9em;
   padding-bottom: 0.9em;
 }
-
 
 .schedule {
   &--header {
@@ -105,7 +109,7 @@ $fy-panel: #f5f5f5;
     height: 15px;
     font-size: 12px;
     line-height: 15px;
-    color: #A9ACBC;
+    color: #a9acbc;
   }
 
   &--bottom-email {
@@ -131,8 +135,7 @@ $fy-panel: #f5f5f5;
     font-size: 14px;
     line-height: 18px;
 
-
-    color: #2C304E;
+    color: #2c304e;
   }
 
   &--frequency {

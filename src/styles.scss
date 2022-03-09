@@ -28,6 +28,8 @@ body {
   margin-top: 35px !important;
   min-width: 320px !important;
   margin-left: 30px;
+  overflow: auto;
+  max-height: 250px;
 }
 
 .simpleSelect {
