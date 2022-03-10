@@ -46,7 +46,6 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       import_to_fyle: [importToFyle],
       is_custom: [isCustom]
     });
-
     if (sourceField && destinationField) {
       group.controls.source_field.disable();
       group.controls.destination_field.disable();
@@ -178,7 +177,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const that = this;
 
     that.mappingSettings = mappingSetting.filter(
-      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'TAX_GROUP'
+      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'TAX_GROUP' && setting.source_field !== 'CORPORATE_CARD'
     );
 
     let expenseFieldFormArray;
