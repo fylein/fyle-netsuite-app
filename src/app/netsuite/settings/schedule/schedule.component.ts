@@ -42,14 +42,14 @@ export class ScheduleComponent implements OnInit {
       that.workspaceService.getWorkspaceAdmins().subscribe((admins) => {
         that.workspaceAdmins = admins;
         that.settingsService.getSettings().subscribe((setting) => {
-          setting.added_emails.forEach(element => {
+          setting.additional_email_options.forEach(element => {
             that.workspaceAdmins.push(element);
           });
         });
         that.form.setValue({
           hours: settings.interval_hours,
           scheduleEnabled: settings.enabled,
-          emails: settings.selected_email,
+          emails: settings.emails_selected,
           searchOption: ''
         });
         that.isLoading = false;
@@ -59,7 +59,7 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  clearSearchText(): void {
+  clearSearchText(event): void {
     const that = this;
     that.form.controls.searchOption.patchValue(null);
   }

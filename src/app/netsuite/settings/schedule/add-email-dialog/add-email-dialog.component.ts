@@ -41,7 +41,7 @@ export class AddEmailDialogComponent implements OnInit {
     const that = this;
     that.form = that.formBuilder.group({
       adminName: ['', Validators.required],
-      adminEmail: ['']
+      adminEmail: ['', Validators.compose([Validators.email, Validators.required])]
     });
   }
 

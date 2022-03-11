@@ -6,6 +6,6 @@ export type ScheduleSettings = {
   start_datetime: Date;
   interval_hours: number;
   schedule?: number;
-  added_emails: [];
-  selected_email: [];
+  additional_email_options: [];
+  emails_selected: [];
 };

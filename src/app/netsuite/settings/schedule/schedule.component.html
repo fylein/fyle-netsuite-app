@@ -51,6 +51,11 @@
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
             <mandatory-field></mandatory-field>
+            <mat-icon class="info-icon"
+             matTooltip="The selected email address will be notified instantly upon export failure"
+             [inline]="true" 
+             matTooltipPosition="after"
+             class="info-icon main">info</mat-icon>
           </div>
           <span class="schedule--header-info">You can select one or more email address from the given list, or add new
             one to get email notifications
@@ -61,10 +66,12 @@
               <mat-select placeholder="Select Admins" disableOptionCentering panelClass="myPanelClass"
                 formControlName="emails" multiple>
                 <app-simple-search-select [form]="form"></app-simple-search-select>
-                <mat-select-trigger>
+                <mat-select-trigger fxLayout="row" fxLayoutAlign="space-between center">
                   <div fxLayout="row">
                     <div fxLayout="row" fxLayoutAlign="space-between center" class="selected-email">
-                      {{form.value.emails ? form.value.emails[0] : ''}}
+                      <div class="display-email">
+                        {{form.value.emails ? form.value.emails[0] : ''}}
+                      </div>
                       <div fxLayout="column" class="vertical"></div>
                       <div class="mat-icon-close" (click)="delete($event, form.value.emails[0])">
                         <mat-icon>close</mat-icon>
@@ -75,13 +82,14 @@
                         +{{form.value.emails.length - 1}}
                       </div>
                     </div>
-                    <div *ngIf="form.value.emails?.length > 1" class="delele-all-icon"
-                      (click)="delete($event, form.value.emails[0], true)">
-                      <mat-icon>close</mat-icon>
-                    </div>
+                  </div>
+                  <div *ngIf="form.value.emails?.length > 1" class="delele-all-icon"
+                    (click)="delete($event, form.value.emails[0], true)">
+                    <mat-icon>close</mat-icon>
                   </div>
                 </mat-select-trigger>
-                <mat-option (click)="clearSearchText()"
+                <mat-option 
+                  (click)="clearSearchText(event)"
                   *ngFor="let hour of workspaceAdmins | search : form.value.searchOption" class="multiline-mat-option"
                   [value]="hour.email">
                   <div fxLayout="column" fxLayoutAlign="end start">
@@ -94,7 +102,6 @@
                   </div>
                 </mat-option>
               </mat-select>
-
             </mat-form-field>
 
             <span class="schedule--span-or">or</span>

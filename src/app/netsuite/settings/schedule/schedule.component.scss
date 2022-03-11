@@ -33,6 +33,14 @@ $fy-panel: #f5f5f5;
   margin-left: 10px;
 }
 
+.display-email {
+  display: block; 
+  max-width: 160px; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .selected-email {
   height: 22px;
   background-color: #ffffff;
@@ -46,24 +54,35 @@ $fy-panel: #f5f5f5;
 }
 
 .delele-all-icon {
-  width: 11.67px;
-  height: 11.67px;
-  margin-top: 1px;
-  margin-left: 4px;
+  margin-top: 5px;
   color: #5a5d72;
 }
+
+.info-icon {
+  text-align: center;
+  cursor: default;
+  margin-top: 10px;
+  font-size: 20px;
+  max-height: 24px;
+  vertical-align: middle;
+}
+
+.main {
+  max-width: 24px;
+  color: #5C98E5;
+}
+
 
 .example-additional-selection {
   width: 24px;
   height: 24px;
-  font-weight: 500;
   font-size: 12px;
   letter-spacing: 0.0016em;
   color: #5a5d72;
   background-color: #f5f5f5;
   text-align: center;
   border-radius: 15px;
-  margin-left: 10px;
+  margin-left: 5px;
   margin-top: 1px;
 }
 
