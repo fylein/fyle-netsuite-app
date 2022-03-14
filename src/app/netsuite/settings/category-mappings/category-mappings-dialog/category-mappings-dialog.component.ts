@@ -178,14 +178,23 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.netsuiteExpenseCategories = res[1].EXPENSE_CATEGORY;
 
       that.isLoading = false;
-      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.categoryMappingRow.source_category.value)[0] : '';
-      const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => that.data.categoryMappingRow.destination_account && nsAccObj.value === that.data.categoryMappingRow.destination_account.value)[0] : '';
-      const netsuiteExpenseCategory = that.editMapping ? that.netsuiteExpenseCategories.filter(nsAccObj => that.data.categoryMappingRow.destination_expense_head && nsAccObj.value === that.data.categoryMappingRow.destination_expense_head.value)[0] : '';
-      that.form = that.formBuilder.group({
-        fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        netsuiteAccount: [netsuiteAccount],
-        netsuiteExpenseCategory: [netsuiteExpenseCategory]
-      });
+      if (that.data.category) {
+        const fyleCategory = that.fyleCategories.filter(category => category.value === that.data.category)[0];
+        that.form = that.formBuilder.group({
+          fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+          netsuiteAccount: [''],
+          netsuiteExpenseCategory: ['']
+        });
+      } else {
+        const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.categoryMappingRow.source_category.value)[0] : '';
+        const netsuiteAccount = that.editMapping ? that.netsuiteAccounts.filter(nsAccObj => that.data.categoryMappingRow.destination_account && nsAccObj.value === that.data.categoryMappingRow.destination_account.value)[0] : '';
+        const netsuiteExpenseCategory = that.editMapping ? that.netsuiteExpenseCategories.filter(nsAccObj => that.data.categoryMappingRow.destination_expense_head && nsAccObj.value === that.data.categoryMappingRow.destination_expense_head.value)[0] : '';
+        that.form = that.formBuilder.group({
+          fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+          netsuiteAccount: [netsuiteAccount],
+          netsuiteExpenseCategory: [netsuiteExpenseCategory]
+        });
+      }
 
       if (that.editMapping) {
         that.form.controls.fyleCategory.disable();
@@ -202,7 +211,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
     if (that.data.categoryMappingRow) {
       that.editMapping = true;
     }
-
     that.isLoading = true;
     that.settingsService.getGeneralSettings().subscribe((settings: GeneralSetting) => {
       that.generalSettings = settings;

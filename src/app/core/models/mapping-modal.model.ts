@@ -10,4 +10,5 @@ export type MappingModal = {
   employeeMappingRow?: EmployeeMapping;
   categoryMappingRow?: CategoryMapping;
   setting?: MappingSetting;
+  category:string;
 };
