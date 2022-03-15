@@ -57,18 +57,6 @@ export class GroupMappingErrorComponent implements OnInit {
           category: selectedItem.value
         }
       });
-      dialogRef.afterClosed().subscribe(() => {
-        const onboarded = that.storageService.get('onboarded');
-        if (onboarded) {
-          const data = {
-            pageSize: that.storageService.get('mappings.pageSize') || 50,
-            pageNumber: 0
-          };
-
-        } else {
-          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-        }
-      });
     }
   }
 
