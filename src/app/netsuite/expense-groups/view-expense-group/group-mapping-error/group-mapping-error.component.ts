@@ -44,16 +44,17 @@ export class GroupMappingErrorComponent implements OnInit {
       that.isLoading = false;
     });
   }
-  open(selectedItem: CategoryMapping = null) {
+
+  open(selectedItem) {
     const that = this;
-    if (this.mappingErrors.filteredData[0].type === 'Category Mapping' ) {
+    if (selectedItem.type === 'Category Mapping' ) {
 
       const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
         width: '450px',
         data: {
           workspaceId: that.workspaceId,
           categoryMappingRow: selectedItem,
-          category: this.mappingErrors.filteredData[0].value
+          category: selectedItem.value
         }
       });
       dialogRef.afterClosed().subscribe(() => {
@@ -63,7 +64,7 @@ export class GroupMappingErrorComponent implements OnInit {
             pageSize: that.storageService.get('mappings.pageSize') || 50,
             pageNumber: 0
           };
-          that.getCategoryMappings(data);
+
         } else {
           that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
         }
@@ -71,13 +72,4 @@ export class GroupMappingErrorComponent implements OnInit {
     }
   }
 
-  getCategoryMappings(data) {
-    const that = this;
-    that.isLoading = true;
-
-    that.mappingsService.getCategoryMappings(data.pageSize, data.pageSize * data.pageNumber).subscribe((response: CategoryMappingsResponse) => {
-      that.categoryMappings = response.results;
-      that.isLoading = false;
-    });
-  }
 }
