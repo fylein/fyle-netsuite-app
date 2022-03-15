@@ -91,7 +91,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       };
 
       that.mappingsService.postCategoryMappings(categoryMappingsPayload).subscribe(() => {
-        that.snackBar.open(that.data.category?'Category is mapped successfully, you can try re-exporting the failed entries':'Category Mapping saved successfully');
+        that.snackBar.open(that.data.category ? 'Category is mapped successfully, you can try re-exporting the failed entries' : 'Category Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
       }, () => {
