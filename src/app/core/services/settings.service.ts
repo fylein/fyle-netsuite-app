@@ -61,12 +61,14 @@ export class SettingsService {
     );
   }
 
-  postSettings(intervalHours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+  postSettings(intervalHours: number, scheduleEnabled: boolean, selectedEmail: string[], addedEmail: {}): Observable<ScheduleSettings> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       hours: intervalHours,
-      schedule_enabled: scheduleEnabled
+      schedule_enabled: scheduleEnabled,
+      added_email: addedEmail,
+      selected_email: selectedEmail
     });
   }
 
