@@ -89,7 +89,7 @@
                   </div>
                 </mat-select-trigger>
                 <mat-option 
-                  (click)="clearSearchText(event)"
+                  (click)="clearSearchText($event)"
                   *ngFor="let hour of workspaceAdmins | search : form.value.searchOption" class="multiline-mat-option"
                   [value]="hour.email">
                   <div fxLayout="column" fxLayoutAlign="end start">
