@@ -240,7 +240,8 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
-        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account]
+        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account],
+        importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants]
       });
 
       that.setupFieldWatchers();
@@ -259,7 +260,8 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
         autoCreateMerchant: [false],
-        enableCardsMapping: [false]
+        enableCardsMapping: [false],
+        importVendorsAsMerchants: [false],
       });
 
       that.setupFieldWatchers();
@@ -389,7 +391,8 @@ export class ConfigurationComponent implements OnInit {
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,
       auto_create_merchants: that.generalSettingsForm.value.autoCreateMerchant,
       map_fyle_cards_netsuite_account: that.cardsMapping,
-      workspace: that.workspaceId
+      workspace: that.workspaceId,
+      import_vendors_as_merchants: that.generalSettingsForm.value.importVendorsAsMerchants ? that.generalSettingsForm.value.importVendorsAsMerchants : false,
     };
   }
 
