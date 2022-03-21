@@ -47,7 +47,7 @@
         <mandatory-error-message customErrorMessage="Please select the frequency hours"
           *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
 
-        <div *ngIf="form.controls.hours.value" fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
+        <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
             <mandatory-field></mandatory-field>
@@ -104,9 +104,9 @@
               </mat-select>
             </mat-form-field>
 
-            <span class="schedule--span-or">or</span>
+            <span *ngIf="form.controls.hours.value" class="schedule--span-or">or</span>
 
-            <div fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
+            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
               <img class="schedule--add-btn" src="assets/images/pngs/add.png">
               <span class="schedule--span-or">Add new email address</span>
             </div>

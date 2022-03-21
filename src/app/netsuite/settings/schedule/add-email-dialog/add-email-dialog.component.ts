@@ -30,6 +30,12 @@ export class AddEmailDialogComponent implements OnInit {
       email: that.form.value.adminEmail
     };
 
+    if (that.data.selectedEmails) {
+      that.data.selectedEmails = [that.form.value.adminEmail, ...that.data.selectedEmails]
+    } else {
+      that.data.selectedEmails = [that.form.value.adminEmail]
+    }
+
     that.settingsService.postSettings(that.data.hours, that.data.schedulEnabled, that.data.selectedEmails, adminData).subscribe(() => {
       that.isLoading = false;
       that.dialogRef.close();
