@@ -17,8 +17,8 @@
       <div class="schedule--header-info">
         Set up an automatic process for importing expense groups
         <div fxLayout="row">
-          from Fyle and exporting them to Sage Intacct.
-          <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" target="_blank"
+          from Fyle and exporting them to Netsuite.
+          <a href="https://help.fylehq.com/en/articles/4424242-fyle-netsuite-integration" target="_blank"
             rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
             <mat-icon class="read-more-link--icon">open_in_new</mat-icon>
           </a>
@@ -43,23 +43,29 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
-        <mandatory-error-message customErrorMessage="Please select the frequency hours"
+          <mandatory-error-message customErrorMessage="Please select the frequency hours"
           *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
+        </div>
 
         <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
-            <mandatory-field></mandatory-field>
             <mat-icon class="info-icon"
              matTooltip="The selected email address will be notified instantly upon export failure"
              [inline]="true" 
              matTooltipPosition="after"
              class="info-icon main">info</mat-icon>
           </div>
-          <span class="schedule--header-info">You can select one or more email address from the given list, or add new
-            one to get email notifications
-            on</span>
+          <div class="schedule--header-info">
+            <div fxLayout="row">
+              You can select one or more email address from the given list,
+               or add new one to get email notifications
+              <a href="https://help.fylehq.com/en/articles/4424242-fyle-netsuite-integration" target="_blank"
+                rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
+                <mat-icon class="read-more-link--icon">open_in_new</mat-icon>
+              </a>
+            </div>
+          </div>
 
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field class="schedule--dropdown" appearance="outline" required>
