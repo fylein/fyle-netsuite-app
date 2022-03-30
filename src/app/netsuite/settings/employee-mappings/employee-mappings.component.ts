@@ -133,9 +133,7 @@ export class EmployeeMappingsComponent implements OnInit {
       that.generalSettings = settings;
       that.mappingsCheck();
       that.isLoading = false;
-      if (!that.generalSettings.map_fyle_cards_netsuite_account && that.workspaceId === 189) {
-        that.columnsToDisplay.push('ccc');
-      }
+
       const data = {
         pageSize: that.storageService.get('mappings.pageSize') || 50,
         pageNumber: 0

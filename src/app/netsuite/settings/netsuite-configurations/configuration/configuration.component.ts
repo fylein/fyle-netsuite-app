@@ -373,7 +373,7 @@ export class ConfigurationComponent implements OnInit {
       that.cardsMapping = true;
     }
 
-    if ((that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') && that.workspaceId.toString() !== '189') {
+    if (that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') {
       that.cardsMapping = true;
     }
 
@@ -461,15 +461,6 @@ export class ConfigurationComponent implements OnInit {
       that.showPaymentsandProjectsField = true;
     } else {
       that.showPaymentsandProjectsField = false;
-    }
-  }
-
-  showNetsuiteCardsMapping() {
-    const that = this;
-    if (that.workspaceId.toString() === '189') {
-      return true;
-    } else {
-      return false;
     }
   }
 
