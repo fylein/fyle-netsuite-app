@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>
     <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
-      <div class="mat-title" *ngIf="!editMapping">
+      <div class="mat-title" *ngIf="!editMapping || data.category">
         Create New Mapping
       </div>
-      <div class="mat-title" *ngIf="editMapping">
+      <div class="mat-title" *ngIf="editMapping && !data.category">
         Edit Category Mapping
       </div>
       <div>

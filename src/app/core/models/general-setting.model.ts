@@ -19,4 +19,5 @@ export type GeneralSetting = {
     created_at?: Date;
     updated_at?: Date;
     workspace?: number;
+    import_vendors_as_merchants?: boolean;
 };
