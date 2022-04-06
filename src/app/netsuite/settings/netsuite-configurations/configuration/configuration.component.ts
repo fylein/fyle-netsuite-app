@@ -33,7 +33,6 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
-  enableCardsMapping: boolean;
   cardsMapping = false;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
@@ -369,9 +368,6 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
-    if ((this.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL') && this.generalSettingsForm.value.enableCardsMapping) {
-      that.cardsMapping = true;
-    }
 
     if (that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') {
       that.cardsMapping = true;
