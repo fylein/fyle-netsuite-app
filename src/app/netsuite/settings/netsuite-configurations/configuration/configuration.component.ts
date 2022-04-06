@@ -239,7 +239,6 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
-        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account],
         importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants]
       });
 
@@ -259,7 +258,6 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
         autoCreateMerchant: [false],
-        enableCardsMapping: [false],
         importVendorsAsMerchants: [false],
       });
 
