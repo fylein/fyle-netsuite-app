@@ -33,7 +33,6 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
-  enableCardsMapping: boolean;
   cardsMapping = false;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
@@ -240,7 +239,6 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
-        enableCardsMapping: [that.generalSettings.map_fyle_cards_netsuite_account],
         importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants]
       });
 
@@ -260,7 +258,6 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
         autoCreateMerchant: [false],
-        enableCardsMapping: [false],
         importVendorsAsMerchants: [false],
       });
 
@@ -369,9 +366,6 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
-    if ((this.generalSettingsForm.value.cccExpense && this.generalSettingsForm.value.cccExpense !== 'BILL') && this.generalSettingsForm.value.enableCardsMapping) {
-      that.cardsMapping = true;
-    }
 
     if (that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') {
       that.cardsMapping = true;
