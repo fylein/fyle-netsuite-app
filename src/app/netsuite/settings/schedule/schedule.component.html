@@ -33,8 +33,16 @@
             Select the frequency of the export
             <mandatory-field></mandatory-field>
           </div>
-          <span class="schedule--header-info">Select the frequancy at which you want your Automated import-export to
-            happen</span>
+          <div class="schedule--header-info">
+            <div fxLayout="row">
+              Select the frequancy at which you want your Automated import-export to
+              happen
+              <a href="https://help.fylehq.com/en/articles/6064944-how-to-be-notified-when-auto-export-fails-in-fyle-netsuite-integration" target="_blank"
+                rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
+                <mat-icon class="read-more-link--icon">open_in_new</mat-icon>
+              </a>
+            </div>
+          </div>
           <mat-form-field class="schedule--dropdown" appearance="outline" required>
             <mat-select placeholder="Select hours" disableOptionCentering panelClass="simpleSelect"
               formControlName="hours">
@@ -43,10 +51,9 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mandatory-error-message customErrorMessage="Please select the frequency hours"
+          <mandatory-error-message class="schedule--error" customErrorMessage="Please select the frequency hours"
           *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
         </div>
-
         <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
@@ -117,8 +124,6 @@
               <span class="schedule--span-or">Add new email address</span>
             </div>
           </div>
-
-
         </div>
 
       </div>
