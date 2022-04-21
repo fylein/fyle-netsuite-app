@@ -181,6 +181,12 @@ $fy-panel: #f5f5f5;
     padding: 10px 23px;
   }
 
+  &--error {
+    padding-top: 20px;
+    margin-bottom: -40px;
+    margin-left: -20px;
+  }
+
   &--save-btn {
     max-width: 120px;
     margin: 20px;
