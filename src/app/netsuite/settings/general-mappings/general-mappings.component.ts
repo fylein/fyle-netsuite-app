@@ -84,8 +84,8 @@ export class GeneralMappingsComponent implements OnInit {
     const cccAccountId = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.form.value.cccAccounts : '';
     const cccAccount = that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' ? that.cccAccounts.filter(filteredCCCAccount => filteredCCCAccount.destination_id === cccAccountId)[0] : '';
 
-    const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.form.value.netsuiteVendors : '';
-    const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
+    const defaultVendorId = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ) ? that.form.value.netsuiteVendors : '';
+    const defaultVendor: MappingDestination = (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ) ? that.netsuiteVendors.filter(filteredVendor => filteredVendor.destination_id === defaultVendorId)[0] : null;
 
     let departmentLevel = null;
     if (that.form.value.useDefaultEmployeeDepartment) {
@@ -138,7 +138,8 @@ export class GeneralMappingsComponent implements OnInit {
       that.form.controls.cccAccounts.setValidators(Validators.required);
     }
 
-    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'
+    || that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ) {
       that.form.controls.netsuiteVendors.setValidators(Validators.required);
     }
 
@@ -233,7 +234,8 @@ export class GeneralMappingsComponent implements OnInit {
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
       attributes.push('CREDIT_CARD_ACCOUNT');
     }
-    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'
+          || that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ) {
       attributes.push('VENDOR');
     }
     if (that.generalSettings.sync_fyle_to_netsuite_payments) {
