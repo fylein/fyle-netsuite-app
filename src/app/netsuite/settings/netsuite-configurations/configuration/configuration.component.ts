@@ -189,6 +189,8 @@ export class ConfigurationComponent implements OnInit {
     that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
       if (cccExpenseMappedTo === 'CREDIT CARD CHARGE') {
         that.showAutoCreateMerchant = true;
+      } else {
+        that.showAutoCreateMerchant = false;
       }
     });
 
