@@ -191,6 +191,7 @@ export class ConfigurationComponent implements OnInit {
         that.showAutoCreateMerchant = true;
       } else {
         that.showAutoCreateMerchant = false;
+        that.generalSettingsForm.controls.autoCreateMerchant.setValue(false);
       }
     });
 
