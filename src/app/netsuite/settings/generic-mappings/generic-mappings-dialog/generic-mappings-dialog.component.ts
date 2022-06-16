@@ -119,9 +119,10 @@ export class GenericMappingsDialogComponent implements OnInit {
 
     that.isLoading = true;
     const activeAttributes = [];
-    if (that.setting.source_field === 'PROJECT' && (that.setting.destination_field === 'PROJECT' || that.setting.destination_field.includes('PROJECT')) ) {
-      activeAttributes.push(that.mappingsService.getFyleExpenseAttributes(that.setting.source_field, true));
-      activeAttributes.push(that.mappingsService.getNetSuiteDestinationAttributes(that.setting.destination_field, true));
+    if (that.setting.source_field === 'PROJECT' && (that.setting.destination_field === 'PROJECT' ||
+      that.setting.destination_field.includes('PROJECT')) ) {
+        activeAttributes.push(that.mappingsService.getFyleExpenseAttributes(that.setting.source_field, true));
+        activeAttributes.push(that.mappingsService.getNetSuiteDestinationAttributes(that.setting.destination_field, true));
     } else {
       activeAttributes.push(that.mappingsService.getFyleExpenseAttributes(that.setting.source_field));
       activeAttributes.push(that.mappingsService.getNetSuiteDestinationAttributes(that.setting.destination_field));
