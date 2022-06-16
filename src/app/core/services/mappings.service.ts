@@ -92,20 +92,28 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleExpenseAttributes(attributeType: string): Observable<MappingSource[]> {
+  getFyleExpenseAttributes(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
+    const params: {[key: string]: any} = {};
+    params.attribute_type = attributeType;
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, {
-      attribute_type: attributeType
-    });
+    if (active === true) {
+      params.active = true;
+    }
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 
-  getNetSuiteDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
+  getNetSuiteDestinationAttributes(attributeTypes: string | string[], active: boolean = false): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
+    const params: {[key: string]: any} = {};
+    params.attribute_types = attributeTypes;
 
-    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, {
-      attribute_types: attributeTypes
-    });
+    if (active === true) {
+      params.active = true;
+    }
+
+    return this.apiService.get(`/workspaces/${workspaceId}/netsuite/destination_attributes/`, params);
   }
 
   getNetsuiteAttributesCount(attributeType: string): Observable<AttributeCount> {
@@ -196,15 +204,19 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/post_country/`, {});
   }
 
-  getMappings(pageLimit: number, pageOffset: number, sourceType: string, tableDimension: number = 2): Observable<MappingsResponse> {
+  getMappings(pageLimit: number, pageOffset: number, sourceType: string, tableDimension: number = 2, sourceActive: boolean = false): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
+    const params: {[key: string]: any} = {};
+    params.source_type = sourceType;
+    params.limit = pageLimit;
+    params.offset = pageOffset;
+    params.table_dimension = tableDimension;
+
+    if (sourceActive === true) {
+      params.source_active = true;
+    }
     return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/`, {
-        source_type: sourceType,
-        limit: pageLimit,
-        offset: pageOffset,
-        table_dimension: tableDimension
-      }
+      `/workspaces/${workspaceId}/mappings/`, params
     );
   }
 
