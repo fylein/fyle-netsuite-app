@@ -20,6 +20,31 @@
         a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
     }
+
+    window.addEventListener(
+      'message',
+      (e) => {
+        // skip adding date to localstorage if request origin is not from a trusted URL
+        if (e.origin != 'https://local.fyle.tech:3000') {
+            return;
+        }
+
+        var payload = e['data']
+        for (var key in payload) {
+          if (key === 'user') {
+            localStorage.setItem(key, JSON.stringify(payload[key]))
+          }
+          else {
+            localStorage.setItem(key, payload[key])
+          }
+        }
+      },
+      false,
+    );
+
+  // after register listen function send this message to parent page.
+    window.parent.postMessage({ pageLoaded: true }, '*');
+
   </script>
   <script type="text/javascript">
     // segment.io
