@@ -30,7 +30,7 @@
     "ng2-flatpickr": "^9.0.0",
     "ngx-cacheable": "^1.4.2",
     "normalize.css": "^8.0.1",
-    "npm": "^6.13.7",
+    "npm": "^8.19.2",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
