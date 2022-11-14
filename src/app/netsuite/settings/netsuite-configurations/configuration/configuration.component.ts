@@ -33,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
+  showImportEmployees: boolean;
   cardsMapping = false;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
@@ -131,6 +132,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimbursableExpense.reset();
       that.showImportCategories = false;
       that.generalSettingsForm.controls.cccExpense.reset();
+      that.showImportEmployeeOprion(employeeMappedTo);
 
       if (that.generalSettings) {
         that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
@@ -242,7 +244,8 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
-        importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants]
+        importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants],
+        importNetsuiteEmployees: [that.generalSettings.import_netsuite_employees]
       });
 
       that.setupFieldWatchers();
@@ -262,6 +265,7 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [false],
         autoCreateMerchant: [false],
         importVendorsAsMerchants: [false],
+        importNetsuiteEmployees: [false]
       });
 
       that.setupFieldWatchers();
@@ -390,6 +394,7 @@ export class ConfigurationComponent implements OnInit {
       map_fyle_cards_netsuite_account: that.cardsMapping,
       workspace: that.workspaceId,
       import_vendors_as_merchants: that.generalSettingsForm.value.importVendorsAsMerchants ? that.generalSettingsForm.value.importVendorsAsMerchants : false,
+      import_netsuite_employees: that.generalSettingsForm.value.importNetsuiteEmployees ? that.generalSettingsForm.value.importNetsuiteEmployees : false
     };
   }
 
@@ -468,6 +473,17 @@ export class ConfigurationComponent implements OnInit {
     } else {
       that.showAutoCreate = false;
       that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
+    }
+  }
+
+  showImportEmployeeOprion(employeeMappedTo) {
+    console.log(employeeMappedTo, 'employeeMappedTo')
+    const that = this;
+    if (employeeMappedTo == 'EMPLOYEE'){
+      that.showImportEmployees = true;
+    } else {
+      that.showImportEmployees = false;
+      that.generalSettingsForm.controls.importNetsuiteEmployees.setValue(false);
     }
   }
 
