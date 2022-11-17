@@ -101,6 +101,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
+    that.showImportEmployeeOprion(that.generalSettings.employee_field_mapping)
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
@@ -298,10 +299,19 @@ export class ConfigurationComponent implements OnInit {
   constructUpdatedConfigurationsPayload(generalSettingsPayload: GeneralSetting): UpdatedConfiguration {
     const that = this;
     const updatedConfiguration: UpdatedConfiguration = {
-      autoCreateDestinationEntity: generalSettingsPayload.auto_create_destination_entity
+      autoCreateDestinationEntity: generalSettingsPayload.auto_create_destination_entity,
+      showMappingsChange: false
     };
 
+    if (that.generalSettings.import_netsuite_employees !== generalSettingsPayload.import_netsuite_employees) {
+      updatedConfiguration.importNetsuiteEployee = {
+        oldValue: that.generalSettings.import_netsuite_employees,
+        newValue: generalSettingsPayload.import_netsuite_employees
+      }
+    }
+
     if (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.employee = {
         oldValue: that.generalSettings.employee_field_mapping,
         newValue: generalSettingsPayload.employee_field_mapping
@@ -309,6 +319,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     if (that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.reimburseExpense = {
         oldValue: that.generalSettings.reimbursable_expenses_object,
         newValue: generalSettingsPayload.reimbursable_expenses_object
@@ -316,6 +327,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     if (that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.cccExpense = {
         oldValue: that.generalSettings.corporate_credit_card_expenses_object,
         newValue: generalSettingsPayload.corporate_credit_card_expenses_object
@@ -449,7 +461,7 @@ export class ConfigurationComponent implements OnInit {
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
 
     // Open dialog conditionally
-    if (that.generalSettings && (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping || that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object || that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object)) {
+    if (that.generalSettings && (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping || that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object || that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object || (!that.generalSettings.import_netsuite_employees && generalSettingsPayload.import_netsuite_employees))) {
       const updatedConfigurations = that.constructUpdatedConfigurationsPayload(generalSettingsPayload);
       that.openDialog(updatedConfigurations, generalSettingsPayload, mappingSettingsPayload);
     } else {
@@ -477,7 +489,6 @@ export class ConfigurationComponent implements OnInit {
   }
 
   showImportEmployeeOprion(employeeMappedTo) {
-    console.log(employeeMappedTo, 'employeeMappedTo')
     const that = this;
     if (employeeMappedTo == 'EMPLOYEE'){
       that.showImportEmployees = true;
