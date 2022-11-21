@@ -101,7 +101,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
-    that.showImportEmployeeOprion(that.generalSettings.employee_field_mapping)
+    that.showImportEmployeeOprion(that.generalSettings.employee_field_mapping);
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
@@ -307,7 +307,7 @@ export class ConfigurationComponent implements OnInit {
       updatedConfiguration.importNetsuiteEployee = {
         oldValue: that.generalSettings.import_netsuite_employees,
         newValue: generalSettingsPayload.import_netsuite_employees
-      }
+      };
     }
 
     if (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping) {
@@ -490,7 +490,7 @@ export class ConfigurationComponent implements OnInit {
 
   showImportEmployeeOprion(employeeMappedTo) {
     const that = this;
-    if (employeeMappedTo == 'EMPLOYEE'){
+    if (employeeMappedTo === 'EMPLOYEE') {
       that.showImportEmployees = true;
     } else {
       that.showImportEmployees = false;

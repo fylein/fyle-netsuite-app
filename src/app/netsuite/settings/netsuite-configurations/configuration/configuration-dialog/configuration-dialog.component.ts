@@ -12,7 +12,7 @@ export class ConfigurationDialogComponent implements OnInit {
   customStyle: object = {};
   additionalWarning: string;
   importNetsuiteEmployeeWarning: boolean;
-  showMappingsChange: boolean = false;
+  showMappingsChange = false;
 
   constructor(public dialogRef: MatDialogRef<ConfigurationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: UpdatedConfiguration) { }
 
