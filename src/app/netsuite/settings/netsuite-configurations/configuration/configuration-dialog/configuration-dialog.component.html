@@ -9,14 +9,6 @@
   </h2>
   
   <mat-dialog-content *ngIf="showMappingsChange">
-    <div class="configurations-dialog--info-box" fxLayout="row" fxLayoutAlign="space-between">
-      <div fxFlex="4">
-        <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
-      </div>
-      <div fxFlex="96">
-        The changes made will impact configurations in the settings and the way the data is exported to NetSuite.
-      </div>
-    </div>
 
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <div fxFlex="40" class="configurations-dialog--heading">
@@ -86,6 +78,15 @@
       </div>
       <div fxFlex="96">
         {{additionalWarning}}
+      </div>
+    </div>
+
+    <div class="configurations-dialog--info-box" fxLayout="row" fxLayoutAlign="space-between">
+      <div fxFlex="4">
+        <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
+      </div>
+      <div fxFlex="96">
+        The changes made above will impact configurations in the settings and the way the data is exported to NetSuite.
       </div>
     </div>
   </mat-dialog-content>
