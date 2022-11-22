@@ -101,7 +101,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
-    that.showImportEmployeeOprion(that.generalSettings.employee_field_mapping);
+    that.showImportEmployeeOption(that.generalSettings.employee_field_mapping);
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
@@ -133,7 +133,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimbursableExpense.reset();
       that.showImportCategories = false;
       that.generalSettingsForm.controls.cccExpense.reset();
-      that.showImportEmployeeOprion(employeeMappedTo);
+      that.showImportEmployeeOption(employeeMappedTo);
 
       if (that.generalSettings) {
         that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
@@ -488,7 +488,7 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
-  showImportEmployeeOprion(employeeMappedTo) {
+  showImportEmployeeOption(employeeMappedTo) {
     const that = this;
     if (employeeMappedTo === 'EMPLOYEE') {
       that.showImportEmployees = true;
