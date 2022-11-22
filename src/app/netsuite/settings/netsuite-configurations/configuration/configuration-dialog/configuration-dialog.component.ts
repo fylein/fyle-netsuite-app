@@ -48,7 +48,7 @@ export class ConfigurationDialogComponent implements OnInit {
       exportType = exportType.charAt(0).toUpperCase() + exportType.substr(1).toLowerCase();
       that.additionalWarning = `${exportType} would require an Expense account for successful export. You can import this by enabling the toggle below or creating a manual map from the Category Mapping section.`;
     }
-    if (that.updatedConfiguration.importNetsuiteEployee.newValue && !that.updatedConfiguration.importNetsuiteEployee.oldValue) {
+    if (that.updatedConfiguration.importNetsuiteEmployee.newValue && !that.updatedConfiguration.importNetsuiteEmployee.oldValue) {
       that.importNetsuiteEmployeeWarning = true;
     }
   }

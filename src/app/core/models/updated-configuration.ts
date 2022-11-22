@@ -13,7 +13,7 @@ export type UpdatedConfiguration = {
     newValue: string
   },
   autoCreateDestinationEntity: boolean,
-  importNetsuiteEployee?: {
+  importNetsuiteEmployee?: {
     oldValue: boolean,
     newValue: boolean
   },

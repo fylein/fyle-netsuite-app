@@ -304,7 +304,7 @@ export class ConfigurationComponent implements OnInit {
     };
 
     if (that.generalSettings.import_netsuite_employees !== generalSettingsPayload.import_netsuite_employees) {
-      updatedConfiguration.importNetsuiteEployee = {
+      updatedConfiguration.importNetsuiteEmployee = {
         oldValue: that.generalSettings.import_netsuite_employees,
         newValue: generalSettingsPayload.import_netsuite_employees
       };
