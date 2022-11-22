@@ -20,5 +20,5 @@ export type GeneralSetting = {
     updated_at?: Date;
     workspace?: number;
     import_vendors_as_merchants?: boolean;
-    import_netsuite_employees?: boolean;
+    import_netsuite_employees: boolean;
 };
