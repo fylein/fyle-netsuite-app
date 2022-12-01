@@ -180,6 +180,11 @@
         </div>
       </mat-slide-toggle>
 
+      <mat-slide-toggle color="primary" class="schedule" formControlName="importNetsuiteEmployees" *ngIf="showImportEmployees">
+        <div class="schedule--toggle-text"> Import Netsuite Employees as Employees in Fyle
+        </div>
+      </mat-slide-toggle>
+
       <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>

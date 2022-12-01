@@ -8,15 +8,7 @@
     </div>
   </h2>
   
-  <mat-dialog-content>
-    <div class="configurations-dialog--info-box" fxLayout="row" fxLayoutAlign="space-between center">
-      <div fxFlex="4">
-        <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
-      </div>
-      <div fxFlex="96">
-        The changes made will impact configurations in the settings and the way the data is exported to NetSuite.
-      </div>
-    </div>
+  <mat-dialog-content *ngIf="showMappingsChange">
 
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <div fxFlex="40" class="configurations-dialog--heading">
@@ -86,6 +78,33 @@
       </div>
       <div fxFlex="96">
         {{additionalWarning}}
+      </div>
+    </div>
+
+    <div class="configurations-dialog--info-box" fxLayout="row" fxLayoutAlign="space-between">
+      <div fxFlex="4">
+        <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
+      </div>
+      <div fxFlex="96">
+        The changes made above will impact configurations in the settings and the way the data is exported to NetSuite.
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-content *ngIf="importNetsuiteEmployeeWarning">
+    <div class="configurations-dialog--info-box" fxLayout="column" [style.margin-top]="'20px'">
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <div fxFlex="4">
+          <mat-icon [inline]="true" class="configurations-dialog--info-icon">info</mat-icon>
+        </div>
+        <div fxFlex="96">
+          <b>Importing Employee data</b> from Netsuite will <b>overwrite the data</b> stored in Fyle.
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="96" [style.margin-top]="'20px'">
+          Employee data like Department, Supervisor, E-mail ID, etc. will be imported from Netsuite and updated in Fyle. <a href="https://help.fylehq.com/en/articles/6780975-import-employees-from-fyle-to-netsuite">Read more</a>
+        </div>
       </div>
     </div>
   </mat-dialog-content>

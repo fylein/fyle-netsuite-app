@@ -11,6 +11,8 @@ export class ConfigurationDialogComponent implements OnInit {
   updatedConfiguration: UpdatedConfiguration;
   customStyle: object = {};
   additionalWarning: string;
+  importNetsuiteEmployeeWarning: boolean;
+  showMappingsChange = false;
 
   constructor(public dialogRef: MatDialogRef<ConfigurationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: UpdatedConfiguration) { }
 
@@ -35,6 +37,7 @@ export class ConfigurationDialogComponent implements OnInit {
 
   setup() {
     const that = this;
+    that.showMappingsChange = that.updatedConfiguration.showMappingsChange;
 
     if (that.updatedConfiguration.cccExpense && that.updatedConfiguration.cccExpense.oldValue !== 'CREDIT CARD CHARGE') {
       that.customStyle = {'margin-right': '10%'};
@@ -44,6 +47,9 @@ export class ConfigurationDialogComponent implements OnInit {
       let exportType = that.updatedConfiguration.reimburseExpense.newValue;
       exportType = exportType.charAt(0).toUpperCase() + exportType.substr(1).toLowerCase();
       that.additionalWarning = `${exportType} would require an Expense account for successful export. You can import this by enabling the toggle below or creating a manual map from the Category Mapping section.`;
+    }
+    if (that.updatedConfiguration.importNetsuiteEmployee && that.updatedConfiguration.importNetsuiteEmployee.newValue && !that.updatedConfiguration.importNetsuiteEmployee.oldValue) {
+      that.importNetsuiteEmployeeWarning = true;
     }
   }
 
