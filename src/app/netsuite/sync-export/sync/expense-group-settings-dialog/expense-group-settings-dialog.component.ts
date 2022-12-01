@@ -31,6 +31,7 @@ save() {
   const reimbursableExpensesGroupedBy = [that.importExpensesForm.value.reimbursableExpenseGroupConfiguration];
   const cccExpensesGroupedBy = [that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration];
   const expenseState = that.importExpensesForm.value.expenseState;
+  const cccExpenseState = that.importExpensesForm.value.cccExpenseState;
   const reimbursableExportDateType = that.importExpensesForm.value.reimbursableExportDate;
   const cccExportDateType = that.importExpensesForm.getRawValue().cccExportDate;
 
@@ -38,6 +39,7 @@ save() {
     reimbursable_expense_group_fields: reimbursableExpensesGroupedBy,
     corporate_credit_card_expense_group_fields: cccExpensesGroupedBy,
     expense_state: expenseState,
+    ccc_expense_state: cccExpenseState,
     reimbursable_export_date_type: reimbursableExportDateType,
     ccc_export_date_type: cccExportDateType
   };
@@ -61,6 +63,7 @@ getExpenseGroupSettings() {
       reimbursableExpenseGroupConfiguration: [ that.getFieldConfiguration(reimbursableFields) ],
       cccExpenseGroupConfiguration: [ that.getFieldConfiguration(cccFields) ],
       expenseState: [ that.expenseGroupSettings.expense_state, [ Validators.required ]],
+      cccExpenseState: [ that.expenseGroupSettings.ccc_expense_state, [ Validators.required ]],
       reimbursableExportDate: [ that.expenseGroupSettings.reimbursable_export_date_type],
       cccExportDate: [ that.expenseGroupSettings.ccc_export_date_type]
     });
@@ -89,6 +92,10 @@ getFieldConfiguration(fieldType) {
 showCCCGroups() {
   const that = this;
   return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
+}
+
+showSimplifyReportClosureOptions(simplifyReportClosure:boolean) {
+  return simplifyReportClosure
 }
 
 ngOnInit() {
@@ -139,6 +146,7 @@ ngOnInit() {
   that.settingsService.getGeneralSettings().subscribe(response => {
     that.workspaceGeneralSettings = response;
     that.getExpenseGroupSettings();
+    that.showSimplifyReportClosureOptions(response.is_simplify_report_closure_enabled)
   });
 }
 

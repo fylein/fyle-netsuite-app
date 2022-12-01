@@ -20,4 +20,5 @@ export type GeneralSetting = {
     updated_at?: Date;
     workspace?: number;
     import_vendors_as_merchants?: boolean;
+    is_simplify_report_closure_enabled?: boolean;
 };
