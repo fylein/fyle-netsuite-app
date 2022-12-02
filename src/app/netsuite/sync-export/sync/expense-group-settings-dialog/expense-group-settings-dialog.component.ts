@@ -94,8 +94,9 @@ showCCCGroups() {
   return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
 }
 
-showSimplifyReportClosureOptions(simplifyReportClosure:boolean) {
-  return simplifyReportClosure
+showSimplifyReportClosureOptions() {
+  const that = this
+  return that.workspaceGeneralSettings.is_simplify_report_closure_enabled
 }
 
 ngOnInit() {
@@ -146,7 +147,6 @@ ngOnInit() {
   that.settingsService.getGeneralSettings().subscribe(response => {
     that.workspaceGeneralSettings = response;
     that.getExpenseGroupSettings();
-    that.showSimplifyReportClosureOptions(response.is_simplify_report_closure_enabled)
   });
 }
 
