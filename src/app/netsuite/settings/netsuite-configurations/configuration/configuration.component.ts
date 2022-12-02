@@ -33,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
+  showImportEmployees: boolean;
   cardsMapping = false;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
@@ -100,6 +101,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
+    that.showImportEmployeeOption(that.generalSettings.employee_field_mapping);
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
@@ -131,6 +133,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimbursableExpense.reset();
       that.showImportCategories = false;
       that.generalSettingsForm.controls.cccExpense.reset();
+      that.showImportEmployeeOption(employeeMappedTo);
 
       if (that.generalSettings) {
         that.generalSettingsForm.controls.reimbursableExpense.markAsTouched();
@@ -242,7 +245,8 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity],
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
-        importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants]
+        importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants],
+        importNetsuiteEmployees: [that.generalSettings.import_netsuite_employees]
       });
 
       that.setupFieldWatchers();
@@ -262,6 +266,7 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [false],
         autoCreateMerchant: [false],
         importVendorsAsMerchants: [false],
+        importNetsuiteEmployees: [false]
       });
 
       that.setupFieldWatchers();
@@ -294,10 +299,19 @@ export class ConfigurationComponent implements OnInit {
   constructUpdatedConfigurationsPayload(generalSettingsPayload: GeneralSetting): UpdatedConfiguration {
     const that = this;
     const updatedConfiguration: UpdatedConfiguration = {
-      autoCreateDestinationEntity: generalSettingsPayload.auto_create_destination_entity
+      autoCreateDestinationEntity: generalSettingsPayload.auto_create_destination_entity,
+      showMappingsChange: false
     };
 
+    if (that.generalSettings.import_netsuite_employees !== generalSettingsPayload.import_netsuite_employees) {
+      updatedConfiguration.importNetsuiteEmployee = {
+        oldValue: that.generalSettings.import_netsuite_employees,
+        newValue: generalSettingsPayload.import_netsuite_employees
+      };
+    }
+
     if (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.employee = {
         oldValue: that.generalSettings.employee_field_mapping,
         newValue: generalSettingsPayload.employee_field_mapping
@@ -305,6 +319,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     if (that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.reimburseExpense = {
         oldValue: that.generalSettings.reimbursable_expenses_object,
         newValue: generalSettingsPayload.reimbursable_expenses_object
@@ -312,6 +327,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     if (that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object) {
+      updatedConfiguration.showMappingsChange = true;
       updatedConfiguration.cccExpense = {
         oldValue: that.generalSettings.corporate_credit_card_expenses_object,
         newValue: generalSettingsPayload.corporate_credit_card_expenses_object
@@ -390,6 +406,7 @@ export class ConfigurationComponent implements OnInit {
       map_fyle_cards_netsuite_account: that.cardsMapping,
       workspace: that.workspaceId,
       import_vendors_as_merchants: that.generalSettingsForm.value.importVendorsAsMerchants ? that.generalSettingsForm.value.importVendorsAsMerchants : false,
+      import_netsuite_employees: that.generalSettingsForm.value.importNetsuiteEmployees ? that.generalSettingsForm.value.importNetsuiteEmployees : false
     };
   }
 
@@ -444,7 +461,7 @@ export class ConfigurationComponent implements OnInit {
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
 
     // Open dialog conditionally
-    if (that.generalSettings && (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping || that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object || that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object)) {
+    if (that.generalSettings && (that.generalSettings.employee_field_mapping !== generalSettingsPayload.employee_field_mapping || that.generalSettings.reimbursable_expenses_object !== generalSettingsPayload.reimbursable_expenses_object || that.generalSettings.corporate_credit_card_expenses_object !== generalSettingsPayload.corporate_credit_card_expenses_object || (!that.generalSettings.import_netsuite_employees && generalSettingsPayload.import_netsuite_employees))) {
       const updatedConfigurations = that.constructUpdatedConfigurationsPayload(generalSettingsPayload);
       that.openDialog(updatedConfigurations, generalSettingsPayload, mappingSettingsPayload);
     } else {
@@ -468,6 +485,16 @@ export class ConfigurationComponent implements OnInit {
     } else {
       that.showAutoCreate = false;
       that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
+    }
+  }
+
+  showImportEmployeeOption(employeeMappedTo) {
+    const that = this;
+    if (employeeMappedTo === 'EMPLOYEE') {
+      that.showImportEmployees = true;
+    } else {
+      that.showImportEmployees = false;
+      that.generalSettingsForm.controls.importNetsuiteEmployees.setValue(false);
     }
   }
 
