@@ -84,7 +84,7 @@
         </div>
       </div>
       <div>
-        <mat-form-field floatLabel="always" appearance="outline" class="dialog--group-field-left" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
+        <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
           <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="expenseState">
             <mat-option value="PAYMENT_PROCESSING" *ngIf="!showSimplifyReportClosureOptions()">
               Payment Processing
