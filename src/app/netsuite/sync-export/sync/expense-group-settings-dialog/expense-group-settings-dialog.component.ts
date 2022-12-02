@@ -95,8 +95,8 @@ showCCCGroups() {
 }
 
 showSimplifyReportClosureOptions() {
-  const that = this
-  return that.workspaceGeneralSettings.is_simplify_report_closure_enabled
+  const that = this;
+  return that.workspaceGeneralSettings.is_simplify_report_closure_enabled;
 }
 
 ngOnInit() {
