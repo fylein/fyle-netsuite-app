@@ -77,15 +77,15 @@
 
       <div>
         <div class="dialog--group-label-left">
-          Import Expenses in State:
+          Import Reimbursable Expenses in State:
         </div>
         <div class="dialog--group-label-right" *ngIf="showCCCGroups()">
-          Credit Card Expenses
+          Import Credit Card Expenses in State:
         </div>
       </div>
       <div>
         <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
-          <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="expenseState">
+          <mat-select placeholder="Choose State of Reimbursable Expenses to be fetched" formControlName="expenseState">
             <mat-option *ngFor="let option of reimbursableOptions" [value]="option.value">
               {{option.label}}
             </mat-option>
@@ -98,12 +98,12 @@
         <mat-form-field floatLabel="always" appearance="outline" class="dialog--group-field-right" required 
           *ngIf="showCCCGroups()"
         >
-          <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="cccExpenseState">
+          <mat-select placeholder="Choose State of Credit Card Expenses to be fetched" formControlName="cccExpenseState">
             <mat-option *ngFor="let option of cccOptions" [value]="option.value">
               {{option.label}}
             </mat-option>
           </mat-select>
-          <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
+          <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.cccExpenseState.errors?.required">
             Please select atleast 1 state
           </mat-error>
         </mat-form-field>
