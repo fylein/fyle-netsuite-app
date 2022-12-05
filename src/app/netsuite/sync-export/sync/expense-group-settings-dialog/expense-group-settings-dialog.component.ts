@@ -18,6 +18,8 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   workspaceGeneralSettings: GeneralSetting;
   isLoading: boolean;
   exportDateOptions: { label: string, value: string }[];
+  reimbursableOptions: { label: string, value: string }[];
+  cccOptions: { label: string, value: string }[];
   expenseGroupingFieldOptions: { label: string, value: string }[];
   workspaceId: number;
 
@@ -148,6 +150,28 @@ ngOnInit() {
     that.workspaceGeneralSettings = response;
     that.getExpenseGroupSettings();
   });
+
+  that.reimbursableOptions = [
+    {
+      label: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'Processing' : 'Payment Processing',
+      value: 'PAYMENT_PROCESSING'
+    },
+    {
+      label: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'Closed' : 'Paid',
+      value: 'PAID'
+    }
+  ]
+
+  that.cccOptions = [
+    {
+      label: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'Approved' : 'Payment Processing',
+      value: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'APPROVED' : 'PAYMENT_PROCESSING'
+    },
+    {
+      label: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'Closed' : 'Paid',
+      value: 'PAID'
+    }
+  ];
 }
 
 }

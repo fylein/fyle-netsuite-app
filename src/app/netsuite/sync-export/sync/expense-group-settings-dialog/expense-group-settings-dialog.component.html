@@ -86,17 +86,8 @@
       <div>
         <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
           <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="expenseState">
-            <mat-option value="PAYMENT_PROCESSING" *ngIf="!showSimplifyReportClosureOptions()">
-              Payment Processing
-            </mat-option>
-            <mat-option value="PAID" *ngIf="!showSimplifyReportClosureOptions()">
-              Paid
-            </mat-option>
-            <mat-option value="PAYMENT_PROCESSING" *ngIf="showSimplifyReportClosureOptions()">
-              Processing
-            </mat-option>
-            <mat-option value="PAID" *ngIf="showSimplifyReportClosureOptions()">
-              Closed
+            <mat-option *ngFor="let option of reimbursableOptions" [value]="option.value">
+              {{option.label}}
             </mat-option>
           </mat-select>
           <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
@@ -108,17 +99,8 @@
           *ngIf="showCCCGroups()"
         >
           <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="cccExpenseState">
-            <mat-option value="PAYMENT_PROCESSING" *ngIf="!showSimplifyReportClosureOptions()">
-              Payment Processing
-            </mat-option>
-            <mat-option value="PAID" *ngIf="!showSimplifyReportClosureOptions()">
-              Paid
-            </mat-option>
-            <mat-option value="APPROVED" *ngIf="showSimplifyReportClosureOptions()">
-              Approved
-            </mat-option>
-            <mat-option value="PAID" *ngIf="showSimplifyReportClosureOptions()">
-              Closed
+            <mat-option *ngFor="let option of cccOptions" [value]="option.value">
+              {{option.label}}
             </mat-option>
           </mat-select>
           <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
