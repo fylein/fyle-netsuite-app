@@ -155,7 +155,7 @@ ngOnInit() {
       label: that.workspaceGeneralSettings.is_simplify_report_closure_enabled ? 'Closed' : 'Paid',
       value: 'PAID'
     }
-  ]
+  ];
 
   that.cccOptions = [
     {
