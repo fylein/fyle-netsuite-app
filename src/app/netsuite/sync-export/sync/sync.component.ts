@@ -44,6 +44,7 @@ export class SyncComponent implements OnInit {
   checkSyncStatus() {
     const that = this;
     const lastSyncedAt = that.workspace.last_synced_at;
+    const cccLastSyncedAt = that.workspace.ccc_last_synced_at;
     const taskType = ['FETCHING_EXPENSES'];
     const taskStatus = ['IN_PROGRESS', 'ENQUEUED'];
 
@@ -53,7 +54,7 @@ export class SyncComponent implements OnInit {
     ).subscribe((res) => {
       if (!res.results.length) {
         that.updateLastSyncStatus().subscribe((response) => {
-          if (response[0].last_synced_at !== lastSyncedAt) {
+          if (response[0].last_synced_at !== lastSyncedAt || response[0].ccc_last_synced_at !== cccLastSyncedAt ) {
             that.snackBar.open('Import Complete');
           } else {
             const expenseState = that.expenseGroupSettings.expense_state.toLowerCase().replace('_', ' ');
