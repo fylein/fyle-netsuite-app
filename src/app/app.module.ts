@@ -12,7 +12,6 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
-// import * as Sentry from '@sentry/angular';
 
 @NgModule({
   declarations: [
@@ -39,12 +38,6 @@ import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/mater
         verticalPosition: 'top'
       }
     },
-    // {
-    //   provide: ErrorHandler,
-    //   // useValue: Sentry.createErrorHandler({
-    //   //   showDialog: false,
-    //   // }),
-    // },
   ],
   bootstrap: [AppComponent],
 })

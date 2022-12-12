@@ -7,13 +7,11 @@ import { SettingsService } from '../core/services/settings.service';
 import { StorageService } from '../core/services/storage.service';
 import { WindowReferenceService } from '../core/services/window.service';
 import { Workspace } from '../core/models/workspace.model';
-import { UserProfile } from '../core/models/user-profile.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { MappingsService } from '../core/services/mappings.service';
 import { MatSnackBar } from '@angular/material';
 import { TrackingService } from '../core/services/tracking.service';
-// import * as Sentry from '@sentry/angular';
 
 @Component({
   selector: 'app-netsuite',
@@ -80,7 +78,6 @@ export class NetSuiteComponent implements OnInit {
   switchWorkspace() {
     this.authService.switchWorkspace();
     this.trackingService.onSwitchWorkspace();
-    // Sentry.configureScope(scope => scope.setUser(null));
   }
 
   getSettingsAndNavigate() {
@@ -135,30 +132,15 @@ export class NetSuiteComponent implements OnInit {
     that.workspaceService.getWorkspaces(that.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length > 0) {
         that.workspace = workspaces[0];
-        // that.setUserIdentity(that.user.employee_email, workspaces[0].id, {fullName: that.user.full_name});
         that.getSettingsAndNavigate();
       } else {
         that.workspaceService.createWorkspace().subscribe(workspace => {
           that.workspace = workspace;
-          // that.setUserIdentity(that.user.employee_email, workspace.id, {fullName: that.user.full_name});
           that.getSettingsAndNavigate();
         });
       }
     });
   }
-
-  // setUserIdentity(email: string, workspaceId: number, properties) {
-  //   Sentry.setUser({
-  //     email,
-  //     workspaceId,
-  //   });
-  //   this.trackingService.onSignIn(email, workspaceId, properties);
-  // }
-
-  // onSignOut() {
-  //   Sentry.configureScope(scope => scope.setUser(null));
-  //   this.trackingService.onSignOut();
-  // }
 
   onConnectNetSuitePageVisit() {
     this.trackingService.onPageVisit('Connect NetSuite');

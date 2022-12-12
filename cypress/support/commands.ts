@@ -6,6 +6,8 @@ declare global {
       interface Chainable {
         journeyLogin(): void;
         microActionsLogin(): void;
+        getElement(attributeName: string): Cypress.Chainable<JQuery<HTMLElement>>;
+        assertText(attributeName: string, text: string): void;
         selectMatOption(optionName: string): void;
         submitButton(content: string): Cypress.Chainable<JQuery<HTMLElement>>;
         saveSetting(content: string): void;
@@ -64,6 +66,14 @@ declare global {
   
     // cy.login() will be used in all tests, hence adding http listener here
     cy.setupHttpListeners();
+  })
+
+  Cypress.Commands.add('getElement', (attributeName: string) => {
+    return cy.get(`[data-cy=${attributeName}]`);
+  })
+
+  Cypress.Commands.add('assertText', (attributeName: string, text: string) => {
+    cy.getElement(attributeName).should('include.text', text)
   })
 
   Cypress.Commands.add('setupHttpListeners', () => {
