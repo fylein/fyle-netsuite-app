@@ -14,12 +14,11 @@ declare global {
         getMatToggle(toggleIndex: number): Cypress.Chainable<JQuery<HTMLElement>>;
         ignoreTokenHealth(): void;
         setupHttpListeners(): void;
-        navigateToSettingPage(pageName: string): void;
+        navigateToSettingPageItems(pageName: string): void;
         exportsPolling(): void;
         waitForDashboardLoad(): void;
         interrupt(): void;
         navigateToModule(pageName: string): void;
-        navigateToMappingPage(pageName: string): void;
         importToFyle(fieldOrder: number, enable: boolean, optionName: string): void;
         enableConfigurationToggle(fieldOrder: number): void;
         selectConfigurationField(fieldOrder: number, optionName: string): void;
@@ -63,6 +62,9 @@ declare global {
     };
     window.localStorage.setItem('user', JSON.stringify(user))
     window.localStorage.setItem('workspaceId', environment.e2e_tests.secret[1].workspace_id)
+    window.localStorage.setItem('onboarded', 'true')
+    window.localStorage.setItem('access_token', JSON.stringify(user.access_token))
+    window.localStorage.setItem('refresh_token', JSON.stringify(user.refresh_token))
   
     // cy.login() will be used in all tests, hence adding http listener here
     cy.setupHttpListeners();
@@ -79,37 +81,41 @@ declare global {
   Cypress.Commands.add('setupHttpListeners', () => {
     // This helps cypress to wait for the http requests to complete with 200, regardless of the defaultCommandTimeout (10s)
     // Usage: cy.wait('@getDestinationAttributes').its('response.statusCode').should('equal', 200)
-    cy.intercept('POST', '**/refresh_dimensions', {}).as('refreshDimension')
+    // cy.intercept('POST', '**/refresh_dimensions', {}).as('refreshDimension')
   
-    setupInterceptor('GET', '/qbo/destination_attributes/', 'getDestinationAttributes');
+    // setupInterceptor('GET', '/qbo/destination_attributes/', 'getDestinationAttributes');
   
-    setupInterceptor('POST', '/fyle/expense_groups/sync', 'synchronousImport');
+    // setupInterceptor('POST', '/fyle/expense_groups/sync', 'synchronousImport');
   
-    setupInterceptor('GET', '/fyle/exportable_expense_groups', 'exportableExpenseGroups');
+    // setupInterceptor('GET', '/fyle/exportable_expense_groups', 'exportableExpenseGroups');
   
-    setupInterceptor('GET', '/tasks/all/', 'tasksPolling');
+    // setupInterceptor('GET', '/tasks/all/', 'tasksPolling');
   
-    setupInterceptor('POST', '/exports/trigger', 'exportsTrigger');
+    // setupInterceptor('POST', '/exports/trigger', 'exportsTrigger');
   
-    setupInterceptor('POST', '/mappings/employee', 'postEmployeeMapping');
+    // setupInterceptor('POST', '/mappings/employee', 'postEmployeeMapping');
   
-    setupInterceptor('GET', '/errors/', 'getErrors');
+    // setupInterceptor('GET', '/errors/', 'getErrors');
   
-    setupInterceptor('GET', '/export_detail', 'getPastExport');
+    // setupInterceptor('GET', '/export_detail', 'getPastExport');
   
-    setupInterceptor('GET', '/fyle/expense_groups/', 'getExpenseGroups')
+    // setupInterceptor('GET', '/fyle/expense_groups/', 'getExpenseGroups')
   
     setupInterceptor('GET', '/mappings/settings', 'getMappingSettings')
+
+    setupInterceptor('GET', '/configuration', 'getConfigurationSettings')
   
-    setupInterceptor('GET', '/mappings/expense_attributes/', 'getMappings')
+    setupInterceptor('GET', '/fyle/expense_groups/count/?state=COMPLETE', 'getCompletedCount')
   
-    setupInterceptor('GET', '/fyle/expense_fields', 'getFyleExpenseFields')
+    setupInterceptor('GET', '/fyle/expense_groups/count/?state=FAILED', 'getFailedCount')
+
+    setupInterceptor('GET', '/credentials/netsuite/', 'getNetsuiteCreds')
   
-    setupInterceptor('GET', '/mappings/employee_attributes/', 'getEmployeeMappings')
+    // setupInterceptor('GET', '/mappings/employee_attributes/', 'getEmployeeMappings')
   
-    setupInterceptor('GET', '/qbo/vendors/', 'getQBOVendors')
+    // setupInterceptor('GET', '/qbo/vendors/', 'getQBOVendors')
   
-    setupInterceptor('GET', '/qbo/mapping_options/', 'getMappingOptions')
+    // setupInterceptor('GET', '/qbo/mapping_options/', 'getMappingOptions')
   });
   
   Cypress.Commands.add('selectMatOption', (optionName) => {
@@ -134,8 +140,8 @@ declare global {
     cy.intercept('GET', '**/credentials/netsuite/', {})
   })
   
-  Cypress.Commands.add('navigateToSettingPage', (pageName: string) => {
-    cy.get('.side-nav-bar--module-block-content').contains(pageName).click();
+  Cypress.Commands.add('navigateToSettingPageItems', (pageName: string) => {
+    cy.getElement('side-nav').find('.netsuite-sidenav--nav-sub-item').contains(pageName).click();
   })
   
   Cypress.Commands.add('exportsPolling', () => {
@@ -157,11 +163,7 @@ declare global {
   })
   
   Cypress.Commands.add('navigateToModule', (pageName: string) => {
-    cy.get('.side-nav-bar--module-block-text').contains(pageName).click()
-  })
-  
-  Cypress.Commands.add('navigateToMappingPage', (pageName: string) => {
-    cy.get('.side-nav-bar--module-block-text-inner').contains(pageName).click();
+    cy.getElement('side-nav').find('.netsuite-sidenav--nav-item').contains(pageName).click()
   })
   
   Cypress.Commands.add('importToFyle', (fieldOrder: number, enable: boolean, optionName: string = '') => {
