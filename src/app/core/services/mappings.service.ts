@@ -267,7 +267,8 @@ export class MappingsService {
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/category/`, {
         limit: pageLimit,
-        offset: pageOffset
+        offset: pageOffset,
+        source_active: true
       }
     );
   }
