@@ -1,6 +1,6 @@
 <mat-sidenav-container class="netsuite" autosize fxFlexFill *ngIf="!isLoading">
     <mat-sidenav class="netsuite-sidenav" mode="side" opened>
-      <mat-nav-list>
+      <mat-nav-list data-cy="side-nav">
         <header matSubheader class="netsuite-sidenav--header">
           <img alt="Fyle" src="../../assets/images/pngs/fyle-logo.png" class="netsuite-sidenav--logo" />
           <mat-icon>add</mat-icon>
@@ -93,7 +93,7 @@
               </strong>
             </div>
           </button>
-          <button type="button" mat-menu-item [routerLink]="['../auth/logout']" (click)="onSignOut()">
+          <button type="button" mat-menu-item [routerLink]="['../auth/logout']" (click)="onSignOut()" data-cy="logout-btn">
             <div fxLayoutAlign="space-around center">
               <mat-icon class="netsuite--menu-icon">
                 power_settings_new
@@ -110,8 +110,8 @@
             <mat-icon class="netsuite--menu-icon">
               account_circle
             </mat-icon>
-            <strong class="netsuite--menu-text">{{user.full_name}}</strong>
-            <mat-icon class="netsuite--menu-icon netsuite--menu-icon__offset">
+            <strong class="netsuite--menu-text" data-cy="ns-user-name">{{user.full_name}}</strong>
+            <mat-icon class="netsuite--menu-icon netsuite--menu-icon__offset" data-cy="log-down-arrow">
               keyboard_arrow_down
             </mat-icon>
           </div>
