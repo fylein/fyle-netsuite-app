@@ -12,7 +12,6 @@ declare global {
         submitButton(content: string): Cypress.Chainable<JQuery<HTMLElement>>;
         saveSetting(content: string): void;
         getMatToggle(toggleIndex: number): Cypress.Chainable<JQuery<HTMLElement>>;
-        ignoreTokenHealth(): void;
         setupHttpListeners(): void;
         navigateToSettingPageItems(pageName: string): void;
         exportsPolling(): void;
@@ -130,11 +129,6 @@ declare global {
   
   Cypress.Commands.add('getMatToggle', (toggleIndex: number) => {
     return cy.get('.mat-slide-toggle-bar').eq(toggleIndex)
-  })
-  
-  Cypress.Commands.add('ignoreTokenHealth', () => {
-    // Intercept this API call to save some time
-    cy.intercept('GET', '**/credentials/netsuite/', {})
   })
   
   Cypress.Commands.add('navigateToSettingPageItems', (pageName: string) => {

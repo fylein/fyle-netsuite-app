@@ -4,7 +4,7 @@
   
   <div *ngIf="currentState !== allOnboardingStates.isOnboarded && !isLoading"
     class="onboarding-stepper onboarding-stepper--container" fxLayout="column" fxLayoutAlign="start center">
-    <h1 class="text-center onboarding-stepper--title">Welcome to Fyle App for NetSuite Integrations</h1>
+    <h1 class="text-center onboarding-stepper--title" data-cy="welcome-text">Welcome to Fyle App for NetSuite Integrations</h1>
     <div fxLayout="row" fxLayoutAlign="center center" class="onboarding-stepper--logos">
       <img src="../../../assets/images/pngs/fyle-logo.png" alt="Fyle">
       <mat-icon>add</mat-icon>
