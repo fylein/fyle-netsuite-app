@@ -6,12 +6,8 @@ describe('auth module', () => {
     cy.visit('/')
   })
 
-  it('should load auth module', () => {
-    cy.visit('/auth')
-  })
-
   it('Netsuite Token expired', () => {
-    cy.intercept('GET', '**/credentials/netsuite/', {
+    cy.intercept('GET', '**/configuration/', {
       statusCode: 400,
       body: {
         message: 'Dummy error message',

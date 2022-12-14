@@ -1,9 +1,7 @@
 /// <reference types="cypress" />
 import { environment } from 'src/environments/environment';
 describe('fyle callback', () => {
-  beforeEach(() => {
-    cy.ignoreTokenHealth()
-  })
+  beforeEach(() => {})
 
   it('should redirect user back to login page', () => {
     cy.visit('/auth/callback?code=xyz')

@@ -16,12 +16,9 @@ declare global {
         setupHttpListeners(): void;
         navigateToSettingPageItems(pageName: string): void;
         exportsPolling(): void;
-        waitForDashboardLoad(): void;
         interrupt(): void;
         navigateToModule(pageName: string): void;
-        importToFyle(fieldOrder: number, enable: boolean, optionName: string): void;
         enableConfigurationToggle(fieldOrder: number): void;
-        selectConfigurationField(fieldOrder: number, optionName: string): void;
       }
     }
   }
@@ -62,7 +59,7 @@ declare global {
     };
     window.localStorage.setItem('user', JSON.stringify(user))
     window.localStorage.setItem('workspaceId', environment.e2e_tests.secret[1].workspace_id)
-    window.localStorage.setItem('onboarded', 'true')
+    // window.localStorage.setItem('onboarded', 'true')
     window.localStorage.setItem('access_token', JSON.stringify(user.access_token))
     window.localStorage.setItem('refresh_token', JSON.stringify(user.refresh_token))
   
@@ -157,34 +154,11 @@ declare global {
     })
   })
   
-  Cypress.Commands.add('waitForDashboardLoad', () => {
-    cy.wait('@synchronousImport').its('response.statusCode').should('equal', 200)
-    cy.wait('@exportableExpenseGroups').its('response.statusCode').should('equal', 200)  
-  })
-  
   Cypress.Commands.add('navigateToModule', (pageName: string) => {
     cy.getElement('side-nav').find('.netsuite-sidenav--nav-item').contains(pageName).click()
-  })
-  
-  Cypress.Commands.add('importToFyle', (fieldOrder: number, enable: boolean, optionName: string = '') => {
-    cy.get('.import-settings--field-toggle-section').eq(fieldOrder).within(() => {
-      cy.enableConfigurationToggle(0)
-      if (enable) {
-        cy.get('.import-settings--fyle-field').click()
-      }
-    })
-    if (enable) {
-      cy.selectMatOption(optionName)
-    }
   })
   
   Cypress.Commands.add('enableConfigurationToggle', (fieldOrder: number) => {
     cy.getMatToggle(fieldOrder).click()
   })
   
-  Cypress.Commands.add('selectConfigurationField', (fieldOrder: number, optionName: string) => {
-    cy.get('.configuration--field-section').eq(fieldOrder).within(() => {
-      cy.get('.configuration--form-field').first().click()
-    })
-    cy.selectMatOption(optionName)
-  })  

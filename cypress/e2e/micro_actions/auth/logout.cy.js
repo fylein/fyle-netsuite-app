@@ -2,7 +2,6 @@
 
 describe('logout', () => {
   beforeEach(() => {
-    cy.ignoreTokenHealth()
     cy.microActionsLogin()
     cy.visit('/')
   })
