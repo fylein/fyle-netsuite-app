@@ -3,7 +3,7 @@
       <div class="mat-title" *ngIf="!editMapping || data.category">
         Create New Mapping
       </div>
-      <div class="mat-title" *ngIf="editMapping && !data.category">
+      <div class="mat-title" *ngIf="editMapping && !data.category" data-cy="edit-category-heading">
         Edit Category Mapping
       </div>
       <div>
@@ -62,7 +62,7 @@
           <input type="text" formControlName="netsuiteAccount" placeholder="Netsuite Account" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
-            <mat-option *ngFor="let option of netsuiteAccountOptions" [value]="option">
+            <mat-option *ngFor="let option of netsuiteAccountOptions" [value]="option" data-cy="category-value">
               {{option.value}}
             </mat-option>
           </mat-autocomplete>
@@ -76,7 +76,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
-    <button class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
+    <button class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()" data-cy="save-btn">
       Save
     </button>
   </mat-dialog-actions>
