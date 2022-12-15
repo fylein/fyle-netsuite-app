@@ -4,13 +4,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run setup:env && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "setup:env": "node scripts/setup_env.js",
     "cypress:open": "cypress open -b chrome --e2e --env coverage=false",
     "cypress:run": "npm run remove_existing_code_coverage && cypress run -b chrome --env coverage=true",
-    "setup_e2e_test": "npm run setup_env && node scripts/setup_e2e_test.js",
+    "setup_e2e_test": "npm run setup:env",
     "remove_existing_code_coverage": "rm -rf .nyc_output cypress/coverage",
     "cypress": "cypress"
   },
