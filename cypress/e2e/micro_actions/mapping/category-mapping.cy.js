@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('header', () => {
+describe('Category mapping', () => {
     beforeEach(() => {
         cy.microActionsLogin()
         cy.visit('/')

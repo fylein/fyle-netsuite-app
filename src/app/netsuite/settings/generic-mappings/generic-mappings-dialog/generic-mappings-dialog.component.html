@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center" data-cy="custom-header">
     <div class="mat-title" *ngIf="!editMapping">
       Create New Mapping
     </div>
@@ -22,7 +22,7 @@
           Select a {{ getTitle(setting.source_field) | titlecase }} from Fyle
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" data-cy="custom-fyle-value">
         <input required type="text" formControlName="sourceField" placeholder="Select Fyle {{ getTitle(setting.source_field) | titlecase }}" matInput
           [matAutocomplete]="fyProj" [errorStateMatcher]="matcher">
         <mat-autocomplete #fyProj="matAutocomplete" [displayWith]="mappingDisplay">
@@ -40,7 +40,7 @@
           Map to Corresponding NetSuite {{ getTitle(setting.destination_field) | titlecase}}
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" data-cy="custom-netsuite-value">
         <input type="text" formControlName="destinationField" placeholder="Select NetSuite {{ getTitle(setting.destination_field) | titlecase}}" matInput [matAutocomplete]="netsuiteEl"
           [errorStateMatcher]="matcher">
         <mat-autocomplete #netsuiteEl="matAutocomplete" [displayWith]="mappingDisplay">
@@ -57,7 +57,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
-  <button class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
+  <button class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()" data-cy="save-btn">
     Save
   </button>
 </mat-dialog-actions>

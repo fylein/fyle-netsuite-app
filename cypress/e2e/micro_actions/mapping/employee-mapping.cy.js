@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('shared login', () => {
+describe('Employee Mapping', () => {
     beforeEach(() => {
       cy.microActionsLogin()
       cy.visit('/')
