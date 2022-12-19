@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { environment } from 'src/environments/environment';
+import environment from 'src/environments/environment.json';
 
 export default defineConfig({
   projectId: 'v7wbae',
