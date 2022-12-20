@@ -15,7 +15,7 @@ const environment = {
     client_id: `${process.env.E2E_TESTS_CLIENT_ID ? process.env.E2E_TESTS_CLIENT_ID : '{{E2E_TESTS_CLIENT_ID}}'}`,
     secret: [{
       workspace_id: `${process.env.E2E_TESTS_WORKSPACE_ID_1 ? process.env.E2E_TESTS_WORKSPACE_ID_1 : '{{E2E_TESTS_WORKSPACE_ID_1}}'}`,
-      access_token: '',
+      access_token: 'ab.cd.ef',
       org_id: `${process.env.E2E_TESTS_ORG_ID_1 ? process.env.E2E_TESTS_ORG_ID_1 : '{{E2E_TESTS_ORG_ID_1}}'}`,
       refresh_token: `${process.env.E2E_TESTS_REFRESH_TOKEN_1 ? process.env.E2E_TESTS_REFRESH_TOKEN_1 : '{{E2E_TESTS_REFRESH_TOKEN_1}}'}`,
       ns_account_id: `${process.env.E2E_TESTS_NS_ACCOUNT_ID_1 ? process.env.E2E_TESTS_NS_ACCOUNT_ID_1 : '{{E2E_TESTS_NS_ACCOUNT_ID_1}}'}`,
@@ -24,7 +24,7 @@ const environment = {
     },
     {
       workspace_id: `${process.env.E2E_TESTS_WORKSPACE_ID_2 ? process.env.E2E_TESTS_WORKSPACE_ID_2 : '{{E2E_TESTS_WORKSPACE_ID_2}}'}`,
-      access_token: '',
+      access_token: 'ab.cf.ed',
       org_id: `${process.env.E2E_TESTS_ORG_ID_2 ? process.env.E2E_TESTS_ORG_ID_2 : '{{E2E_TESTS_ORG_ID_2}}'}`,
       refresh_token: `${process.env.E2E_TESTS_REFRESH_TOKEN_2 ? process.env.E2E_TESTS_REFRESH_TOKEN_2 : '{{E2E_TESTS_REFRESH_TOKEN_2}}'}`,
       ns_account_id: `${process.env.E2E_TESTS_NS_ACCOUNT_ID_2 ? process.env.E2E_TESTS_NS_ACCOUNT_ID_2 : '{{E2E_TESTS_NS_ACCOUNT_ID_2}}'}`,

@@ -106,11 +106,7 @@ declare global {
   
     setupInterceptor('GET', '/fyle/expense_groups/count/?state=FAILED', 'getFailedCount')
 
-    // setupInterceptor('GET', '/credentials/netsuite/', 'getNetsuiteCreds')
-  
-    // setupInterceptor('GET', 'workspaces/?org_id', 'getOrgId')
-  
-    // setupInterceptor('GET', '/qbo/vendors/', 'getQBOVendors')
+    setupInterceptor('GET', '/credentials/netsuite/', 'getNetsuiteCreds')
   
     // setupInterceptor('GET', '/qbo/mapping_options/', 'getMappingOptions')
   });
