@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { environment } from 'src/environments/environment';
+import environment from 'src/environments/environment.json';
 
 declare global {
     namespace Cypress {
@@ -40,9 +40,10 @@ declare global {
       org_name: 'XYZ Org'
     };
     window.localStorage.setItem('user', JSON.stringify(user))
-    window.localStorage.setItem('workspaceId', environment.e2e_tests.secret[0].workspace_id)
-  
-    // cy.login() will be used in all tests, hence adding http listener here
+    window.localStorage.setItem('workspaceId', JSON.stringify(environment.e2e_tests.secret[0].workspace_id))
+    window.localStorage.setItem('onboarded', 'true')
+    window.localStorage.setItem('access_token', JSON.stringify(user.access_token))
+    window.localStorage.setItem('refresh_token', JSON.stringify(user.refresh_token))
     cy.setupHttpListeners();
   })
 
@@ -57,8 +58,8 @@ declare global {
       org_name: 'XYZ Org'
     };
     window.localStorage.setItem('user', JSON.stringify(user))
-    window.localStorage.setItem('workspaceId', environment.e2e_tests.secret[1].workspace_id)
-    // window.localStorage.setItem('onboarded', 'true')
+    window.localStorage.setItem('workspaceId', JSON.stringify(environment.e2e_tests.secret[1].workspace_id))
+    window.localStorage.setItem('onboarded', 'true')
     window.localStorage.setItem('access_token', JSON.stringify(user.access_token))
     window.localStorage.setItem('refresh_token', JSON.stringify(user.refresh_token))
   
@@ -106,10 +107,6 @@ declare global {
     setupInterceptor('GET', '/fyle/expense_groups/count/?state=FAILED', 'getFailedCount')
 
     setupInterceptor('GET', '/credentials/netsuite/', 'getNetsuiteCreds')
-  
-    // setupInterceptor('GET', '/mappings/employee_attributes/', 'getEmployeeMappings')
-  
-    // setupInterceptor('GET', '/qbo/vendors/', 'getQBOVendors')
   
     // setupInterceptor('GET', '/qbo/mapping_options/', 'getMappingOptions')
   });

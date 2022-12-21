@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm run setup:env && ng build",
+    "build": "npm run setup:env && ng build --prod --output-path=dist",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

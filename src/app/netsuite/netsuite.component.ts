@@ -132,14 +132,24 @@ export class NetSuiteComponent implements OnInit {
     that.workspaceService.getWorkspaces(that.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length > 0) {
         that.workspace = workspaces[0];
+        that.setUserIdentity(that.user.employee_email, workspaces[0].id, {fullName: that.user.full_name});
         that.getSettingsAndNavigate();
       } else {
         that.workspaceService.createWorkspace().subscribe(workspace => {
           that.workspace = workspace;
+          that.setUserIdentity(that.user.employee_email, workspaces[0].id, {fullName: that.user.full_name});
           that.getSettingsAndNavigate();
         });
       }
     });
+  }
+
+  setUserIdentity(email: string, workspaceId: number, properties) {
+    this.trackingService.onSignIn(email, workspaceId, properties);
+  }
+
+  onSignOut() {
+    this.trackingService.onSignOut();
   }
 
   onConnectNetSuitePageVisit() {
