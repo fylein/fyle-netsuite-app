@@ -23,7 +23,7 @@ RUN npm install @angular-builders/custom-webpack@8.4.1
 COPY . /app
 
 # generate build
-RUN ng build 
+RUN npm run build
 
 ############
 ### prod ###
