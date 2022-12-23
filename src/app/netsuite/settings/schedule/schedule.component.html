@@ -6,7 +6,7 @@
     Automated Import/Export
   </div>
 
-  <form class="schedule--form" [formGroup]="form">
+  <form class="schedule--form" [formGroup]="form" data-cy="schedule-form">
     <div class="schedule--select">
       <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
         Enable Automated Import-Export
@@ -41,7 +41,7 @@
           </div>
           <mat-form-field class="schedule--dropdown" appearance="outline" required>
             <mat-select placeholder="Select hours" disableOptionCentering panelClass="simpleSelect"
-              formControlName="hours">
+              formControlName="hours" data-cy="schedule-frequency-data">
               <mat-option *ngFor="let hour of hours" [value]="hour">
                 {{hour}} hour<span *ngIf="hour>1">s</span>
               </mat-option>
@@ -73,7 +73,7 @@
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field class="schedule--dropdown" appearance="outline" required>
               <mat-select placeholder="Select Admins" disableOptionCentering panelClass="myPanelClass"
-                formControlName="emails" multiple>
+                formControlName="emails" multiple data-cy="schedule-selected-email">
                 <app-simple-search-select [form]="form"></app-simple-search-select>
                 <mat-select-trigger fxLayout="row" fxLayoutAlign="space-between center">
                   <div fxLayout="row">
@@ -115,7 +115,7 @@
 
             <span *ngIf="form.controls.hours.value" class="schedule--span-or">or</span>
 
-            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
+            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()" data-cy="add-email">
               <img class="schedule--add-btn" src="assets/images/pngs/add.png">
               <span class="schedule--span-or">Add new email address</span>
             </div>
@@ -124,7 +124,7 @@
 
       </div>
       <button [disabled]="!form.valid" *ngIf="form.controls.scheduleEnabled.value" class="schedule--save-btn"
-        mat-flat-button color="primary" type="submit" (click)="submit()">
+        mat-flat-button color="primary" type="submit" (click)="submit()" data-cy="save-btn">
         Save
       </button>
     </div>
