@@ -16,7 +16,7 @@
     <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
       <app-loader></app-loader>
     </div>
-    <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form">
+    <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form" data-cy="add-email-form">
       <div fxLayout="column" fxLayoutAlign="start stretch">
         <div class="header-name">
           Name
@@ -36,7 +36,7 @@
       </div>
     </form>
   </mat-dialog-content>
-  <mat-dialog-actions align="end">
+  <mat-dialog-actions align="end" data-cy="btn-cnl-save">
     <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
     <button [disabled]="!form.valid" class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
       Add and Save
