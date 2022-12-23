@@ -20,7 +20,7 @@ const environment = {
       refresh_token: `${process.env.E2E_TESTS_REFRESH_TOKEN_1 ? process.env.E2E_TESTS_REFRESH_TOKEN_1 : '{{E2E_TESTS_REFRESH_TOKEN_1}}'}`,
       ns_account_id: `${process.env.E2E_TESTS_NS_ACCOUNT_ID_1 ? process.env.E2E_TESTS_NS_ACCOUNT_ID_1 : '{{E2E_TESTS_NS_ACCOUNT_ID_1}}'}`,
       ns_token_id: `${process.env.E2E_TESTS_NS_TOKEN_ID_1 ? process.env.E2E_TESTS_NS_TOKEN_ID_1 : '{{E2E_TESTS_NS_TOKEN_ID_1}}'}`,
-      ns_token_secret: `${process.env.E2E_TESTS_NS_TOKEN_SECRET_1 ? process.env.E2E_TESTS_NS_TOKEN_SECRET_1 : '{{E2E_TESTS_NS_TOKEN_SECRET_1}}'}`,
+      ns_token_secret: `${process.env.E2E_TESTS_NS_TOKEN_SERECT_1 ? process.env.E2E_TESTS_NS_TOKEN_SERECT_1 : '{{E2E_TESTS_NS_TOKEN_SERECT_1}}'}`,
     },
     {
       workspace_id: `${process.env.E2E_TESTS_WORKSPACE_ID_2 ? process.env.E2E_TESTS_WORKSPACE_ID_2 : '{{E2E_TESTS_WORKSPACE_ID_2}}'}`,
@@ -29,7 +29,7 @@ const environment = {
       refresh_token: `${process.env.E2E_TESTS_REFRESH_TOKEN_2 ? process.env.E2E_TESTS_REFRESH_TOKEN_2 : '{{E2E_TESTS_REFRESH_TOKEN_2}}'}`,
       ns_account_id: `${process.env.E2E_TESTS_NS_ACCOUNT_ID_2 ? process.env.E2E_TESTS_NS_ACCOUNT_ID_2 : '{{E2E_TESTS_NS_ACCOUNT_ID_2}}'}`,
       ns_token_id: `${process.env.E2E_TESTS_NS_TOKEN_ID_2 ? process.env.E2E_TESTS_NS_TOKEN_ID_2 : '{{E2E_TESTS_NS_TOKEN_ID_2}}'}`,
-      ns_token_secret: `${process.env.E2E_TESTS_NS_TOKEN_SECRET_2 ? process.env.E2E_TESTS_NS_TOKEN_SECRET_2 : '{{E2E_TESTS_NS_TOKEN_SECRET_2}}'}`,
+      ns_token_secret: `${process.env.E2E_TESTS_NS_TOKEN_SERECT_2 ? process.env.E2E_TESTS_NS_TOKEN_SERECT_2 : '{{E2E_TESTS_NS_TOKEN_SERECT_2}}'}`,
     }
   ]
   }
