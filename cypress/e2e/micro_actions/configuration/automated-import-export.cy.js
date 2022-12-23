@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { ResetFormType } from "@rxweb/reactive-form-validators"
+import environment from 'src/environments/environment.json';
 
 describe('Auto Import and Export Setting', () => {
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('Auto Import and Export Setting', () => {
                 "netsuite@gmail.com",
                 "admin1@fyleformicro.testing"
             ],
-            "workspace": 2,
+            "workspace": environment.e2e_tests.secret[1].workspace_id,
             "schedule": 14
         }
         cy.intercept('GET', '**/schedule/', schedule)
