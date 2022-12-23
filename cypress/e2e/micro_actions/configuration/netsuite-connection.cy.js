@@ -16,7 +16,7 @@ describe('Netsuite connection', () => {
         cy.assertText('connect-netsuite-header','Connect to your NetSuite account to start exporting expense data from Fyle.')
         cy.getElement('connect-netsuite-form').get('.mappings-dialog--label').first().contains('NetSuite Account ID')
         cy.getElement('connect-netsuite-form').get('.mat-input-element').eq(0).then(($el) => {
-            assert.equal($el[0].value,environment.e2e_tests.secret[1].ns_account_id)
+            expect($el[0].value).not.to.be.empty
         })
         cy.getElement('connect-netsuite-form').get('.mappings-dialog--label').eq(1).contains('NetSuite Token ID')
         cy.getElement('connect-netsuite-form').get('.mat-input-element').eq(1).then(($el) => {
