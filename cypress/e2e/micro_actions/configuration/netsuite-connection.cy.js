@@ -11,12 +11,13 @@ describe('Netsuite connection', () => {
     it('Update netsuite connection', () => {
         cy.url().should('include', '/settings/netsuite')
         cy.get('.page-header--name').contains('NetSuite Connection')
+        cy.assertText('zero-state-description', 'You have connected to your NetSuite Account already')
         cy.assertText('zero-state-btn','Update NetSuite Connection')
         cy.getElement('zero-state-btn').click()
         cy.assertText('connect-netsuite-header','Connect to your NetSuite account to start exporting expense data from Fyle.')
         cy.getElement('connect-netsuite-form').get('.mappings-dialog--label').first().contains('NetSuite Account ID')
         cy.getElement('connect-netsuite-form').get('.mat-input-element').eq(0).then(($el) => {
-            expect($el[0].value).not.to.be.empty
+            expect($el[0].value).equal(environment.e2e_tests.secret[1].ns_account_id)
         })
         cy.getElement('connect-netsuite-form').get('.mappings-dialog--label').eq(1).contains('NetSuite Token ID')
         cy.getElement('connect-netsuite-form').get('.mat-input-element').eq(1).then(($el) => {
