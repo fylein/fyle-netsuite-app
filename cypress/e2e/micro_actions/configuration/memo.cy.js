@@ -1,6 +1,4 @@
 /// <reference types="cypress" />
-import { ResetFormType } from '@rxweb/reactive-form-validators';
-import environment from 'src/environments/environment.json';
 
 describe('Memo', () => {
     beforeEach(() => {
