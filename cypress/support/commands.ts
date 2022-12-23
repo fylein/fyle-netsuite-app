@@ -98,7 +98,25 @@ declare global {
   
     // setupInterceptor('GET', '/fyle/expense_groups/', 'getExpenseGroups')
   
-    setupInterceptor('GET', '/mappings/settings', 'getMappingSettings')
+    const setting = {
+      "count": 1,
+      "next": null,
+      "previous": null,
+      "results": [
+          {
+              "id": 1,
+              "source_field": "COST_CENTER",
+              "destination_field": "CLASS",
+              "import_to_fyle": false,
+              "is_custom": false,
+              "source_placeholder": null,
+              "created_at": "2022-12-19T11:53:39.828777Z",
+              "updated_at": "2022-12-23T06:55:17.526425Z",
+              "workspace": environment.e2e_tests.secret[1].workspace_id
+          },
+      ]
+    }
+    cy.intercept('GET', '**/mappings/settings/', setting)
 
     setupInterceptor('GET', '/configuration', 'getConfigurationSettings')
   

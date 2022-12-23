@@ -3,7 +3,7 @@
 </div>
 
 <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
-  <div class="page-info">
+  <div class="page-info" data-cy="expense-feild-header">
     <div class="page-info--description">
       Please map Netsuite fields to a Fyle equivalent. You can either map fields from NetSuite to an existing
       <br>
@@ -27,7 +27,7 @@
 
   <form class="expense-fields--form" [formGroup]="expenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
     <div formArrayName="expenseFields">
-      <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayout="row" fxLayoutAlign="start center" data-cy="expense-fields-sub-heading">
         <div class="fields-header" fxFlex="38">NetSuite Fields</div>
         <div fxFlex="10"></div>
         <div class="fields-header fields-header--fyle" fxFlex="38">Fyle Fields</div>
@@ -45,7 +45,7 @@
         [formGroupName]="i">
         <div fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field floatLabel="always" fxFlex="38" appearance="outline">
-            <mat-select placeholder="Choose NetSuite field" formControlName="destination_field">
+            <mat-select placeholder="Choose NetSuite field" formControlName="destination_field" data-cy="netsuite-feild-data">
               <mat-option *ngFor="let netsuiteField of netsuiteFormFieldList" [(value)]="netsuiteField.attribute_type">
                 {{ netsuiteField.display_name | titlecase }}
               </mat-option>
@@ -55,7 +55,7 @@
             <div class="map">Map to</div>
           </div>
           <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-            <mat-select [placeholder]="customFieldName || 'Choose Fyle Expense field'" formControlName="source_field">
+            <mat-select [placeholder]="customFieldName || 'Choose Fyle Expense field'" formControlName="source_field" data-cy="fyle-feild-data">
               <mat-option *ngFor="let fyleExpenseField of fyleExpenseFields"
                 [(value)]="fyleExpenseField.attribute_type">
                 {{ fyleExpenseField.display_name | titlecase }}
@@ -91,7 +91,7 @@
 
     <div fxLayout="row" fxLayoutAlign="center center">
       <div fxFlex="35" fxLayout="row" fxLayoutAlign="center" *ngIf="showCustomFieldName" [formGroup]="customFieldForm">
-        <mat-card class="custom-field-box">
+        <mat-card class="custom-field-box" data-cy="custom-feild">
           <mat-list role="list">
             Add a custom field
             <mat-form-field class="custom-field-name" appearance="outline">
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div fxLayoutAlign="start stretch" *ngIf="showAddButton">
+    <div fxLayoutAlign="start stretch" *ngIf="showAddButton" data-cy="add-btn">
       <img class="expense-fields--add-icon" src="assets/images/pngs/add.png" (click)="addExpenseField()">
       <a class="add-row-text" (click)="addExpenseField()">
         Add another field
@@ -129,7 +129,7 @@
     </div>
 
     <button class="expense-fields--save-btn" mat-flat-button color="primary" [disabled]="!expenseFieldsForm.valid"
-      (click)="saveExpenseFields()" type="submit">
+      (click)="saveExpenseFields()" type="submit" data-cy="save-btn">
       Save
     </button>
   </form>

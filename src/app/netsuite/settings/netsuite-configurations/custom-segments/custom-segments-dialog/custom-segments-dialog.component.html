@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-    <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center" data-cy="model-header">
       <div class="mat-title">
         Add Custom List / Record / Segment
       </div>
@@ -12,7 +12,7 @@
     <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
       <app-loader></app-loader>
     </div>
-    <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form">
+    <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form" data-cy="segment-form">
       <div fxLayout="column" fxLayoutAlign="start stretch">
         <div class="mat-body-strong">
           <strong class="mappings-dialog--label">
@@ -62,8 +62,8 @@
     </form>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
-    <button [disabled]="!form.valid" class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
+    <button type="button" mat-flat-button mat-dialog-close data-cy="cancel-btn">Cancel</button>
+    <button [disabled]="!form.valid" class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()" data-cy="save-btn">
       Save
     </button>
   </mat-dialog-actions>
