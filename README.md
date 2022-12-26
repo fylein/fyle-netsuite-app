@@ -3,30 +3,26 @@ Angular 8 client for Fyle NetSuite Integration
 
 ### Setup
 
-* Setup environment variables in src/environments/environment.ts
+## Local development setup
 
-    ```javascript
-    export const environment = {
-        production: false,
-        fyle_url: '{{FYLE_URL}}',
-        fyle_client_id: '{{FYLE_CLIENT_ID}}',
-        callback_uri: '{{CALLBACK_URI}}',
-        api_url: '{{API_URL}}',
-        app_url: '{{APP_URL}}'
-    }
-   ``` 
+### Setup - 1 (Recommended)
+Follow instructions mentioned in [Integrations Central](https://github.com/fylein/fyle-integrations-central/)
 
-* Install the requirements
+### Setup - 2
+* Install dependencies
 
-    ```
+    ```bash
     npm install
     ```
 
-* Run the Development server
+* Copy `environment.json` from integrations-central/ and add it to `src/environments`
 
-    Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+    ```bash
+    cp ../fyle-integrations-central/app-secrets/netsuite-app/environment.json src/environments/environment.json
+    ```
 
-* Code scaffolding
+* Run app
 
-    Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
+    ```bash
+    npm start
+    ```
