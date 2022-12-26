@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { environment } from 'src/environments/environment';
+import environment from 'src/environments/environment.json';
 
 export default defineConfig({
   projectId: 'v7wbae',
@@ -12,6 +12,6 @@ export default defineConfig({
   },
   viewportHeight: 980,
   viewportWidth: 1440,
-  defaultCommandTimeout: environment.e2e_tests.env !== 'staging' ? 15000 : 30000,
-  requestTimeout: environment.e2e_tests.env !== 'staging' ? 15000 : 30000
+  defaultCommandTimeout: environment.e2e_tests.env !== 'staging' ? 15000 : 60000,
+  requestTimeout: environment.e2e_tests.env !== 'staging' ? 15000 : 60000
 });

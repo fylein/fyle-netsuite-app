@@ -4,7 +4,7 @@
 
 <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="page-info">
-    <div class="page-info--description">
+    <div class="page-info--description" data-cy="memo-header">
       Customize the data set you would like to pass to the memo field of NetSuite while exporting expenses from Fyle.
       <a href="https://help.fylehq.com/en/articles/5853688-modify-data-exported-to-the-memo-field-in-netsuite"
       target="_blank" rel="noopener noreferrer" class="read-more-link">
@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="page-info">
-    <div class="memo--label">
+    <div class="memo--label" data-cy="memo-sub-header">
       Select and reorder the fields
       <mandatory-field></mandatory-field>
     </div>
@@ -22,7 +22,7 @@
     <form class="configurations--form" [formGroup]="form">
       <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="100">
         <mat-form-field floatLabel="always" appearance="outline" class="form-margin">
-          <mat-select formControlName="memoStructure" multiple>
+          <mat-select formControlName="memoStructure" multiple data-cy="memo-data">
             <div cdkDropList (cdkDropListDropped)="drop($event)">
                 <mat-option *ngFor="let option of defaultMemoFields" [value]="option" cdkDrag>
                   {{ getTitle(option) | titlecase }}
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div *ngIf="!isLoading" class="info-box" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="50" class="info-box-text">
+      <div fxFlex="50" class="info-box-text" data-cy="memo-preview">
         <ng-container>
           {{ showPreview(generalSettings.memo_structure) }}
         </ng-container>
@@ -48,7 +48,7 @@
       <div fxFlex="25"></div>
     </div>
     <div class="page-info">
-    <button class="configurations--save-btn" [disabled]="!form.valid" mat-flat-button color="primary" (click)="save()">
+    <button class="configurations--save-btn" [disabled]="!form.valid" mat-flat-button color="primary" (click)="save()" data-cy="save-btn">
       Save
     </button>
     </div>

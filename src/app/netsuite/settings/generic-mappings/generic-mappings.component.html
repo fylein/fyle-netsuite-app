@@ -29,18 +29,18 @@
       <table mat-table [dataSource]="mappings" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="sourceField">
-          <th mat-header-cell *matHeaderCellDef> {{ getTitle(sourceField) | titlecase }} </th>
-          <td mat-cell *matCellDef="let element">
+          <th mat-header-cell *matHeaderCellDef data-cy="custom-table-fyle-header"> {{ getTitle(sourceField) | titlecase }} </th>
+          <td mat-cell *matCellDef="let element" data-cy="custom-table-fyle-value">
             {{element.source.value}}
             <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.source.auto_mapped">bolt</mat-icon>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="destinationField">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef data-cy="custom-table-netsuite-header">
             NetSuite {{ getTitle(setting.destination_field) | titlecase }}
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" data-cy="custom-table-netsuite-value">
             {{element.destination.value}}
           </td>
         </ng-container>
