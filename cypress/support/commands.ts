@@ -41,7 +41,6 @@ declare global {
     };
     window.localStorage.setItem('user', JSON.stringify(user))
     window.localStorage.setItem('workspaceId', JSON.stringify(environment.e2e_tests.secret[0].workspace_id))
-    window.localStorage.setItem('onboarded', 'true')
     window.localStorage.setItem('access_token', JSON.stringify(user.access_token))
     window.localStorage.setItem('refresh_token', JSON.stringify(user.refresh_token))
     cy.setupHttpListeners();

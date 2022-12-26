@@ -10,7 +10,7 @@
       <mat-icon>add</mat-icon>
       <img src="../../../assets/images/pngs/netsuite-logo.png" alt="netsuite">
     </div>
-    <div class="onboarding-stepper--subheader">
+    <div class="onboarding-stepper--subheader" data-cy="welcome-sub-text">
       Let's get you on board with a few quick steps!
     </div>
     <div>
@@ -177,7 +177,7 @@
               </span>
             </div>
             <div class="dashboard--actions-action cursor-pointer" fxLayout="row" fxLayoutAlign="start center"
-              routerLink="../sync_export/sync/">
+              routerLink="../sync_export/sync/" data-cy="import">
               <div>
                 Import Now
               </div>
@@ -194,7 +194,7 @@
               Export Expenses to NetSuite
             </div>
             <div class="dashboard--actions-action cursor-pointer" fxLayout="row" fxLayoutAlign="start center"
-              routerLink="../sync_export/export/">
+              routerLink="../sync_export/export/" data-cy="export">
               <div>
                 Export Now
               </div>

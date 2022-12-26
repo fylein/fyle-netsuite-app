@@ -25,7 +25,7 @@
             </div>
             <div>
               <button type="button" [disabled]="isExporting || isProcessingExports" mat-flat-button color="primary" (click)="createNetSuiteItems()">
-                <div *ngIf="!isExporting && !isProcessingExports && exportableExpenseGroups && exportableExpenseGroups.length > 0">
+                <div *ngIf="!isExporting && !isProcessingExports && exportableExpenseGroups && exportableExpenseGroups.length > 0" data-cy="export-btn">
                   Export
                 </div>
                 <div *ngIf="isExporting || isProcessingExports">
