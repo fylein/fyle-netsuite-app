@@ -1,0 +1,59 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+    <app-loader></app-loader>
+ </div>
+ <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="info-box">
+         Set a rule to skip the export of expenses from Fyle to Netsuite
+    </div>
+    <div *ngIf="!isLoading" class="info-box" fxLayout="row" fxLayoutAlign="start center">
+       <div fxFlex="75" class="info-box-text">
+          You could choose to skip the export of certain expenses from Fyle to Netsuite by setting up a conditional rule.
+       </div> 
+    </div>
+    <div fxFlex="20"></div>
+       <form class="expense-fields--form" [formGroup] = "excludeForm" fxLayout="column" fxLayoutAlign="start stretch">
+        <!-- <div formArrayName="expenseFields"> -->
+        <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="fields-header">Condition</div>
+        <mandatory-field></mandatory-field>
+        <div fxFlex="17"></div>
+        <div class="fields-header">Operator</div>
+        <mandatory-field></mandatory-field>
+        <div fxFlex="18"></div>
+        <div class="fields-header">Value</div>
+        <mandatory-field></mandatory-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
+             <mat-select placeholder="Select the condition" formControlName="condition">
+                <mat-option *ngFor = "let obj of sample_array">
+                   {{ obj.text }}
+                </mat-option>
+             </mat-select>
+          </mat-form-field>
+          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
+            <mat-select placeholder="Select the operator" formControlName="operator">
+               <mat-option *ngFor = "let obj of sample_array">
+                   {{ obj.text }}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
+             <mat-select placeholder="Select the value" formControlName="value">
+                <mat-option *ngFor = "let obj of sample_array">
+                    {{ obj.text }}
+                </mat-option>
+             </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayoutAlign="start stretch">
+            <img class="expense-fields--add-icon" src="assets/images/pngs/add.png" (click)="addExpenseField()">
+            <a class="add-row-text" (click)="addExpenseField()">
+              Add Condition
+            </a>
+          </div>
+        <button class="expense-fields--save-btn" mat-flat-button color="primary" type="submit">    
+            Save
+        </button>
+       </form>
+ </div>

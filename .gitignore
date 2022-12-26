@@ -53,3 +53,4 @@ Thumbs.db
 
 # Local serve
 start.sh
+src/environments/environment.json
