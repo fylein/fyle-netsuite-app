@@ -26,18 +26,37 @@ export class SkipExportComponent implements OnInit {
 
   addCondition() {
     this.condition = true
+    this.excludeForm1.enable();
   }
 
   remCondition(){
     this.condition = false
+    this.excludeForm1.disable();
   }
 
- sample_array = [
-      {id: 1, text: 'isEmpty'},
-      {id: 2, text: 'isNotEmpty'},
-      {id: 3, text: 'isEqual'}
+ conditional_field = [
+      {id: 1, text: 'Expense Custom Fields'},
+      {id: 2, text: 'Report Number'},
+      {id: 3, text: 'Employee Email'},
+      {id: 4, text: 'Date of Spend'},
+      {id: 5, text: 'Report Name'}
   ];
 
+ operator_field = [
+    {id: 1, text: 'is empty'},
+    {id: 2, text: 'is not empty'},
+    {id: 3, text: 'is equal'},
+    {id: 4, text: 'Contains'},
+    {id: 5, text: 'is it on or before'}
+];
+
+value_field = [
+  {id: 1, text: 'ajdnwjnadw'},
+  {id: 2, text: 'djanwjnadw'},
+  {id: 3, text: 'wxdnwjnadw'},
+  {id: 4, text: 'nvdnwjnadw'},
+  {id: 5, text: 'npxnwjnadw'}
+];
   initFormGroups(){
     this.excludeForm = new FormGroup({
       condition: new FormControl('',[Validators.required]), 

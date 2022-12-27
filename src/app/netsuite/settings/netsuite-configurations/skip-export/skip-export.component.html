@@ -26,21 +26,21 @@
       <div fxLayout="row" fxLayoutAlign="start center">
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition">
-               <mat-option *ngFor = "let obj of sample_array">
+               <mat-option *ngFor = "let obj of conditional_field" [(value)]="conditional_field">
                   {{ obj.text }}
                </mat-option>
             </mat-select>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the operator" formControlName="operator">
-               <mat-option *ngFor = "let obj of sample_array">
+               <mat-option *ngFor = "let obj of operator_field" [(value)]="operator_field">
                   {{ obj.text }}
                </mat-option>
             </mat-select>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the value" formControlName="value">
-               <mat-option *ngFor = "let obj of sample_array">
+               <mat-option *ngFor = "let obj of value_field" [(value)]="value_field">
                   {{ obj.text }}
                </mat-option>
             </mat-select>
@@ -52,26 +52,28 @@
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition">
-                  <mat-option *ngFor = "let obj of sample_array">
+                  <mat-option *ngFor = "let obj of conditional_field" [(value)]="conditional_field">
                      {{ obj.text }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
+            <!-- Here we can actually change as per the option selected above -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the operator" formControlName="operator">
-                  <mat-option *ngFor = "let obj of sample_array">
+                  <mat-option *ngFor = "let obj of operator_field" [(value)]="operator_field">
                      {{ obj.text }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
+            <!-- fin -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the value" formControlName="value">
-                  <mat-option *ngFor = "let obj of sample_array">
+                  <mat-option *ngFor = "let obj of value_field" [(value)]="value_field">
                      {{ obj.text }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
-            <div fxFlex="5">
+            <div fxFlex="2">
                <img class="skip-export--delete-icon" src="assets/images/pngs/delete.png"
                   (click)="remCondition()">
             </div>
