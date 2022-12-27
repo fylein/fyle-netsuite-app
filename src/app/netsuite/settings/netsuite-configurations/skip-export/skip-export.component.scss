@@ -23,7 +23,7 @@ $fy-info-dark: #2c304e;
   }
 }
 
-::ng-deep .expense-fields {
+::ng-deep .skip-export {
   &--header {
     border-bottom: 1px solid $fy-layout-background;
   }
@@ -35,10 +35,17 @@ $fy-info-dark: #2c304e;
     color: $fy-nav-text;
   }
 
+  &--form1 {
+    font-size: 14px;
+    margin: 0px;
+    max-width: 1000px;
+    color: $fy-nav-text;
+  }
+
   &--add-icon {
     text-align: center;
     cursor: pointer;
-    padding-left: 10px;
+    padding-left: 30px;
     padding-bottom: 25px;
     max-width: 24px;
     max-height: 24px;
@@ -82,7 +89,11 @@ $fy-info-dark: #2c304e;
   }
 
   &--save-btn {
-    max-width: 32px;
+    max-width: 32px;    
+    text-align: center;
+    cursor: pointer;
+    padding-left: 30px;
+    padding-bottom: 25px;
   }
 
   &--errors {

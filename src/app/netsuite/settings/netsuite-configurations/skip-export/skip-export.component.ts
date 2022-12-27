@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-skip-export',
@@ -8,28 +9,27 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class SkipExportComponent implements OnInit {
   excludeForm: FormGroup;
-  expenseFields: FormArray;
+  excludeForm1: FormGroup;
+  condition: Boolean;
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.condition = false
     this.initFormGroups();
-  }
-  
-  createExpenseField() {
-    const that = this;
-
-    const group = that.formBuilder.group({
-      condition: ['',[Validators.required]], 
-      operator: ['',[Validators.required]], 
-      value: ['',[Validators.required]]
-    });
-    return group;
+    this.initFormGroups1();
   }
 
-  addExpenseField() {
-    const that = this;
-    that.expenseFields = that.excludeForm.get('expenseFields') as FormArray;
-    that.expenseFields.push(that.createExpenseField());
+  checkCondition()
+  {
+    return this.condition
+  }
+
+  addCondition() {
+    this.condition = true
+  }
+
+  remCondition(){
+    this.condition = false
   }
 
  sample_array = [
@@ -40,6 +40,14 @@ export class SkipExportComponent implements OnInit {
 
   initFormGroups(){
     this.excludeForm = new FormGroup({
+      condition: new FormControl('',[Validators.required]), 
+      operator: new FormControl('',[Validators.required]), 
+      value: new FormControl('',[Validators.required])
+    });
+  }
+
+  initFormGroups1(){
+    this.excludeForm1 = new FormGroup({
       condition: new FormControl('',[Validators.required]), 
       operator: new FormControl('',[Validators.required]), 
       value: new FormControl('',[Validators.required])
