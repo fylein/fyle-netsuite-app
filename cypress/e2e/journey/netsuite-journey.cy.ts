@@ -150,7 +150,6 @@ describe('netsuite journey', () => {
     })
     cy.get('mat-progress-bar').should('to.be', 'visible') 
     cy.get('.cdk-overlay-container').contains('import') 
-    cy.navigateToModule('Dashboard')
   }
 
   function exportToNetsuite() {
@@ -167,7 +166,7 @@ describe('netsuite journey', () => {
   }
 
   function resolveError() {
-    var error;
+    let error;
     cy.navigateToModule('Expense Groups')
     cy.get('.page-header--name').contains('Expense Groups')
     cy.url().should('include', '/expense_group')
