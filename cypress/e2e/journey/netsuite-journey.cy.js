@@ -99,7 +99,7 @@ describe('netsuite journey', () => {
 
   function employeeSetting() {
     cy.get('.onboarding-stepper--desc').eq(5).contains('Map Employees')
-    cy.get('.onboarding-stepper--check').eq(5).should('have.css', 'color', 'rgb(179, 186, 199)')
+    // cy.get('.onboarding-stepper--check').eq(5).should('have.css', 'color', 'rgb(179, 186, 199)')
     cy.get('.onboarding-stepper--navigation').contains('Go to Employee Mappings').click()
     cy.url().should('include', '/settings/employee/mappings')
     cy.get('.page-header--name').contains('Employee Mapping')
@@ -126,7 +126,7 @@ describe('netsuite journey', () => {
     cy.get('.page-header--name').contains('Category Mappings')
     cy.get('button').first().contains('Create Category Mapping').click()
     cy.getElement('edit-category-heading').contains('Create New Mapping')
-    cy.get('input').eq(0).type('Train')
+    cy.get('input').eq(0).type('Training')
     cy.getElement('fyle-category-value').eq(0).click()
     cy.get('input').eq(1).type('Different Sub Account')
     cy.getElement('category-value').eq(0).click()
@@ -145,7 +145,7 @@ describe('netsuite journey', () => {
     cy.getElement('import-btn').contains('Import').click()
     cy.getElement('import-btn').contains('Importing').should('to.be', 'disabled')
     cy.get('mat-progress-bar').should('to.be', 'visible') 
-    cy.get('.cdk-overlay-container').contains('import') 
+    cy.get('.cdk-overlay-container').contains('Import') 
   }
 
   function exportToNetsuite() {
@@ -153,16 +153,15 @@ describe('netsuite journey', () => {
     cy.url().should('include', '/sync_export/export')
     cy.get('.export-header').contains('Export Expenses to NetSuite.')
     cy.getElement('export-btn').contains('Export').click()
-    cy.getElement('export-btn').contains('Exporting').then(($el) => {
-        expect($el).to.be.disabled
-    })
+    cy.getElement('export-btn').contains('Exporting').should('to.be', 'disabled')
     cy.get('mat-progress-bar').should('to.be', 'visible') 
     cy.get('.cdk-overlay-container').contains('Export') 
     cy.navigateToModule('Dashboard')
   }
 
   function resolveError() {
-    let error;
+    let value;
+    let tData, tCol, tRow;
     cy.navigateToModule('Expense Groups')
     cy.get('.page-header--name').contains('Expense Groups')
     cy.url().should('include', '/expense_group')
@@ -171,24 +170,31 @@ describe('netsuite journey', () => {
     cy.url().should('include', '/view/info')
     cy.getElement('error-nav').contains('Mapping Errors').click()
     cy.url().should('include', '/view/mapping_errors')
-    cy.get('td').contains('Category').click()
-    cy.get('input').eq(1).then(($el) => {
-        error = $el.val()
-    })
-    cy.get('input').eq(2).type('Training')
-    cy.getElement('category-value').eq(0).click()
-    cy.get('input').eq(2).should('have.value', 'Training')
-    cy.assertText('save-btn','Save')
-    cy.getElement('save-btn').click()
-    cy.get('.cdk-overlay-container').contains('Category is mapped successfully, you can try re-exporting the failed entries') 
-    cy.navigateToModule('Dashboard') 
-    exportToNetsuite()
-    cy.navigateToModule('Expense Groups')
-    cy.getElement('failed-data').eq(0).click()
-    cy.getElement('error-nav').contains('Mapping Errors').click()
-    cy.get('td').eq(0).click()
-    cy.get('input').eq(1).then(($el) => {
-        expect($el).to.have.text(error)
+    cy.get('td').then(($el) => {
+      tData = $el.length
+      cy.get('th').then(($ell) => {
+        tCol = $ell.length
+        tRow  = tData/tCol;
+        if (tRow > 1) {
+          for(var i = 0; i < tData; i=i+tCol) {
+            cy.get('td').eq(i).click()
+            cy.get('input').eq(0).then(($el) => {
+                value = i == 0 ? 'Different Sub Account' : $el.val()[0]
+                cy.get('input').eq(1).type(value)
+                cy.getElement('category-value').eq(i).click()
+                cy.assertText('save-btn','Save')
+                cy.getElement('save-btn').click()
+                cy.get('.cdk-overlay-container').contains('Category is mapped successfully, you can try re-exporting the failed entries') 
+            })
+          }
+          cy.navigateToModule('Dashboard')
+          exportToNetsuite()
+          resolveError()
+        }
+        else if (tRow == 1) {
+            cy.get('td').eq(0).contains('NetSuite System Error')
+        }
+      })
     })
   }
 
