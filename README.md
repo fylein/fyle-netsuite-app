@@ -49,7 +49,7 @@ Follow instructions mentioned in [Integrations Central](https://github.com/fylei
 * Create an sql function to partially setup an org to run tests -
     ```bash
     # bash into database
-    \i ../fyle-netsuite-api/sql/functions/reset-worspacce.sql;
+    \i ../fyle-netsuite-api/sql/functions/reset-worspace.sql;
     ```
 
 * Partially reset the org using the sql script we created -
