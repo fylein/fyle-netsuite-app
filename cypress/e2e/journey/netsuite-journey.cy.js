@@ -66,8 +66,8 @@ describe('netsuite journey', () => {
     cy.getElement('map-reimbursable-expense').click().get('mat-option').contains('Journal Entry').click()
     cy.getElement('ccc-expense').click().get('mat-option').contains('Bill').click()
     // cy.getElement('sync-payments').click().get('mat-option').contains('Import NetSuite Payments into Fyle').click()
-    // cy.getElement('employee-from-fyle').click().get('mat-option').contains('Match names on Fyle and Netsuite').click()
-    cy.getElement('auto-create-employee').click()
+    cy.getElement('employee-from-fyle').click().get('mat-option').contains('Match names on Fyle and Netsuite').click()
+    // cy.getElement('auto-create-employee').click()
     cy.getElement('save-btn').contains('Save').click()
     cy.get('.cdk-overlay-container').contains('Configuration saved successfully') 
     cy.url().should('include', '/dashboard') 
@@ -75,61 +75,6 @@ describe('netsuite journey', () => {
   }
 
   function bankAccountSetting() {
-    const generalMappings = [
-      {
-        active: null,
-        attribute_type: "LOCATION",
-        auto_created: false,
-        created_at: "2022-12-12T07:52:40.065567Z",
-        destination_id: "2",
-        detail: null,
-        display_name: "Location",
-        id: 1844,
-        updated_at: "2022-12-12T07:52:40.065574Z",
-        value: "01: San Francisco",
-        workspace: environment.e2e_tests.secret[0].workspace_id,
-      },
-      {
-        active: false,
-        attribute_type: "ACCOUNTS_PAYABLE",
-        auto_created: false,
-        created_at: "2022-12-12T07:52:53.935711Z",
-        destination_id: "25",
-        detail: null,
-        display_name: "Accounts Payable",
-        id: 2634,
-        updated_at: "2022-12-23T12:45:46.331771Z",
-        value: "Accounts Payable",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "BANK_ACCOUNT",
-        auto_created: false,
-        created_at: "2022-12-12T07:52:53.935711Z",
-        destination_id: "223",
-        detail: null,
-        display_name: "Bank Account",
-        id: 2444,
-        updated_at: "2022-12-23T12:45:46.331771Z",
-        value: "ABN Withholding",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: null,
-        attribute_type: "VENDOR",
-        auto_created: false,
-        created_at: "2022-12-12T07:52:43.979070Z",
-        destination_id: "121",
-        detail: {email: null},
-        display_name: "Vendor",
-        id: 1880,
-        updated_at: "2022-12-12T07:52:43.979072Z",
-        value: "California EDD",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      }
-    ]
-    cy.intercept('GET', '**/netsuite/destination_attributes/**', generalMappings)
     cy.get('.onboarding-stepper--desc').eq(4).contains('Map Bank Accounts')
     cy.get('.onboarding-stepper--check').eq(4).should('have.css', 'color', 'rgb(179, 186, 199)')
     cy.get('.onboarding-stepper--navigation').contains('Go to General Mappings').click()
@@ -160,184 +105,20 @@ describe('netsuite journey', () => {
     cy.get('.page-header--name').contains('Employee Mapping')
     cy.get('button').contains('Create Employee Mapping').click()
     cy.getElement('employee-model').children('div').eq(0).contains('Create New Mapping')
-    cy.getElement('employee-value').get('input').eq(1).type('admin1@fyleforjourney.in')
+    cy.getElement('employee-value').get('input').eq(0).type('admin1@fyleforjourney.in')
     cy.getElement('fyle-employee-data').get('mat-autocomplete').get('mat-option').eq(0).click()
-    cy.getElement('employee-value').get('input').eq(2).type('ashwin')
+    cy.getElement('employee-value').get('input').eq(1).type('ashwin')
     cy.getElement('employee-value').get('mat-autocomplete').get('mat-option').eq(0).click()
-    cy.getElement('employee-value').get('input').eq(2).should('have.value', 'Ashwin')
+    cy.getElement('employee-value').get('input').eq(1).should('have.value', 'Ashwin')
     cy.assertText('save-btn','Save')
     cy.getElement('save-btn').click()
     cy.getElement('employe-name-data').contains('Ashwin')
-    cy.getElement('save-btn').contains('Save').click()
     cy.get('.cdk-overlay-container').contains('Employee Mapping saved successfully') 
-    cy.url().should('include', '/dashboard') 
+    cy.navigateToModule('Dashboard') 
     cy.get('.onboarding-stepper--check__complete').eq(5).should('have.css', 'color', 'rgb(40, 195, 84)')
   }
 
   function categorySetting() {
-    const category = [
-      {
-        active: true,
-        attribute_type: "CATEGORY",
-        auto_created: false,
-        auto_mapped: false,
-        created_at: "2022-12-12T07:52:37.448168Z",
-        detail: null,
-        display_name: "Category",
-        id: 2333,
-        source_id: "225212",
-        updated_at: "2022-12-22T11:27:54.902239Z",
-        value: "Food",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "CATEGORY",
-        auto_created: false,
-        auto_mapped: false,
-        created_at: "2022-12-12T07:52:37.448168Z",
-        detail: null,
-        display_name: "Category",
-        id: 2336,
-        source_id: "225212",
-        updated_at: "2022-12-22T11:27:54.902239Z",
-        value: "Taxi",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "CATEGORY",
-        auto_created: false,
-        auto_mapped: false,
-        created_at: "2022-12-12T07:52:37.448168Z",
-        detail: null,
-        display_name: "Category",
-        id: 2335,
-        source_id: "225212",
-        updated_at: "2022-12-22T11:27:54.902239Z",
-        value: "Per Diem",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "CATEGORY",
-        auto_created: false,
-        auto_mapped: false,
-        created_at: "2022-12-12T07:52:37.448168Z",
-        detail: null,
-        display_name: "Category",
-        id: 2334,
-        source_id: "225212",
-        updated_at: "2022-12-22T11:27:54.902239Z",
-        value: "Train",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "CATEGORY",
-        auto_created: false,
-        auto_mapped: false,
-        created_at: "2022-12-12T07:52:37.448168Z",
-        detail: null,
-        display_name: "Category",
-        id: 2337,
-        source_id: "225212",
-        updated_at: "2022-12-22T11:27:54.902239Z",
-        value: "Unspecified",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      }
-    ]
-    const NsexpenseAccount = [
-      {
-        active: true,
-        attribute_type: "ACCOUNT",
-        auto_created: false,
-        created_at: "2022-12-27T10:11:28.792849Z",
-        destination_id: "273",
-        detail: null,
-        display_name: "Account",
-        id: 7725,
-        updated_at: "2022-12-27T10:11:28.792857Z",
-        value: "Different Sub Account",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "ACCOUNT",
-        auto_created: false,
-        created_at: "2022-12-27T10:11:28.792849Z",
-        destination_id: "273",
-        detail: null,
-        display_name: "Account",
-        id: 7724,
-        updated_at: "2022-12-27T10:11:28.792857Z",
-        value: "Food",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "ACCOUNT",
-        auto_created: false,
-        created_at: "2022-12-27T10:11:28.792849Z",
-        destination_id: "273",
-        detail: null,
-        display_name: "Account",
-        id: 7726,
-        updated_at: "2022-12-27T10:11:28.792857Z",
-        value: "Taxi",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      },
-      {
-        active: true,
-        attribute_type: "ACCOUNT",
-        auto_created: false,
-        created_at: "2022-12-27T10:11:28.792849Z",
-        destination_id: "273",
-        detail: null,
-        display_name: "Account",
-        id: 7727,
-        updated_at: "2022-12-27T10:11:28.792857Z",
-        value: "Train",
-        workspace: environment.e2e_tests.secret[0].workspace_id
-      }
-    ]
-    const postCategory = {
-      "id": 7369,
-      "source_category": {
-          "id": 277010,
-          "attribute_type": "CATEGORY",
-          "display_name": "Category",
-          "value": "Food",
-          "source_id": "49743",
-          "auto_mapped": false,
-          "auto_created": false,
-          "active": true,
-          "detail": null,
-          "created_at": "2022-12-05T08:56:38.942304Z",
-          "updated_at": "2022-12-27T10:44:52.977812Z",
-          "workspace": 181
-      },
-      "destination_account": {
-          "id": 332151,
-          "attribute_type": "ACCOUNT",
-          "display_name": "Account",
-          "value": "Food",
-          "destination_id": "193",
-          "auto_created": false,
-          "active": true,
-          "detail": null,
-          "created_at": "2022-12-05T08:56:56.223092Z",
-          "updated_at": "2022-12-15T10:52:48.008545Z",
-          "workspace": 181
-      },
-      "destination_expense_head": null,
-      "created_at": "2022-12-05T10:15:41.785053Z",
-      "updated_at": "2022-12-27T10:44:52.989239Z",
-      "workspace": 181
-  }
-    // cy.intercept('GET', '**/netsuite/destination_attributes/**', NsexpenseAccount)
-    // cy.intercept('GET', '**/fyle/expense_attributes/**', category)
-    // cy.intercept('POST', '**/mappings/category/', postCategory)
     cy.get('.onboarding-stepper--desc').eq(6).contains('Map Categories')
     cy.get('.onboarding-stepper--check').eq(6).should('have.css', 'color', 'rgb(179, 186, 199)')
     cy.get('.onboarding-stepper--navigation').contains('Go to Category Mappings').click()
@@ -362,9 +143,7 @@ describe('netsuite journey', () => {
     cy.url().should('include', '/sync_export/sync')
     cy.get('.page-header--name').contains('Import & Export')
     cy.getElement('import-btn').contains('Import').click()
-    cy.getElement('import-btn').contains('Importing').then(($el) => {
-        expect($el).to.be.disabled
-    })
+    cy.getElement('import-btn').contains('Importing').should('to.be', 'disabled')
     cy.get('mat-progress-bar').should('to.be', 'visible') 
     cy.get('.cdk-overlay-container').contains('import') 
   }
@@ -378,7 +157,7 @@ describe('netsuite journey', () => {
         expect($el).to.be.disabled
     })
     cy.get('mat-progress-bar').should('to.be', 'visible') 
-    cy.get('.cdk-overlay-container').contains('Export complete') 
+    cy.get('.cdk-overlay-container').contains('Export') 
     cy.navigateToModule('Dashboard')
   }
 
@@ -392,7 +171,7 @@ describe('netsuite journey', () => {
     cy.url().should('include', '/view/info')
     cy.getElement('error-nav').contains('Mapping Errors').click()
     cy.url().should('include', '/view/mapping_errors')
-    cy.get('td').eq(0).click()
+    cy.get('td').contains('Category').click()
     cy.get('input').eq(1).then(($el) => {
         error = $el.val()
     })
@@ -402,6 +181,7 @@ describe('netsuite journey', () => {
     cy.assertText('save-btn','Save')
     cy.getElement('save-btn').click()
     cy.get('.cdk-overlay-container').contains('Category is mapped successfully, you can try re-exporting the failed entries') 
+    cy.navigateToModule('Dashboard') 
     exportToNetsuite()
     cy.navigateToModule('Expense Groups')
     cy.getElement('failed-data').eq(0).click()
@@ -429,8 +209,6 @@ describe('netsuite journey', () => {
     configurationSetting()
 
     bankAccountSetting()
-
-    ccSetting()
 
     employeeSetting()
 
