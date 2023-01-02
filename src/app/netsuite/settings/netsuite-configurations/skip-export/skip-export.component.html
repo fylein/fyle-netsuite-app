@@ -33,17 +33,14 @@
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the operator" formControlName="operator">
-               <mat-option>
-                  None
-               </mat-option>
-               <mat-option *ngFor = "let obj of operator_field_final" [value]="obj.value">
+               <mat-option *ngFor = "let obj of operator_field" [value]="obj.value">
                   {{ obj.label }}
                </mat-option>
             </mat-select>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the value" formControlName="value">
-               <mat-option *ngFor = "let obj of value_field" [(value)]="value_field">
+               <mat-option *ngFor = "let obj of value_field" [value]="value_field">
                   {{ obj.label }}
                </mat-option>
             </mat-select>
@@ -51,27 +48,27 @@
       </div>
    </form>
    <div *ngIf="checkCondition()">
-      <form class="skip-export--form" [formGroup] = "excludeForm1" fxLayout="column" fxLayoutAlign="start stretch">
+      <form class="skip-export--form" [formGroup] = "excludeForm" fxLayout="column" fxLayoutAlign="start stretch">
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-               <mat-select placeholder="Select the condition" formControlName="condition">
-                  <mat-option *ngFor = "let obj of conditional_field" [(value)]="conditional_field">
+               <mat-select placeholder="Select the condition" formControlName="condition_1">
+                  <mat-option *ngFor = "let obj of conditional_field" [value]="conditional_field">
                      {{ obj.label }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <!-- Here we can actually change as per the option selected above -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-               <mat-select placeholder="Select the operator" formControlName="operator">
-                  <mat-option *ngFor = "let obj of operator_field" [(value)]="operator_field">
+               <mat-select placeholder="Select the operator" formControlName="operator_1">
+                  <mat-option *ngFor = "let obj of operator_field_temp" [value]="operator_field">
                      {{ obj.label }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <!-- fin -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-               <mat-select placeholder="Select the value" formControlName="value">
-                  <mat-option *ngFor = "let obj of value_field" [(value)]="value_field">
+               <mat-select placeholder="Select the value" formControlName="value_1">
+                  <mat-option *ngFor = "let obj of value_field" [value]="value_field">
                      {{ obj.label }}
                   </mat-option>
                </mat-select>
