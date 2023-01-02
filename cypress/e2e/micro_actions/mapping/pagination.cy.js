@@ -8,9 +8,7 @@ describe('pagination', () => {
   })
 
   it('Pagination test', () => {
-    cy.intercept('GET', '**/mappings/employee/?limit=50&offset=0', {fixture: 'employee.json'})
-    cy.intercept('GET', '**/mappings/employee/?limit=50&offset=50', {fixture: 'employee.json'})
-    cy.intercept('GET', '**/mappings/employee/?limit=50&offset=100', {fixture: 'employee.json'})
+    cy.intercept('GET', '**/mappings/employee/**', {fixture: 'employee.json'})
     cy.get('.page-header--name').contains('Employee Mapping')
     cy.assertText('paginator','50')
     cy.get('.mat-select-value').click()
