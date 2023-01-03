@@ -193,6 +193,7 @@ describe('netsuite journey', () => {
         }
         else if (tRow == 1) {
             cy.get('td').eq(0).contains('NetSuite System Error')
+            cy.get('td').eq(1).should('include','An error occured in a upsert request')
         }
       })
     })
