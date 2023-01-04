@@ -79,7 +79,7 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
         });
         response.on('end', () => {
           const token = JSON.parse(body);
-          environment.e2e_tests.secret[0].access_token = token.access_token;
+          environment.e2e_tests.secret[1].access_token = token.access_token;
 
           const targetPath = './src/environments/environment.json';
           writeFile(targetPath, JSON.stringify(environment), 'utf8', (err) => {
