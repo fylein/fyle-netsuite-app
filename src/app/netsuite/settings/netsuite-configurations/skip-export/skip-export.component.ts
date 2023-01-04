@@ -10,14 +10,15 @@ import { event } from "cypress/types/jquery";
 })
 export class SkipExportComponent implements OnInit {
   excludeForm: FormGroup;
-  excludeForm1: FormGroup;
   condition: Boolean;
-  operator_field: { id: number,label: string, value: string }[];
+  operator_field: { label: string, value: string }[];
+  value_field: { label: string, value: string }[];
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.condition = false;
     this.initFormGroups();
+    this.getAllSettings();
   }
 
   checkCondition() {
@@ -26,78 +27,56 @@ export class SkipExportComponent implements OnInit {
 
   addCondition() {
     this.condition = true;
-    this.excludeForm1.enable();
+    // this.excludeForm1.enable();
   }
 
   remCondition() {
     this.condition = false;
-    this.excludeForm1.disable();
+    // this.excludeForm1.disable();
+    this.excludeForm.controls.condition_1.reset();
   }
 
-  onChange(event)
-  {
-    console.log(event['value']);
-    this.operator_field = this.getConditionField(event['value']);
-  }
-
-  conditional_field = [
-    {value: "EXPENSE CUSTOM FIELDS", label: "Expense Custom Fields" },
-    {value: "REPORT NUMBER", label: "Report Number" },
-    {value: "EMPLOYEE EMAIL", label: "Employee Email" },
-    {value: "DATE OF SPEND", label: "Date of Spend" },
-    {value: "REPORT NAME", label: "Report Name" }
-  ];
-
-  operator_field_temp = [
-    {value: "EXPENSE CUSTOM FIELDS", label: "is empty" },
-    {value: "EXPENSE CUSTOM FIELDS", label: "is not empty" },
-    {value: "EXPENSE CUSTOM FIELDS", label: "is equal" },
-    {value: "REPORT NAME", label: "Contains" },
-    {value: "DATE OF SPEND", label: "is Before" },
-    {value: "DATE OF SPEND", label: "is it on or before" },
-  ];
-
-  getConditionField(conditionField: string) {
+  setOperatorField(conditionField: string) {
     const operatorList = [];
 
     if (conditionField === 'EXPENSE CUSTOM FIELDS') {
       operatorList.push({
         label: 'is empty',
-        value: 'EXPENSE CUSTOM FIELDS'
+        value: 'IS EMPTY EXPENSE CUSTOM FIELDS'
       });
       operatorList.push({
         label: 'is not empty',
-        value: 'EXPENSE CUSTOM FIELDS'
+        value: 'IS NOT EMPTY EXPENSE CUSTOM FIELDS'
       });
       operatorList.push({
         label: 'is equal',
-        value: 'EXPENSE CUSTOM FIELDS'
+        value: 'IS EQUAL EXPENSE CUSTOM FIELDS'
       });
     }
     else if(conditionField === 'REPORT NUMBER'){
       operatorList.push({
-        value: "REPORT NUMBER", label: "is equal"
+        value: "IS EQUAL REPORT NUMBER", label: "is equal"
       });
     }
     else if(conditionField === 'EMPLOYEE EMAIL'){
       operatorList.push({
-        value: "EMPLOYEE EMAIL", label: "is equal"
+        value: "IS EQUAL EMPLOYEE EMAIL", label: "is equal"
       });
     }
     else if(conditionField === 'DATE OF SPEND'){
       operatorList.push({
-        value: "DATE OF SPEND", label: "is Before"
+        value: "IS BEFORE", label: "is before"
       });
       operatorList.push({
-        value: "DATE OF SPEND", label: "is it on or before" 
+        value: "IS IT ON OR BEFORE", label: "is it on or before" 
       });
     }
     else if(conditionField === 'REPORT NAME'){
       operatorList.push({
-        value: "REPORT NAME", label: "Contains"
+        value: "CONTAINS REPORT NAME", label: "contains"
       });
       operatorList.push({
-        value: "REPORT NAME", label: "is equal" 
+        value: "IS EQUAL REPORT NAME", label: "is equal" 
       });
     }
     return {
@@ -109,16 +88,65 @@ export class SkipExportComponent implements OnInit {
     }[conditionField];
   }
 
-  value_field = [
-    { label: "ajdnwjnadw" },
-    { label: "djanwjnadw" },
-    { label: "wxdnwjnadw" },
-    { label: "nvdnwjnadw" },
-    { label: "npxnwjnadw" },
+  condition_type = [
+    {id: 1, value: 'SELECT'},
+    {id: 2, value: 'TEXT'},
+    {id: 3, value: 'NUMBER'}
+];
+
+  setValueField(operator: string)
+  {
+    const valueList = [];
+    // if (operator === 'EXPENSE CUSTOM FIELDS') {
+    //   valueList.push({
+    //     ofType: this.condition_type[0].value,
+    //     label: 'is empty',
+    //     value: 'IS EMPTY EXPENSE CUSTOM FIELDS'
+    //   });
+    //   valueList.push({
+    //     label: 'is not empty',
+    //     value: 'IS NOT EMPTY EXPENSE CUSTOM FIELDS'
+    //   });
+    //   valueList.push({
+    //     label: 'is equal',
+    //     value: 'IS EQUAL EXPENSE CUSTOM FIELDS'
+    //   });
+    // }
+    return {
+
+    }[operator];
+  }
+
+  conditionFieldWatcher(){
+    this.excludeForm.controls.condition.valueChanges.subscribe((conditionSelected) => {
+      this.operator_field=this.setOperatorField(conditionSelected);
+    });
+  }
+
+  operatorFieldWatcher(){
+    this.excludeForm.controls.operator.valueChanges.subscribe((operatorSelected) => {
+      this.value_field=this.setValueField(operatorSelected);
+    });
+  }
+
+  fieldWatcher(){
+    this.conditionFieldWatcher();
+    this.operatorFieldWatcher();
+  }
+
+  conditional_field = [
+    {value: "EXPENSE CUSTOM FIELDS", label: "Expense Custom Fields", ofType: "SELECT" },
+    {value: "REPORT NUMBER", label: "Report Number" },
+    {value: "EMPLOYEE EMAIL", label: "Employee Email" },
+    {value: "DATE OF SPEND", label: "Date of Spend" },
+    {value: "REPORT NAME", label: "Report Name" }
   ];
   
+  getAllSettings(){
+    this.fieldWatcher();
+  }
+
   initFormGroups() {
-    
     this.excludeForm = new FormGroup({
       condition: new FormControl("", [Validators.required]),
       operator: new FormControl("", [Validators.required]),
@@ -126,6 +154,6 @@ export class SkipExportComponent implements OnInit {
       condition_1: new FormControl("", [Validators.required]),
       operator_1: new FormControl("", [Validators.required]),
       value_1: new FormControl("", [Validators.required])
-    });
+    })
   }
 }

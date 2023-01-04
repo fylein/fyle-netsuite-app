@@ -25,7 +25,7 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-            <mat-select placeholder="Select the condition" formControlName="condition" (selectionChange)="onChange($event)">
+            <mat-select placeholder="Select the condition" formControlName="condition">
                <mat-option *ngFor = "let obj of conditional_field" [value]="obj.value">
                   {{ obj.label }}
                </mat-option>
@@ -40,11 +40,13 @@
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the value" formControlName="value">
+               <!-- ngIf = "formName.condition.type==select" -->
                <mat-option *ngFor = "let obj of value_field" [value]="value_field">
                   {{ obj.label }}
+                  <!-- <input required type="text" formControlName="value" placeholder="Enter Text" matInput *ngIf = "value_type==text"> -->
                </mat-option>
             </mat-select>
-         </mat-form-field>
+            </mat-form-field>
       </div>
    </form>
    <div *ngIf="checkCondition()">
