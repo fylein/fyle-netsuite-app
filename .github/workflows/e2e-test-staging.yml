@@ -93,6 +93,7 @@ jobs:
       COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
       APP_URL: ${{ secrets.APP_URL }}
       API_URL: ${{ secrets.API_URL }}
+      E2E_TESTS_CLIENT_ID: ${{ secrets.E2E_TESTS_CLIENT_ID }}
       E2E_TESTS_WORKSPACE_ID_1: ${{ secrets.E2E_TESTS_WORKSPACE_ID_1 }}
       E2E_TESTS_WORKSPACE_ID_2: ${{ secrets.E2E_TESTS_WORKSPACE_ID_2 }}
       E2E_TESTS_ENV: ${{ secrets.E2E_TESTS_ENV }}
