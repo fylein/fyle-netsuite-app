@@ -196,6 +196,7 @@ describe('netsuite journey', () => {
           cy.get('td').eq(1).contains('An error occured in a upsert request')
           cy.navigateToSettingPageItems('Category Mapping')
           cy.get('td').contains('Different Sub Account').click()
+          cy.get('input').eq(2).clear()
           cy.get('input').eq(2).type('train')
           cy.getElement('category-value').eq(0).click()
           cy.get('input').eq(2).should('have.value', 'Train')
