@@ -30,7 +30,6 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
   };
 
   http.request(options, function(res) {
-    console.log("result",res)
     if (res.statusCode === 200) {
       console.log('Prepared workspace for e2e tests');
 
@@ -66,7 +65,6 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
   }).end();
 
   http.request(options, function(res) {
-    console.log("result",res)
     if (res.statusCode === 200) {
       console.log('Prepared workspace for e2e tests');
 
