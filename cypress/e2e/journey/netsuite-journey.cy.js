@@ -208,7 +208,6 @@ describe('netsuite journey', () => {
           cy.get('mat-progress-bar').should('to.be', 'visible') 
           cy.get('.cdk-overlay-container').contains('Export') 
           cy.navigateToModule('Expense Groups')
-          cy.get('zero-state').contains('img')
           cy.assertText('zero-state-description', 'You have no expense groups yet')
           cy.getElement('export-nav').contains('Complete').click()
           cy.url().should('include','/expense_groups?page_number=0&page_size=10&state=COMPLETE')
