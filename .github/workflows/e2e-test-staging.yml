@@ -31,7 +31,7 @@ jobs:
               - 'cypress/**'
       - name: Prepare for end to end tests
         if: steps.filter.outputs.src == 'true'
-        run: npm run setup:env
+        run: npm run setup_e2e_test
       - name: Cache Dependencies
         uses: actions/cache@v3
         id: cache
@@ -50,8 +50,23 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
-      E2E_TESTS_REFRESH_TOKEN: ${{ secrets.E2E_TESTS_REFRESH_TOKEN }}
-      E2E_TESTS_ORG_ID: ${{ secrets.E2E_TESTS_ORG_ID }}
+      COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
+      APP_URL: ${{ secrets.APP_URL }}
+      API_URL: ${{ secrets.API_URL }}
+      E2E_TESTS_CLIENT_ID: ${{ secrets.E2E_TESTS_CLIENT_ID }}
+      E2E_TESTS_WORKSPACE_ID_1: ${{ secrets.E2E_TESTS_WORKSPACE_ID_1 }}
+      E2E_TESTS_WORKSPACE_ID_2: ${{ secrets.E2E_TESTS_WORKSPACE_ID_2 }}
+      E2E_TESTS_ENV: ${{ secrets.E2E_TESTS_ENV }}
+      E2E_TESTS_REFRESH_TOKEN_1: ${{ secrets.E2E_TESTS_REFRESH_TOKEN_1 }}
+      E2E_TESTS_ORG_ID_1: ${{ secrets.E2E_TESTS_ORG_ID_1 }}
+      E2E_TESTS_NS_ACCOUNT_ID_1: ${{ secrets.E2E_TESTS_NS_ACCOUNT_ID_1}}
+      E2E_TESTS_NS_TOKEN_ID_1: ${{secrets.E2E_TESTS_NS_TOKEN_ID_1}}
+      E2E_TESTS_NS_TOKEN_SECRET_1: ${{secrets.E2E_TESTS_NS_TOKEN_SECRET_1}}
+      E2E_TESTS_REFRESH_TOKEN_2: ${{ secrets.E2E_TESTS_REFRESH_TOKEN_2 }}
+      E2E_TESTS_ORG_ID_2: ${{ secrets.E2E_TESTS_ORG_ID_2 }}
+      E2E_TESTS_NS_ACCOUNT_ID_2: ${{ secrets.E2E_TESTS_NS_ACCOUNT_ID_2}}
+      E2E_TESTS_NS_TOKEN_ID_2: ${{secrets.E2E_TESTS_NS_TOKEN_ID_2}}
+      E2E_TESTS_NS_TOKEN_SECRET_2: ${{secrets.E2E_TESTS_NS_TOKEN_SECRET_2}}
 
   end-to-end-test:
     runs-on: macos-latest
@@ -69,7 +84,7 @@ jobs:
         with:
           node-version: 14
       - name: Prepare for end to end tests
-        run: npm run setup:env
+        run: npm run setup_e2e_test
       - name: Cache Dependencies
         uses: actions/cache@v3
         id: cache
