@@ -20,7 +20,7 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
 
   const options = {
     hostname: host,
-    port: host === 'localhost' ? 8002 : 443,
+    port: host === 'localhost' ? 8001 : 443,
     path: `/api/workspaces/${environment.e2e_tests.secret[0].workspace_id}/setup_e2e_test/`,
     method: 'POST',
     headers: {
