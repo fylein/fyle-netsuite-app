@@ -7,7 +7,6 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
   const environment = JSON.parse(data);
   const baseUrl = environment.api_url;
   const apiUrl = `${baseUrl}/workspaces/${environment.e2e_tests.secret[0].workspace_id}/setup_e2e_test/`;
-
   let http;
   let host;
   if (apiUrl.includes('http://')) {
@@ -15,6 +14,7 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
     host = 'localhost';
   } else {
     http = require('https');
+    console.log("wqwq",baseUrl.split('://')[1])
     host = baseUrl.split('://')[1].replace('/api', '');
   }
 
