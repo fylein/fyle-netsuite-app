@@ -14,7 +14,6 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
     host = 'localhost';
   } else {
     http = require('https');
-    console.log("wqwq",baseUrl.split('://'),baseUrl, environment.app_url)
     host = baseUrl.split('://')[1].replace('/api', '');
   }
 
