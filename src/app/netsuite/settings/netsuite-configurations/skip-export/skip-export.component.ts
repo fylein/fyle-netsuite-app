@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { event } from "cypress/types/jquery";
@@ -11,29 +11,37 @@ import { event } from "cypress/types/jquery";
 export class SkipExportComponent implements OnInit {
   excludeForm: FormGroup;
   condition: Boolean;
+  addConditionButton: Boolean;
+  conditionType: string;
   operator_field: { label: string, value: string }[];
   value_field: { label: string, value: string }[];
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.condition = false;
+    this.addConditionButton = true;
     this.initFormGroups();
     this.getAllSettings();
   }
 
-  checkCondition() {
+  checkAddCondition() {
     return this.condition;
   }
 
   addCondition() {
     this.condition = true;
-    // this.excludeForm1.enable();
+    this.addConditionButton = false;
   }
 
   remCondition() {
-    this.condition = false;
-    // this.excludeForm1.disable();
     this.excludeForm.controls.condition_1.reset();
+    this.condition = false;
+    this.addConditionButton = true;
+  }
+
+  checkAddConditionButton()
+  {
+    return this.addConditionButton;
   }
 
   setOperatorField(conditionField: string) {
@@ -89,37 +97,37 @@ export class SkipExportComponent implements OnInit {
   }
 
   condition_type = [
-    {id: 1, value: 'SELECT'},
-    {id: 2, value: 'TEXT'},
-    {id: 3, value: 'NUMBER'}
+    {value: 'SELECT'},
+    {value: 'TEXT'},
+    {value: 'NUMBER'}
 ];
-
+and_or = [
+  {value: 'AND'},
+  {value: 'OR'}
+];
   setValueField(operator: string)
   {
     const valueList = [];
-    // if (operator === 'EXPENSE CUSTOM FIELDS') {
-    //   valueList.push({
-    //     ofType: this.condition_type[0].value,
-    //     label: 'is empty',
-    //     value: 'IS EMPTY EXPENSE CUSTOM FIELDS'
-    //   });
-    //   valueList.push({
-    //     label: 'is not empty',
-    //     value: 'IS NOT EMPTY EXPENSE CUSTOM FIELDS'
-    //   });
-    //   valueList.push({
-    //     label: 'is equal',
-    //     value: 'IS EQUAL EXPENSE CUSTOM FIELDS'
-    //   });
-    // }
+    if (operator === 'IS EQUAL EXPENSE CUSTOM FIELDS' && this.condition_type[0].value==='SELECT') {
+      valueList.push({
+        ofType: this.condition_type[0].value,
+        label: 'option 1',
+        value: 'OPTION 1'
+      });
+      valueList.push({
+        ofType: this.condition_type[0].value,
+        label: 'option 2',
+        value: 'OPTION 2'
+      });
+    }
     return {
-
+      'IS EQUAL EXPENSE CUSTOM FIELDS': valueList
     }[operator];
   }
 
   conditionFieldWatcher(){
     this.excludeForm.controls.condition.valueChanges.subscribe((conditionSelected) => {
-      this.operator_field=this.setOperatorField(conditionSelected);
+      this.operator_field=this.setOperatorField(conditionSelected.value);
     });
   }
 
@@ -133,12 +141,12 @@ export class SkipExportComponent implements OnInit {
     this.conditionFieldWatcher();
     this.operatorFieldWatcher();
   }
-
+//  Will come from API 
   conditional_field = [
     {value: "EXPENSE CUSTOM FIELDS", label: "Expense Custom Fields", ofType: "SELECT" },
-    {value: "REPORT NUMBER", label: "Report Number" },
+    {value: "REPORT NUMBER", label: "Report Number", ofType: "TEXT"},
     {value: "EMPLOYEE EMAIL", label: "Employee Email" },
-    {value: "DATE OF SPEND", label: "Date of Spend" },
+    {value: "DATE OF SPEND", label: "Date of Spend", ofType: "DATE"},
     {value: "REPORT NAME", label: "Report Name" }
   ];
   
@@ -151,9 +159,12 @@ export class SkipExportComponent implements OnInit {
       condition: new FormControl("", [Validators.required]),
       operator: new FormControl("", [Validators.required]),
       value: new FormControl("", [Validators.required]),
+      andOr: new FormControl("", [Validators.required]),
       condition_1: new FormControl("", [Validators.required]),
       operator_1: new FormControl("", [Validators.required]),
       value_1: new FormControl("", [Validators.required])
+      
     })
+    // console.log(this.excludeForm.value)
   }
 }
