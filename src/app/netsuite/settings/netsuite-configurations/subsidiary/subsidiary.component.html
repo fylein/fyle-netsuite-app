@@ -3,7 +3,7 @@
 </div>
 <div>
   <div class="page-info">
-    <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description" *ngIf="!isLoading">
+    <div fxLayout="row" fxLayoutAlign="start center" data-cy="subsidiary-heading" class="page-info--description" *ngIf="!isLoading">
       Set up NetSuite Subsidiary.
       <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
     </div>
@@ -16,7 +16,7 @@
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required>
           <mat-select class="general-mappings--input" placeholder="Select NetSuite Subsidiary"
-            formControlName="netsuiteSubsidiaries">
+            formControlName="netsuiteSubsidiaries" data-cy="subsidiary-options">
             <mat-option *ngFor="let netsuiteLocation of netsuiteSubsidiaries; let i = index"
               [value]="netsuiteSubsidiaries[i].destination_id">
               {{netsuiteSubsidiaries[i].value}}
@@ -24,7 +24,7 @@
           </mat-select>
         </mat-form-field>
         <mandatory-error-message listName="subsidiary" *ngIf="subsidiaryForm.controls.netsuiteSubsidiaries.touched && !subsidiaryForm.controls.netsuiteSubsidiaries.valid"></mandatory-error-message>
-        <button [disabled]="subsidiaryMappingDone || !subsidiaryForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+        <button [disabled]="subsidiaryMappingDone || !subsidiaryForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit" data-cy="save-btn">
           Save
         </button>
       </div>

@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>
-    <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center" data-cy="edit-category-heading">
       <div class="mat-title" *ngIf="!editMapping || data.category">
         Create New Mapping
       </div>
-      <div class="mat-title" *ngIf="editMapping && !data.category" data-cy="edit-category-heading">
+      <div class="mat-title" *ngIf="editMapping && !data.category">
         Edit Category Mapping
       </div>
       <div>
@@ -26,7 +26,7 @@
           <input required type="text" formControlName="fyleCategory" placeholder="Select Fyle Category" matInput
             [matAutocomplete]="fyCat" [errorStateMatcher]="matcher">
           <mat-autocomplete #fyCat="matAutocomplete" [displayWith]="mappingDisplay">
-            <mat-option *ngFor="let option of fyleCategoryOptions" [value]="option">
+            <mat-option *ngFor="let option of fyleCategoryOptions" [value]="option" data-cy="fyle-category-value">
               {{option.value}}
             </mat-option>
           </mat-autocomplete>

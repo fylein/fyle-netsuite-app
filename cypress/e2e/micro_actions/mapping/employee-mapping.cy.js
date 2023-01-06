@@ -19,7 +19,6 @@ describe('Employee Mapping', () => {
         cy.get('.page-header--name').contains('Employee Mapping')
         cy.url().should('include', '/settings/employee/mappings')
         cy.get('button').first().contains('Create Employee Mapping')
-        cy.get('button').eq(1).contains('Refresh Employee Mappings')
         cy.getElement('employe-email').contains('Employee Email')
         cy.getElement('employe-name').contains('Employee Name')
         cy.getElement('employe-email-data').eq(0).then(($el) => {

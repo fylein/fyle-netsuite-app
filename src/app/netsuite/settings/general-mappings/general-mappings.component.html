@@ -21,7 +21,7 @@
         </div>
         <mat-form-field floatLabel="always" appearance="outline" *ngIf="netsuiteLocations.length" required>
           <mat-select class="general-mappings--input" placeholder="Select NetSuite Location"
-            formControlName="netsuiteLocations">
+            formControlName="netsuiteLocations" data-cy="NS-location">
             <mat-option [value]="null">
               None
             </mat-option>
@@ -35,7 +35,7 @@
           Select NetSuite Location Level
          </div>
          <mat-form-field floatLabel="always" appearance="outline" *ngIf="showLocationLevelOption" required>
-          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels">
+          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels" data-cy="NS-location-level">
             <mat-option value="TRANSACTION_BODY">
                Transaction Body
              </mat-option>
@@ -54,7 +54,7 @@
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           <mat-select class="general-mappings--input" placeholder="Select accounts payable for expenses imported from Fyle"
-            formControlName="accountPayableAccounts">
+            formControlName="accountPayableAccounts" data-cy="vendor-payable-account">
             <mat-option *ngFor="let accountPayableAccount of accountPayableAccounts; let i = index"
               [value]="accountPayableAccounts[i].destination_id">
               {{accountPayableAccounts[i].value}}
@@ -69,7 +69,7 @@
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
-          <mat-select class="general-mappings--input" placeholder="Select bank account for expenses imported from Fyle" formControlName="bankAccounts">
+          <mat-select class="general-mappings--input" placeholder="Select bank account for expenses imported from Fyle" formControlName="bankAccounts" data-cy="employee-payable-account">
             <mat-option *ngFor="let bankAccount of bankAccounts; let i = index" [value]="bankAccounts[i].destination_id">
               {{bankAccounts[i].value}}
             </mat-option>
@@ -99,7 +99,7 @@
           *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'
           || generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ">
           <mat-select class="general-mappings--input" placeholder="Select default {{ generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' ? 'Credit Card' : 'Journal Entry' }} Vendor for card expenses imported from Fyle"
-            formControlName="netsuiteVendors">
+            formControlName="netsuiteVendors" data-cy="default-ccc-account">
             <mat-option *ngFor="let cccAccount of netsuiteVendors; let i = index" [value]="netsuiteVendors[i].destination_id">
               {{netsuiteVendors[i].value}}
             </mat-option>
@@ -174,7 +174,7 @@
           </div>
         </mat-slide-toggle>
       </div>
-      <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+      <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit" data-cy="save-btn">
         Save
       </button>
     </form>

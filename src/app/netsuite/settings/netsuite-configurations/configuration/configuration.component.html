@@ -17,7 +17,7 @@
         <mandatory-field></mandatory-field>
       </div>
       <mat-form-field floatLabel="always" appearance="outline" required>
-        <mat-select placeholder="Choose NetSuite equivalent of Employees" formControlName="employees">
+        <mat-select placeholder="Choose NetSuite equivalent of Employees" formControlName="employees" data-cy="employee-to-netsuite">
           <mat-option value="VENDOR">
             Vendor
           </mat-option>
@@ -34,7 +34,7 @@
       </div>
       <mat-form-field floatLabel="always" appearance="outline" required>
         <mat-select placeholder="Choose NetSuite equivalent of Reimbursable Expenses"
-          formControlName="reimbursableExpense">
+          formControlName="reimbursableExpense" data-cy="map-reimbursable-expense">
           <mat-option *ngFor="let option of expenseOptions" [value]="option.value">
             {{option.label}}
           </mat-option>
@@ -47,7 +47,7 @@
       </div>
       <mat-form-field floatLabel="always" appearance="outline">
         <mat-select placeholder="Choose NetSuite equivalent of Corporate Credit Card Expenses"
-          formControlName="cccExpense">
+          formControlName="cccExpense" data-cy="ccc-expense">
           <mat-option>
             None
           </mat-option>
@@ -64,7 +64,7 @@
       <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showPaymentsandProjectsField">
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how payments flow between Fyle and NetSuite"
-            formControlName="paymentsSync">
+            formControlName="paymentsSync" data-cy="sync-payments">
             <mat-option>
               None
             </mat-option>
@@ -84,7 +84,7 @@
       <div fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how to auto map employees between Fyle and NetSuite"
-            formControlName="autoMapEmployees">
+            formControlName="autoMapEmployees" data-cy="employee-from-fyle">
             <mat-option [value]="null">
               None
             </mat-option>
@@ -101,7 +101,7 @@
         </mat-form-field>
       </div>
 
-      <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreate" formControlName="autoCreateDestinationEntity">
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreate" formControlName="autoCreateDestinationEntity" data-cy="auto-create-employee">
         <div class="schedule--toggle-text">
           Auto Create Vendor / Employee on NetSuite
           <mat-icon
@@ -185,7 +185,7 @@
         </div>
       </mat-slide-toggle>
 
-      <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
+      <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit" data-cy="save-btn">
         Save
       </button>
     </div>

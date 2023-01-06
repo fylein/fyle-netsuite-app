@@ -26,7 +26,7 @@
           <input required type="text" formControlName="fyleEmployee" placeholder="Select Fyle Employee" matInput
             [matAutocomplete]="fyEmp">
           <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">
-            <mat-option *ngFor="let option of employeeOptions" [value]="option">
+            <mat-option *ngFor="let option of employeeOptions" [value]="option" data-cy="fyle-employee-data">
               {{option.value}}
             </mat-option>
           </mat-autocomplete>
