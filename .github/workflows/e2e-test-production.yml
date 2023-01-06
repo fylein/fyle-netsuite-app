@@ -9,7 +9,6 @@ on:
 
 jobs:
   install:
-    if: (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run e2e tests')
     runs-on: macos-latest
     environment: End to End Test - Production
     steps:
