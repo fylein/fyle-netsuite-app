@@ -30,7 +30,7 @@
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition">
                <mat-option *ngFor = "let obj of conditional_field" [value]="obj">
-               {{ obj.label }}
+               {{ obj.field_name }}
                </mat-option>
             </mat-select>
          </mat-form-field>
@@ -41,17 +41,17 @@
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!excludeForm.value.condition || excludeForm.value?.condition?.ofType==='SELECT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!excludeForm.value.condition || excludeForm.value?.condition?.type==='SELECT'">
             <mat-select multiple placeholder="Select the value" formControlName="value">
-               <mat-option *ngFor = "let obj of value_field" [value]="value_field">
-               {{obj.label}}
+               <mat-option *ngFor = "let obj of employee_value" [value]="value">
+               {{obj.value}}
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.ofType==='TEXT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.type==='TEXT'">
             <input required type="text" formControlName="value" placeholder="Enter the value" matInput>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.ofType==='DATE'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.type==='DATE'">
             <input matInput [matDatepicker]="picker" placeholder="Select the date">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker startView="month"></mat-datepicker>

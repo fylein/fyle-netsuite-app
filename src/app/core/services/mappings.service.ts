@@ -10,6 +10,7 @@ import { CustomSegment } from '../models/custom-segment.model';
 import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { EmployeeMapping } from '../models/employee-mapping.model';
 import { ExpenseField } from '../models/expense-field.model';
+import { Expense } from '../models/expense.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { MappingDestination } from '../models/mapping-destination.model';
@@ -92,15 +93,27 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
+  getNetsuiteCustomFields(attributeType: string, active: boolean = false): Observable<ExpenseField[]>{
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    
+    const params: {[key: string]: any} = {};
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/custom_fields/`, {});
+  }
+
   getFyleExpenseAttributes(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const params: {[key: string]: any} = {};
+    if (attributeType==="EMPLOYEE EMAIL")
+    {
+      attributeType = "EMPLOYEE"
+    }
     params.attribute_type = attributeType;
 
     if (active === true) {
       params.active = true;
     }
-
+    //one more if, attribute type says employee email.
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 
