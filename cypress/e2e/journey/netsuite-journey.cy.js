@@ -65,7 +65,7 @@ describe('netsuite journey', () => {
     cy.getElement('employee-to-netsuite').click().get('mat-option').contains('Employee').click()
     cy.getElement('map-reimbursable-expense').click().get('mat-option').contains('Journal Entry').click()
     cy.getElement('ccc-expense').click().get('mat-option').contains('Bill').click()
-    // cy.getElement('sync-payments').click().get('mat-option').contains('Import NetSuite Payments into Fyle').click()
+    //cy.getElement('sync-payments').click().get('mat-option').contains('Import NetSuite Payments into Fyle').click()
     cy.getElement('employee-from-fyle').click().get('mat-option').contains('None').click()
     // cy.getElement('auto-create-employee').click()
     cy.getElement('save-btn').contains('Save').click()
