@@ -203,7 +203,7 @@ describe('netsuite journey', () => {
           cy.getElement('save-btn').click()
           cy.navigateToModule('Dashboard')
           cy.getElement('export').click()
-          cy.wait(60000)
+          cy.wait(5000)
           cy.getElement('export-btn').contains('Export').click()
           cy.get('mat-progress-bar').should('to.be', 'visible') 
           cy.get('.cdk-overlay-container').contains('Export') 
