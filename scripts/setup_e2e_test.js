@@ -7,7 +7,6 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
   const environment = JSON.parse(data);
   const baseUrl = environment.api_url;
   const apiUrl = `${baseUrl}/workspaces/${environment.e2e_tests.secret[0].workspace_id}/setup_e2e_test/`;
-
   let http;
   let host;
   if (apiUrl.includes('http://')) {
@@ -59,7 +58,7 @@ readFile('./src/environments/environment.json', 'utf8', (err, data) => {
       request.write(payload);
       request.end();
     } else {
-      console.log('Error preparing workspace 1 for e2e tests', res.statusMessage);
+      console.log('Error preparing workspace for e2e tests', res.statusMessage);
       throw res.statusMessage;
     }
   }).end();
