@@ -34,6 +34,7 @@ describe('Auto Import and Export Setting', () => {
 
     it('Auto Import and Export Setting', () => {
         cy.intercept('GET', '**/schedule/', {statusCode: 400, message: 'Schedule settings does not exist in workspace'})
+        cy.intercept('POST', '**/schedule/', {statusCode: 400, message: 'Schedule settings does not exist in workspace'})
         cy.url().should('include', '/settings/schedule')
         cy.get('.schedule--header').contains('Automated Import/Export')
         cy.getElement('schedule-form').get('.schedule--header-title').eq(0).contains('Enable Automated Import-Export')
