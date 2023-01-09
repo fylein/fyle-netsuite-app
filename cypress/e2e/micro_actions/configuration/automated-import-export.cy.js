@@ -61,5 +61,6 @@ describe('Auto Import and Export Setting', () => {
         cy.getElement('save-btn').contains('Save').click()
         cy.intercept('GET', '**/schedule/', schedule)
         cy.get('.cdk-overlay-container').contains('Schedule saved') 
+        cy.intercept('GET', '**/schedule/', schedule)
     })
 })
