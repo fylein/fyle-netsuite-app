@@ -4,8 +4,6 @@ on:
   # Runs every Tuesday and Thursday at 2pm IST
   schedule:
     - cron:  '30 8 * * 2,4'
-  pull_request:
-    types: [assigned,  opened,  synchronize,  reopened]
 
 jobs:
   install:
