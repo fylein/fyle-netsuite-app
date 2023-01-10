@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { Component, Input, OnInit, Directive } from "@angular/core";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, NgControl } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { event } from "cypress/types/jquery";
 import { SettingsService } from 'src/app/core/services/settings.service';
@@ -12,6 +12,18 @@ import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model'
 import { MatDialog } from '@angular/material/dialog';
 import { TrackingService } from 'src/app/core/services/tracking.service';
 import { MappingsService } from "src/app/core/services/mappings.service";
+import { SkipExport } from "src/app/core/models/skip-export.model";
+
+// @Directive({
+//   selector: '[enableDisable]'
+// })
+// export class EnableDisableDirective {
+//   @Input() set enableDisable(action: string) {
+//     this.ngControl.control[action]();
+//   }
+//   constructor(private ngControl: NgControl) {
+//   }
+// }
 
 @Component({
   selector: "app-skip-export",
@@ -19,13 +31,21 @@ import { MappingsService } from "src/app/core/services/mappings.service";
   styleUrls: ["./skip-export.component.scss"],
 })
 export class SkipExportComponent implements OnInit {
-  excludeForm: FormGroup;
+  skipExportForm: FormGroup;
   condition: Boolean;
   addConditionButton: Boolean;
   conditionType: string;
+  workspaceId: number;
   operator_field: { label: string; value: string }[];
-  value_field: { label: string; value: string }[];
-  constructor(private formBuilder: FormBuilder, private mappingsService: MappingsService) {}
+  operator_field_1: { label: string; value: string }[];
+  // value_field_1: { label: string; value: string }[];
+  // value_field: { label: string; value: string }[];
+  constructor(
+    private formBuilder: FormBuilder,
+    private mappingsService: MappingsService,
+    private snackBar: MatSnackBar,
+    private settingsService: SettingsService
+  ) {}
 
   ngOnInit() {
     this.condition = false;
@@ -44,7 +64,7 @@ export class SkipExportComponent implements OnInit {
   }
 
   remCondition() {
-    this.excludeForm.controls.condition_1.reset();
+    this.skipExportForm.controls.condition_1.reset();
     this.condition = false;
     this.addConditionButton = true;
   }
@@ -53,157 +73,265 @@ export class SkipExportComponent implements OnInit {
     return this.addConditionButton;
   }
 
+  // {
+  //   "condition" : "employee_email",
+  //   "operator" : "in",
+  //   "values" : [
+  //     "ashwinnnnn.t@fyle.in",
+  //     "admin1@fyleforleaf.in"
+  //   ],
+  //   "rank" : 1,
+  //   "join_by" : null,
+  //   "is_custom" : False,
+  // },
+
+  payload = {};
+  saveSkipExportFields() {
+    const that = this;
+
+    const valueField = this.skipExportForm.getRawValue();
+    // console.log("hello",valueField)
+
+    // console.log(valueField.condition)
+
+    //Actual first payload
+    const payload = {
+      condition: valueField.condition.field_name,
+      operator: valueField.operator,
+      value: valueField.value,
+      rank: 1,
+      join_by: valueField.join_by ? valueField.join_by.value : null,
+      is_custom: valueField.condition.is_custom,
+    };
+
+    this.settingsService
+      .postSkipExport(that.workspaceId, payload)
+      .subscribe((skipExport: SkipExport) => {
+        console.log("first payload send", payload);
+      });
+    // to handle isempty and is not empty****** input field should be disabled bruh
+    // check the date
+    // get call to assign value to form controller, saved setting will be displayed in the
+    // is loading, initially it will be true, once api call is done it will change it to false,
+    if (valueField.condition_1 && valueField.operator_1 && valueField.value_1) {
+      const payload_1 = {
+        condition: valueField.condition_1.field_name,
+        operator: valueField.operator_1,
+        value: valueField.value_1,
+        rank: 2,
+        join_by: null,
+        is_custom: valueField.condition.is_custom,
+      };
+      this.settingsService
+        .postSkipExport(that.workspaceId, payload_1)
+        .subscribe((skipExport: SkipExport) => {
+          console.log("second payload send", payload_1);
+          this.snackBar.open("Skip Export fields saved successfully");
+        });
+    }
+  }
+
   setOperatorField(conditionField: string) {
     const operatorList = [];
-
-    if (conditionField === "EXPENSE CUSTOM FIELDS") {
+    // console.log(conditionField)
+    if (conditionField === "report_id") {
       operatorList.push({
-        label: "is empty",
-        value: "IS EMPTY EXPENSE CUSTOM FIELDS",
-      });
-      operatorList.push({
-        label: "is not empty",
-        value: "IS NOT EMPTY EXPENSE CUSTOM FIELDS",
-      });
-      operatorList.push({
-        label: "is equal",
-        value: "IS EQUAL EXPENSE CUSTOM FIELDS",
-      });
-    } else if (conditionField === "REPORT NUMBER") {
-      operatorList.push({
-        value: "IS EQUAL REPORT NUMBER",
+        value: "iexact",
         label: "is equal",
       });
-    } else if (conditionField === "EMPLOYEE EMAIL") {
+    } else if (conditionField === "employee_email") {
       operatorList.push({
-        value: "IS EQUAL EMPLOYEE EMAIL",
+        value: "iexact",
         label: "is equal",
       });
-    } else if (conditionField === "DATE OF SPEND") {
+    } else if (conditionField === "spent_at") {
       operatorList.push({
-        value: "IS BEFORE",
+        value: "lt",
         label: "is before",
       });
       operatorList.push({
-        value: "IS IT ON OR BEFORE",
+        value: "lte",
         label: "is it on or before",
       });
-    } else if (conditionField === "REPORT NAME") {
+    } else if (conditionField === "report_title") {
       operatorList.push({
-        value: "CONTAINS REPORT NAME",
+        value: "icontains",
         label: "contains",
       });
       operatorList.push({
-        value: "IS EQUAL REPORT NAME",
+        value: "iexact",
         label: "is equal",
       });
     }
     return {
-      "EXPENSE CUSTOM FIELDS": operatorList,
-      "REPORT NUMBER": operatorList,
-      "EMPLOYEE EMAIL": operatorList,
-      "DATE OF SPEND": operatorList,
-      "REPORT NAME": operatorList,
+      report_title: operatorList,
+      employee_email: operatorList,
+      spent_at: operatorList,
+      report_id: operatorList,
     }[conditionField];
   }
 
-  condition_type = [
-    { value: "SELECT" },
-    { value: "TEXT" },
-    { value: "NUMBER" },
-  ];
+  join_by = [{ value: "AND" }, { value: "OR" }];
 
-  and_or = [{ value: "AND" }, { value: "OR" }];
-
-  setValueField(operator: string) {
-    const valueList = [];
-    if (
-      operator === "IS EQUAL EXPENSE CUSTOM FIELDS" &&
-      this.condition_type[0].value === "SELECT"
-    ) {
-      valueList.push({
-        ofType: this.condition_type[0].value,
-        label: "option 1",
-        value: "OPTION 1",
-      });
-      valueList.push({
-        ofType: this.condition_type[0].value,
-        label: "option 2",
-        value: "OPTION 2",
-      });
-    }
-    return {
-      "IS EQUAL EXPENSE CUSTOM FIELDS": valueList,
-    }[operator];
-  }
+  // condition_type = [
+  //   { value: "SELECT" },
+  //   { value: "TEXT" },
+  //   { value: "NUMBER" },
+  // ];
 
   conditionFieldWatcher() {
-    this.excludeForm.controls.condition.valueChanges.subscribe(
+    this.skipExportForm.controls.condition.valueChanges.subscribe(
       (conditionSelected) => {
-        this.operator_field = this.setOperatorField(conditionSelected.value);
-        this.getExpenseAttribute(conditionSelected.value);
+        console.log(conditionSelected);
+        this.skipExportForm.controls.value.reset();
+        if (conditionSelected.is_custom) {
+          this.operator_field = [
+            {
+              label: "is equal",
+              value: "iexact",
+            },
+            {
+              label: "is empty",
+              value: "isnull",
+            },
+            {
+              label: "is not empty",
+              value: "isnull",
+            },
+          ];
+        } else {
+          this.operator_field = this.setOperatorField(
+            conditionSelected.field_name
+          );
+        }
+        this.setSkipExportValueField(
+          conditionSelected.field_name,
+          conditionSelected.is_custom
+        );
       }
     );
   }
 
-  operatorFieldWatcher() {
-    this.excludeForm.controls.operator.valueChanges.subscribe(
-      (operatorSelected) => {
-        this.value_field = this.setValueField(operatorSelected);
+  conditionFieldWatcher_1() {
+    this.skipExportForm.controls.condition_1.valueChanges.subscribe(
+      (conditionSelected) => {
+        // console.log(conditionSelected.label);
+        // this.skipExportForm.controls.operator_1.reset();
+        // console.log(conditionSelected);
+        this.skipExportForm.controls.value_1.reset();
+        if (conditionSelected.is_custom) {
+          this.operator_field_1 = [
+            {
+              label: "is equal",
+              value: "iexact",
+            },
+            {
+              label: "is empty",
+              value: "isnull",
+            },
+            {
+              label: "is not empty",
+              value: "isnull",
+            },
+          ];
+        } else {
+          this.operator_field_1 = this.setOperatorField(
+            conditionSelected.field_name
+          );
+        }
+        this.setSkipExportValueField_1(
+          conditionSelected.field_name,
+          conditionSelected.is_custom
+        );
       }
     );
   }
+
+  operatorFieldWatcher() {}
 
   fieldWatcher() {
     this.conditionFieldWatcher();
     this.operatorFieldWatcher();
+    this.conditionFieldWatcher_1();
   }
-
-  //  Will come from API
-  // to get this from api
-  // /api/workspaces/fyle/expense_attributes/?attribute_type=EMPLOYEE&active=true
-  employee_value = []
-  getExpenseAttribute(genericSelection) {
-    this.mappingsService.getFyleExpenseAttributes(genericSelection,true).subscribe((employeeValue)=>{
-      // console.log(response,"backend expense data")
-      this.employee_value = employeeValue
-    })
-  }
-
-  conditional_field = [
-    // {
-    //   value: "EXPENSE CUSTOM FIELDS",
-    //   label: "Expense Custom Fields",
-    //   ofType: "SELECT",
-    // },
-    // { value: "REPORT NUMBER", label: "Report Number", ofType: "TEXT" },
-    // { value: "EMPLOYEE EMAIL", label: "Employee Email", ofType: "SELECT" },
-    // { value: "DATE OF SPEND", label: "Date of Spend", ofType: "DATE" },
-    // { value: "REPORT NAME", label: "Report Name" },
-  ];
-
-  getCustomConditions(){
-      this.mappingsService.getNetsuiteCustomFields("",true).subscribe((employeeValue)=>{
-        console.log(employeeValue,"backend expense data")
-        this.conditional_field = employeeValue
-      })
+  isNullOrNot(isNullOrNot = false) {
+    if (isNullOrNot) {
+      this.skipExportForm.get("value").disable();
+    } else {
+      this.skipExportForm.get("value").enable();
     }
-    
+  }
+  value_field = [];
+  setValueField(genericSelection) {
+    this.mappingsService
+      .getSkipExportValueField(genericSelection, true)
+      .subscribe((skipExportValue) => {
+        // console.log(skipExportValue,"array")
+        this.isNullOrNot(false);
+        this.value_field = skipExportValue;
+      });
+  }
+  setSkipExportValueField(genericSelection, isCustom) {
+    if (isCustom) {
+      this.skipExportForm.controls.operator.valueChanges.subscribe(
+        (operatorSelected) => {
+          console.log(operatorSelected);
+          console.log(isCustom);
+          if (operatorSelected == "isnull") {
+            this.isNullOrNot(true);
+            this.value_field = [{ value: true }, Validators.required];
+          } else if (operatorSelected == "iexact") {
+            this.isNullOrNot(false);
+            this.setValueField(genericSelection);
+          }
+        }
+      );
+    } else {
+      this.setValueField(genericSelection);
+    }
+  }
+
+  value_field_1 = [];
+  setSkipExportValueField_1(genericSelection, isCustom) {
+    this.mappingsService
+      .getSkipExportValueField(genericSelection, true)
+      .subscribe((skipExportValue) => {
+        // console.log(skipExportValue,"array")
+        this.value_field_1 = skipExportValue;
+      });
+  }
+
+  condition_field = [];
+  //remove this this is snake case
+  setConditionField(conditionValue) {
+    // console.log(conditionValue)
+    this.condition_field = conditionValue;
+  }
+
+  getCustomConditions() {
+    this.mappingsService
+      .getSkipExportConditionField()
+      .subscribe((conditionValue) => {
+        // console.log(conditionValue,"conditon field")
+        this.setConditionField(conditionValue);
+      });
+  }
+
   getAllSettings() {
     this.fieldWatcher();
     this.getCustomConditions();
   }
 
   initFormGroups() {
-    this.excludeForm = new FormGroup({
+    this.skipExportForm = new FormGroup({
       condition: new FormControl("", [Validators.required]),
       operator: new FormControl("", [Validators.required]),
       value: new FormControl("", [Validators.required]),
-      andOr: new FormControl("", [Validators.required]),
+      join_by: new FormControl("", [Validators.required]),
       condition_1: new FormControl("", [Validators.required]),
       operator_1: new FormControl("", [Validators.required]),
       value_1: new FormControl("", [Validators.required]),
     });
-    // console.log(this.excludeForm.value)
+    // console.log(this.skipExportForm.value)
   }
 }

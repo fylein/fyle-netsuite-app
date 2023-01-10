@@ -10,7 +10,8 @@
          You could choose to skip the export of certain expenses from Fyle to Netsuite by setting up a conditional rule.
       </div>
    </div>
-   <form class="skip-export--form" [formGroup] = "excludeForm" fxLayout="column" fxLayoutAlign="start stretch">
+   <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
+      <!-- <div formArrayName="expenseFields"> -->
       <div fxLayout="row" fxLayoutAlign="start center">
          <span fxFlex="10">
          </span>
@@ -29,8 +30,8 @@
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition">
-               <mat-option *ngFor = "let obj of conditional_field" [value]="obj">
-               {{ obj.field_name }}
+               <mat-option *ngFor = "let obj of condition_field" [value]="obj">
+               {{ obj.field_name | titlecase | snakeCaseToSpaceCase }}
                </mat-option>
             </mat-select>
          </mat-form-field>
@@ -41,54 +42,63 @@
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!excludeForm.value.condition || excludeForm.value?.condition?.type==='SELECT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition || skipExportForm.value?.condition?.type==='SELECT'">
             <mat-select multiple placeholder="Select the value" formControlName="value">
-               <mat-option *ngFor = "let obj of employee_value" [value]="value">
+               <mat-option *ngFor = "let obj of value_field" [value]="obj.value">
                {{obj.value}}
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.type==='TEXT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition?.type==='TEXT'">
             <input required type="text" formControlName="value" placeholder="Enter the value" matInput>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="excludeForm.value?.condition?.type==='DATE'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition?.type==='DATE'">
             <input matInput [matDatepicker]="picker" placeholder="Select the date">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker startView="month"></mat-datepicker>
          </mat-form-field>
       </div>
+      <!-- </div> -->
    </form>
    <div *ngIf="checkAddCondition()">
-      <form class="skip-export--form" [formGroup] = "excludeForm" fxLayout="column" fxLayoutAlign="start stretch">
+      <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="10" appearance="outline" style="width:5px !important">
-               <mat-select placeholder="AND" formControlName="andOr">
-                  <mat-option *ngFor = "let obj of and_or" [value]="obj">
+               <mat-select placeholder="AND" formControlName="join_by">
+                  <mat-option *ngFor = "let obj of join_by" [value]="obj">
                   {{ obj.value }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition_1">
-                  <mat-option *ngFor = "let obj of conditional_field" [value]="conditional_field">
-                  {{ obj.label }}
+                  <mat-option *ngFor = "let obj of condition_field" [value]="obj">
+                  {{ obj.field_name | titlecase | snakeCaseToSpaceCase}}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <!-- Here we can actually change as per the option selected above -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the operator" formControlName="operator_1">
-                  <mat-option *ngFor = "let obj of operator_field_temp" [value]="operator_field">
+                  <mat-option *ngFor = "let obj of operator_field_1" [value]="obj.value">
                   {{ obj.label }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
-            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-               <mat-select placeholder="Select the value" formControlName="value_1">
-                  <mat-option *ngFor = "let obj of value_field" [value]="value_field">
-                  {{ obj.label }}
+            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition_1 || skipExportForm.value?.condition_1?.type==='SELECT'">
+               <mat-select multiple placeholder="Select the value" formControlName="value_1">
+                  <mat-option *ngFor = "let obj of value_field_1" [value]="obj.value">
+                  {{ obj.value }}
                   </mat-option>
                </mat-select>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition_1?.type==='TEXT'">
+               <input required type="text" formControlName="value_1" placeholder="Enter the value" matInput>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition_1?.type==='DATE'">
+               <input matInput [matDatepicker]="picker" placeholder="Select the date">
+               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+               <mat-datepicker #picker startView="month"></mat-datepicker>
             </mat-form-field>
             <div fxFlex="2">
                <img class="skip-export--delete-icon" src="assets/images/pngs/delete.png"
@@ -104,7 +114,7 @@
       </a>
    </div>
    <div class="skip-export--save-btn">
-      <button mat-flat-button color="primary" type="submit">    
+      <button (click)="saveSkipExportFields()" mat-flat-button color="primary" type="submit">    
       Save
       </button>
    </div>

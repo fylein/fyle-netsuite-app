@@ -93,27 +93,30 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getNetsuiteCustomFields(attributeType: string, active: boolean = false): Observable<ExpenseField[]>{
+  getSkipExportConditionField(): Observable<ExpenseField[]>{
     const workspaceId = this.workspaceService.getWorkspaceId();
-    
-    const params: {[key: string]: any} = {};
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/custom_fields/`, {});
+  }
+
+  getSkipExportValueField(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    const params: {[key: string]: any} = {};
+
+    if (attributeType==="employee_email"){  attributeType = "EMPLOYEE"  }
+    params.attribute_type = attributeType.toUpperCase();
+
+    if (active === true) {  params.active = true; }
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 
   getFyleExpenseAttributes(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const params: {[key: string]: any} = {};
-    if (attributeType==="EMPLOYEE EMAIL")
-    {
-      attributeType = "EMPLOYEE"
-    }
-    params.attribute_type = attributeType;
 
-    if (active === true) {
-      params.active = true;
-    }
-    //one more if, attribute type says employee email.
+    params.attribute_type = attributeType.toUpperCase();
+
+    if (active === true) {  params.active = true; }
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 
