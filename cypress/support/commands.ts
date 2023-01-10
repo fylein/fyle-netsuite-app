@@ -85,9 +85,9 @@ declare global {
   
     // setupInterceptor('GET', '/fyle/exportable_expense_groups', 'exportableExpenseGroups');
   
-    // setupInterceptor('GET', '/tasks/all/', 'tasksPolling');
+    setupInterceptor('GET', '/tasks/all/', 'tasksPolling');
   
-    // setupInterceptor('POST', '/exports/trigger', 'exportsTrigger');
+    setupInterceptor('POST', '/exports/trigger', 'exportsTrigger');
   
     // setupInterceptor('POST', '/mappings/employee', 'postEmployeeMapping');
   
