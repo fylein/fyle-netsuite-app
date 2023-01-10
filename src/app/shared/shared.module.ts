@@ -10,7 +10,7 @@ import { MandatoryFieldComponent } from './mandatory-field/mandatory-field.compo
 import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandatory-error-message.component';
 import { SimpleSearchSelectComponent } from './simple-search-select/simple-search-select.component';
 import { SearchPipe } from './pipes/search.pipe';
-
+import { SnakeCaseToSpaceCase } from './pipes/snake-case-to-space-case.pipe';
 
 
 @NgModule({
@@ -21,6 +21,7 @@ import { SearchPipe } from './pipes/search.pipe';
     MandatoryErrorMessageComponent,
     SimpleSearchSelectComponent,
     SearchPipe,
+    SnakeCaseToSpaceCase
   ],
   imports: [
     CommonModule,
@@ -37,6 +38,7 @@ import { SearchPipe } from './pipes/search.pipe';
     MandatoryErrorMessageComponent,
     SimpleSearchSelectComponent,
     SearchPipe,
+    SnakeCaseToSpaceCase
   ]
 })
 export class SharedModule { }

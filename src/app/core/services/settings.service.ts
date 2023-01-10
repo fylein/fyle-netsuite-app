@@ -10,11 +10,14 @@ import { MappingSettingResponse } from '../models/mapping-setting-response.model
 import { ScheduleSettings } from '../models/schedule-settings.model';
 import { WorkspaceService } from './workspace.service';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
+import { SkipExport } from '../models/skip-export.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
 const generalSettingsCache = new Subject<void>();
 const mappingsSettingsCache = new Subject<void>();
+const skipExportCache = new Subject<void>();
+
 const subsidiaryMappingCache$ = new Subject<void>();
 
 @Injectable({
@@ -118,6 +121,14 @@ export class SettingsService {
   })
   postMappingSettings(workspaceId: number, mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/settings/`, mappingSettings);
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: skipExportCache
+  })
+  postSkipExport(workspaceId: number, skipExport: SkipExport): Observable<SkipExport> {
+    workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_filters/`, skipExport);
   }
 
   @Cacheable({
