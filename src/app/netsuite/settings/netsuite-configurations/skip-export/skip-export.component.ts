@@ -312,7 +312,6 @@ export class SkipExportComponent implements OnInit {
 
   selectedOptions() {
     this.settingsService.getSkipExport(2).subscribe((skipExport) => {
-      console.log(skipExport);
       this.data = skipExport.results[0];
       this.data_1 = skipExport.results[1];
       var ofType = "";
