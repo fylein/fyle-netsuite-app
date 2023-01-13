@@ -30,13 +30,19 @@ export class SkipExportComponent implements OnInit {
   operatorField: { label: string; value: string }[];
   operatorField1: { label: string; value: string }[];
   data: any;
-  data_1: any;
+  data1: any;
   constructor(
     private fb: FormBuilder,
     private mappingsService: MappingsService,
     private snackBar: MatSnackBar,
     private settingsService: SettingsService
   ) {}
+
+  conditionField = [];
+  valueField = [];
+  valueField1 = [];
+  payload = {};
+  join_by = [{ value: 'AND' }, { value: 'OR' }];
 
   ngOnInit() {
     this.condition = false;
@@ -68,7 +74,6 @@ export class SkipExportComponent implements OnInit {
     return this.addConditionButton;
   }
 
-  payload = {};
   saveSkipExportFields() {
     const that = this;
 
@@ -94,10 +99,14 @@ export class SkipExportComponent implements OnInit {
       valueField.value_1 = [valueField.value_1];
     }
     if (valueField.condition.is_custom === true) {
-      if (valueField.operator === 'isnull') valueField.value = ['True'];
+      if (valueField.operator === 'isnull') {
+        valueField.value = ['True'];
+      }
     }
     if (valueField.condition_1.is_custom === true) {
-      if (valueField.operator_1 === 'isnull') valueField.value_1 = ['True'];
+      if (valueField.operator_1 === 'isnull') {
+        valueField.value_1 = ['True'];
+      }
     }
     const payload = {
       condition: valueField.condition.field_name,
@@ -113,7 +122,7 @@ export class SkipExportComponent implements OnInit {
         this.snackBar.open('Skip Export fields saved successfully');
       });
     if (valueField.condition_1 && valueField.operator_1 && valueField.value_1) {
-      const payload_1 = {
+      const payload1 = {
         condition: valueField.condition_1.field_name,
         operator: valueField.operator_1,
         values: valueField.value_1,
@@ -122,7 +131,7 @@ export class SkipExportComponent implements OnInit {
         is_custom: valueField.condition_1.is_custom,
       };
       this.settingsService
-        .postSkipExport(that.workspaceId, payload_1)
+        .postSkipExport(that.workspaceId, payload1)
         .subscribe((skipExport: SkipExport) => {});
     }
   }
@@ -165,8 +174,6 @@ export class SkipExportComponent implements OnInit {
       report_title: operatorList,
     }[conditionField];
   }
-
-  join_by = [{ value: 'AND' }, { value: 'OR' }];
 
   conditionFieldWatcher() {
     this.skipExportForm.controls.condition.valueChanges.subscribe(
@@ -232,11 +239,8 @@ export class SkipExportComponent implements OnInit {
     );
   }
 
-  operatorFieldWatcher() {}
-
   fieldWatcher() {
     this.conditionFieldWatcher();
-    this.operatorFieldWatcher();
     this.conditionFieldWatcher_1();
   }
   isNullOrNot(isNullOrNot = false) {
@@ -246,7 +250,7 @@ export class SkipExportComponent implements OnInit {
       this.skipExportForm.get('value').enable();
     }
   }
-  valueField = [];
+
   setValueField(genericSelection: any) {
     this.mappingsService
       .getFyleExpenseAttributes(genericSelection, true)
@@ -255,6 +259,7 @@ export class SkipExportComponent implements OnInit {
         this.isNullOrNot(false);
       });
   }
+  
   setSkipExportValueField(genericSelection, isCustom) {
     if (isCustom) {
       this.skipExportForm.controls.operator.valueChanges.subscribe(
@@ -280,7 +285,7 @@ export class SkipExportComponent implements OnInit {
       this.skipExportForm.get('value_1').enable();
     }
   }
-  valueField1 = [];
+
   setValueField_1(genericSelection: any) {
     this.mappingsService
       .getFyleExpenseAttributes(genericSelection, true)
@@ -289,6 +294,7 @@ export class SkipExportComponent implements OnInit {
         this.isNullOrNot_1(false);
       });
   }
+
   setSkipExportValueField_1(genericSelection, isCustom) {
     if (isCustom) {
       this.skipExportForm.controls.operator_1.valueChanges.subscribe(
@@ -307,7 +313,6 @@ export class SkipExportComponent implements OnInit {
     }
   }
 
-  conditionField = [];
   setConditionField(conditionValue) {
     this.conditionField = conditionValue;
   }
@@ -326,6 +331,7 @@ export class SkipExportComponent implements OnInit {
     }
     return false;
   }
+
   getAllSettings() {
     this.fieldWatcher();
     this.getCustomConditions();
@@ -334,7 +340,7 @@ export class SkipExportComponent implements OnInit {
   selectedOptions() {
     this.settingsService.getSkipExport(2).subscribe((skipExport) => {
       this.data = skipExport.results[0];
-      this.data_1 = skipExport.results[1];
+      this.data1 = skipExport.results[1];
       let ofType = '';
       if (this.data.condition === 'employee_email') {
         ofType = 'SELECT';
@@ -344,9 +350,9 @@ export class SkipExportComponent implements OnInit {
         ofType = 'TEXT';
       }
       let ofType_1 = '';
-      if (this.data_1.condition === 'employee_email') {
+      if (this.data1.condition === 'employee_email') {
         ofType_1 = 'SELECT';
-      } else if (this.data_1.condition === 'spent_at') {
+      } else if (this.data1.condition === 'spent_at') {
         ofType_1 = 'DATE';
       } else {
         ofType_1 = 'TEXT';
@@ -358,9 +364,9 @@ export class SkipExportComponent implements OnInit {
       };
 
       const actualOptionSelected_1 = {
-        field_name: this.data_1.condition,
+        field_name: this.data1.condition,
         type: ofType_1,
-        is_custom: this.data_1.is_custom,
+        is_custom: this.data1.is_custom,
       };
       this.skipExportForm.patchValue({
         condition: actualOptionSelected,
@@ -372,8 +378,8 @@ export class SkipExportComponent implements OnInit {
         this.skipExportForm.patchValue({
           join_by: this.data.join_by,
           condition_1: actualOptionSelected_1,
-          operator_1: this.data_1.operator,
-          value_1: this.data_1.values,
+          operator_1: this.data1.operator,
+          value_1: this.data1.values,
         });
       }
     });
