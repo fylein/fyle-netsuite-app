@@ -349,13 +349,13 @@ export class SkipExportComponent implements OnInit {
       } else {
         ofType = 'TEXT';
       }
-      let ofType_1 = '';
+      let ofType1 = '';
       if (this.data1.condition === 'employee_email') {
-        ofType_1 = 'SELECT';
+        ofType1 = 'SELECT';
       } else if (this.data1.condition === 'spent_at') {
-        ofType_1 = 'DATE';
+        ofType1 = 'DATE';
       } else {
-        ofType_1 = 'TEXT';
+        ofType1 = 'TEXT';
       }
       const actualOptionSelected = {
         field_name: this.data.condition,
@@ -365,7 +365,7 @@ export class SkipExportComponent implements OnInit {
 
       const actualOptionSelected1 = {
         field_name: this.data1.condition,
-        type: ofType_1,
+        type: ofType1,
         is_custom: this.data1.is_custom,
       };
       this.skipExportForm.patchValue({
