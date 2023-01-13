@@ -29,7 +29,7 @@
          WHERE
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-            <mat-select placeholder="Select the condition" formControlName="condition">
+            <mat-select placeholder="Select the condition" formControlName="condition" [compareWith]="compareObjects">
                <mat-option *ngFor = "let obj of condition_field" [value]="obj">
                {{ obj.field_name | titlecase | snakeCaseToSpaceCase }}
                </mat-option>
@@ -53,7 +53,7 @@
             <input required type="text" formControlName="value" placeholder="Enter the value" matInput>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition?.type==='DATE'">
-            <input matInput [matDatepicker]="picker" placeholder="Select the date">
+            <input matInput [matDatepicker]="picker" formControlName="value" placeholder="Select the date">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker startView="month"></mat-datepicker>
          </mat-form-field>
@@ -65,13 +65,13 @@
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="10" appearance="outline" style="width:5px !important">
                <mat-select placeholder="AND" formControlName="join_by">
-                  <mat-option *ngFor = "let obj of join_by" [value]="obj">
+                  <mat-option *ngFor = "let obj of join_by" [value]="obj.value">
                   {{ obj.value }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-               <mat-select placeholder="Select the condition" formControlName="condition_1">
+               <mat-select placeholder="Select the condition" formControlName="condition_1" [compareWith]="compareObjects">
                   <mat-option *ngFor = "let obj of condition_field" [value]="obj">
                   {{ obj.field_name | titlecase | snakeCaseToSpaceCase}}
                   </mat-option>
@@ -96,7 +96,7 @@
                <input required type="text" formControlName="value_1" placeholder="Enter the value" matInput>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition_1?.type==='DATE'">
-               <input matInput [matDatepicker]="picker" placeholder="Select the date">
+               <input matInput [matDatepicker]="picker" formControlName="value_1" placeholder="Select the date">
                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                <mat-datepicker #picker startView="month"></mat-datepicker>
             </mat-form-field>
