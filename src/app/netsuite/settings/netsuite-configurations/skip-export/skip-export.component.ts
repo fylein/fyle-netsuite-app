@@ -34,8 +34,8 @@ export class SkipExportComponent implements OnInit {
   addConditionButton: boolean;
   conditionType: string;
   workspaceId: number;
-  operator_field: { label: string; value: string }[];
-  operator_field_1: { label: string; value: string }[];
+  operatorField: { label: string; value: string }[];
+  operatorField1: { label: string; value: string }[];
   data: any;
   data_1: any;
   constructor(
@@ -171,7 +171,7 @@ export class SkipExportComponent implements OnInit {
       (conditionSelected) => {
         this.skipExportForm.controls.value.reset();
         if (conditionSelected.is_custom) {
-          this.operator_field = [
+          this.operatorField = [
             {
               label: 'is equal',
               value: 'iexact',
@@ -186,7 +186,7 @@ export class SkipExportComponent implements OnInit {
             },
           ];
         } else {
-          this.operator_field = this.setOperatorField(
+          this.operatorField = this.setOperatorField(
             conditionSelected.field_name
           );
         }
@@ -203,7 +203,7 @@ export class SkipExportComponent implements OnInit {
       (conditionSelected) => {
         this.skipExportForm.controls.value_1.reset();
         if (conditionSelected.is_custom) {
-          this.operator_field_1 = [
+          this.operatorField1 = [
             {
               label: 'is equal',
               value: 'iexact',
@@ -218,7 +218,7 @@ export class SkipExportComponent implements OnInit {
             },
           ];
         } else {
-          this.operator_field_1 = this.setOperatorField(
+          this.operatorField1 = this.setOperatorField(
             conditionSelected.field_name
           );
         }

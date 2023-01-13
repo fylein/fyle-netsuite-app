@@ -37,7 +37,7 @@
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the operator" formControlName="operator">
-               <mat-option *ngFor = "let obj of operator_field" [value]="obj.value">
+               <mat-option *ngFor = "let obj of operatorField" [value]="obj.value">
                {{ obj.label }}
                </mat-option>
             </mat-select>
@@ -80,7 +80,7 @@
             <!-- Here we can actually change as per the option selected above -->
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the operator" formControlName="operator_1">
-                  <mat-option *ngFor = "let obj of operator_field_1" [value]="obj.value">
+                  <mat-option *ngFor = "let obj of operatorField1" [value]="obj.value">
                   {{ obj.label }}
                   </mat-option>
                </mat-select>

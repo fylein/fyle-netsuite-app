@@ -102,8 +102,8 @@ export class MappingsService {
   getSkipExportValueField(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const params: {[key: string]: any} = {};
-    if (attributeType==='employee_email'){
-      attributeType = 'EMPLOYEE'
+    if (attributeType === 'employee_email') {
+      attributeType = 'EMPLOYEE';
     }
     params.attribute_type = attributeType.toUpperCase();
     if (active === true) {  params.active = true; }
