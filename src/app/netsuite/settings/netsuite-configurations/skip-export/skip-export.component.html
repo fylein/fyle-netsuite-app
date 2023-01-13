@@ -30,7 +30,7 @@
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition" [compareWith]="compareObjects">
-               <mat-option *ngFor = "let obj of condition_field" [value]="obj">
+               <mat-option *ngFor = "let obj of conditionField" [value]="obj">
                {{ obj.field_name | titlecase | snakeCaseToSpaceCase }}
                </mat-option>
             </mat-select>
@@ -44,7 +44,7 @@
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition || skipExportForm.value?.condition?.type==='SELECT'">
             <mat-select multiple placeholder="Select the value" formControlName="value">
-               <mat-option *ngFor = "let obj of value_field" [value]="obj.value">
+               <mat-option *ngFor = "let obj of valueField" [value]="obj.value">
                {{obj.value}}
                </mat-option>
             </mat-select>
@@ -72,7 +72,7 @@
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition_1" [compareWith]="compareObjects">
-                  <mat-option *ngFor = "let obj of condition_field" [value]="obj">
+                  <mat-option *ngFor = "let obj of conditionField" [value]="obj">
                   {{ obj.field_name | titlecase | snakeCaseToSpaceCase}}
                   </mat-option>
                </mat-select>
@@ -87,7 +87,7 @@
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition_1 || skipExportForm.value?.condition_1?.type==='SELECT'">
                <mat-select multiple placeholder="Select the value" formControlName="value_1">
-                  <mat-option *ngFor = "let obj of value_field_1" [value]="obj.value">
+                  <mat-option *ngFor = "let obj of valueField1" [value]="obj.value">
                   {{ obj.value }}
                   </mat-option>
                </mat-select>
