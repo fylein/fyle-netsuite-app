@@ -30,8 +30,8 @@ import { formatDate } from '@angular/common';
 export class SkipExportComponent implements OnInit {
   skipExportForm: FormGroup;
   formGroup: FormGroup;
-  condition: Boolean;
-  addConditionButton: Boolean;
+  condition: boolean;
+  addConditionButton: boolean;
   conditionType: string;
   workspaceId: number;
   operator_field: { label: string; value: string }[];
@@ -245,7 +245,7 @@ export class SkipExportComponent implements OnInit {
     }
   }
   value_field = [];
-  setValueField(genericSelection) {
+  setValueField(genericSelection: any) {
     this.mappingsService
       .getSkipExportValueField(genericSelection, true)
       .subscribe((skipExportValue) => {
@@ -257,10 +257,10 @@ export class SkipExportComponent implements OnInit {
     if (isCustom) {
       this.skipExportForm.controls.operator.valueChanges.subscribe(
         (operatorSelected) => {
-          if (operatorSelected == 'isnull') {
+          if (operatorSelected === 'isnull') {
             this.isNullOrNot(true);
             this.value_field = [{ value: true }, Validators.required];
-          } else if (operatorSelected == 'iexact') {
+          } else if (operatorSelected === 'iexact') {
             this.isNullOrNot(false);
             this.setValueField(genericSelection);
           }
@@ -304,17 +304,11 @@ export class SkipExportComponent implements OnInit {
     this.getCustomConditions();
   }
 
-  conditionOptionSelected = {
-    field_name: String,
-    type: String,
-    is_custom: Boolean,
-  };
-
   selectedOptions() {
     this.settingsService.getSkipExport(2).subscribe((skipExport) => {
       this.data = skipExport.results[0];
       this.data_1 = skipExport.results[1];
-      var ofType = '';
+      let ofType = '';
       if (this.data.condition === 'employee_email') {
         ofType = 'SELECT';
       } else if (this.data.condition === 'spent_at') {
@@ -322,7 +316,7 @@ export class SkipExportComponent implements OnInit {
       } else {
         ofType = 'TEXT';
       }
-      var ofType_1 = '';
+      let ofType_1 = '';
       if (this.data_1.condition === 'employee_email') {
         ofType_1 = 'SELECT';
       } else if (this.data_1.condition === 'spent_at') {

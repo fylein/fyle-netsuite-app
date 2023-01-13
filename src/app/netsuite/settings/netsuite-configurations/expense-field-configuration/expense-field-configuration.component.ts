@@ -17,7 +17,7 @@ import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-resp
   styleUrls: ['./expense-field-configuration.component.scss', '../../../netsuite.component.scss']
 })
 export class ExpenseFieldConfigurationComponent implements OnInit {
-  expenseFieldsForm: FormGroup; 
+  expenseFieldsForm: FormGroup;
   customFieldForm: FormGroup;
   expenseFields: FormArray;
   workspaceId: number;
