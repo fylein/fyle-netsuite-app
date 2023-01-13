@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Directive } from "@angular/core";
+import { Component, Input, OnInit, Directive } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,26 +6,26 @@ import {
   FormGroup,
   Validators,
   NgControl,
-} from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { event } from "cypress/types/jquery";
-import { SettingsService } from "src/app/core/services/settings.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { NetSuiteComponent } from "src/app/netsuite/netsuite.component";
-import { MappingSetting } from "src/app/core/models/mapping-setting.model";
-import { GeneralSetting } from "src/app/core/models/general-setting.model";
-import { SubsidiaryMapping } from "src/app/core/models/subsidiary-mapping.model";
-import { MatDialog } from "@angular/material/dialog";
-import { TrackingService } from "src/app/core/services/tracking.service";
-import { MappingsService } from "src/app/core/services/mappings.service";
-import { SkipExport } from "src/app/core/models/skip-export.model";
-import { formatDate } from "@angular/common";
+} from '@angular/forms';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { event } from 'cypress/types/jquery';
+import { SettingsService } from 'src/app/core/services/settings.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NetSuiteComponent } from 'src/app/netsuite/netsuite.component';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { SubsidiaryMapping } from 'src/app/core/models/subsidiary-mapping.model';
+import { MatDialog } from '@angular/material/dialog';
+import { TrackingService } from 'src/app/core/services/tracking.service';
+import { MappingsService } from 'src/app/core/services/mappings.service';
+import { SkipExport } from 'src/app/core/models/skip-export.model';
+import { formatDate } from '@angular/common';
 
 @Component({
-  selector: "app-skip-export",
-  templateUrl: "./skip-export.component.html",
-  styleUrls: ["./skip-export.component.scss"],
+  selector: 'app-skip-export',
+  templateUrl: './skip-export.component.html',
+  styleUrls: ['./skip-export.component.scss'],
 })
 export class SkipExportComponent implements OnInit {
   skipExportForm: FormGroup;
@@ -77,24 +77,24 @@ export class SkipExportComponent implements OnInit {
     const that = this;
 
     const valueField = this.skipExportForm.getRawValue();
-    if (valueField.condition.field_name === "spent_at") {
+    if (valueField.condition.field_name === 'spent_at') {
       valueField.value = formatDate(
         valueField.value,
-        "yyyy-MM-dd hh:mm:ss+hh",
-        "en"
+        'yyyy-MM-dd hh:mm:ss+hh',
+        'en'
       );
     }
-    if (valueField.condition_1.field_name === "spent_at") {
+    if (valueField.condition_1.field_name === 'spent_at') {
       valueField.value_1 = formatDate(
         valueField.value_1,
-        "yyyy-MM-dd hh:mm:ss+hh",
-        "en"
+        'yyyy-MM-dd hh:mm:ss+hh',
+        'en'
       );
     }
-    if (typeof valueField.value === "string") {
+    if (typeof valueField.value === 'string') {
       valueField.value = [valueField.value];
     }
-    if (typeof valueField.value_1 === "string") {
+    if (typeof valueField.value_1 === 'string') {
       valueField.value_1 = [valueField.value_1];
     }
     const payload = {
@@ -120,40 +120,40 @@ export class SkipExportComponent implements OnInit {
       this.settingsService
         .postSkipExport(that.workspaceId, payload_1)
         .subscribe((skipExport: SkipExport) => {
-          this.snackBar.open("Skip Export fields saved successfully");
+          this.snackBar.open('Skip Export fields saved successfully');
         });
     }
   }
 
   setOperatorField(conditionField: string) {
     const operatorList = [];
-    if (conditionField === "claim_number") {
+    if (conditionField === 'claim_number') {
       operatorList.push({
-        value: "iexact",
-        label: "is equal",
+        value: 'iexact',
+        label: 'is equal',
       });
-    } else if (conditionField === "employee_email") {
+    } else if (conditionField === 'employee_email') {
       operatorList.push({
-        value: "iexact",
-        label: "is equal",
+        value: 'iexact',
+        label: 'is equal',
       });
-    } else if (conditionField === "spent_at") {
+    } else if (conditionField === 'spent_at') {
       operatorList.push({
-        value: "lt",
-        label: "is before",
-      });
-      operatorList.push({
-        value: "lte",
-        label: "is it on or before",
-      });
-    } else if (conditionField === "report_title") {
-      operatorList.push({
-        value: "icontains",
-        label: "contains",
+        value: 'lt',
+        label: 'is before',
       });
       operatorList.push({
-        value: "iexact",
-        label: "is equal",
+        value: 'lte',
+        label: 'is it on or before',
+      });
+    } else if (conditionField === 'report_title') {
+      operatorList.push({
+        value: 'icontains',
+        label: 'contains',
+      });
+      operatorList.push({
+        value: 'iexact',
+        label: 'is equal',
       });
     }
     return {
@@ -164,7 +164,7 @@ export class SkipExportComponent implements OnInit {
     }[conditionField];
   }
 
-  join_by = [{ value: "AND" }, { value: "OR" }];
+  join_by = [{ value: 'AND' }, { value: 'OR' }];
 
   conditionFieldWatcher() {
     this.skipExportForm.controls.condition.valueChanges.subscribe(
@@ -173,16 +173,16 @@ export class SkipExportComponent implements OnInit {
         if (conditionSelected.is_custom) {
           this.operator_field = [
             {
-              label: "is equal",
-              value: "iexact",
+              label: 'is equal',
+              value: 'iexact',
             },
             {
-              label: "is empty",
-              value: "isnull",
+              label: 'is empty',
+              value: 'isnull',
             },
             {
-              label: "is not empty",
-              value: "isnull",
+              label: 'is not empty',
+              value: 'isnull',
             },
           ];
         } else {
@@ -205,16 +205,16 @@ export class SkipExportComponent implements OnInit {
         if (conditionSelected.is_custom) {
           this.operator_field_1 = [
             {
-              label: "is equal",
-              value: "iexact",
+              label: 'is equal',
+              value: 'iexact',
             },
             {
-              label: "is empty",
-              value: "isnull",
+              label: 'is empty',
+              value: 'isnull',
             },
             {
-              label: "is not empty",
-              value: "isnull",
+              label: 'is not empty',
+              value: 'isnull',
             },
           ];
         } else {
@@ -239,9 +239,9 @@ export class SkipExportComponent implements OnInit {
   }
   isNullOrNot(isNullOrNot = false) {
     if (isNullOrNot) {
-      this.skipExportForm.get("value").disable();
+      this.skipExportForm.get('value').disable();
     } else {
-      this.skipExportForm.get("value").enable();
+      this.skipExportForm.get('value').enable();
     }
   }
   value_field = [];
@@ -257,10 +257,10 @@ export class SkipExportComponent implements OnInit {
     if (isCustom) {
       this.skipExportForm.controls.operator.valueChanges.subscribe(
         (operatorSelected) => {
-          if (operatorSelected == "isnull") {
+          if (operatorSelected == 'isnull') {
             this.isNullOrNot(true);
             this.value_field = [{ value: true }, Validators.required];
-          } else if (operatorSelected == "iexact") {
+          } else if (operatorSelected == 'iexact') {
             this.isNullOrNot(false);
             this.setValueField(genericSelection);
           }
@@ -314,21 +314,21 @@ export class SkipExportComponent implements OnInit {
     this.settingsService.getSkipExport(2).subscribe((skipExport) => {
       this.data = skipExport.results[0];
       this.data_1 = skipExport.results[1];
-      var ofType = "";
-      if (this.data.condition === "employee_email") {
-        ofType = "SELECT";
-      } else if (this.data.condition === "spent_at") {
-        ofType = "DATE";
+      var ofType = '';
+      if (this.data.condition === 'employee_email') {
+        ofType = 'SELECT';
+      } else if (this.data.condition === 'spent_at') {
+        ofType = 'DATE';
       } else {
-        ofType = "TEXT";
+        ofType = 'TEXT';
       }
-      var ofType_1 = "";
-      if (this.data_1.condition === "employee_email") {
-        ofType_1 = "SELECT";
-      } else if (this.data_1.condition === "spent_at") {
-        ofType_1 = "DATE";
+      var ofType_1 = '';
+      if (this.data_1.condition === 'employee_email') {
+        ofType_1 = 'SELECT';
+      } else if (this.data_1.condition === 'spent_at') {
+        ofType_1 = 'DATE';
       } else {
-        ofType_1 = "TEXT";
+        ofType_1 = 'TEXT';
       }
       const actualOptionSelected = {
         field_name: this.data.condition,
@@ -361,18 +361,18 @@ export class SkipExportComponent implements OnInit {
 
   initFormGroups() {
     const actualOptionSelected = {
-      field_name: "claim_number",
-      type: "TEXT",
+      field_name: 'claim_number',
+      type: 'TEXT',
       is_custom: false,
     };
     this.skipExportForm = new FormGroup({
-      condition: new FormControl("", [Validators.required]),
-      operator: new FormControl("", [Validators.required]),
-      value: new FormControl("", [Validators.required]),
-      join_by: new FormControl("", [Validators.required]),
-      condition_1: new FormControl("", [Validators.required]),
-      operator_1: new FormControl("", [Validators.required]),
-      value_1: new FormControl("", [Validators.required]),
+      condition: new FormControl('', [Validators.required]),
+      operator: new FormControl('', [Validators.required]),
+      value: new FormControl('', [Validators.required]),
+      join_by: new FormControl('', [Validators.required]),
+      condition_1: new FormControl('', [Validators.required]),
+      operator_1: new FormControl('', [Validators.required]),
+      value_1: new FormControl('', [Validators.required]),
     });
   }
 }
