@@ -65,7 +65,7 @@
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="10" appearance="outline" style="width:5px !important">
                <mat-select placeholder="AND" formControlName="join_by">
-                  <mat-option *ngFor = "let obj of join_by" [value]="obj.value">
+                  <mat-option *ngFor = "let obj of joinBy" [value]="obj.value">
                   {{ obj.value }}
                   </mat-option>
                </mat-select>

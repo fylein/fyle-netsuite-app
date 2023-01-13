@@ -42,7 +42,7 @@ export class SkipExportComponent implements OnInit {
   valueField = [];
   valueField1 = [];
   payload = {};
-  join_by = [{ value: 'AND' }, { value: 'OR' }];
+  joinBy = [{ value: 'AND' }, { value: 'OR' }];
 
   ngOnInit() {
     this.condition = false;
@@ -259,7 +259,7 @@ export class SkipExportComponent implements OnInit {
         this.isNullOrNot(false);
       });
   }
-  
+
   setSkipExportValueField(genericSelection, isCustom) {
     if (isCustom) {
       this.skipExportForm.controls.operator.valueChanges.subscribe(
@@ -363,7 +363,7 @@ export class SkipExportComponent implements OnInit {
         is_custom: this.data.is_custom,
       };
 
-      const actualOptionSelected_1 = {
+      const actualOptionSelected1 = {
         field_name: this.data1.condition,
         type: ofType_1,
         is_custom: this.data1.is_custom,
@@ -377,7 +377,7 @@ export class SkipExportComponent implements OnInit {
         this.addCondition();
         this.skipExportForm.patchValue({
           join_by: this.data.join_by,
-          condition_1: actualOptionSelected_1,
+          condition_1: actualOptionSelected1,
           operator_1: this.data1.operator,
           value_1: this.data1.values,
         });
