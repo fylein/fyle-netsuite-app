@@ -79,10 +79,11 @@ export class SkipExportComponent implements OnInit {
       this.skipExportForm.get('condition_1').valid
     ) {
       if (
-        this.skipExportForm.get('condition').value ==
+        this.skipExportForm.get('condition').value ===
         this.skipExportForm.get('condition_1').value
-      )
+      ) {
         return true;
+      }
     }
     return false;
   }
@@ -93,7 +94,7 @@ export class SkipExportComponent implements OnInit {
           this.skipExportForm.get('operator').valid &&
           this.skipExportForm.get('value').valid
       : this.skipExportForm.valid &&
-          this.skipExportForm.get('condition').value !=
+          this.skipExportForm.get('condition').value !==
             this.skipExportForm.get('condition_1').value;
   }
 
@@ -408,7 +409,7 @@ export class SkipExportComponent implements OnInit {
     });
   }
 
-  clearSearchText(event): void {
+  clearSearchText(): void {
     const that = this;
     that.skipExportForm.controls.searchOption.patchValue(null);
   }
