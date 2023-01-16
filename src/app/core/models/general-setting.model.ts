@@ -14,7 +14,6 @@ export type GeneralSetting = {
     auto_map_employees: string;
     employee_field_mapping: string;
     memo_structure?: string[];
-    // skip_export?: string[];
     map_fyle_cards_netsuite_account: boolean;
     skip_cards_mapping?: boolean;
     created_at?: Date;

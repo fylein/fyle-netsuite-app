@@ -14,6 +14,7 @@ import { TrackingService } from 'src/app/core/services/tracking.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { SkipExport } from 'src/app/core/models/skip-export.model';
 import { formatDate } from '@angular/common';
+import { toArray } from 'cypress/types/lodash';
 
 @Component({
   selector: 'app-skip-export',
@@ -22,7 +23,6 @@ import { formatDate } from '@angular/common';
 })
 export class SkipExportComponent implements OnInit {
   skipExportForm: FormGroup;
-  formGroup: FormGroup;
   condition: boolean;
   addConditionButton: boolean;
   conditionType: string;
@@ -32,7 +32,6 @@ export class SkipExportComponent implements OnInit {
   data: any;
   data1: any;
   constructor(
-    private fb: FormBuilder,
     private mappingsService: MappingsService,
     private snackBar: MatSnackBar,
     private settingsService: SettingsService
@@ -72,6 +71,30 @@ export class SkipExportComponent implements OnInit {
 
   checkAddConditionButton() {
     return this.addConditionButton;
+  }
+
+  checkValidationCondition() {
+    if (
+      this.skipExportForm.get('condition').valid &&
+      this.skipExportForm.get('condition_1').valid
+    ) {
+      if (
+        this.skipExportForm.get('condition').value ==
+        this.skipExportForm.get('condition_1').value
+      )
+        return true;
+    }
+    return false;
+  }
+
+  checkValidation() {
+    return !this.condition
+      ? this.skipExportForm.get('condition').valid &&
+          this.skipExportForm.get('operator').valid &&
+          this.skipExportForm.get('value').valid
+      : this.skipExportForm.valid &&
+          this.skipExportForm.get('condition').value !=
+            this.skipExportForm.get('condition_1').value;
   }
 
   saveSkipExportFields() {
@@ -362,7 +385,6 @@ export class SkipExportComponent implements OnInit {
         type: ofType,
         is_custom: this.data.is_custom,
       };
-
       const actualOptionSelected1 = {
         field_name: this.data1.condition,
         type: ofType1,
@@ -373,6 +395,7 @@ export class SkipExportComponent implements OnInit {
         operator: this.data.operator,
         value: this.data.values,
       });
+
       if (skipExport.count === 2) {
         this.addCondition();
         this.skipExportForm.patchValue({
@@ -385,6 +408,11 @@ export class SkipExportComponent implements OnInit {
     });
   }
 
+  clearSearchText(event): void {
+    const that = this;
+    that.skipExportForm.controls.searchOption.patchValue(null);
+  }
+
   initFormGroups() {
     this.skipExportForm = new FormGroup({
       condition: new FormControl('', [Validators.required]),
@@ -394,6 +422,7 @@ export class SkipExportComponent implements OnInit {
       condition_1: new FormControl('', [Validators.required]),
       operator_1: new FormControl('', [Validators.required]),
       value_1: new FormControl('', [Validators.required]),
+      searchOption: new FormControl(''),
     });
   }
 }
