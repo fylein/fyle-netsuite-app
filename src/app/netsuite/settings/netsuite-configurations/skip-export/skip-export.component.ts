@@ -182,7 +182,6 @@ export class SkipExportComponent implements OnInit {
   conditionFieldWatcher1() {
     this.skipExportForm.controls.condition1.valueChanges.subscribe(
       (conditionSelected) => {
-        console.log(conditionSelected);
         this.skipExportForm.controls.value1.reset();
         if (conditionSelected.is_custom) {
           this.operatorFieldOptions1 = [
