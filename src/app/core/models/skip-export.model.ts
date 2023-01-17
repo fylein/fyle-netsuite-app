@@ -3,7 +3,7 @@
 export type SkipExport = {
   condition: string;
   operator: string;
-  values: Array<any>;
+  values: string[];
   rank: number;
   join_by: string;
   is_custom: boolean;

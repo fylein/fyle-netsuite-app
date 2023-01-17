@@ -11,7 +11,7 @@ import { ScheduleSettings } from '../models/schedule-settings.model';
 import { WorkspaceService } from './workspace.service';
 import { SubsidiaryMapping } from '../models/subsidiary-mapping.model';
 import { SkipExport } from '../models/skip-export.model';
-import { SkipExportSelected } from '../models/skip-export-selected.model';
+import { ExpenseFilterResponse } from '../models/expense-filter-response.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const netsuiteCredentialsCache = new Subject<void>();
@@ -131,7 +131,7 @@ export class SettingsService {
     workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_filters/`, skipExport);
   }
-  getSkipExport(workspaceId: number): Observable<SkipExportSelected> {
+  getSkipExport(workspaceId: number): Observable<ExpenseFilterResponse> {
     workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_filters/`, {});
   }
