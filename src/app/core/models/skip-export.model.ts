@@ -5,6 +5,6 @@ export type SkipExport = {
   operator: string;
   values: string[];
   rank: number;
-  join_by: string;
+  join_by: 'AND' | 'OR';
   is_custom: boolean;
 };
