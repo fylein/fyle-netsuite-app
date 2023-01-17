@@ -22,6 +22,7 @@ import { toArray } from 'cypress/types/lodash';
   styleUrls: ['./skip-export.component.scss'],
 })
 export class SkipExportComponent implements OnInit {
+  isLoading: boolean;
   skipExportForm: FormGroup;
   showSecondFilter: boolean;
   showConditionButton: boolean;
@@ -83,7 +84,6 @@ export class SkipExportComponent implements OnInit {
     const that = this;
 
     const valueField = this.skipExportForm.getRawValue();
-    console.log(valueField);
     if (valueField.condition1.field_name === 'spent_at') {
       valueField.value1 = formatDate(
         valueField.value1,
@@ -147,7 +147,11 @@ export class SkipExportComponent implements OnInit {
 
   setOperatorFieldOptions(conditionField: string) {
     const operatorList = [];
-    if (conditionField === 'claim_number' || conditionField === 'employee_email' || conditionField === 'report_title') {
+    if (
+      conditionField === 'claim_number' ||
+      conditionField === 'employee_email' ||
+      conditionField === 'report_title'
+    ) {
       operatorList.push({
         value: 'iexact',
         label: 'is equal',
@@ -178,6 +182,7 @@ export class SkipExportComponent implements OnInit {
   conditionFieldWatcher1() {
     this.skipExportForm.controls.condition1.valueChanges.subscribe(
       (conditionSelected) => {
+        console.log(conditionSelected);
         this.skipExportForm.controls.value1.reset();
         if (conditionSelected.is_custom) {
           this.operatorFieldOptions1 = [
@@ -314,11 +319,9 @@ export class SkipExportComponent implements OnInit {
   }
 
   getCustomConditions() {
-    this.mappingsService
-      .getFyleCustomFields()
-      .subscribe((conditionValue) => {
-        this.conditionFieldOptions = conditionValue;
-      });
+    this.mappingsService.getFyleCustomFields().subscribe((conditionValue) => {
+      this.conditionFieldOptions = conditionValue;
+    });
   }
 
   compareObjects(selectedOption: any, listedOption: any): boolean {
@@ -328,59 +331,56 @@ export class SkipExportComponent implements OnInit {
     return false;
   }
 
-  getAllSettings() {
-    this.fieldWatcher();
-    this.getCustomConditions();
-  }
-
   selectedOptions() {
-    this.settingsService.getSkipExport(this.workspaceId).subscribe((skipExport) => {
-      const data = skipExport.results[0];
-      const data1 = skipExport.results[1];
-      //TODO
-      let ofType = '';
-      if (data.condition === 'employee_email') {
-        ofType = 'SELECT';
-      } else if (data.condition === 'spent_at') {
-        ofType = 'DATE';
-      } else {
-        ofType = 'TEXT';
-      }
-      let ofType1 = '';
-      if (data1.condition === 'employee_email') {
-        ofType1 = 'SELECT';
-      } else if (data1.condition === 'spent_at') {
-        ofType1 = 'DATE';
-      } else {
-        ofType1 = 'TEXT';
-      }
-      const actualOptionSelected = {
-        field_name: data.condition,
-        type: ofType,
-        is_custom: data.is_custom,
-      };
-      const actualOptionSelected1 = {
-        field_name: data1.condition,
-        type: ofType1,
-        is_custom: data1.is_custom,
-      };
+    this.settingsService
+      .getSkipExport(this.workspaceId)
+      .subscribe((skipExport) => {
+        const data = skipExport.results[0];
+        const data1 = skipExport.results[1];
+        // TODO
+        let ofType = '';
+        if (data.condition === 'employee_email') {
+          ofType = 'SELECT';
+        } else if (data.condition === 'spent_at') {
+          ofType = 'DATE';
+        } else {
+          ofType = 'TEXT';
+        }
+        let ofType1 = '';
+        if (data1.condition === 'employee_email') {
+          ofType1 = 'SELECT';
+        } else if (data1.condition === 'spent_at') {
+          ofType1 = 'DATE';
+        } else {
+          ofType1 = 'TEXT';
+        }
+        const actualOptionSelected = {
+          field_name: data.condition,
+          type: ofType,
+          is_custom: data.is_custom,
+        };
+        const actualOptionSelected1 = {
+          field_name: data1.condition,
+          type: ofType1,
+          is_custom: data1.is_custom,
+        };
 
-      this.skipExportForm.patchValue({
-        condition1: actualOptionSelected,
-        operator1: data.operator,
-        value1: data.values
-      });
-      
-      if (skipExport.count === 2) {
-        this.addCondition();
         this.skipExportForm.patchValue({
-          join_by: data.join_by,
-          condition2: actualOptionSelected1,
-          operator2: data1.operator,
-          value2: data1.values,
+          condition1: actualOptionSelected,
+          operator1: data.operator,
+          value1: data.values,
         });
-      }
-    });
+
+        if (skipExport.count === 2) {
+          this.addCondition();
+          this.skipExportForm.patchValue({
+            join_by: data.join_by,
+            condition2: actualOptionSelected1,
+            operator2: data1.operator,
+            value2: data1.values,
+          });
+        }
+      });
   }
 
   clearSearchText(): void {
@@ -401,12 +401,17 @@ export class SkipExportComponent implements OnInit {
     });
   }
 
+  getAllSettings() {
+    this.fieldWatcher();
+    this.getCustomConditions();
+    this.selectedOptions();
+  }
+
   ngOnInit() {
     this.initFormGroups();
     this.showSecondFilter = false;
     this.showConditionButton = true;
-    this.getAllSettings();
-    this.selectedOptions();
     this.workspaceId = this.route.snapshot.parent.parent.params.workspace_id;
+    this.getAllSettings();
   }
 }
