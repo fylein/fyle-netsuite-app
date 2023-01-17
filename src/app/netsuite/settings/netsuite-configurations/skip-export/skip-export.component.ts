@@ -343,7 +343,7 @@ export class SkipExportComponent implements OnInit {
 
   getCustomConditions() {
     this.mappingsService
-      .getSkipExportConditionField()
+      .getFyleCustomFields()
       .subscribe((conditionValue) => {
         this.setConditionField(conditionValue);
       });

@@ -131,10 +131,15 @@ export class SettingsService {
     workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_filters/`, skipExport);
   }
+  
+  @Cacheable({
+    cacheBusterObserver: skipExportCache
+  })
   getSkipExport(workspaceId: number): Observable<ExpenseFilterResponse> {
     workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_filters/`, {});
   }
+  
   @Cacheable({
     cacheBusterObserver: generalSettingsCache
   })
