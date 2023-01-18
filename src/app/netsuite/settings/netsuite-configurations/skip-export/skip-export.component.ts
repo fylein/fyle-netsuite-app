@@ -215,32 +215,32 @@ export class SkipExportComponent implements OnInit {
   conditionFieldWatcher2() {
     this.skipExportForm.controls.condition2.valueChanges.subscribe(
       (conditionSelected) => {
-        if(conditionSelected) {
+        if (conditionSelected) {
           this.skipExportForm.controls.value2.reset();
-        if (conditionSelected.is_custom) {
-          this.operatorFieldOptions2 = [
-            {
-              label: 'is equal',
-              value: 'iexact',
-            },
-            {
-              label: 'is empty',
-              value: 'isnull',
-            },
-            {
-              label: 'is not empty',
-              value: 'isnull',
-            },
-          ];
-        } else {
-          this.operatorFieldOptions2 = this.setOperatorFieldOptions(
-            conditionSelected.field_name
+          if (conditionSelected.is_custom) {
+            this.operatorFieldOptions2 = [
+              {
+                label: 'is equal',
+                value: 'iexact',
+              },
+              {
+                label: 'is empty',
+                value: 'isnull',
+              },
+              {
+                label: 'is not empty',
+                value: 'isnull',
+              },
+            ];
+          } else {
+            this.operatorFieldOptions2 = this.setOperatorFieldOptions(
+              conditionSelected.field_name
+            );
+          }
+          this.setSkipExportValueField_1(
+            conditionSelected.field_name,
+            conditionSelected.is_custom
           );
-        }
-        this.setSkipExportValueField_1(
-          conditionSelected.field_name,
-          conditionSelected.is_custom
-        );
         }
       }
     );
@@ -324,7 +324,6 @@ export class SkipExportComponent implements OnInit {
     this.mappingsService.getFyleCustomFields().toPromise().then((conditionValue) => {
       this.conditionFieldOptions = conditionValue;
     });
-    
   }
 
   compareObjects(selectedOption: any, listedOption: any): boolean {
@@ -341,14 +340,14 @@ export class SkipExportComponent implements OnInit {
   }
 
   getAllSettings() {
-    this.getCustomConditions()
+    this.getCustomConditions();
     this.settingsService
       .getSkipExport(this.workspaceId)
       .subscribe((responses) => {
         const formOptions1 = responses.results[0];
         const formOptions2 = responses.results[1];
         let ofType1 = '';
-        if (formOptions1.condition === 'employee_email' || formOptions1.is_custom == true) {
+        if (formOptions1.condition === 'employee_email' || formOptions1.is_custom === true) {
           ofType1 = 'SELECT';
         } else if (formOptions1.condition === 'spent_at') {
           ofType1 = 'DATE';
@@ -356,7 +355,7 @@ export class SkipExportComponent implements OnInit {
           ofType1 = 'TEXT';
         }
         let ofType2 = '';
-        if (formOptions2.condition === 'employee_email' || formOptions2.is_custom == true) {
+        if (formOptions2.condition === 'employee_email' || formOptions2.is_custom === true) {
           ofType2 = 'SELECT';
         } else if (formOptions2.condition === 'spent_at') {
           ofType2 = 'DATE';
