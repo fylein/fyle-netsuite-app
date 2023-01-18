@@ -2,7 +2,7 @@
 
 export type SkipExport = {
   condition: string;
-  operator: string;
+  operator: 'isnull' | 'iexact' | 'icontains' | 'lt' | 'lte';
   values: string[];
   rank: number;
   join_by: 'AND' | 'OR';
