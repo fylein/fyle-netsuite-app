@@ -289,7 +289,7 @@ export class SkipExportComponent implements OnInit {
     this.skipExportForm.controls.operator1.valueChanges.subscribe(
       (operatorSelected) => {
         this.skipExportForm.controls.value1.reset();
-        if(operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
+        if (operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
           this.skipExportForm.get('value1').disable();
         } else {
           this.skipExportForm.get('value1').enable();
@@ -300,7 +300,7 @@ export class SkipExportComponent implements OnInit {
     this.skipExportForm.controls.operator2.valueChanges.subscribe(
       (operatorSelected) => {
         this.skipExportForm.controls.value2.reset();
-        if(operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
+        if (operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
           this.skipExportForm.get('value2').disable();
         } else {
           this.skipExportForm.get('value2').enable();
