@@ -112,8 +112,7 @@ export class SkipExportComponent implements OnInit {
       if (valueField.operator1 === 'is_empty') {
         valueField.value1 = ['True'];
         valueField.operator1 = 'isnull';
-      }
-      else if (valueField.operator1 === 'is_not_empty') {
+      } else if (valueField.operator1 === 'is_not_empty') {
         valueField.value1 = ['False'];
         valueField.operator1 = 'isnull';
       }
@@ -130,7 +129,7 @@ export class SkipExportComponent implements OnInit {
     if (typeof valueField.value1 === 'string') {
       valueField.value1 = [valueField.value1];
     }
-    
+
     const payload1 = {
       condition: valueField.condition1.field_name,
       operator: valueField.operator1,
@@ -155,8 +154,7 @@ export class SkipExportComponent implements OnInit {
         if (valueField.operator2 === 'is_empty') {
           valueField.value2 = ['True'];
           valueField.operator2 = 'isnull';
-        }
-        else if (valueField.operator2 === 'is_not_empty') {
+        } else if (valueField.operator2 === 'is_not_empty') {
           valueField.value2 = ['False'];
           valueField.operator2 = 'isnull';
         }
@@ -293,8 +291,7 @@ export class SkipExportComponent implements OnInit {
         this.skipExportForm.controls.value1.reset();
         if(operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
           this.skipExportForm.get('value1').disable();
-        }
-        else {
+        } else {
           this.skipExportForm.get('value1').enable();
         }
       }
@@ -305,8 +302,7 @@ export class SkipExportComponent implements OnInit {
         this.skipExportForm.controls.value2.reset();
         if(operatorSelected === 'is_empty' || operatorSelected === 'is_not_empty') {
           this.skipExportForm.get('value2').disable();
-        }
-        else {
+        } else {
           this.skipExportForm.get('value2').enable();
         }
       }
