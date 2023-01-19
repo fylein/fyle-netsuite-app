@@ -41,15 +41,7 @@
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition1 || skipExportForm.value?.condition1?.type==='SELECT'">
-            <mat-select multiple placeholder="Select the value" formControlName="value1">
-               <app-simple-search-select [form]="skipExportForm"></app-simple-search-select>
-               <mat-option *ngFor = "let obj of valueFieldOptions1" [value]="obj.value">
-               {{obj.value}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='TEXT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value.condition1.type==='SELECT' || skipExportForm.value?.condition1?.type==='TEXT'">
             <input required type="text" formControlName="value1" placeholder="Enter the value" matInput>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
@@ -83,15 +75,7 @@
                   </mat-option>
                </mat-select>
             </mat-form-field>
-            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value?.condition2?.type==='SELECT'">
-               <mat-select multiple placeholder="Select the value" formControlName="value2">
-                  <app-simple-search-select [form]="skipExportForm"></app-simple-search-select>
-                  <mat-option *ngFor = "let obj of valueFieldOptions2" [value]="obj.value">
-                  {{ obj.value }}
-                  </mat-option>
-               </mat-select>
-            </mat-form-field>
-            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='TEXT'">
+            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value.condition2.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT'">
                <input required type="text" formControlName="value2" placeholder="Enter the value" matInput>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
