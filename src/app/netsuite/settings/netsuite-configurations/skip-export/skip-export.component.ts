@@ -79,7 +79,7 @@ export class SkipExportComponent implements OnInit {
         this.skipExportForm.get('condition2').value
       : this.skipExportForm.get('condition1').valid &&
       this.skipExportForm.get('operator1').valid &&
-      this.skipExportForm.get('value1').valid
+      this.skipExportForm.get('value1').valid;
   }
 
   saveSkipExportFields() {
@@ -376,10 +376,11 @@ export class SkipExportComponent implements OnInit {
           selectedConditionOption1.type = type;
           conditionArray.push(selectedConditionOption1);
         });
-        if (conditionArray.length > 1 && formOptions1.join_by != null)
-          this.addCondition();
 
-        console.log(formOptions1.values);
+        if (conditionArray.length > 1 && formOptions1.join_by != null){
+          this.addCondition();
+        }
+
         this.skipExportForm = this.formBuilder.group({
           condition1: [
             conditionArray.length > 0 ? conditionArray[0] : '',
