@@ -377,7 +377,7 @@ export class SkipExportComponent implements OnInit {
           conditionArray.push(selectedConditionOption1);
         });
 
-        if (conditionArray.length > 1 && formOptions1.join_by != null){
+        if (conditionArray.length > 1 && formOptions1.join_by != null) {
           this.addCondition();
         }
 
