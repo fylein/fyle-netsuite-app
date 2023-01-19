@@ -15,6 +15,7 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { SkipExport } from 'src/app/core/models/skip-export.model';
 import { formatDate } from '@angular/common';
 import { toArray } from 'cypress/types/lodash';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-skip-export',
@@ -72,13 +73,13 @@ export class SkipExportComponent implements OnInit {
   }
 
   checkValidation() {
-    return !this.showSecondFilter
-      ? this.skipExportForm.get('condition1').valid &&
-          this.skipExportForm.get('operator1').valid &&
-          this.skipExportForm.get('value1').valid
-      : this.skipExportForm.valid &&
-          this.skipExportForm.get('condition1').value !==
-            this.skipExportForm.get('condition2').value;
+    return this.showSecondFilter
+      ? this.skipExportForm.valid &&
+      this.skipExportForm.get('condition1').value !==
+        this.skipExportForm.get('condition2').value
+      : this.skipExportForm.get('condition1').valid &&
+      this.skipExportForm.get('operator1').valid &&
+      this.skipExportForm.get('value1').valid
   }
 
   saveSkipExportFields() {
@@ -321,9 +322,12 @@ export class SkipExportComponent implements OnInit {
   }
 
   getCustomConditions() {
-    this.mappingsService.getFyleCustomFields().toPromise().then((conditionValue) => {
-      this.conditionFieldOptions = conditionValue;
-    });
+    this.mappingsService
+      .getFyleCustomFields()
+      .toPromise()
+      .then((conditionValue) => {
+        this.conditionFieldOptions = conditionValue;
+      });
   }
 
   compareObjects(selectedOption: any, listedOption: any): boolean {
@@ -331,7 +335,6 @@ export class SkipExportComponent implements OnInit {
       return true;
     }
     return false;
-    // return selectedOption && listedOption ? selectedOption.field_name === listedOption.field_name : selectedOption === listedOption;
   }
 
   clearSearchText(): void {
@@ -340,43 +343,79 @@ export class SkipExportComponent implements OnInit {
   }
 
   getAllSettings() {
-    this.getCustomConditions();
-    this.settingsService
-      .getSkipExport(this.workspaceId)
-      .subscribe((responses) => {
-        const formOptions1 = responses.results[0];
-        const formOptions2 = responses.results[1];
-        let ofType1 = '';
-        if (formOptions1.condition === 'employee_email' || formOptions1.is_custom === true) {
-          ofType1 = 'SELECT';
-        } else if (formOptions1.condition === 'spent_at') {
-          ofType1 = 'DATE';
-        } else {
-          ofType1 = 'TEXT';
-        }
-        let ofType2 = '';
-        if (formOptions2.condition === 'employee_email' || formOptions2.is_custom === true) {
-          ofType2 = 'SELECT';
-        } else if (formOptions2.condition === 'spent_at') {
-          ofType2 = 'DATE';
-        } else {
-          ofType2 = 'TEXT';
-        }
-        const selectedConditionOption1 = {field_name: formOptions1.condition, type: ofType1, is_custom: formOptions1.is_custom};
-        const selectedConditionOption2 = {field_name: formOptions2.condition, is_custom: formOptions2.is_custom, type: ofType2};
+    forkJoin([
+      this.mappingsService.getFyleCustomFields(),
+      this.settingsService.getSkipExport(this.workspaceId),
+    ]).subscribe(
+      (responses) => {
+        this.conditionFieldOptions = responses[0];
+        const formOptions1 = responses[1].results[0];
+        const formOptions2 = responses[1].results[1];
+        this.operatorFieldOptions1 = this.setOperatorFieldOptions(
+          formOptions1.condition
+        );
+        this.operatorFieldOptions2 = this.setOperatorFieldOptions(
+          formOptions2.condition
+        );
+        this.setSkipExportValueField(
+          formOptions1.condition,
+          formOptions1.is_custom
+        );
+
+        const conditionArray = [];
+        responses[1].results.forEach((element) => {
+          const selectedConditionOption1 = {
+            field_name: element.condition,
+            type: [''],
+            is_custom: element.is_custom,
+          };
+
+          const type = this.conditionFieldOptions.filter(
+            (fieldOption) => fieldOption.field_name === element.condition
+          )[0].type;
+          selectedConditionOption1.type = type;
+          conditionArray.push(selectedConditionOption1);
+        });
+        if (conditionArray.length > 1 && formOptions1.join_by != null)
+          this.addCondition();
+
+        console.log(formOptions1.values);
         this.skipExportForm = this.formBuilder.group({
-          condition1: [selectedConditionOption1, [Validators.required]],
+          condition1: [
+            conditionArray.length > 0 ? conditionArray[0] : '',
+            [Validators.required],
+          ],
           operator1: [formOptions1.operator, [Validators.required]],
-          value1: [formOptions1.values, [Validators.required]],
+          value1: [
+            conditionArray[0].type === 'DATE'
+              ? new Date(formOptions1.values[0])
+              : formOptions1.values,
+            [Validators.required],
+          ],
           join_by: [formOptions1.join_by, [Validators.required]],
-          condition2: [selectedConditionOption2, [Validators.required]],
-          operator2: [formOptions2.operator, [Validators.required]],
-          value2: [formOptions2.values, [Validators.required]],
+          condition2: [
+            conditionArray.length > 1 && formOptions1.join_by != null
+              ? conditionArray[1]
+              : null,
+            [Validators.required],
+          ],
+          operator2: [
+            formOptions1.join_by != null ? formOptions2.operator : null,
+            [Validators.required],
+          ],
+          value2: [
+            conditionArray[1].type === 'DATE'
+              ? new Date(formOptions2.values[0])
+              : formOptions2.values,
+            [Validators.required],
+          ],
           searchOption: [''],
         });
         this.fieldWatcher();
         this.isLoading = false;
-      }, () => {
+      },
+      () => {
+        this.getCustomConditions();
         this.skipExportForm = this.formBuilder.group({
           condition1: new FormControl('', [Validators.required]),
           operator1: new FormControl('', [Validators.required]),
@@ -389,7 +428,8 @@ export class SkipExportComponent implements OnInit {
         });
         this.fieldWatcher();
         this.isLoading = false;
-      });
+      }
+    );
   }
 
   ngOnInit() {
