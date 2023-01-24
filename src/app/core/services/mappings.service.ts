@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
 import { CategoryMappingsResponse } from '../models/category-mapping-response.model';
 import { CategoryMapping } from '../models/category-mapping.model';
+import { ConditionField } from '../models/condition-field.model';
 import { CustomSegment } from '../models/custom-segment.model';
 import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { EmployeeMapping } from '../models/employee-mapping.model';
@@ -93,7 +94,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
   }
 
-  getFyleCustomFields(): Observable<ExpenseField[]> {
+  getFyleCustomFields(): Observable<ConditionField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/custom_fields/`, {});
@@ -102,11 +103,12 @@ export class MappingsService {
   getFyleExpenseAttributes(attributeType: string, active: boolean = false): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const params: {[key: string]: any} = {};
-    if (attributeType === 'employee_email') {
-      attributeType = 'EMPLOYEE';
+    params.attribute_type = attributeType;
+
+    if (active === true) {
+      params.active = true;
     }
-    params.attribute_type = attributeType.toUpperCase();
-    if (active === true) {  params.active = true; }
+
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 

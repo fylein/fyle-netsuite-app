@@ -29,20 +29,31 @@
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition1" [compareWith]="compareObjects">
-               <mat-option *ngFor = "let obj of conditionFieldOptions" [value]="obj">
-               {{ obj.field_name | titlecase | snakeCaseToSpaceCase }}
+               <mat-option *ngFor = "let conditionFieldOption of conditionFieldOptions" [value]="conditionFieldOption">
+               {{ conditionFieldOption.field_name | titlecase | snakeCaseToSpaceCase }}
                </mat-option>
             </mat-select>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the operator" formControlName="operator1">
-               <mat-option *ngFor = "let obj of operatorFieldOptions1" [value]="obj.value">
-               {{ obj.label }}
+               <mat-option *ngFor = "let operatorFieldOption1 of operatorFieldOptions1" [value]="operatorFieldOption1.value">
+               {{ operatorFieldOption1.label }}
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value.condition1.type==='SELECT' || skipExportForm.value?.condition1?.type==='TEXT'">
-            <input required type="text" formControlName="value1" placeholder="Enter the value" matInput>
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition1 || skipExportForm.value.condition1.type==='SELECT' || skipExportForm.value?.condition1?.type==='TEXT'">
+            <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip1">
+            <mat-chip *ngFor="let item of valueOption1" [selectable]="true"
+            [removable]="removable" (removed)="remove1(item)">
+            {{item}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Enter the values"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add1($event)">
+            </mat-chip-list>
          </mat-form-field>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
             <input matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date">
@@ -51,32 +62,43 @@
          </mat-form-field>
       </div>
    </form>
-   <div *ngIf="showSecondFilter">
+   <div *ngIf="showAdditionalCondition">
       <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
          <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="10" appearance="outline" style="width:5px !important">
                <mat-select placeholder="AND" formControlName="join_by">
-                  <mat-option *ngFor = "let obj of joinByOptions" [value]="obj.value">
-                  {{ obj.value }}
+                  <mat-option *ngFor = "let joinBy of joinByOptions" [value]="joinBy.value">
+                  {{ joinBy.value }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition2" [compareWith]="compareObjects">
-                  <mat-option *ngFor = "let obj of conditionFieldOptions" [value]="obj">
-                  {{ obj.field_name | titlecase | snakeCaseToSpaceCase}}
+                  <mat-option *ngFor = "let conditionFieldOption of conditionFieldOptions" [value]="conditionFieldOption">
+                  {{ conditionFieldOption.field_name | titlecase | snakeCaseToSpaceCase}}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the operator" formControlName="operator2">
-                  <mat-option *ngFor = "let obj of operatorFieldOptions2" [value]="obj.value">
-                  {{ obj.label }}
+                  <mat-option *ngFor = "let opertorFieldOption2 of operatorFieldOptions2" [value]="opertorFieldOption2.value">
+                  {{ opertorFieldOption2.label }}
                   </mat-option>
                </mat-select>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value.condition2.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT'">
-               <input required type="text" formControlName="value2" placeholder="Enter the value" matInput>
+               <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip2">
+               <mat-chip *ngFor="let item of valueOption2" [selectable]="true"
+               [removable]="removable" (removed)="remove2(item)">
+               {{item}}
+               <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+               </mat-chip>
+               <input placeholder="Enter the values"
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="add2($event)">
+               </mat-chip-list>
             </mat-form-field>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
                <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date">
@@ -93,9 +115,9 @@
          </div>
       </form>
    </div>
-   <div fxLayoutAlign="start stretch" fxLayout="row" *ngIf = "showConditionButton">
-      <img class="skip-export--add-icon" src="assets/images/pngs/add.png" (click)="addCondition()">
-      <a class="add-row-text" (click)="addCondition()">
+   <div fxLayoutAlign="start stretch" fxLayout="row" *ngIf = "showAddButton">
+      <img class="skip-export--add-icon" src="assets/images/pngs/add.png" (click)="updateAdditionalFilterVisibility(true)">
+      <a class="add-row-text" (click)="updateAdditionalFilterVisibility(true)">
       Add Condition
       </a>
    </div>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderComponent } from './loader/loader.component';
@@ -12,6 +12,12 @@ import { SimpleSearchSelectComponent } from './simple-search-select/simple-searc
 import { SearchPipe } from './pipes/search.pipe';
 import { SnakeCaseToSpaceCase } from './pipes/snake-case-to-space-case.pipe';
 
+import { MatChipsModule, MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatIconModule } from '@angular/material';
+import {Component} from '@angular/core';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -29,7 +35,10 @@ import { SnakeCaseToSpaceCase } from './pipes/snake-case-to-space-case.pipe';
     FlexLayoutModule,
     MatButtonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule
   ],
   exports: [
     LoaderComponent,
@@ -38,7 +47,17 @@ import { SnakeCaseToSpaceCase } from './pipes/snake-case-to-space-case.pipe';
     MandatoryErrorMessageComponent,
     SimpleSearchSelectComponent,
     SearchPipe,
-    SnakeCaseToSpaceCase
+    SnakeCaseToSpaceCase,
+    MatChipsModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    {
+      provide: MAT_CHIPS_DEFAULT_OPTIONS,
+      useValue: {
+        separatorKeyCodes: [ENTER, COMMA]
+      }
+    }
   ]
 })
 export class SharedModule { }
