@@ -41,6 +41,7 @@ export class SkipExportComponent implements OnInit {
   valueFieldOptions2 = [];
   operatorFieldOptions1: { label: string; value: string }[];
   operatorFieldOptions2: { label: string; value: string }[];
+  joinByOptions = [{ value: 'AND' }, { value: 'OR' }];
   constructor(
     private mappingsService: MappingsService,
     private formBuilder: FormBuilder,
@@ -70,9 +71,9 @@ export class SkipExportComponent implements OnInit {
   valueOption2: any[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  add1(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
+  add1(addEvent1: MatChipInputEvent): void {
+    const input = addEvent1.input;
+    const value = addEvent1.value;
 
     if ((value || '').trim()) {
       this.valueOption1.push(value);
@@ -91,9 +92,9 @@ export class SkipExportComponent implements OnInit {
     }
   }
 
-  add2(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
+  add2(addEvent2: MatChipInputEvent): void {
+    const input = addEvent2.input;
+    const value = addEvent2.value;
 
     if ((value || '').trim()) {
       this.valueOption2.push(value);
@@ -112,8 +113,6 @@ export class SkipExportComponent implements OnInit {
     }
   }
 
-  joinByOptions = [{ value: 'AND' }, { value: 'OR' }];
-
   resetOptions() {
     this.skipExportForm.controls.join_by.reset();
     this.skipExportForm.controls.condition2.reset();
@@ -129,7 +128,7 @@ export class SkipExportComponent implements OnInit {
     } else if (rank === 2) {
       this.valueOption2 = [];
     }
-    if (conditionSelected != null) {
+    if (conditionSelected !== null) {
       if (conditionSelected.is_custom === true) {
         this.setCustomOperatorOptions(rank);
       } else if (conditionSelected.is_custom === false) {
@@ -186,7 +185,7 @@ export class SkipExportComponent implements OnInit {
             (this.skipExportForm.get('condition1').value.field_name ===
               'spent_at' &&
               this.skipExportForm.get('value1').valid) ||
-            this.valueOption1.length != 0 ||
+            this.valueOption1.length !== 0 ||
             this.skipExportForm.get('operator1').value === 'is_empty' ||
             this.skipExportForm.get('operator1').value === 'is_not_empty'
           ) {
@@ -194,7 +193,7 @@ export class SkipExportComponent implements OnInit {
               (this.skipExportForm.get('condition2').value.field_name ===
                 'spent_at' &&
                 this.skipExportForm.get('value2').valid) ||
-              this.valueOption2.length != 0 ||
+              this.valueOption2.length !== 0 ||
               this.skipExportForm.get('operator2').value === 'is_empty' ||
               this.skipExportForm.get('operator2').value === 'is_not_empty'
             ) {
@@ -207,7 +206,7 @@ export class SkipExportComponent implements OnInit {
       this.skipExportForm.get('condition1').valid &&
       this.skipExportForm.get('operator1').valid
     ) {
-      if (this.valueOption1.length != 0) {
+      if (this.valueOption1.length !== 0) {
         return true;
       }
       if (
@@ -228,7 +227,7 @@ export class SkipExportComponent implements OnInit {
 
   saveSkipExportFields() {
     const that = this;
-    let valueField = this.skipExportForm.getRawValue();
+    const valueField = this.skipExportForm.getRawValue();
     if (valueField.condition1.is_custom === true) {
       if (valueField.operator1 === 'is_empty') {
         valueField.value1 = ['True'];
@@ -441,7 +440,7 @@ export class SkipExportComponent implements OnInit {
             responses[1].results[0].condition
           );
         }
-        if (responses[1].results[0].join_by != null) {
+        if (responses[1].results[0].join_by !== null) {
           this.updateAdditionalFilterVisibility(true);
           if (responses[1].results[1].is_custom) {
             this.setCustomOperatorOptions(responses[1].results[1].rank);
@@ -493,22 +492,22 @@ export class SkipExportComponent implements OnInit {
         customFieldType1: [responses[1].results[0].custom_field_type],
 
         join_by: [
-          responses[1].results[0].join_by != null
+          responses[1].results[0].join_by !== null
             ? responses[1].results[0].join_by
             : '',
           [Validators.required],
         ],
 
         condition2: [
-          responses[1].results[0].join_by != null ? conditionArray[1] : '',
+          responses[1].results[0].join_by !== null ? conditionArray[1] : '',
           [Validators.required],
         ],
         operator2: [
-          responses[1].results[0].join_by != null ? selectedOperator2 : '',
+          responses[1].results[0].join_by !== null ? selectedOperator2 : '',
           [Validators.required],
         ],
         value2: [
-          responses[1].results[0].join_by != null
+          responses[1].results[0].join_by !== null
             ? selectedOperator2 === 'is_empty' ||
               selectedOperator2 === 'is_not_empty'
               ? (this.isDisabledChip2 = true)
@@ -519,7 +518,7 @@ export class SkipExportComponent implements OnInit {
           [Validators.required],
         ],
         customFieldType2:
-          responses[1].results[0].join_by != null
+          responses[1].results[0].join_by !== null
             ? [responses[1].results[1].custom_field_type]
             : [''],
       });
