@@ -294,7 +294,7 @@ export class SkipExportComponent implements OnInit {
           };
           this.settingsService
             .postSkipExport(that.workspaceId, payload2)
-            .subscribe((skipExport: SkipExport) => {});
+            .subscribe((skipExport1: SkipExport) => {});
         }
         this.snackBar.open('Skip Export fields saved successfully');
       });
