@@ -121,6 +121,7 @@ export class SkipExportComponent implements OnInit {
   }
 
   resetFields(operator, value, conditionSelected, rank: number) {
+    console.log(value);
     operator.reset();
     value.reset();
     if (rank === 1) {
@@ -475,52 +476,15 @@ export class SkipExportComponent implements OnInit {
       }
 
       this.skipExportForm = this.formBuilder.group({
-        condition1: [
-          conditionArray.length > 0 ? conditionArray[0] : '',
-          [Validators.required],
-        ],
+        condition1: [conditionArray.length > 0 ? conditionArray[0] : '',[Validators.required],],
         operator1: [selectedOperator1, [Validators.required]],
-        value1: [
-          selectedOperator1 === 'is_empty' ||
-          selectedOperator1 === 'is_not_empty'
-            ? (this.isDisabledChip1 = true)
-            : conditionArray[0].type === 'DATE'
-            ? new Date(responses[1].results[0].values[0])
-            : (this.valueOption1 = responses[1].results[0].values),
-          [Validators.required],
-        ],
+        value1: [selectedOperator1 === 'is_empty' || selectedOperator1 === 'is_not_empty' ? (this.isDisabledChip1 = true) : conditionArray[0].type === 'DATE' ? new Date(responses[1].results[0].values[0]) : (this.valueOption1 = responses[1].results[0].values), [Validators.required],],
         customFieldType1: [responses[1].results[0].custom_field_type],
-
-        join_by: [
-          responses[1].results[0].join_by !== null
-            ? responses[1].results[0].join_by
-            : '',
-          [Validators.required],
-        ],
-
-        condition2: [
-          responses[1].results[0].join_by !== null ? conditionArray[1] : '',
-          [Validators.required],
-        ],
-        operator2: [
-          responses[1].results[0].join_by !== null ? selectedOperator2 : '',
-          [Validators.required],
-        ],
-        value2: [
-          responses[1].results[0].join_by !== null
-            ? selectedOperator2 === 'is_empty' ||
-              selectedOperator2 === 'is_not_empty'
-              ? (this.isDisabledChip2 = true)
-              : conditionArray[1].type === 'DATE'
-              ? new Date(responses[1].results[1].values[0])
-              : (this.valueOption2 = responses[1].results[1].values)
-            : '',
-          [Validators.required],
-        ],
-        customFieldType2:
-          responses[1].results[0].join_by !== null
-            ? [responses[1].results[1].custom_field_type]
-            : [''],
+        join_by: [responses[1].results[0].join_by !== null ? responses[1].results[0].join_by : '', [Validators.required],],
+        condition2: [responses[1].results[0].join_by !== null ? conditionArray[1] : '',[Validators.required],],
+        operator2: [ responses[1].results[0].join_by !== null ? selectedOperator2 : '',[Validators.required],],
+        value2: [responses[1].results[0].join_by !== null ? selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty' ? (this.isDisabledChip2 = true) : conditionArray[1].type === 'DATE' ? new Date(responses[1].results[1].values[0]) : (this.valueOption2 = responses[1].results[1].values) : '', [Validators.required],],
+        customFieldType2:responses[1].results[0].join_by !== null ? [responses[1].results[1].custom_field_type] : [''],
       });
       this.fieldWatcher();
       this.isLoading = false;
