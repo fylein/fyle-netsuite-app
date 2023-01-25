@@ -478,19 +478,18 @@ export class SkipExportComponent implements OnInit {
       if (selectedOperator1 === 'is_empty' || selectedOperator1 === 'is_not_empty') {
         this.isDisabledChip1 = true;
       } else {
-        if (conditionArray[0].type === 'DATE') {
-          valueFC1 = new Date(responses[1].results[0].values[0])
-        } else {
-          this.valueOption1 = responses[1].results[0].values;
-        }
+          if (conditionArray[0].type === 'DATE') {
+            valueFC1 = new Date(responses[1].results[0].values[0]);
+          } else {
+            this.valueOption1 = responses[1].results[0].values;
+          }
       }
 
       let valueFC2;
       if (responses[1].results[0].join_by !== null) {
         if (selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty') {
           this.isDisabledChip2 = true;
-        }
-       else {
+        } else {
         if (conditionArray[1].type === 'DATE') {
           valueFC2 = new Date(responses[1].results[1].values[0]);
         } else {
