@@ -121,8 +121,6 @@ export class SkipExportComponent implements OnInit {
   }
 
   resetFields(operator, value, conditionSelected, rank: number) {
-    operator.reset();
-    value.reset();
     if (rank === 1) {
       this.valueOption1 = [];
     } else if (rank === 2) {
