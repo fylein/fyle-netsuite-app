@@ -1,7 +1,7 @@
-<div class="internal-loader" fxLayoutAlign="center start" fxFlexFill>
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
    <app-loader></app-loader>
 </div>
-<div fxLayout="column" fxLayoutAlign="start stretch">
+<div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
    <div class="info-box">
       Set a rule to skip the export of expenses from Fyle to Netsuite
    </div>
