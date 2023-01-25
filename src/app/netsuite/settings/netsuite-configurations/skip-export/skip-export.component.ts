@@ -26,6 +26,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 })
 export class SkipExportComponent implements OnInit {
   isLoading: boolean = true;
+  anish: string;
   isDisabledChip1: boolean = false;
   isDisabledChip2: boolean = false;
   skipExportForm: FormGroup;
@@ -121,6 +122,8 @@ export class SkipExportComponent implements OnInit {
   }
 
   resetFields(operator, value, conditionSelected, rank: number) {
+    operator.reset();
+    value.reset();
     if (rank === 1) {
       this.valueOption1 = [];
     } else if (rank === 2) {
@@ -450,7 +453,15 @@ export class SkipExportComponent implements OnInit {
         }
       }
 
-      let selectedOperator1;
+      let selectedOperator1 = '';
+      let selectedOperator2 = '';
+      let valueFC1;
+      let valueFC2;
+      let customFieldTypeFC1;
+      let customFieldTypeFC2;
+      let joinByFC;
+      console.log(responses);
+      if(responses[1].count > 0) {
       if (responses[1].results[0].operator === 'isnull') {
         if (responses[1].results[0].values[0] === 'True') {
           selectedOperator1 = 'is_empty';
@@ -460,19 +471,6 @@ export class SkipExportComponent implements OnInit {
       } else {
         selectedOperator1 = responses[1].results[0].operator;
       }
-
-      let selectedOperator2;
-      if (responses[1].results[1].operator === 'isnull') {
-        if (responses[1].results[1].values[0] === 'True') {
-          selectedOperator2 = 'is_empty';
-        } else {
-          selectedOperator2 = 'is_not_empty';
-        }
-      } else {
-        selectedOperator2 = responses[1].results[1].operator;
-      }
-
-      let valueFC1;
       if (selectedOperator1 === 'is_empty' || selectedOperator1 === 'is_not_empty') {
         this.isDisabledChip1 = true;
       } else {
@@ -482,29 +480,43 @@ export class SkipExportComponent implements OnInit {
             this.valueOption1 = responses[1].results[0].values;
           }
       }
-
-      let valueFC2;
-      if (responses[1].results[0].join_by !== null) {
-        if (selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty') {
-          this.isDisabledChip2 = true;
+      customFieldTypeFC1 = responses[1].results[0].custom_field_type;
+    }
+      if (responses[1].count > 1) {
+        if (responses[1].results[1].operator === 'isnull') {
+          if (responses[1].results[1].values[0] === 'True') {
+            selectedOperator2 = 'is_empty';
+          } else {
+            selectedOperator2 = 'is_not_empty';
+          }
         } else {
-        if (conditionArray[1].type === 'DATE') {
-          valueFC2 = new Date(responses[1].results[1].values[0]);
-        } else {
-          this.valueOption2 = responses[1].results[1].values;
+          selectedOperator2 = responses[1].results[1].operator;
         }
+        if (responses[1].results[0].join_by !== null) {
+          if (selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty') {
+            this.isDisabledChip2 = true;
+          } else {
+          if (conditionArray[1].type === 'DATE') {
+            valueFC2 = new Date(responses[1].results[1].values[0]);
+          } else {
+            this.valueOption2 = responses[1].results[1].values;
+          }
+        }
+      }
+      if(responses[1].results[0].join_by !== null) {
+        joinByFC = responses[1].results[0].join_by;
       }
     }
       this.skipExportForm = this.formBuilder.group({
         condition1: [conditionArray.length > 0 ? conditionArray[0] : '',[Validators.required]],
         operator1: [selectedOperator1.length !== 0 ? selectedOperator1 : '', [Validators.required]],
         value1: [valueFC1 ? valueFC1 : '', [Validators.required]],
-        customFieldType1: [responses[1].results[0].custom_field_type],
-        join_by: [responses[1].results[0].join_by !== null ? responses[1].results[0].join_by : '', [Validators.required]],
-        condition2: [responses[1].results[0].join_by !== null ? conditionArray[1] : '',[Validators.required]],
-        operator2: [responses[1].results[0].join_by !== null && selectedOperator2 ? selectedOperator2 : '',[Validators.required]],
+        customFieldType1: [customFieldTypeFC1 ? customFieldTypeFC1 : ''],
+        join_by: [joinByFC ? joinByFC : '', [Validators.required]],
+        condition2: [joinByFC ? conditionArray[1] : '',[Validators.required]],
+        operator2: [joinByFC && selectedOperator2 ? selectedOperator2 : '',[Validators.required]],
         value2: [valueFC2 ? valueFC2 : '', [Validators.required],],
-        customFieldType2:responses[1].results[0].join_by !== null ? [responses[1].results[1].custom_field_type] : [''],
+        customFieldType2:joinByFC ? [responses[1].results[1].custom_field_type] : [''],
       });
       this.fieldWatcher();
       this.isLoading = false;
