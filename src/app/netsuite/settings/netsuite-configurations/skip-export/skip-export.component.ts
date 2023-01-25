@@ -460,7 +460,6 @@ export class SkipExportComponent implements OnInit {
       let customFieldTypeFC1;
       let customFieldTypeFC2;
       let joinByFC;
-      console.log(responses);
       if(responses[1].count > 0) {
       if (responses[1].results[0].operator === 'isnull') {
         if (responses[1].results[0].values[0] === 'True') {
