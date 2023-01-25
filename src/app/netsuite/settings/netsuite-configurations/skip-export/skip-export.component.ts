@@ -260,7 +260,7 @@ export class SkipExportComponent implements OnInit {
     };
     this.settingsService
       .postSkipExport(that.workspaceId, payload1)
-      .subscribe((skipExport: SkipExport) => {
+      .subscribe((skipExport1: SkipExport) => {
         if (valueField.condition2 && valueField.operator2) {
           if (valueField.condition2.field_name === 'spent_at') {
             valueField.value2 = formatDate(
@@ -294,7 +294,7 @@ export class SkipExportComponent implements OnInit {
           };
           this.settingsService
             .postSkipExport(that.workspaceId, payload2)
-            .subscribe((skipExport1: SkipExport) => {});
+            .subscribe((skipExport2: SkipExport) => {});
         }
         this.snackBar.open('Skip Export fields saved successfully');
       });
