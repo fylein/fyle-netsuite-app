@@ -10,6 +10,8 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Subscription } from 'rxjs';
 import { ExpenseGroupResponse } from 'src/app/core/models/expense-group-response.model';
 import { NetSuiteResponseLog } from 'src/app/core/models/netsuite-response-log.model';
+import { SkipExportLogResponse } from 'src/app/core/models/skip-export-log-response.model';
+import { SkipExportLog } from 'src/app/core/models/skip-export-log.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -19,13 +21,16 @@ import { NetSuiteResponseLog } from 'src/app/core/models/netsuite-response-log.m
 export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   workspaceId: number;
   expenseGroups: MatTableDataSource<ExpenseGroup> = new MatTableDataSource([]);
+  skippedExpenses: MatTableDataSource<SkipExportLog> = new MatTableDataSource([]);
   isLoading = true;
+  isSkippedVisible : boolean = false;
   count: number;
   state: string;
   settings: GeneralSetting;
   pageNumber = 0;
   pageSize: number;
-  columnsToDisplay = ['employee', 'expensetype'];
+  columnsToDisplay1 = [];
+  columnsToDisplay2 = [];
   exportTypeRedirectionMap = {
     vendorBill: 'vendbill',
     expenseReport: 'exprept',
@@ -55,7 +60,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.expenseGroups.filter = filterValue.trim().toLowerCase();
+    if(this.state === 'SKIP') {
+      this.skippedExpenses.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.expenseGroups.filter = filterValue.trim().toLowerCase();
+    }
   }
 
   onPageChange(event) {
@@ -102,6 +111,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   getPaginatedExpenseGroups() {
     const that = this;
 
+    that.isSkippedVisible = false;
     return that.expenseGroupService.getExpenseGroups(that.pageSize, that.pageNumber * that.pageSize, that.state).subscribe((expenseGroups: ExpenseGroupResponse) => {
       that.count = expenseGroups.count;
       expenseGroups.results.forEach(expenseGroup => {
@@ -109,7 +119,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
         expenseGroup.export_type = exportType;
       });
       that.expenseGroups = new MatTableDataSource(expenseGroups.results);
-      that.expenseGroups.filterPredicate = that.searchByText;
+      that.expenseGroups.filterPredicate = that.searchByText1;
       that.isLoading = false;
       return expenseGroups;
     });
@@ -119,6 +129,19 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     this.router.navigate([`workspaces/${this.workspaceId}/expense_groups/${id}/view`]);
   }
 
+  setSkipLog() {
+    const that = this;
+
+    that.isSkippedVisible = true;
+    return that.expenseGroupService.getSkipExportLogs(that.pageSize, that.pageNumber * that.pageSize).subscribe((skippedExpenses: SkipExportLogResponse)=>{
+      that.count = skippedExpenses.count;
+      
+      that.skippedExpenses = new MatTableDataSource(skippedExpenses.results);
+      that.skippedExpenses.filterPredicate = that.searchByText2;
+      that.isLoading = false;
+      return skippedExpenses;
+    });
+  }
   reset() {
     const that = this;
     that.workspaceId = +that.route.snapshot.params.workspace_id;
@@ -128,13 +151,18 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getGeneralSettings().subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
-      } else {
-        that.columnsToDisplay = ['employee', 'expensetype'];
+        that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+      } else if (that.state === 'FAILED') {
+        that.columnsToDisplay1 = ['employee', 'expensetype'];
+      } else if (that.state === 'SKIP') {
+        that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
       }
-
       that.settings = settings;
-      that.getPaginatedExpenseGroups();
+      if (that.state === 'SKIP') {
+        that.setSkipLog();
+      } else {
+        that.getPaginatedExpenseGroups();
+      }
     });
 
     that.routerEventSubscription = that.router.events.subscribe(event => {
@@ -151,15 +179,21 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
-          } else {
-            that.columnsToDisplay = ['employee', 'expensetype'];
+            that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+          } else if (state === 'FAILED') {
+            that.columnsToDisplay1 = ['employee', 'expensetype'];
+          } else if (state === 'SKIP') {
+            that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
           }
 
           that.pageNumber = pageNumber;
           that.pageSize = pageSize;
           that.state = state;
-          that.getPaginatedExpenseGroups();
+          if (that.state === 'SKIP') {
+            that.setSkipLog();
+          } else {
+            that.getPaginatedExpenseGroups();
+          }
         }
       }
     });
@@ -181,16 +215,21 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.openInNetSuite(exportRedirection, clickedExpenseGroup.response_logs.internalId);
   }
 
-  searchByText(data: ExpenseGroup, filterText: string) {
+  searchByText1(data: ExpenseGroup, filterText: string) {
     return data.description.employee_email.includes(filterText) ||
       ('Reimbursable'.toLowerCase().includes(filterText) && data.fund_source === 'PERSONAL') ||
       ('Corporate Credit Card'.toLowerCase().includes(filterText) && data.fund_source !== 'PERSONAL') ||
       data.description.claim_number.includes(filterText);
   }
 
+  searchByText2(data: SkipExportLog, filterText: string) {
+    return data.employee_email.includes(filterText);
+  }
+
   ngOnInit() {
     this.reset();
-    this.expenseGroups.filterPredicate = this.searchByText;
+    this.expenseGroups.filterPredicate = this.searchByText1;
+    this.skippedExpenses.filterPredicate = this.searchByText2;
     this.settingsService.getNetSuiteCredentials().subscribe(creds => {
       this.storageService.set('nsAccountId', (creds.ns_account_id).toLowerCase());
     });
