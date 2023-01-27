@@ -46,7 +46,7 @@
             <mat-chip *ngFor="let item of valueOption1" [selectable]="true"
             [removable]="removable" (removed)="remove1(item)">
             {{item}}
-            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            <img class="cross-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-cross.svg">
             </mat-chip>
             <input placeholder="Enter the values"
             [matChipInputFor]="chipList"
