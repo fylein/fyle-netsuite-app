@@ -99,7 +99,7 @@
       </ng-container>
       <ng-container matColumnDef="skippedExpenseType">
          <th mat-header-cell *matHeaderCellDef> Expense Type </th>
-         <td mat-cell *matCellDef="let element"> {{element.fund_source}} </td>
+         <td mat-cell *matCellDef="let element"> {{element.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card'}} </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay2"></tr>
       <tr class="page-table--row page-table--row__pointer cursor-pointer" mat-row *matRowDef="let row; columns: columnsToDisplay2;"></tr>
