@@ -82,7 +82,7 @@
     <mat-paginator *ngIf="state==='FAILED' || 'COMPLETE'" [length]="count" [pageSizeOptions]="[10, 50, 100, 200]" [pageSize]="pageSize" [pageIndex]="pageNumber"
       (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
   </div>
-  <div *ngIf="!isLoading" [hidden]="!isSkippedVisible">
+  <div *ngIf="!isLoading" [hidden]="!isSkippedVisible || !skippedExpenses.filteredData.length">
     <table mat-table [dataSource]="skippedExpenses" class="page-table" matSort matSortActive="updated_at"
       matSortDisableClear matSortDirection="desc">
       <ng-container matColumnDef="export-skipped-on">
