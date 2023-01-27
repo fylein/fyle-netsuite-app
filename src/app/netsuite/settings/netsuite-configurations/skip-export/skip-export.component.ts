@@ -515,7 +515,7 @@ export class SkipExportComponent implements OnInit {
         condition2: [joinByFC ? conditionArray[1] : '',[Validators.required]],
         operator2: [joinByFC && selectedOperator2 ? selectedOperator2 : '',[Validators.required]],
         value2: [valueFC2 ? valueFC2 : '', [Validators.required],],
-        customFieldType2:joinByFC ? [responses[1].results[1].custom_field_type] : [''],
+        customFieldType2: joinByFC ? [responses[1].results[1].custom_field_type] : [''],
       });
       this.fieldWatcher();
       this.isLoading = false;

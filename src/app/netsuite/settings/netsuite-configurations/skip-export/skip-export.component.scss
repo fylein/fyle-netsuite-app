@@ -22,7 +22,38 @@ $fy-info-dark: #2c304e;
     font-size: 14px;
   }
 }
+.datePicker {
+  max-height: 104px;
+}
+.cross-icon {
+  max-width: 7.75px;
+  max-height: 7.75px;
+}
 
+::ng-deep .mat-chip-list-wrapper .mat-standard-chip, .mat-chip-list-wrapper input.mat-input-element {
+  margin: 1px;
+}
+::ng-deep .mat-chip-list-wrapper {
+  max-height: 104px;
+    overflow-y: auto;
+}
+
+::ng-deep .mat-chip.mat-standard-chip {
+  background: #FFFFFF;
+/* Grayscale/Border */
+  border: 1px solid #DFDFE2;
+  border-radius: 12px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+::ng-deep .mat-chip.mat-standard-chip::after {
+  background: #FFFFFF;
+}
 ::ng-deep .skip-export {
   &--header {
     border-bottom: 1px solid $fy-layout-background;
@@ -30,14 +61,14 @@ $fy-info-dark: #2c304e;
 
   &--form {
     font-size: 14px;
-    margin: 24px;
+    margin: 12px;
     max-width: 1000px;
     color: $fy-nav-text;
   }
 
   &--form1 {
     font-size: 14px;
-    margin: 24px;
+    margin: 12px;
     max-width: 1000px;
     color: $fy-nav-text;
   }
