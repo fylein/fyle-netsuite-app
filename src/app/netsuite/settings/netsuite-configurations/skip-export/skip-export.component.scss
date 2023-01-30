@@ -77,17 +77,18 @@ $fy-info-dark: #2c304e;
 
 ::ng-deep .mat-form-field-type-mat-select .mat-form-field-flex {
   height: 40px !important;
-  // width: 230px;
+  width: 230px;
   justify-content: center !important;
   align-items: center !important;
 }
 
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
-  height: 40px !important;
-  // width: 230px;
-  justify-content: center !important;
-  align-items: center !important;
-}
+// ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+//   height: 40px !important;
+//   width: 230px;
+//   max-height: 150px;
+//   justify-content: center !important;
+//   align-items: center !important;
+// }
 
 ::ng-deep .skip-export {
   &--form {
