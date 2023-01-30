@@ -13,21 +13,27 @@
    </div>
    <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div fxLayout="row" fxLayoutAlign="start center">
-         <div class="fields-header-1">Condition
-         <mandatory-field></mandatory-field></div>
-         <div class="fields-header-2">Operator
-         <mandatory-field></mandatory-field></div>
-         <div class="fields-header-3">Value
-         <mandatory-field></mandatory-field></div>
+         <div class="fields-header-1">
+            Condition
+            <mandatory-field></mandatory-field>
+         </div>
+         <div class="fields-header-2">
+            Operator
+            <mandatory-field></mandatory-field>
+         </div>
+         <div class="fields-header-3" *ngIf = "(skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')">
+            Value
+            <mandatory-field></mandatory-field>
+         </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
          <span class="where-text">
          Where
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
-            <mat-select placeholder="Select the condition" formControlName="condition1" [compareWith]="compareObjects">
+            <mat-select placeholder="Select the condition" formControlName="condition1" [compareWith]="compareObjects" panelClass="heightTwenty">
                <mat-option *ngFor = "let conditionFieldOption of conditionFieldOptions" [value]="conditionFieldOption">
-               {{ conditionFieldOption.field_name | titlecase | snakeCaseToSpaceCase }}
+               {{ (conditionFieldOption.field_name === 'claim_number' ? 'report_number' : conditionFieldOption.field_name) | titlecase | snakeCaseToSpaceCase }}
                </mat-option>
             </mat-select>
          </mat-form-field>
@@ -38,33 +44,37 @@
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition1 || skipExportForm.value.condition1.type==='SELECT' || skipExportForm.value?.condition1?.type==='TEXT'">
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value.condition1.field_name === 'report_title' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
+            <input matInput type="text" formControlName="value1" placeholder="Enter a value">
+         </mat-form-field>
+         <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="(skipExportForm.value.condition1.field_name !== 'report_title') && (!skipExportForm.value.condition1 || skipExportForm.value.condition1.type==='SELECT' || skipExportForm.value?.condition1?.type==='TEXT' || skipExportForm.value?.condition1?.type==='NUMBER') && (skipExportForm.value.operator1 !== 'is_empty')  && (skipExportForm.value.operator1 !== 'is_not_empty')">
             <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip1">
             <mat-chip *ngFor="let item of valueOption1" [selectable]="true"
             [removable]="removable" (removed)="remove1(item)">
             {{item}}
+            <img class="divider-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-divider.svg">
             <img class="cross-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-cross.svg">
             </mat-chip>
-            <input placeholder="Enter the values"
+            <input placeholder="Enter the value"
             [matChipInputFor]="chipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
             (matChipInputTokenEnd)="add1($event)">
             </mat-chip-list>
          </mat-form-field>
-         <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
-         <div style="display: inline-flex;">
-            <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker startView="month"></mat-datepicker>
-         </div>
+         <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
+            <div style="display: inline-flex;">
+               <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
+               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+               <mat-datepicker #picker startView="month"></mat-datepicker>
+            </div>
          </mat-form-field>
       </div>
    </form>
    <div *ngIf="showAdditionalCondition">
       <form class="skip-export--form1" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
          <div fxLayout="row" fxLayoutAlign="start center">
-            <mat-form-field floatLabel="always" fxFlex="10" appearance="outline"  style="width:5px !important; padding: 15px !important;">
+            <mat-form-field class="join-by" floatLabel="always" fxFlex="10" appearance="outline" style="width:32px !important; height:70px !important; padding: 15px !important;">
                <mat-select placeholder="AND" formControlName="join_by">
                   <mat-option *ngFor = "let joinBy of joinByOptions" [value]="joinBy.value">
                   {{ joinBy.value }}
@@ -74,7 +84,7 @@
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition2" [compareWith]="compareObjects">
                   <mat-option *ngFor = "let conditionFieldOption of conditionFieldOptions" [value]="conditionFieldOption">
-                  {{ conditionFieldOption.field_name | titlecase | snakeCaseToSpaceCase}}
+                  {{ (conditionFieldOption.field_name === 'claim_number' ? 'report_number' : conditionFieldOption.field_name) | titlecase | snakeCaseToSpaceCase}}
                   </mat-option>
                </mat-select>
             </mat-form-field>
@@ -85,29 +95,35 @@
                   </mat-option>
                </mat-select>
             </mat-form-field>
-            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value.condition2.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT'">
-               <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip2">
-               <mat-chip *ngFor="let item of valueOption2" [selectable]="true"
-               [removable]="removable" (removed)="remove2(item)">
-               {{item}}
-               <img class="cross-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-cross.svg">
-               </mat-chip>
-               <input placeholder="Enter the values"
-               [matChipInputFor]="chipList"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="addOnBlur"
-               (matChipInputTokenEnd)="add2($event)">
-               </mat-chip-list>
-            </mat-form-field>
-            <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
-            <div style="display: inline-flex;">
-               <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date">
-               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-               <mat-datepicker #picker startView="month"></mat-datepicker>
+            <div *ngIf="!showAddButton">
+               <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.field_name && skipExportForm.value?.condition2?.field_name === 'report_title'  && (skipExportForm.value.operator2 !== 'is_empty' || skipExportForm.value.operator2 !== 'is_not_empty')">
+                  <input matInput type="text" formControlName="value2" placeholder="Enter a value">
+               </mat-form-field>
+               <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.field_name !== 'report_title' && (!skipExportForm.value?.condition2 || skipExportForm.value?.condition2?.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT' || skipExportForm.value?.condition2?.type==='NUMBER') && (skipExportForm.value.operator2 !== 'is_empty')  && (skipExportForm.value.operator2 !== 'is_not_empty')">
+                  <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip2">
+                  <mat-chip *ngFor="let item of valueOption2" [selectable]="true"
+                  [removable]="removable" (removed)="remove2(item)">
+                  {{item}}
+                  <img class="divider-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-divider.svg">
+                  <img class="cross-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-cross.svg">
+                  </mat-chip>
+                  <input [placeholder]="valueOption2.length ? '' : 'Enter the value'"
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add2($event)">
+                  </mat-chip-list>
+               </mat-form-field>
+               <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
+                  <div style="display: inline-flex;">
+                     <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date" readonly>
+                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                     <mat-datepicker #picker startView="month"></mat-datepicker>
+                  </div>
+               </mat-form-field>
             </div>
-            </mat-form-field>
-               <img class="skip-export--delete-icon" src="assets/images/pngs/delete.svg"
-                  (click)="remCondition()">
+            <img class="skip-export--delete-icon" src="assets/images/pngs/delete.svg"
+               (click)="remCondition()">
          </div>
          <div *ngIf = "checkValidationCondition()">
             <p>Condition selected should be distinct.</p>
