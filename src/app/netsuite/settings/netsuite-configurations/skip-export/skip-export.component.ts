@@ -336,7 +336,7 @@ export class SkipExportComponent implements OnInit {
         value: 'lte',
         label: 'is it on or before',
       });
-    } 
+    }
     if (conditionField === 'report_title') {
       operatorList.push({
         value: 'icontains',
@@ -381,7 +381,6 @@ export class SkipExportComponent implements OnInit {
   operatorFieldWatcher() {
     this.skipExportForm.controls.operator1.valueChanges.subscribe(
       (operatorSelected) => {
-        console.log(operatorSelected);
         this.valueOption1 = [];
         if (
           operatorSelected === 'is_empty' ||
@@ -435,7 +434,6 @@ export class SkipExportComponent implements OnInit {
       this.mappingsService.getFyleCustomFields(),
       this.settingsService.getSkipExport(this.workspaceId),
     ]).subscribe((responses) => {
-      console.log(responses[0]);
       this.conditionFieldOptions = responses[0];
       const conditionArray = [];
       responses[1].results.forEach((element) => {
