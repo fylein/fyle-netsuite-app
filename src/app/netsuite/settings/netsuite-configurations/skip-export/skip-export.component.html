@@ -13,12 +13,18 @@
    </div>
    <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div fxLayout="row" fxLayoutAlign="start center">
-         <div class="fields-header-1">Condition
-         <mandatory-field></mandatory-field></div>
-         <div class="fields-header-2">Operator
-         <mandatory-field></mandatory-field></div>
-         <div class="fields-header-3">Value
-         <mandatory-field></mandatory-field></div>
+         <div class="fields-header-1">
+            Condition
+            <mandatory-field></mandatory-field>
+         </div>
+         <div class="fields-header-2">
+            Operator
+            <mandatory-field></mandatory-field>
+         </div>
+         <div class="fields-header-3">
+            Value
+            <mandatory-field></mandatory-field>
+         </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
          <span class="where-text">
@@ -53,11 +59,11 @@
             </mat-chip-list>
          </mat-form-field>
          <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
-         <div style="display: inline-flex;">
-            <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker startView="month"></mat-datepicker>
-         </div>
+            <div style="display: inline-flex;">
+               <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
+               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+               <mat-datepicker #picker startView="month"></mat-datepicker>
+            </div>
          </mat-form-field>
       </div>
    </form>
@@ -100,11 +106,11 @@
                </mat-chip-list>
             </mat-form-field>
             <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
-            <div style="display: inline-flex;">
-               <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date">
-               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-               <mat-datepicker #picker startView="month"></mat-datepicker>
-            </div>
+               <div style="display: inline-flex;">
+                  <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker startView="month"></mat-datepicker>
+               </div>
             </mat-form-field>
             <div fxFlex="2">
                <img class="skip-export--delete-icon" src="assets/images/pngs/delete.png"
