@@ -3,29 +3,26 @@
 </div>
 <div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
    <div class="info-box">
+      <img class = "skip-icon" src="assets/images/pngs/vector-skip.svg">
       Set a rule to skip the export of expenses from Fyle to Netsuite
    </div>
-   <div *ngIf="!isLoading" class="info-box" fxLayout="row" fxLayoutAlign="start center">
+   <div *ngIf="!isLoading" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="75" class="info-box-text">
-         You could choose to skip the export of certain expenses from Fyle to Netsuite by setting up a conditional rule.
+         You could choose to skip the export of certain expenses from Fyle to Netsuite by<br>setting up a conditional rule.
       </div>
    </div>
    <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div fxLayout="row" fxLayoutAlign="start center">
-         <span fxFlex="10">
-         </span>
-         <div class="fields-header">Condition</div>
-         <mandatory-field></mandatory-field>
-         <div fxFlex="17"></div>
-         <div class="fields-header">Operator</div>
-         <mandatory-field></mandatory-field>
-         <div fxFlex="18"></div>
-         <div class="fields-header">Value</div>
-         <mandatory-field></mandatory-field>
+         <div class="fields-header-1">Condition
+         <mandatory-field></mandatory-field></div>
+         <div class="fields-header-2">Operator
+         <mandatory-field></mandatory-field></div>
+         <div class="fields-header-3">Value
+         <mandatory-field></mandatory-field></div>
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
-         <span fxFlex="10">
-         WHERE
+         <span class="where-text">
+         Where
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
             <mat-select placeholder="Select the condition" formControlName="condition1" [compareWith]="compareObjects">
@@ -55,9 +52,9 @@
             (matChipInputTokenEnd)="add1($event)">
             </mat-chip-list>
          </mat-form-field>
-         <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
+         <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE'">
          <div style="display: inline-flex;">
-            <input matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
+            <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker startView="month"></mat-datepicker>
          </div>
@@ -65,9 +62,9 @@
       </div>
    </form>
    <div *ngIf="showAdditionalCondition">
-      <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
+      <form class="skip-export--form1" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
          <div fxLayout="row" fxLayoutAlign="start center">
-            <mat-form-field floatLabel="always" fxFlex="10" appearance="outline" style="width:5px !important; padding: 15px !important;">
+            <mat-form-field floatLabel="always" fxFlex="10" appearance="outline"  style="width:5px !important; padding: 15px !important;">
                <mat-select placeholder="AND" formControlName="join_by">
                   <mat-option *ngFor = "let joinBy of joinByOptions" [value]="joinBy.value">
                   {{ joinBy.value }}
@@ -88,7 +85,7 @@
                   </mat-option>
                </mat-select>
             </mat-form-field>
-            <mat-form-field class = "chipsField"floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value.condition2.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT'">
+            <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="!skipExportForm.value.condition2 || skipExportForm.value.condition2.type==='SELECT' || skipExportForm.value?.condition2?.type==='TEXT'">
                <mat-chip-list #chipList aria-label="" [disabled]="isDisabledChip2">
                <mat-chip *ngFor="let item of valueOption2" [selectable]="true"
                [removable]="removable" (removed)="remove2(item)">
@@ -103,7 +100,7 @@
                </mat-chip-list>
             </mat-form-field>
             <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
-               <div style="display: inline-flex;">
+            <div style="display: inline-flex;">
                <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date">
                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                <mat-datepicker #picker startView="month"></mat-datepicker>
@@ -120,7 +117,7 @@
       </form>
    </div>
    <div fxLayoutAlign="start stretch" fxLayout="row" *ngIf = "showAddButton">
-      <img class="skip-export--add-icon" src="assets/images/pngs/add.png" (click)="updateAdditionalFilterVisibility(true)">
+      <img class="skip-export--add-icon" src="assets/images/pngs/add.svg" (click)="updateAdditionalFilterVisibility(true)">
       <a class="add-row-text" (click)="updateAdditionalFilterVisibility(true)">
       Add Condition
       </a>

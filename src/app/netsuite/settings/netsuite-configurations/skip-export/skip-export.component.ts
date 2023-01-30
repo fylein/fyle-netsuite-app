@@ -228,6 +228,7 @@ export class SkipExportComponent implements OnInit {
 
   saveSkipExportFields() {
     const that = this;
+    that.isLoading = true;
     const valueField = this.skipExportForm.getRawValue();
     if (valueField.condition1.is_custom === true) {
       if (valueField.operator1 === 'is_empty') {
@@ -297,6 +298,7 @@ export class SkipExportComponent implements OnInit {
             .postSkipExport(that.workspaceId, payload2)
             .subscribe((skipExport2: SkipExport) => {});
         }
+        that.isLoading = false;
         this.snackBar.open('Skip Export fields saved successfully');
       });
   }

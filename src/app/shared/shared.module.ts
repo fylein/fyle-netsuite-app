@@ -15,7 +15,7 @@ import { SnakeCaseToSpaceCase } from './pipes/snake-case-to-space-case.pipe';
 import { MatChipsModule, MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MAT_DATE_LOCALE } from '@angular/material';
 import {Component} from '@angular/core';
 import {MatChipInputEvent} from '@angular/material/chips';
 
@@ -57,7 +57,8 @@ import {MatChipInputEvent} from '@angular/material/chips';
       useValue: {
         separatorKeyCodes: [ENTER, COMMA]
       }
-    }
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
   ]
 })
 export class SharedModule { }
