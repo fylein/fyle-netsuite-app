@@ -23,7 +23,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   expenseGroups: MatTableDataSource<ExpenseGroup> = new MatTableDataSource([]);
   skippedExpenses: MatTableDataSource<SkipExportLog> = new MatTableDataSource([]);
   isLoading = true;
-  isSkippedVisible : boolean = false;
+  isSkippedVisible: boolean = false;
   count: number;
   state: string;
   settings: GeneralSetting;
@@ -60,7 +60,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    if(this.state === 'SKIP') {
+    if (this.state === 'SKIP') {
       this.skippedExpenses.filter = filterValue.trim().toLowerCase();
     } else {
       this.expenseGroups.filter = filterValue.trim().toLowerCase();
@@ -133,9 +133,8 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     const that = this;
 
     that.isSkippedVisible = true;
-    return that.expenseGroupService.getSkipExportLogs(that.pageSize, that.pageNumber * that.pageSize).subscribe((skippedExpenses: SkipExportLogResponse)=>{
+    return that.expenseGroupService.getSkipExportLogs(that.pageSize, that.pageNumber * that.pageSize).subscribe((skippedExpenses: SkipExportLogResponse) => {
       that.count = skippedExpenses.count;
-      
       that.skippedExpenses = new MatTableDataSource(skippedExpenses.results);
       that.skippedExpenses.filterPredicate = that.searchByText2;
       that.isLoading = false;

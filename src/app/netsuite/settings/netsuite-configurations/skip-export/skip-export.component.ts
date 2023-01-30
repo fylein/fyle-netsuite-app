@@ -254,11 +254,17 @@ export class SkipExportComponent implements OnInit {
     const payload1 = {
       condition: valueField.condition1.field_name,
       operator: valueField.operator1,
-      values: valueField.condition1.type === 'DATE' || valueField.operator1 === 'isnull' ? valueField.value1 : this.valueOption1,
+      values:
+        valueField.condition1.type === 'DATE' ||
+        valueField.operator1 === 'isnull'
+          ? valueField.value1
+          : this.valueOption1,
       rank: 1,
       join_by: valueField.join_by ? valueField.join_by : null,
       is_custom: valueField.condition1.is_custom,
-      custom_field_type: valueField.condition1.is_custom ? valueField.condition1.type : null,
+      custom_field_type: valueField.condition1.is_custom
+        ? valueField.condition1.type
+        : null,
     };
     this.settingsService
       .postSkipExport(that.workspaceId, payload1)
@@ -288,11 +294,17 @@ export class SkipExportComponent implements OnInit {
           const payload2 = {
             condition: valueField.condition2.field_name,
             operator: valueField.operator2,
-            values: valueField.condition2.type === 'DATE' || valueField.operator2 === 'isnull' ? valueField.value2 : this.valueOption2,
+            values:
+              valueField.condition2.type === 'DATE' ||
+              valueField.operator2 === 'isnull'
+                ? valueField.value2
+                : this.valueOption2,
             rank: 2,
             join_by: null,
             is_custom: valueField.condition2.is_custom,
-            custom_field_type: valueField.condition2.is_custom ? valueField.condition2.type : null,
+            custom_field_type: valueField.condition2.is_custom
+              ? valueField.condition2.type
+              : null,
           };
           this.settingsService
             .postSkipExport(that.workspaceId, payload2)
@@ -460,29 +472,31 @@ export class SkipExportComponent implements OnInit {
       let valueFC1;
       let valueFC2;
       let customFieldTypeFC1;
-      let customFieldTypeFC2;
       let joinByFC;
-      if(responses[1].count > 0) {
-      if (responses[1].results[0].operator === 'isnull') {
-        if (responses[1].results[0].values[0] === 'True') {
-          selectedOperator1 = 'is_empty';
+      if (responses[1].count > 0) {
+        if (responses[1].results[0].operator === 'isnull') {
+          if (responses[1].results[0].values[0] === 'True') {
+            selectedOperator1 = 'is_empty';
+          } else {
+            selectedOperator1 = 'is_not_empty';
+          }
         } else {
-          selectedOperator1 = 'is_not_empty';
+          selectedOperator1 = responses[1].results[0].operator;
         }
-      } else {
-        selectedOperator1 = responses[1].results[0].operator;
-      }
-      if (selectedOperator1 === 'is_empty' || selectedOperator1 === 'is_not_empty') {
-        this.isDisabledChip1 = true;
-      } else {
+        if (
+          selectedOperator1 === 'is_empty' ||
+          selectedOperator1 === 'is_not_empty'
+        ) {
+          this.isDisabledChip1 = true;
+        } else {
           if (conditionArray[0].type === 'DATE') {
             valueFC1 = new Date(responses[1].results[0].values[0]);
           } else {
             this.valueOption1 = responses[1].results[0].values;
           }
+        }
+        customFieldTypeFC1 = responses[1].results[0].custom_field_type;
       }
-      customFieldTypeFC1 = responses[1].results[0].custom_field_type;
-    }
       if (responses[1].count > 1) {
         if (responses[1].results[1].operator === 'isnull') {
           if (responses[1].results[1].values[0] === 'True') {
@@ -494,30 +508,44 @@ export class SkipExportComponent implements OnInit {
           selectedOperator2 = responses[1].results[1].operator;
         }
         if (responses[1].results[0].join_by !== null) {
-          if (selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty') {
+          if (
+            selectedOperator2 === 'is_empty' ||
+            selectedOperator2 === 'is_not_empty'
+          ) {
             this.isDisabledChip2 = true;
           } else {
-          if (conditionArray[1].type === 'DATE') {
-            valueFC2 = new Date(responses[1].results[1].values[0]);
-          } else {
-            this.valueOption2 = responses[1].results[1].values;
+            if (conditionArray[1].type === 'DATE') {
+              valueFC2 = new Date(responses[1].results[1].values[0]);
+            } else {
+              this.valueOption2 = responses[1].results[1].values;
+            }
           }
         }
+        if (responses[1].results[0].join_by !== null) {
+          joinByFC = responses[1].results[0].join_by;
+        }
       }
-      if(responses[1].results[0].join_by !== null) {
-        joinByFC = responses[1].results[0].join_by;
-      }
-    }
       this.skipExportForm = this.formBuilder.group({
-        condition1: [conditionArray.length > 0 ? conditionArray[0] : '',[Validators.required]],
-        operator1: [selectedOperator1.length !== 0 ? selectedOperator1 : '', [Validators.required]],
+        condition1: [
+          conditionArray.length > 0 ? conditionArray[0] : '',
+          [Validators.required],
+        ],
+        operator1: [
+          selectedOperator1.length !== 0 ? selectedOperator1 : '',
+          [Validators.required],
+        ],
         value1: [valueFC1 ? valueFC1 : '', [Validators.required]],
         customFieldType1: [customFieldTypeFC1 ? customFieldTypeFC1 : ''],
         join_by: [joinByFC ? joinByFC : '', [Validators.required]],
-        condition2: [joinByFC ? conditionArray[1] : '',[Validators.required]],
-        operator2: [joinByFC && selectedOperator2 ? selectedOperator2 : '',[Validators.required]],
-        value2: [valueFC2 ? valueFC2 : '', [Validators.required],],
-        customFieldType2: joinByFC ? [responses[1].results[1].custom_field_type] : [''],
+        condition2: [joinByFC ? conditionArray[1] : '', [Validators.required]],
+        operator2: [
+          joinByFC && selectedOperator2 ? selectedOperator2 : '',
+          [Validators.required],
+        ],
+        value2: [valueFC2 ? valueFC2 : '', [Validators.required]],
+        customFieldType2: joinByFC
+          ? [responses[1].results[1].custom_field_type]
+          : [''],
       });
       this.fieldWatcher();
       this.isLoading = false;

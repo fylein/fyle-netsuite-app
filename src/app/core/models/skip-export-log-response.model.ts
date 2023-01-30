@@ -1,4 +1,4 @@
-import { SkipExportLog } from "./skip-export-log.model";
+import { SkipExportLog } from './skip-export-log.model';
 
 /* tslint:disable */
 export type SkipExportLogResponse = {
