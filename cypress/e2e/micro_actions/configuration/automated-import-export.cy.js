@@ -10,9 +10,13 @@ describe('Auto Import and Export Setting', () => {
     })
 
     function scheduleSet() {
+        cy.intercept('GET', '**/schedule/', {statusCode: 400, message: 'Schedule settings does not exist in workspace'})
+    }
+
+    it('Auto Import and Export Setting', () => {
         const schedule = {
             "id": 7,
-            "enabled": true,
+            "enabled": false,
             "start_datetime": "2022-12-23T06:38:05.162701Z",
             "interval_hours": 1,
             "error_count": null,
@@ -29,11 +33,7 @@ describe('Auto Import and Export Setting', () => {
             "workspace": environment.e2e_tests.secret[1].workspace_id,
             "schedule": 14
         }
-        cy.intercept('GET', '**/schedule/', schedule)
-    }
-
-    it('Auto Import and Export Setting', () => {
-        cy.intercept('GET', '**/schedule/', {statusCode: 400, message: 'Schedule settings does not exist in workspace'})
+        scheduleSet()
         cy.url().should('include', '/settings/schedule')
         cy.get('.schedule--header').contains('Automated Import/Export')
         cy.getElement('schedule-form').get('.schedule--header-title').eq(0).contains('Enable Automated Import-Export')
@@ -57,8 +57,10 @@ describe('Auto Import and Export Setting', () => {
         cy.getElement('add-email-form').get('input').eq(2).type('netsuite@gmail.com')
         cy.getElement('btn-cnl-save').get('button').eq(1).contains('Cancel')
         cy.getElement('btn-cnl-save').get('button').eq(2).contains('Add and Save').click()
+        cy.intercept('POST', '**/schedule/', schedule)
         cy.getElement('save-btn').contains('Save').click()
-        scheduleSet()
+        cy.intercept('GET', '**/schedule/', schedule)
         cy.get('.cdk-overlay-container').contains('Schedule saved') 
+        cy.intercept('GET', '**/schedule/', schedule)
     })
 })

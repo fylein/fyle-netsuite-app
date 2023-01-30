@@ -5,10 +5,10 @@ export default defineConfig({
   projectId: 'v7wbae',
   e2e: {
     baseUrl: environment.app_url,
-    // setupNodeEvents(on, config) {
-    //   require('@cypress/code-coverage/task')(on, config)
-    //   return config
-    // }
+    setupNodeEvents(on, config) {
+      require('@cypress/code-coverage/task')(on, config)
+      return config
+    }
   },
   viewportHeight: 980,
   viewportWidth: 1440,

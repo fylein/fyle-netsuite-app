@@ -2,7 +2,7 @@
     <div class="page-header--name mat-h2">
       Expense Groups
     </div>
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar data-cy="export-nav">
       <a mat-tab-link (click)="changeState('FAILED')" [active]="state==='FAILED'">
         Failed
       </a>
@@ -44,7 +44,7 @@
 
       <ng-container matColumnDef="employee">
         <th mat-header-cell *matHeaderCellDef> Employee </th>
-        <td mat-cell *matCellDef="let element"> {{element.description.employee_email}} </td>
+        <td mat-cell *matCellDef="let element" data-cy="failed-data"> {{element.description.employee_email}} </td>
       </ng-container>
   
       <ng-container matColumnDef="export">
