@@ -1,16 +1,18 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 $text-error: #ff6e40;
 $fy-info-dark: #2c304e;
 
+// CSS Actually Used
+
 .skip-icon {
-  // position: absolute;
-  width: 18px !important;
-  height: 20px !important;
-  margin-left: 30px !important;
-  margin-right: 19px !important;
-  // left: 3px;
-  // top: 2px;
+// position: absolute;
+width: 18px !important;
+height: 20px !important;
+margin-left: 30px !important;
+margin-right: 19px !important;
+// left: 3px;
+// top: 2px;
 }
 
 .info-box {
@@ -31,19 +33,19 @@ $fy-info-dark: #2c304e;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: #5a5d72;
+  color: #5A5D72;
   flex: none;
-  order: 1;
-  flex-grow: 0;
+order: 1;
+flex-grow: 0;
 }
 
 .fields-header-1 {
-  margin-left: 166px;
-  margin-top: 40px;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  color: #5a5d72;
+margin-left: 166px;
+margin-top: 40px;
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+color: #5A5D72;
 }
 
 .fields-header-2 {
@@ -51,8 +53,8 @@ $fy-info-dark: #2c304e;
   margin-top: 40px;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
-  color: #5a5d72;
+  font-size: 14px; 
+  color: #5A5D72;
 }
 
 .fields-header-3 {
@@ -61,7 +63,7 @@ $fy-info-dark: #2c304e;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  color: #5a5d72;
+  color: #5A5D72;
 }
 
 .where-text {
@@ -94,6 +96,7 @@ $fy-info-dark: #2c304e;
 }
 
 ::ng-deep .skip-export {
+
   &--form {
     font-size: 14px;
     margin: 14px;
@@ -128,7 +131,7 @@ $fy-info-dark: #2c304e;
   }
 
   &--save-btn {
-    max-width: 32px;
+    max-width: 32px;    
     text-align: center;
     cursor: pointer;
     padding-left: 30px;
@@ -163,19 +166,18 @@ $fy-info-dark: #2c304e;
   max-height: 7.75px;
 }
 
-::ng-deep .mat-chip-list-wrapper .mat-standard-chip,
-.mat-chip-list-wrapper input.mat-input-element {
+::ng-deep .mat-chip-list-wrapper .mat-standard-chip, .mat-chip-list-wrapper input.mat-input-element {
   margin: 1px;
 }
 ::ng-deep .mat-chip-list-wrapper {
   max-height: 104px;
-  overflow-y: auto;
+    overflow-y: auto;
 }
 
 ::ng-deep .mat-chip.mat-standard-chip {
-  background: #ffffff;
-  /* Grayscale/Border */
-  border: 1px solid #dfdfe2;
+  background: #FFFFFF;
+/* Grayscale/Border */
+  border: 1px solid #DFDFE2;
   border-radius: 12px;
   font-style: normal;
   font-weight: 400;
@@ -186,7 +188,7 @@ $fy-info-dark: #2c304e;
   flex-grow: 0;
 }
 ::ng-deep .mat-chip.mat-standard-chip::after {
-  background: #ffffff;
+  background: #FFFFFF;
 }
 
 .add-row-text {
