@@ -82,7 +82,7 @@ $fy-info-dark: #2c304e;
   align-items: center !important;
 }
 
-::ng-deep .mat-datepicker {
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
   height: 40px !important;
   // width: 230px;
   justify-content: center !important;
@@ -119,7 +119,8 @@ $fy-info-dark: #2c304e;
     cursor: pointer;
     max-width: 20px;
     max-height: 20px;
-    padding-left: 10px;
+    // padding-left: 10px;
+    margin-left: 26.5px;
     padding-bottom: 25px;
   }
 

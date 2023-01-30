@@ -106,10 +106,8 @@
                <mat-datepicker #picker startView="month"></mat-datepicker>
             </div>
             </mat-form-field>
-            <div fxFlex="2">
-               <img class="skip-export--delete-icon" src="assets/images/pngs/delete.png"
+               <img class="skip-export--delete-icon" src="assets/images/pngs/delete.svg"
                   (click)="remCondition()">
-            </div>
          </div>
          <div *ngIf = "checkValidationCondition()">
             <p>Condition selected should be distinct.</p>
