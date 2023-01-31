@@ -13,21 +13,22 @@
    </div>
    <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div fxLayout="row" fxLayoutAlign="start center">
-         <div class="fields-header-1">
+         <div fxFlex="15"></div>
+         <div class="fields-header-1" fxFlex="25">
             Condition
             <mandatory-field></mandatory-field>
          </div>
-         <div class="fields-header-2">
+         <div class="fields-header-2" fxFlex="25">
             Operator
             <mandatory-field></mandatory-field>
          </div>
-         <div class="fields-header-3" *ngIf = "(skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')">
+         <div class="fields-header-3" fxFlex="25" *ngIf = "(skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')">
             Value
             <mandatory-field></mandatory-field>
          </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
-         <span class="where-text">
+         <span fxFlex="15" class="where-text">
          Where
          </span>
          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
@@ -81,6 +82,7 @@
                   </mat-option>
                </mat-select>
             </mat-form-field>
+            <div fxFlex="5"></div>
             <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline">
                <mat-select placeholder="Select the condition" formControlName="condition2" [compareWith]="compareObjects">
                   <mat-option *ngFor = "let conditionFieldOption of conditionFieldOptions" [value]="conditionFieldOption">
