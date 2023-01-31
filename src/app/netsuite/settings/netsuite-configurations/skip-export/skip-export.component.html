@@ -55,7 +55,7 @@
             <img class="divider-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-divider.svg">
             <img class="cross-icon" matChipRemove *ngIf="removable" src="../../../../../assets/images/pngs/vector-cross.svg">
             </mat-chip>
-            <input placeholder="Enter the value"
+            <input [placeholder]="valueOption1.length ? '' : 'Enter the value'"
             [matChipInputFor]="chipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
