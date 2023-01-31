@@ -194,11 +194,10 @@ $fy-info-dark: #2c304e;
 ::ng-deep .mat-chip-list-wrapper {
   max-height: 104px;
   overflow-y: auto;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
+  // padding-bottom: 10px;
+  // padding-top: 10px;
+  // padding-left: 5px;
+  // padding-right: 5px;
 }
 
 ::ng-deep .mat-chip.mat-standard-chip {
@@ -224,5 +223,5 @@ $fy-info-dark: #2c304e;
 }
 
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
-  padding: 1em 1em 1em 1em;
+  padding: 0.75em 0.75em 0.75em 0.75em;
 }
