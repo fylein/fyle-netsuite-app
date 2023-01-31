@@ -225,3 +225,18 @@ $fy-info-dark: #2c304e;
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
   padding: 0.75em 0.75em 0.75em 0.75em;
 }
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar:vertical {
+  width: 4px;
+  background-color: transparent;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid #D8D8D8 !important; /* should match background, can't be transparent */
+  background-color: #D8D8D8;
+}
