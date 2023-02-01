@@ -125,7 +125,7 @@ export class MappingsService {
   }
 
   getGroupedNetSuiteDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
-    return from(this.getNetSuiteDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
+    return from(this.getNetSuiteDestinationAttributes(attributeTypes, true).toPromise().then((response: MappingDestination[]) => {
       return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
         const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
         group.push(attribute);
