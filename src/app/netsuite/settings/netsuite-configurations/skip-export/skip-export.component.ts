@@ -70,7 +70,7 @@ export class SkipExportComponent implements OnInit {
       value: 'is_not_empty',
     },
   ];
-  customSELECTOperatorOptions = [
+  customSelectOperatorOptions = [
     {
       label: 'Is',
       value: 'iexact',
@@ -369,19 +369,19 @@ export class SkipExportComponent implements OnInit {
 
   setCustomOperatorOptions(rank: number, type: string) {
       if (type !== 'SELECT') {
-      if (rank === 1) {
-        this.operatorFieldOptions1 = this.customOperatorOptions;
-      } else if (rank === 2) {
-        this.operatorFieldOptions2 = this.customOperatorOptions;
-      }
-    } else {
-      if (rank === 1) {
-        this.operatorFieldOptions1 = this.customSELECTOperatorOptions;
-      } else if (rank === 2) {
-        this.operatorFieldOptions2 = this.customSELECTOperatorOptions;
+        if (rank === 1) {
+          this.operatorFieldOptions1 = this.customOperatorOptions;
+        } else if (rank === 2) {
+          this.operatorFieldOptions2 = this.customOperatorOptions;
+        }
+      } else {
+        if (rank === 1) {
+          this.operatorFieldOptions1 = this.customSelectOperatorOptions;
+        } else if (rank === 2) {
+          this.operatorFieldOptions2 = this.customSelectOperatorOptions;
+        }
       }
     }
-  }
 
   conditionFieldWatcher() {
     this.skipExportForm.controls.condition1.valueChanges.subscribe(
