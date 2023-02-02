@@ -484,9 +484,10 @@ export class SkipExportComponent implements OnInit {
         }
       }
 
+      if (responses[1].count > 0) { 
       this.skippedCondition1 = conditionArray[0].field_name;
       this.skippedCondition2 = conditionArray[1].field_name;
-
+    }
       let selectedOperator1 = '';
       let selectedOperator2 = '';
       let valueFC1;
