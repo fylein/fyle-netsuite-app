@@ -74,6 +74,10 @@ export class SkipExportComponent implements OnInit {
     {
       label: 'Is',
       value: 'iexact',
+    },
+    {
+      label: 'Is not',
+      value: 'not_in'
     }
   ];
   valueOption1: any[] = [];
@@ -419,6 +423,7 @@ export class SkipExportComponent implements OnInit {
         } else {
           this.isDisabledChip1 = false;
         }
+        console.log(operatorSelected);
       }
     );
 
