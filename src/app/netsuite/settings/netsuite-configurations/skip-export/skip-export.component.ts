@@ -70,6 +70,12 @@ export class SkipExportComponent implements OnInit {
       value: 'is_not_empty',
     },
   ];
+  customSelectOperatorOptions = [
+    {
+      label: 'Is',
+      value: 'iexact',
+    }
+  ];
   valueOption1: any[] = [];
   valueOption2: any[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -141,7 +147,7 @@ export class SkipExportComponent implements OnInit {
     }
     if (conditionSelected !== null) {
       if (conditionSelected.is_custom === true) {
-        this.setCustomOperatorOptions(rank);
+        this.setCustomOperatorOptions(rank, conditionSelected.type);
       } else if (conditionSelected.is_custom === false) {
         if (rank === 1) {
           this.operatorFieldOptions1 = this.setDefaultOperatorOptions(
@@ -361,13 +367,21 @@ export class SkipExportComponent implements OnInit {
     return operatorList;
   }
 
-  setCustomOperatorOptions(rank: number) {
-    if (rank === 1) {
-      this.operatorFieldOptions1 = this.customOperatorOptions;
-    } else if (rank === 2) {
-      this.operatorFieldOptions2 = this.customOperatorOptions;
+  setCustomOperatorOptions(rank: number, type: string) {
+      if (type !== 'SELECT') {
+        if (rank === 1) {
+          this.operatorFieldOptions1 = this.customOperatorOptions;
+        } else if (rank === 2) {
+          this.operatorFieldOptions2 = this.customOperatorOptions;
+        }
+      } else {
+        if (rank === 1) {
+          this.operatorFieldOptions1 = this.customSelectOperatorOptions;
+        } else if (rank === 2) {
+          this.operatorFieldOptions2 = this.customSelectOperatorOptions;
+        }
+      }
     }
-  }
 
   conditionFieldWatcher() {
     this.skipExportForm.controls.condition1.valueChanges.subscribe(
@@ -466,7 +480,7 @@ export class SkipExportComponent implements OnInit {
 
       if (conditionArray.length) {
         if (responses[1].results[0].is_custom) {
-          this.setCustomOperatorOptions(responses[1].results[0].rank);
+          this.setCustomOperatorOptions(responses[1].results[0].rank, responses[1].results[0].custom_field_type);
         } else {
           this.operatorFieldOptions1 = this.setDefaultOperatorOptions(
             responses[1].results[0].condition
@@ -475,7 +489,7 @@ export class SkipExportComponent implements OnInit {
         if (responses[1].results[0].join_by !== null) {
           this.updateAdditionalFilterVisibility(true);
           if (responses[1].results[1].is_custom) {
-            this.setCustomOperatorOptions(responses[1].results[1].rank);
+            this.setCustomOperatorOptions(responses[1].results[1].rank, responses[1].results[1].custom_field_type);
           } else {
             this.operatorFieldOptions2 = this.setDefaultOperatorOptions(
               responses[1].results[1].condition
