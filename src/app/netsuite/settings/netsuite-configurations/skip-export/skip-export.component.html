@@ -72,8 +72,8 @@
             <mat-hint>Separate your values with a comma or enter key.</mat-hint>
          </mat-form-field>
          <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
-            <div style="display: inline-flex;">
-               <input class="datePicker" matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
+            <div class="datePicker">
+               <input matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                <mat-datepicker #picker startView="month"></mat-datepicker>
             </div>
@@ -126,8 +126,8 @@
                   </mat-chip-list>
                   <mat-hint>Separate your values with a comma or enter key.</mat-hint>
                </mat-form-field>
-               <mat-form-field class="datePicker" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
-                  <div style="display: inline-flex;">
+               <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
+                  <div class="datePicker">
                      <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date" readonly>
                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                      <mat-datepicker #picker startView="month"></mat-datepicker>
@@ -141,7 +141,7 @@
          </div>
       </form>
    </div>
-   <div *ngIf="!isLoading" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
+   <div *ngIf="!isLoading && skippedCondition1.length" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="75" class="info-box-one-text">
         <mat-icon [inline]="true" class="info-icon main">info</mat-icon>
         The values for {{ (skippedCondition1 === 'claim_number' ? 'report_number' : skippedCondition1)  | titlecase | snakeCaseToSpaceCase }} and {{ (skippedCondition2 === 'claim_number' ? 'report_number' : skippedCondition2)  | titlecase | snakeCaseToSpaceCase }} conditions will get removed once the intergration skip these expenses. 
