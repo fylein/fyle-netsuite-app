@@ -118,10 +118,9 @@ export class GenericMappingsDialogComponent implements OnInit {
     const that = this;
 
     that.isLoading = true;
-    const active: boolean = that.setting.source_field === 'PROJECT' && that.setting.destination_field === 'PROJECT' ? true : false;
     forkJoin([
-      that.mappingsService.getFyleExpenseAttributes(that.setting.source_field, active),
-      that.mappingsService.getNetSuiteDestinationAttributes(that.setting.destination_field, active)
+      that.mappingsService.getFyleExpenseAttributes(that.setting.source_field, true),
+      that.mappingsService.getNetSuiteDestinationAttributes(that.setting.destination_field, true)
     ]).subscribe((res) => {
       that.fyleAttributes = res[0];
       that.netsuiteElements = res[1];

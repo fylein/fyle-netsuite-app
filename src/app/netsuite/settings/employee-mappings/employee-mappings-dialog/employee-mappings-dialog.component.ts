@@ -191,7 +191,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
-      that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
+      that.mappingsService.getFyleExpenseAttributes('EMPLOYEE', true),
       that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes),
       that.mappingsService.getGeneralMappings()
     ]).subscribe(res => {
