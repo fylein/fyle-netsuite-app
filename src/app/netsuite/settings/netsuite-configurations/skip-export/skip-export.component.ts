@@ -59,7 +59,7 @@ export class SkipExportComponent implements OnInit {
   customOperatorOptions = [
     {
       label: 'Is',
-      value: 'in',
+      value: 'iexact',
     },
     {
       label: 'Is empty',
@@ -241,9 +241,11 @@ export class SkipExportComponent implements OnInit {
     if (valueField.condition1.field_name !== 'report_title' && valueField.operator1 === 'iexact') {
       valueField.operator1 = 'in';
     }
-    if (valueField.condition2.field_name !== 'report_title' && valueField.operator2 === 'iexact') {
-      valueField.operator2 = 'in';
-    }
+    if (valueField.join_by) {
+      if (valueField.condition2.field_name !== 'report_title' && valueField.operator2 === 'iexact') {
+        valueField.operator2 = 'in';
+      }
+  }
     if (valueField.condition1.is_custom === true) {
       if (valueField.operator1 === 'is_empty') {
         valueField.value1 = ['True'];
