@@ -63,6 +63,7 @@ import { ConfigurationDialogComponent } from './settings/netsuite-configurations
 import { MemoStructureComponent } from './settings/netsuite-configurations/memo-structure/memo-structure.component';
 import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/add-email-dialog.component';
+import { SkipExportComponent } from './settings/netsuite-configurations/skip-export/skip-export.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/ad
     PaginatorComponent,
     ConfigurationDialogComponent,
     MemoStructureComponent,
+    SkipExportComponent,
     AddEmailDialogComponent
   ],
   entryComponents: [

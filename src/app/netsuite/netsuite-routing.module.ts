@@ -25,6 +25,8 @@ import { ExpenseFieldConfigurationComponent } from './settings/netsuite-configur
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
 import { CustomSegmentsComponent } from './settings/netsuite-configurations/custom-segments/custom-segments.component';
 import { MemoStructureComponent } from './settings/netsuite-configurations/memo-structure/memo-structure.component';
+import { SkipExportComponent } from './settings/netsuite-configurations/skip-export/skip-export.component';
+
 
 
 const routes: Routes = [{
@@ -98,6 +100,10 @@ const routes: Routes = [{
             {
               path: 'memo_structure',
               component: MemoStructureComponent
+            },
+            {
+              path: 'skip_export',
+              component: SkipExportComponent
             },
             {
               path: 'custom_segments',

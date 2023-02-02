@@ -6,10 +6,12 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
 import { CategoryMappingsResponse } from '../models/category-mapping-response.model';
 import { CategoryMapping } from '../models/category-mapping.model';
+import { ConditionField } from '../models/condition-field.model';
 import { CustomSegment } from '../models/custom-segment.model';
 import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { EmployeeMapping } from '../models/employee-mapping.model';
 import { ExpenseField } from '../models/expense-field.model';
+import { Expense } from '../models/expense.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { MappingDestination } from '../models/mapping-destination.model';
@@ -90,6 +92,12 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/netsuite/netsuite_fields/`, {});
+  }
+
+  getFyleCustomFields(): Observable<ConditionField[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/custom_fields/`, {});
   }
 
   getFyleExpenseAttributes(attributeType: string, active: boolean = false): Observable<MappingSource[]> {

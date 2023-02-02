@@ -4,6 +4,7 @@
 @import './assets/stylesheets/fy-theme.scss';
 @import 'variables.scss';
 @import './assets/stylesheets/utility.scss';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 $fy-nav-hover: rgba(0, 0, 0, 0.039);
 $fy-autocomplete-border: rgba(211, 211, 211, 0.451);
@@ -108,6 +109,7 @@ simple-snack-bar span { // @vikas wanted a center aligned snack-bar :P
 
 .mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
   padding: 0 !important;
+  max-height: 104px;
 }
 
 .netsuite {
