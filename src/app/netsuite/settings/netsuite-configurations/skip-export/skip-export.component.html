@@ -141,7 +141,7 @@
          </div>
       </form>
    </div>
-   <div *ngIf="!isLoading && skippedCondition1.length" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
+   <div *ngIf="!isLoading && skippedCondition1" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="75" class="info-box-one-text">
         <mat-icon [inline]="true" class="info-icon main">info</mat-icon>
         The values for {{ (skippedCondition1 === 'claim_number' ? 'report_number' : skippedCondition1)  | titlecase | snakeCaseToSpaceCase }} and {{ (skippedCondition2 === 'claim_number' ? 'report_number' : skippedCondition2)  | titlecase | snakeCaseToSpaceCase }} conditions will get removed once the intergration skip these expenses. 
