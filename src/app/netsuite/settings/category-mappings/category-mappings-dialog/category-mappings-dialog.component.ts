@@ -20,6 +20,7 @@ export class MappingErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
+
 @Component({
   selector: 'app-category-mappings-dialog',
   templateUrl: './category-mappings-dialog.component.html',
@@ -170,7 +171,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
-      that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
+      that.mappingsService.getFyleExpenseAttributes('CATEGORY', true),
       that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes)
     ]).subscribe((res) => {
       that.fyleCategories = res[0];
