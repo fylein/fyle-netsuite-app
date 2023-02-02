@@ -26,7 +26,9 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 })
 export class SkipExportComponent implements OnInit {
   isLoading: boolean = true;
-  anish: string;
+  tooltip: boolean = false;
+  skippedCondition1: string;
+  skippedCondition2: string;
   isDisabledChip1: boolean = false;
   isDisabledChip2: boolean = false;
   skipExportForm: FormGroup;
@@ -56,21 +58,29 @@ export class SkipExportComponent implements OnInit {
   addOnBlur = true;
   customOperatorOptions = [
     {
-      label: 'is equal',
-      value: 'iexact',
+      label: 'Is',
+      value: 'in',
     },
     {
-      label: 'is empty',
+      label: 'Is empty',
       value: 'is_empty',
     },
     {
-      label: 'is not empty',
+      label: 'Is not empty',
       value: 'is_not_empty',
     },
   ];
   valueOption1: any[] = [];
   valueOption2: any[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  showTooltip() {
+    this.tooltip = true;
+  }
+
+  hideTooltip() {
+    this.tooltip = false;
+  }
 
   add1(addEvent1: MatChipInputEvent): void {
     const input = addEvent1.input;
@@ -231,6 +241,9 @@ export class SkipExportComponent implements OnInit {
     if (valueField.condition1.field_name !== 'report_title' && valueField.operator1 === 'iexact') {
       valueField.operator1 = 'in';
     }
+    if (valueField.condition2.field_name !== 'report_title' && valueField.operator2 === 'iexact') {
+      valueField.operator2 = 'in';
+    }
     if (valueField.condition1.is_custom === true) {
       if (valueField.operator1 === 'is_empty') {
         valueField.value1 = ['True'];
@@ -330,11 +343,11 @@ export class SkipExportComponent implements OnInit {
     } else if (conditionField === 'spent_at') {
       operatorList.push({
         value: 'lt',
-        label: 'is before',
+        label: 'Is before',
       });
       operatorList.push({
         value: 'lte',
-        label: 'is it on or before',
+        label: 'Is it on or before',
       });
     }
     if (conditionField === 'report_title') {
@@ -469,6 +482,9 @@ export class SkipExportComponent implements OnInit {
         }
       }
 
+      this.skippedCondition1 = conditionArray[0].field_name;
+      this.skippedCondition2 = conditionArray[1].field_name;
+
       let selectedOperator1 = '';
       let selectedOperator2 = '';
       let valueFC1;
@@ -520,6 +536,8 @@ export class SkipExportComponent implements OnInit {
           } else {
             if (conditionArray[1].type === 'DATE') {
               valueFC2 = new Date(responses[1].results[1].values[0]);
+            } else if (conditionArray[1].field_name === 'report_title') {
+              valueFC2 = responses[1].results[1].values[0];
             } else {
               this.valueOption2 = responses[1].results[1].values;
             }

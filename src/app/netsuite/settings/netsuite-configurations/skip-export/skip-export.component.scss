@@ -34,7 +34,6 @@ $fy-info-dark: #2c304e;
 }
 
 .fields-header-1 {
-  // margin-left: 166px;
   margin-top: 40px;
   font-style: normal;
   font-weight: 400;
@@ -43,7 +42,6 @@ $fy-info-dark: #2c304e;
 }
 
 .fields-header-2 {
-  // margin-left: 33px;
   margin-top: 40px;
   font-style: normal;
   font-weight: 400;
@@ -52,7 +50,6 @@ $fy-info-dark: #2c304e;
 }
 
 .fields-header-3 {
-  // margin-left: 20px;
   margin-top: 40px;
   font-style: normal;
   font-weight: 400;
@@ -62,7 +59,6 @@ $fy-info-dark: #2c304e;
 
 .where-text {
   padding-left: 72px;
-  // margin-right: 24px;
   width: 70px;
   height: 18px;
   font-style: normal;
@@ -83,15 +79,18 @@ $fy-info-dark: #2c304e;
   min-height: 22px;
 }
 
-// .heightTwenty {
-//   height: 20px !important;
-// }
-
 :host ::ng-deep .mat-form-field-type-mat-select .mat-form-field-flex {
   height: 40px !important;
-  // width: 230px;
   justify-content: center !important;
   align-items: center !important;
+}
+
+:host ::ng-deep .mat-form-field-type-mat-chip-list .mat-form-field-flex {
+  max-height: 150px !important;
+  width: 306px;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
 }
 
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
@@ -100,30 +99,26 @@ $fy-info-dark: #2c304e;
 
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
   min-height: 40px !important;
-  // width: 230px;
   max-height: 150px;
   justify-content: center !important;
   align-items: center !important;
-  // background-color: red;
 }
 
 :host .join-by {
   width: 70px !important;
   height: 32px !important;
-  margin-bottom: 22px;
+  margin-bottom: 60px;
 }
 
 ::ng-deep .skip-export {
   &--form {
     font-size: 14px;
-    // margin: 14px;
     max-width: 1000px;
     color: $fy-nav-text;
   }
 
   &--form1 {
     font-size: 14px;
-    // margin-left: 72px;
     max-width: 1000px;
     color: $fy-nav-text;
   }
@@ -143,7 +138,6 @@ $fy-info-dark: #2c304e;
     cursor: pointer;
     max-width: 20px;
     max-height: 20px;
-    // padding-left: 10px;
     margin-left: 26.5px;
     padding-bottom: 25px;
   }
@@ -191,13 +185,10 @@ $fy-info-dark: #2c304e;
 .mat-chip-list-wrapper input.mat-input-element {
   margin: 1px;
 }
+
 ::ng-deep .mat-chip-list-wrapper {
   max-height: 104px;
   overflow-y: auto;
-  // padding-bottom: 10px;
-  // padding-top: 10px;
-  // padding-left: 5px;
-  // padding-right: 5px;
 }
 
 ::ng-deep .mat-chip.mat-standard-chip {
@@ -223,7 +214,7 @@ $fy-info-dark: #2c304e;
 }
 
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
-  padding: 0.75em 0.75em 0.75em 0.75em;
+  padding: 0.5em 0.5em 0.5em 0.5em;
 }
 
 :host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar {
@@ -231,12 +222,53 @@ $fy-info-dark: #2c304e;
 }
 
 :host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar:vertical {
-  width: 4px;
-  background-color: transparent;
+  width: 4px !important;
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar:horizontal {
+  height: 4px !important;
+  background-color: transparent !important;
 }
 
 :host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar-thumb {
   border-radius: 8px;
   border: 2px solid #D8D8D8 !important;
   background-color: #D8D8D8;
+}
+
+.read-more {
+  position: absolute;
+  margin: 1px 4px 0px 5px;
+}
+
+.add-condition-btn {
+  margin-top: 50px;
+}
+
+.validation-text {
+  padding-left: 70px !important;
+  padding-bottom: 15px !important;
+}
+
+.info-box-one {
+  margin: 16px 24px;
+}
+
+.info-box-one-text {
+  font-size: 13.25px;
+  border: 1px solid rgba(0, 98, 255, 4%);
+  padding: 2px;
+  background: rgba(0, 98, 255, 2%);
+  background-clip: padding-box;
+}
+
+.info-icon {
+  text-align: center;
+  cursor: default;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  max-height: 24px;
+  vertical-align: middle;
 }
