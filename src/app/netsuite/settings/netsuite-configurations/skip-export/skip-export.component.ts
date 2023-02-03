@@ -504,7 +504,7 @@ export class SkipExportComponent implements OnInit {
 
       if (responses[1].count > 0) {
       this.skippedCondition1 = conditionArray[0].field_name;
-      if (responses[1].count > 1) {
+      if (responses[1].count > 1 && responses[1].results[0].join_by) {
         this.skippedCondition2 = conditionArray[1].field_name;
       }
     }
