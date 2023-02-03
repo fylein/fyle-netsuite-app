@@ -423,7 +423,6 @@ export class SkipExportComponent implements OnInit {
         } else {
           this.isDisabledChip1 = false;
         }
-        console.log(operatorSelected);
       }
     );
 
