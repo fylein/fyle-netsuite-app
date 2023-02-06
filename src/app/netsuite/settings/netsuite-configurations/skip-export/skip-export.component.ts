@@ -267,7 +267,7 @@ export class SkipExportComponent implements OnInit {
     }
 
     if (valueField.condition1.field_name === 'spent_at') {
-      valueField.value1 = formatDate(valueField.value1, 'yyyy-MM-dd hh:mm:ss+hh', 'en-US', 'UTC');
+      valueField.value1 = new Date(valueField.value1).toISOString();
     }
 
     if (typeof valueField.value1 === 'string') {
@@ -293,7 +293,7 @@ export class SkipExportComponent implements OnInit {
       .subscribe((skipExport1: SkipExport) => {
         if (valueField.condition2 && valueField.operator2) {
           if (valueField.condition2.field_name === 'spent_at') {
-            valueField.value2 = formatDate(valueField.value2, 'yyyy-MM-dd hh:mm:ss+hh', 'en-US', 'UTC');
+            valueField.value1 = new Date(valueField.value1).toISOString();
           }
 
           if (valueField.condition2.is_custom === true) {
