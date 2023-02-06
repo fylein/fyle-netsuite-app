@@ -11,11 +11,6 @@
          You could choose to skip the export of certain expenses from Fyle to Netsuite by
          <br>
          setting up a conditional rule.
-         <a href="https://www.fylehq.com/help/en/articles/4424248-onboarding-process-to-set-up-fyle-netsuite-integration"
-         target="_blank" rel="noopener noreferrer" class="read-more-link">
-         Read more
-         <mat-icon class="read-more-link--icon read-more">open_in_new</mat-icon>
-       </a>
       </div>
    </div>
    <form class="skip-export--form" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
@@ -75,7 +70,7 @@
             </mat-chip-list>
             <mat-hint>Separate your values with a comma or enter key.</mat-hint>
          </mat-form-field>
-         <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
+         <mat-form-field class="date-field" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
             <div class="datePicker">
                <input matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -86,9 +81,9 @@
    </form>
    <div *ngIf="showAdditionalCondition">
       <form class="skip-export--form1" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
-         <div fxLayout="row" fxLayoutAlign="start center" style="display: flex;">
+         <div fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="5"></div>
-            <mat-form-field class="join-by" floatLabel="always" fxFlex="10" appearance="outline" style="padding: 22px !important;">
+            <mat-form-field class="join-by" floatLabel="always" fxFlex="10" appearance="outline">
                <mat-select placeholder="AND/OR" formControlName="join_by">
                   <mat-option *ngFor = "let joinBy of joinByOptions" [value]="joinBy.value">
                   {{ joinBy.value }}
@@ -130,7 +125,7 @@
                   </mat-chip-list>
                   <mat-hint>Separate your values with a comma or enter key.</mat-hint>
                </mat-form-field>
-               <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
+               <mat-form-field class="date-field" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
                   <div class="datePicker">
                      <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date" readonly>
                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>

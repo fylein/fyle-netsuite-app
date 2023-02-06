@@ -6,12 +6,12 @@ $fy-info-dark: #2c304e;
 .skip-icon {
   width: 18px !important;
   height: 20px !important;
-  margin-left: 30px !important;
+  padding-left: 30px !important;
   margin-right: 19px !important;
 }
 
 .info-box {
-  margin-top: 40px !important;
+  margin-top: 38px !important;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -101,10 +101,9 @@ $fy-info-dark: #2c304e;
   align-items: center !important;
 }
 
-:host .join-by {
+:host ::ng-deep .join-by .mat-form-field-flex{
   width: 70px !important;
-  height: 32px !important;
-  margin-bottom: 60px;
+  height: 28px !important;
 }
 
 ::ng-deep .skip-export {
@@ -115,6 +114,7 @@ $fy-info-dark: #2c304e;
   }
 
   &--form1 {
+    margin-top: 2em;
     font-size: 14px;
     max-width: 1000px;
     color: $fy-nav-text;
@@ -280,5 +280,8 @@ $fy-info-dark: #2c304e;
 
 :host .datePicker {
   display: inline-flex;
-  height: 45px !important;
+}
+
+:host ::ng-deep .date-field .mat-form-field-flex{
+  height: 44.75px !important;
 }
