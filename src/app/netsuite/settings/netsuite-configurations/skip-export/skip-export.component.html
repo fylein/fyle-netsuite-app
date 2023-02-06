@@ -75,7 +75,7 @@
             </mat-chip-list>
             <mat-hint>Separate your values with a comma or enter key.</mat-hint>
          </mat-form-field>
-         <mat-form-field  floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
+         <mat-form-field class="date-field" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='DATE' && (skipExportForm.value.operator1 !== 'is_empty' || skipExportForm.value.operator1 !== 'is_not_empty')">
             <div class="datePicker">
                <input matInput [matDatepicker]="picker" formControlName="value1" placeholder="Select the date" readonly>
                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -130,7 +130,7 @@
                   </mat-chip-list>
                   <mat-hint>Separate your values with a comma or enter key.</mat-hint>
                </mat-form-field>
-               <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
+               <mat-form-field class="date-field" floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='DATE'">
                   <div class="datePicker">
                      <input matInput [matDatepicker]="picker" formControlName="value2" placeholder="Select the date" readonly>
                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
