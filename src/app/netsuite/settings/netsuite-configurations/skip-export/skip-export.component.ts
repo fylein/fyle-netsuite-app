@@ -267,7 +267,7 @@ export class SkipExportComponent implements OnInit {
     }
 
     if (valueField.condition1.field_name === 'spent_at') {
-      valueField.value1 = new Date(valueField.value1).toISOString();
+      valueField.value1 = new Date(valueField.value1).toISOString().split('T')[0] + 'T17:00:00.000Z';
     }
 
     if (typeof valueField.value1 === 'string') {
@@ -293,7 +293,7 @@ export class SkipExportComponent implements OnInit {
       .subscribe((skipExport1: SkipExport) => {
         if (valueField.condition2 && valueField.operator2) {
           if (valueField.condition2.field_name === 'spent_at') {
-            valueField.value2 = new Date(valueField.value2).toISOString();
+            valueField.value2 = new Date(valueField.value2).toISOString().split('T')[0] + 'T17:00:00.000Z';
           }
 
           if (valueField.condition2.is_custom === true) {
