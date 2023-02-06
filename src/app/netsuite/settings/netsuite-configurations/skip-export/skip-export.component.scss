@@ -6,12 +6,12 @@ $fy-info-dark: #2c304e;
 .skip-icon {
   width: 18px !important;
   height: 20px !important;
-  margin-left: 30px !important;
+  padding-left: 30px !important;
   margin-right: 19px !important;
 }
 
 .info-box {
-  margin-top: 40px !important;
+  margin-top: 38px !important;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -114,6 +114,7 @@ $fy-info-dark: #2c304e;
   }
 
   &--form1 {
+    margin-top: 2em;
     font-size: 14px;
     max-width: 1000px;
     color: $fy-nav-text;

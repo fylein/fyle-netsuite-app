@@ -86,9 +86,9 @@
    </form>
    <div *ngIf="showAdditionalCondition">
       <form class="skip-export--form1" [formGroup] = "skipExportForm" fxLayout="column" fxLayoutAlign="start stretch">
-         <div fxLayout="row" fxLayoutAlign="start center" style="display: flex;">
+         <div fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="5"></div>
-            <mat-form-field class="join-by" floatLabel="always" fxFlex="10" appearance="outline" style="padding: 22px !important;">
+            <mat-form-field class="join-by" floatLabel="always" fxFlex="10" appearance="outline">
                <mat-select placeholder="AND/OR" formControlName="join_by">
                   <mat-option *ngFor = "let joinBy of joinByOptions" [value]="joinBy.value">
                   {{ joinBy.value }}
