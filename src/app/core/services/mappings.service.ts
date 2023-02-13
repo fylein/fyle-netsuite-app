@@ -132,8 +132,8 @@ export class MappingsService {
     });
   }
 
-  getGroupedNetSuiteDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
-    return from(this.getNetSuiteDestinationAttributes(attributeTypes, true).toPromise().then((response: MappingDestination[]) => {
+  getGroupedNetSuiteDestinationAttributes(attributeTypes: string[],  active?: boolean): Observable<GroupedDestinationAttributes> {
+    return from(this.getNetSuiteDestinationAttributes(attributeTypes, active).toPromise().then((response: MappingDestination[]) => {
       return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
         const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
         group.push(attribute);
