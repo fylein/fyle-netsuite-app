@@ -172,7 +172,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const attributes = that.getAttributesFilteredByConfig();
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('CATEGORY', true),
-      that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes)
+      that.mappingsService.getGroupedNetSuiteDestinationAttributes(attributes, true)
     ]).subscribe((res) => {
       that.fyleCategories = res[0];
       that.netsuiteAccounts = res[1].ACCOUNT;
