@@ -38,5 +38,5 @@ export class WorkspaceService {
     return id ? +id : null;
   }
 
-  // TODO: Add a method with implicit workspace id and replace calls everwhere
+  // TODO: Add a method with implicit workspace id and replace calls everwher
 }
