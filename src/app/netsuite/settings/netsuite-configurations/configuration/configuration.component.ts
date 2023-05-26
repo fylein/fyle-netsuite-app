@@ -33,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
   showAutoCreateMerchant: boolean;
   netsuiteSubsidiaryCountry: string;
   showImportCategories: boolean;
+  showImportItems: boolean;
   showImportEmployees: boolean;
   cardsMapping = false;
 
@@ -101,6 +102,12 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
+    if ((that.generalSettings.reimbursable_expenses_object === 'BILL' && (that.generalSettings.corporate_credit_card_expenses_object === null || that.generalSettings.corporate_credit_card_expenses_object === 'undefined'))
+        || (that.generalSettings.reimbursable_expenses_object === 'BILL' && that.generalSettings.corporate_credit_card_expenses_object === 'BILL')) {
+      that.showImportItems = true;
+    } else {
+      that.showImportItems = false;
+    }
     that.showImportEmployeeOption(that.generalSettings.employee_field_mapping);
 
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
@@ -162,10 +169,31 @@ export class ConfigurationComponent implements OnInit {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
           that.generalSettingsForm.controls.importCategories.setValue(false);
         }
+
+        if (reimbursableExpenseMappedTo === 'BILL') {
+          that.showImportItems = true;
+        } else {
+          that.showImportItems = false;
+          that.generalSettingsForm.controls.importItems.setValue(false);
+        }
       }
 
       if (that.generalSettings && that.generalSettings.sync_fyle_to_netsuite_payments && !that.showPaymentsandProjectsField) {
         that.generalSettingsForm.controls.paymentsSync.setValue(false);
+      }
+    });
+  }
+
+  setupCccExpenseFieldWatcher() {
+    const that = this;
+
+    that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
+      const reimbursableExpenseMappedTo = that.generalSettingsForm.controls.reimbursableExpense.value;
+      if ((cccExpenseMappedTo === 'BILL' || cccExpenseMappedTo === null || cccExpenseMappedTo === undefined) && reimbursableExpenseMappedTo === 'BILL') {
+        that.showImportItems = true;
+      } else {
+        that.showImportItems = false;
+        that.generalSettingsForm.controls.importItems.setValue(false);
       }
     });
   }
@@ -187,6 +215,9 @@ export class ConfigurationComponent implements OnInit {
 
     // Reimbursable Expense Mapping
     that.setupReimbursableFieldWatcher();
+
+    // CCC Expense Mapping
+    that.setupCccExpenseFieldWatcher();
 
     // Auto Create Merchant
     that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
@@ -240,6 +271,7 @@ export class ConfigurationComponent implements OnInit {
         importProjects: [importProjects],
         changeAccountingPeriod: [that.generalSettings.change_accounting_period],
         importCategories: [that.generalSettings.import_categories],
+        importItems: [that.generalSettings.import_items],
         importTaxDetails: [that.generalSettings.import_tax_items],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
@@ -259,6 +291,7 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [null],
         importProjects: [false],
         importCategories: [false],
+        importItems: [false],
         importTaxDetails: [false],
         changeAccountingPeriod: [false],
         paymentsSync: [null],
@@ -399,6 +432,7 @@ export class ConfigurationComponent implements OnInit {
       import_projects: false,
       change_accounting_period: that.generalSettingsForm.value.changeAccountingPeriod ? that.generalSettingsForm.value.changeAccountingPeriod : false,
       import_categories: that.generalSettingsForm.value.importCategories,
+      import_items: that.generalSettingsForm.value.importItems,
       import_tax_items: that.generalSettingsForm.value.importTaxDetails ? that.generalSettingsForm.value.importTaxDetails : false,
       auto_map_employees: that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null,
       auto_create_destination_entity: that.generalSettingsForm.value.autoCreateDestinationEntity,

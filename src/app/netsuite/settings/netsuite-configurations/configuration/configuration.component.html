@@ -131,6 +131,19 @@
         </div>
       </mat-slide-toggle>
 
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="showImportItems" formControlName="importItems">
+        <div class="schedule--toggle-text">
+          Import NetSuite Items into Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            [matTooltip]="'Import NetSuite Items as categories in Fyle'"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showPaymentsandProjectsField" formControlName="importProjects">
         <div class="schedule--toggle-text">
           Import NetSuite Projects / Customers into Fyle
