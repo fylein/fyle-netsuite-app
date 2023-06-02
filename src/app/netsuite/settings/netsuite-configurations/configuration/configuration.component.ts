@@ -102,7 +102,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
-    if ((that.generalSettings.reimbursable_expenses_object === 'BILL' && (that.generalSettings.corporate_credit_card_expenses_object === null || that.generalSettings.corporate_credit_card_expenses_object === 'undefined'))
+    if ((that.generalSettings.reimbursable_expenses_object === 'BILL' && (!that.generalSettings.corporate_credit_card_expenses_object))
         || (that.generalSettings.reimbursable_expenses_object === 'BILL' && that.generalSettings.corporate_credit_card_expenses_object === 'BILL')) {
       that.showImportItems = true;
     } else {
@@ -173,7 +173,6 @@ export class ConfigurationComponent implements OnInit {
         if (reimbursableExpenseMappedTo === 'BILL') {
           that.showImportItems = true;
         } else {
-          that.showImportItems = false;
           that.generalSettingsForm.controls.importItems.setValue(false);
         }
       }
@@ -189,7 +188,7 @@ export class ConfigurationComponent implements OnInit {
 
     that.generalSettingsForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
       const reimbursableExpenseMappedTo = that.generalSettingsForm.controls.reimbursableExpense.value;
-      if ((cccExpenseMappedTo === 'BILL' || cccExpenseMappedTo === null || cccExpenseMappedTo === undefined) && reimbursableExpenseMappedTo === 'BILL') {
+      if ((cccExpenseMappedTo === 'BILL' || !cccExpenseMappedTo) && reimbursableExpenseMappedTo === 'BILL') {
         that.showImportItems = true;
       } else {
         that.showImportItems = false;
