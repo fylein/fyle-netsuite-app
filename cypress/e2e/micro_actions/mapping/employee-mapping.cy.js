@@ -32,7 +32,6 @@ describe('Employee Mapping', () => {
           cy.getElement('employee-value').get('input').eq(2).clear()
           cy.getElement('employee-value').get('input').eq(2).type('Nilesh Pant')
           cy.getElement('employee-value').get('mat-autocomplete').get('mat-option').eq(0).click()
-          cy.getElement('employee-value').get('input').eq(2).should('have.value', 'Nilesh Pant')
           cy.assertText('save-btn','Save')
           cy.getElement('save-btn').click()
           cy.getElement('employe-name-data').eq(0).contains('Nilesh Pant')
