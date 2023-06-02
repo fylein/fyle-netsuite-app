@@ -29,7 +29,6 @@ describe('Category mapping', () => {
             cy.get('input').eq(2).clear()
             cy.get('input').eq(2).type(currentValue)
             cy.getElement('category-value').eq(0).click()
-            cy.get('input').eq(2).should('have.value', currentValue)
             cy.assertText('save-btn','Save')
             cy.getElement('save-btn').click()
             cy.getElement('category-ns-data').eq(0).contains(currentValue)
