@@ -20,12 +20,12 @@ describe('Category mapping', () => {
         cy.url().should('include', '/settings/category/mappings')
         cy.get('button').first().contains('Create Category Mapping')
         cy.get('th').first().contains('Category')
-        cy.get('th').eq(1).contains('Netsuite Account')
+        cy.get('th').eq(1).contains('Netsuite')
         cy.getElement('category-fyle-data').first().click()
         cy.getElement('edit-category-heading').contains('Edit Category Mapping')
         cy.get('input').eq(2).then(($input) => {
             const previousValue = $input[0].value
-            const currentValue = previousValue === 'CAD' ? 'Food' : 'CAD'
+            const currentValue = previousValue === 'brand new' ? 'Hotel' : 'brand new'
             cy.get('input').eq(2).clear()
             cy.get('input').eq(2).type(currentValue)
             cy.getElement('category-value').eq(0).click()

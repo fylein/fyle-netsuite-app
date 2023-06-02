@@ -44,7 +44,7 @@
           <input type="text" formControlName="netsuiteExpenseCategory" placeholder="Netsuite Expense Category" matInput
             [matAutocomplete]="netsuiteAc" [errorStateMatcher]="matcher">
           <mat-autocomplete #netsuiteAc="matAutocomplete" [displayWith]="mappingDisplay">
-            <mat-option *ngFor="let option of netsuiteExpenseCategoryOptions" [value]="option">
+            <mat-option *ngFor="let option of netsuiteExpenseCategoryOptions" [value]="option" data-cy="category-value">
               {{option.value}}
             </mat-option>
           </mat-autocomplete>

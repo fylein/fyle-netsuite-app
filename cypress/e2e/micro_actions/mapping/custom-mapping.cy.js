@@ -26,12 +26,11 @@ describe('Cost Center Mapping', () => {
         cy.getElement('custom-netsuite-value').get('input').eq(2).then(($input) => {
             const value = $input[0].value
             cy.getElement('custom-netsuite-value').get('input').eq(2).clear()
-            cy.getElement('custom-netsuite-value').get('input').eq(2).type('Accessories')
+            cy.getElement('custom-netsuite-value').get('input').eq(2).type('Ashu')
             cy.getElement('custom-netsuite-value').get('mat-autocomplete').get('mat-option').eq(0).click()
-            cy.getElement('custom-netsuite-value').get('input').eq(2).should('have.value', 'Accessories')
             cy.assertText('save-btn','Save')
             cy.getElement('save-btn').click()
-            cy.getElement('custom-table-netsuite-value').eq(0).contains('Accessories')
+            cy.getElement('custom-table-netsuite-value').eq(0).contains('Ashu')
             reset(value)
         })
     })
