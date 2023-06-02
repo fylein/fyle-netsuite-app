@@ -105,8 +105,6 @@ export class ConfigurationComponent implements OnInit {
     if ((that.generalSettings.reimbursable_expenses_object === 'BILL' && (!that.generalSettings.corporate_credit_card_expenses_object))
         || (that.generalSettings.reimbursable_expenses_object === 'BILL' && that.generalSettings.corporate_credit_card_expenses_object === 'BILL')) {
       that.showImportItems = true;
-    } else {
-      that.showImportItems = false;
     }
     that.showImportEmployeeOption(that.generalSettings.employee_field_mapping);
 
@@ -173,6 +171,7 @@ export class ConfigurationComponent implements OnInit {
         if (reimbursableExpenseMappedTo === 'BILL') {
           that.showImportItems = true;
         } else {
+          that.showImportItems = false;
           that.generalSettingsForm.controls.importItems.setValue(false);
         }
       }
