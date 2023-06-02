@@ -102,8 +102,7 @@ export class ConfigurationComponent implements OnInit {
     that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
     that.showPaymentsandProjectFields(that.generalSettings.reimbursable_expenses_object);
     that.showImportCategories = true;
-    if ((that.generalSettings.reimbursable_expenses_object === 'BILL' && (!that.generalSettings.corporate_credit_card_expenses_object))
-        || (that.generalSettings.reimbursable_expenses_object === 'BILL' && that.generalSettings.corporate_credit_card_expenses_object === 'BILL')) {
+    if (that.generalSettings.reimbursable_expenses_object === 'BILL' && (!that.generalSettings.corporate_credit_card_expenses_object || that.generalSettings.corporate_credit_card_expenses_object === 'BILL')) {
       that.showImportItems = true;
     }
     that.showImportEmployeeOption(that.generalSettings.employee_field_mapping);
