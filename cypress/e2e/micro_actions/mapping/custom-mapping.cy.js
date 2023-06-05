@@ -15,7 +15,7 @@ describe('Cost Center Mapping', () => {
         cy.getElement('save-btn').click()
     }
 
-    it('Pagination test', () => {
+    it('Update cost center mapping', () => {
         cy.get('.page-header--name').contains('Cost Center Mappings')
         cy.url().should('include', '/settings/cost_center/mappings')
         cy.get('button').first().contains('New Cost Center Mapping')
