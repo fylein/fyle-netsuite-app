@@ -217,8 +217,8 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   searchByText1(data: ExpenseGroup, filterText: string) {
     return data.description.employee_email.includes(filterText) ||
       ('Reimbursable'.toLowerCase().includes(filterText) && data.fund_source === 'PERSONAL') ||
-      ('Corporate Credit Card'.toLowerCase().includes(filterText) && data.fund_source !== 'PERSONAL') ||
-      data.description?.claim_number.includes(filterText);
+      ('Corporate Credit Card'.toLowerCase().includes(filterText) && (data.fund_source !== 'PERSONAL') ||
+      data.description?.claim_number.includes(filterText));
   }
 
   searchByText2(data: SkipExportLog, filterText: string) {
