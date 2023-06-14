@@ -57,6 +57,21 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="configurations--label" *ngIf="showNameInJournalOption">
+        Choose the field to be shown in journal entry
+      </div>
+      <mat-form-field floatLabel="always" appearance="outline" *ngIf="showNameInJournalOption">
+        <mat-select placeholder="Choose the option to be posted for ccc expense"
+          formControlName="nameInJournalEntry" data-cy="ccc-jounral">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option *ngFor="let option of nameInJournalOptions" [value]="option.value">
+            {{option.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="configurations--label" *ngIf="showPaymentsandProjectsField">
         Auto Sync Payments
         <mat-icon [inline]="true" class="info-icon" matTooltip="Sync payments between Fyle and NetSuite" matTooltipPosition="after">info</mat-icon>
