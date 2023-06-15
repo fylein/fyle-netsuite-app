@@ -139,7 +139,7 @@ export class GeneralMappingsComponent implements OnInit {
     }
 
     if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL' || that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'
-    || that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ) {
+    || (that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' && that.generalSettings.name_in_journal_entry != 'EMPLOYEE')) {
       that.form.controls.netsuiteVendors.setValidators(Validators.required);
     }
 
@@ -160,7 +160,7 @@ export class GeneralMappingsComponent implements OnInit {
         return true;
       }
     }
-
+    
     return false;
   }
 
