@@ -47,7 +47,7 @@ export class ConfigurationComponent implements OnInit {
       label: 'Employee/Vendor Name',
       value: 'EMPLOYEE'
     }
-  ]
+  ];
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private mappingsService: MappingsService, private netsuite: NetSuiteComponent, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
@@ -122,8 +122,8 @@ export class ConfigurationComponent implements OnInit {
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.showAutoCreateMerchant = true;
     }
-    
-    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY'){
+
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY') {
       that.showNameInJournalOption = true;
     }
   }
@@ -237,11 +237,10 @@ export class ConfigurationComponent implements OnInit {
       if (cccExpenseMappedTo === 'CREDIT CARD CHARGE') {
         that.showAutoCreateMerchant = true;
         that.showNameInJournalOption = false;
-      } 
+      }
       if (cccExpenseMappedTo === 'JOURNAL ENTRY') {
         that.showNameInJournalOption = true;
-      }
-      else {
+      } else {
         that.showNameInJournalOption = false;
         that.showAutoCreateMerchant = false;
         that.generalSettingsForm.controls.autoCreateMerchant.setValue(false);
@@ -298,7 +297,7 @@ export class ConfigurationComponent implements OnInit {
         autoCreateMerchant: [that.generalSettings.auto_create_merchants],
         importVendorsAsMerchants: [that.generalSettings.import_vendors_as_merchants],
         importNetsuiteEmployees: [that.generalSettings.import_netsuite_employees],
-        nameInJournalEntry: [that.generalSettings ? that.generalSettings.name_in_journal_entry: '']
+        nameInJournalEntry: [that.generalSettings ? that.generalSettings.name_in_journal_entry : '']
       });
 
       that.setupFieldWatchers();
@@ -462,7 +461,7 @@ export class ConfigurationComponent implements OnInit {
       workspace: that.workspaceId,
       import_vendors_as_merchants: that.generalSettingsForm.value.importVendorsAsMerchants ? that.generalSettingsForm.value.importVendorsAsMerchants : false,
       import_netsuite_employees: that.generalSettingsForm.value.importNetsuiteEmployees ? that.generalSettingsForm.value.importNetsuiteEmployees : false,
-      name_in_journal_entry: that.generalSettingsForm.value.nameInJournalEntry ? that.generalSettingsForm.value.nameInJournalEntry: 'MERCHANT'
+      name_in_journal_entry: that.generalSettingsForm.value.nameInJournalEntry ? that.generalSettingsForm.value.nameInJournalEntry : 'MERCHANT'
     };
   }
 
