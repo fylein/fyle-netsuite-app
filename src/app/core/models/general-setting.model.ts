@@ -23,4 +23,5 @@ export type GeneralSetting = {
     import_vendors_as_merchants?: boolean;
     is_simplify_report_closure_enabled?: boolean;
     import_netsuite_employees: boolean;
+    name_in_journal_entry: string;
 };

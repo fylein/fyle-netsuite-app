@@ -91,13 +91,13 @@
         </mat-form-field>
         <mandatory-error-message listName="default credit card account" *ngIf="form.controls.cccAccounts.touched && !form.controls.cccAccounts.valid"></mandatory-error-message>
         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' 
-          || generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ">
+          || ( generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' && generalSettings.name_in_journal_entry != 'EMPLOYEE')">
           Default {{ generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' ? 'Credit Card' : 'Journal Entry' }} Vendor
           <mandatory-field *ngIf="isFieldMandatory('netsuiteVendors')"></mandatory-field>
         </div>
         <mat-form-field floatLabel="always" appearance="outline" required
           *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE'
-          || generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' ">
+          || ( generalSettings.corporate_credit_card_expenses_object === 'JOURNAL ENTRY' && generalSettings.name_in_journal_entry != 'EMPLOYEE')">
           <mat-select class="general-mappings--input" placeholder="Select default {{ generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' ? 'Credit Card' : 'Journal Entry' }} Vendor for card expenses imported from Fyle"
             formControlName="netsuiteVendors" data-cy="default-ccc-account">
             <mat-option *ngFor="let cccAccount of netsuiteVendors; let i = index" [value]="netsuiteVendors[i].destination_id">

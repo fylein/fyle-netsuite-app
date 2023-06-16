@@ -57,6 +57,19 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="configurations--label" *ngIf="showNameInJournalOption">
+        Name in Journal Entry (CCC)
+        <mat-icon [inline]="true" class="info-icon" matTooltip="You can choose whether you want to use the merchant name or the {{generalSettingsForm.value.employees | titlecase }} name in the name field for your Journal Entries" matTooltipPosition="after">info</mat-icon>
+      </div>
+      <mat-form-field floatLabel="always" appearance="outline" *ngIf="showNameInJournalOption">
+        <mat-select placeholder="Select a value"
+          formControlName="nameInJournalEntry" data-cy="ccc-jounral">
+          <mat-option *ngFor="let option of nameInJournalOptions" [value]="option.value">
+            {{option.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="configurations--label" *ngIf="showPaymentsandProjectsField">
         Auto Sync Payments
         <mat-icon [inline]="true" class="info-icon" matTooltip="Sync payments between Fyle and NetSuite" matTooltipPosition="after">info</mat-icon>
