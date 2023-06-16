@@ -59,14 +59,11 @@
 
       <div class="configurations--label" *ngIf="showNameInJournalOption">
         Name in Journal Entry (CCC)
-        <mat-icon [inline]="true" class="info-icon" matTooltip="You can choose whether you want to use the merchant name or the employee name in the name field for your Journal Entries" matTooltipPosition="after">info</mat-icon>
+        <mat-icon [inline]="true" class="info-icon" matTooltip="You can choose whether you want to use the merchant name or the {{generalSettingsForm.value.employees | titlecase }} name in the name field for your Journal Entries" matTooltipPosition="after">info</mat-icon>
       </div>
       <mat-form-field floatLabel="always" appearance="outline" *ngIf="showNameInJournalOption">
         <mat-select placeholder="Select a value"
           formControlName="nameInJournalEntry" data-cy="ccc-jounral">
-          <mat-option>
-            None
-          </mat-option>
           <mat-option *ngFor="let option of nameInJournalOptions" [value]="option.value">
             {{option.label}}
           </mat-option>
