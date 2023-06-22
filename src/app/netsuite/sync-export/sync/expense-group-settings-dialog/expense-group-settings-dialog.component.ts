@@ -18,6 +18,7 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   workspaceGeneralSettings: GeneralSetting;
   isLoading: boolean;
   exportDateOptions: { label: string, value: string }[];
+  cccExportDateOptions: { label: string, value: string }[];
   reimbursableOptions: { label: string, value: string }[];
   cccOptions: { label: string, value: string }[];
   expenseGroupingFieldOptions: { label: string, value: string }[];
@@ -126,6 +127,10 @@ ngOnInit() {
     }
   ];
 
+  that.cccExportDateOptions = that.exportDateOptions.concat([{
+    label: 'Posted Date',
+    value: 'posted_at'
+  }])
   that.expenseGroupingFieldOptions = [
     {
       label: 'Expense Report',
