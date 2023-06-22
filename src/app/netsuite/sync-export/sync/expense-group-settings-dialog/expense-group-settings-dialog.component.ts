@@ -76,6 +76,8 @@ getExpenseGroupSettings() {
       that.importExpensesForm.controls.cccExportDate.disable();
     }
 
+    this.cccExpenseGroupFn(this.importExpensesForm.value.cccExpenseGroupConfiguration);
+
     that.isLoading = false;
   });
 }
@@ -95,6 +97,17 @@ getFieldConfiguration(fieldType) {
 showCCCGroups() {
   const that = this;
   return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
+}
+
+cccExpenseGroupFn(value) {
+  if (value === 'expense_id') {
+    this.cccExportDateOptions = this.exportDateOptions.concat([{
+      label: 'Posted Date',
+      value: 'posted_at'
+    }]);
+  } else {
+    this.cccExportDateOptions = this.exportDateOptions;
+  }
 }
 
 ngOnInit() {
@@ -127,10 +140,7 @@ ngOnInit() {
     }
   ];
 
-  that.cccExportDateOptions = that.exportDateOptions.concat([{
-    label: 'Posted Date',
-    value: 'posted_at'
-  }]);
+  that.cccExportDateOptions = that.exportDateOptions;
 
   that.expenseGroupingFieldOptions = [
     {
