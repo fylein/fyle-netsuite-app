@@ -131,7 +131,7 @@ ngOnInit() {
     label: 'Posted Date',
     value: 'posted_at'
   }]);
-  
+
   that.expenseGroupingFieldOptions = [
     {
       label: 'Expense Report',
