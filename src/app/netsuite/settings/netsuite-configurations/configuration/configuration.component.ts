@@ -237,8 +237,7 @@ export class ConfigurationComponent implements OnInit {
       if (cccExpenseMappedTo === 'CREDIT CARD CHARGE') {
         that.showAutoCreateMerchant = true;
         that.showNameInJournalOption = false;
-      }
-      else if (cccExpenseMappedTo === 'JOURNAL ENTRY') {
+      } else if (cccExpenseMappedTo === 'JOURNAL ENTRY') {
         that.showNameInJournalOption = true;
         that.showAutoCreateMerchant = false;
       } else {
