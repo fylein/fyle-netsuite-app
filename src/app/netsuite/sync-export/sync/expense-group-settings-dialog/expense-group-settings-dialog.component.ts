@@ -84,7 +84,7 @@ getExpenseGroupSettings() {
         }
       ];
     } else {
-      this.cccExpenseGroupFn(this.importExpensesForm.value.cccExpenseGroupConfiguration);
+      this.setCreditCardExpenseGroupingDateOptions(this.importExpensesForm.value.cccExpenseGroupConfiguration);
     }
 
     that.isLoading = false;
@@ -108,7 +108,7 @@ showCCCGroups() {
   return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
 }
 
-cccExpenseGroupFn(value) {
+setCreditCardExpenseGroupingDateOptions(value) {
   if (value === 'expense_id') {
     this.cccExportDateOptions = this.exportDateOptions.concat([{
       label: 'Posted Date',
