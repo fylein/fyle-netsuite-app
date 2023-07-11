@@ -18,6 +18,7 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   workspaceGeneralSettings: GeneralSetting;
   isLoading: boolean;
   exportDateOptions: { label: string, value: string }[];
+  cccExportDateOptions: { label: string, value: string }[];
   reimbursableOptions: { label: string, value: string }[];
   cccOptions: { label: string, value: string }[];
   expenseGroupingFieldOptions: { label: string, value: string }[];
@@ -72,7 +73,18 @@ getExpenseGroupSettings() {
 
     if (that.workspaceGeneralSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE') {
       that.importExpensesForm.controls.cccExpenseGroupConfiguration.disable();
-      that.importExpensesForm.controls.cccExportDate.disable();
+      this.cccExportDateOptions = [
+        {
+          label: 'Spend Date',
+          value: 'spent_at'
+        },
+        {
+          label: 'Posted Date',
+          value: 'posted_at'
+        }
+      ];
+    } else {
+      this.setCreditCardExpenseGroupingDateOptions(this.importExpensesForm.value.cccExpenseGroupConfiguration);
     }
 
     that.isLoading = false;
@@ -94,6 +106,17 @@ getFieldConfiguration(fieldType) {
 showCCCGroups() {
   const that = this;
   return that.workspaceGeneralSettings.corporate_credit_card_expenses_object;
+}
+
+setCreditCardExpenseGroupingDateOptions(value) {
+  if (value === 'expense_id') {
+    this.cccExportDateOptions = this.exportDateOptions.concat([{
+      label: 'Posted Date',
+      value: 'posted_at'
+    }]);
+  } else {
+    this.cccExportDateOptions = this.exportDateOptions.concat();
+  }
 }
 
 ngOnInit() {
