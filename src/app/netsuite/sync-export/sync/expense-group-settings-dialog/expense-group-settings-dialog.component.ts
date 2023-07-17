@@ -79,7 +79,7 @@ getExpenseGroupSettings() {
           value: 'spent_at'
         },
         {
-          label: 'Posted Date',
+          label: 'Card Transaction Post date',
           value: 'posted_at'
         }
       ];
@@ -111,7 +111,7 @@ showCCCGroups() {
 setCreditCardExpenseGroupingDateOptions(value) {
   if (value === 'expense_id') {
     this.cccExportDateOptions = this.exportDateOptions.concat([{
-      label: 'Posted Date',
+      label: 'Card Transaction Post date',
       value: 'posted_at'
     }]);
   } else {
