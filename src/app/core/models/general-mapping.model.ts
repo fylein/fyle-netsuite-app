@@ -15,6 +15,8 @@ export type GeneralMapping = {
   vendor_payment_account_name: string;
   default_ccc_vendor_id: string;
   default_ccc_vendor_name: string;
+  department_id: string;
+  department_name: string;
   department_level: string;
   use_employee_department: boolean;
   use_employee_class: boolean;

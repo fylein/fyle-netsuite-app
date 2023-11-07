@@ -133,10 +133,26 @@
           </div>
         </mat-slide-toggle>
 
-        <div class="mat-body-strong" *ngIf="form.value.useDefaultEmployeeDepartment">
+        <div class="mat-body-strong" *ngIf="netsuiteDepartments.length">
+          NetSuite Department
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" *ngIf="netsuiteDepartments.length" required>
+          <mat-select class="general-mappings--input" placeholder="Select NetSuite Department"
+            formControlName="netsuiteDepartments" data-cy="NS-location">
+            <mat-option [value]="null">
+              None
+            </mat-option>
+            <mat-option *ngFor="let netsuiteLocation of netsuiteDepartments; let i = index"
+              [value]="netsuiteDepartments[i].destination_id">
+              {{netsuiteDepartments[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="mat-body-strong">
           Select NetSuite Department Level
          </div>
-         <mat-form-field floatLabel="always" appearance="outline" *ngIf="form.value.useDefaultEmployeeDepartment" required>
+         <mat-form-field floatLabel="always" appearance="outline" required>
           <mat-select class="general-mappings--input" placeholder="Choose NetSuite Department Level" formControlName="netsuiteDepartmentLevels">
             <mat-option value="TRANSACTION_BODY">
                Transaction Body
