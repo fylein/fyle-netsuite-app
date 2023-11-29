@@ -67,7 +67,7 @@ export class GenericMappingsComponent implements OnInit {
   getMappings(data) {
     const that = this;
     that.isLoading = true;
-    const active: boolean = that.setting.source_field === 'PROJECT' && that.setting.destination_field === 'PROJECT' ? true : false;
+    const active: boolean = ((that.setting.source_field === 'PROJECT' && that.setting.destination_field === 'PROJECT') || that.setting.destination_field === 'CLASS') ? true : false;
     that.mappingsService.getMappings(data.pageSize, data.pageSize * data.pageNumber, that.setting.source_field, 2, active).subscribe(mappings => {
       that.mappings = new MatTableDataSource(mappings.results);
       that.pageNumber = data.pageNumber;
