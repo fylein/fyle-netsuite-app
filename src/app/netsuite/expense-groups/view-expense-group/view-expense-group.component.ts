@@ -45,7 +45,7 @@ export class ViewExpenseGroupComponent implements OnInit {
 
   openExpenseInFyle(expenseId: string) {
     const clusterDomain = this.storageService.get('clusterDomain');
-    this.windowReference.open(`${environment.fyle_app_url}/app/main/#/enterprise/view_expense/${expenseId}`, '_blank');
+    this.windowReference.open(`${environment.fyle_app_url}/app/admin/#/enterprise/view_expense/${expenseId}`, '_blank');
   }
 
   ngOnInit() {
