@@ -35,7 +35,7 @@ export class ApiService {
   }
 
   private logout(): void {
-    console.log('apiBaseUrl not found, logging off user');
+    console.error('apiBaseUrl not found, logging off user');
     this.storageService.clear();
     this.windowReference.location.href = FYLE_URL +
     '/app/developers/#/oauth/authorize?' +

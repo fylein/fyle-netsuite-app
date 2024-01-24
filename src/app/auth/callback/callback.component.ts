@@ -38,31 +38,31 @@ export class CallbackComponent implements OnInit {
     that.route.queryParams.subscribe(params => {
       if (params.code) {
         that.authService.getClusterDomainByCode(params.code).subscribe(clusterDomainWithToken => {
-          this.storageService.set('cluster-domain', `${clusterDomainWithToken.cluster_domain}/${environment.production ? 'netsuite-api/api': 'api'}`);
+          this.storageService.set('cluster-domain', `${clusterDomainWithToken.cluster_domain}/${environment.production ? 'netsuite-api/api' : 'api'}`);
 
-            this.authService.loginWithRefreshToken(clusterDomainWithToken.tokens.refresh_token).subscribe(response => {
-              that.storageService.set('email', response.user.email);
-              that.storageService.set('access_token', response.access_token);
-              that.storageService.set('refresh_token', response.refresh_token);
-              const user = {
-                employee_email: response.user.email,
-                full_name: response.user.full_name,
-                org_id: response.user.org_id,
-                org_name: response.user.org_name
-              };
-              that.storageService.set('user', user);
-              that.authService.getFyleOrgs().subscribe(responses => {
-                that.storageService.set('orgsCount', responses.length);
-                that.router.navigate(['/workspaces']);
-              });
+          this.authService.loginWithRefreshToken(clusterDomainWithToken.tokens.refresh_token).subscribe(response => {
+            that.storageService.set('email', response.user.email);
+            that.storageService.set('access_token', response.access_token);
+            that.storageService.set('refresh_token', response.refresh_token);
+            const user = {
+              employee_email: response.user.email,
+              full_name: response.user.full_name,
+              org_id: response.user.org_id,
+              org_name: response.user.org_name
+            };
+            that.storageService.set('user', user);
+            that.authService.getFyleOrgs().subscribe(responses => {
+              that.storageService.set('orgsCount', responses.length);
+              that.router.navigate(['/workspaces']);
             });
-          },
-          error => {
-            that.router.navigate(['auth/login']).then(() => {
-              that.windowReference.location.reload();
-            });
-            that.logout();
-          }
+          });
+        },
+        error => {
+          that.router.navigate(['auth/login']).then(() => {
+            that.windowReference.location.reload();
+          });
+          that.logout();
+        }
         );
       } else if (params.error) {
         that.router.navigate(['auth/login']).then(() => {
