@@ -8,7 +8,7 @@ fi
 for f in /usr/share/nginx/html/*
 do
     echo "Substituting Environment variables and other stuff in $f ...";
-    sed -i $SED_EXTRA_ARGS "s?{{API_URL}}?${API_URL}?g" $f;
+    sed -i $SED_EXTRA_ARGS "s?{{CLUSTER_DOMAIN_API_URL}}?${CLUSTER_DOMAIN_API_URL}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{APP_URL}}?${APP_URL}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{FYLE_APP_URL}}?${FYLE_APP_URL}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{CALLBACK_URI}}?${CALLBACK_URI}?g" $f;

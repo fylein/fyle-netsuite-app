@@ -6,3 +6,8 @@ export type Token = {
   refresh_token: string;
   user: User;
 };
+
+export type ClusterDomainWithToken = {
+  cluster_domain: string;
+  tokens: Token;
+}

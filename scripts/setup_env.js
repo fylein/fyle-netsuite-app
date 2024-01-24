@@ -6,7 +6,7 @@ const environment = {
   fyle_app_url: `${process.env.FYLE_APP_URL ? process.env.FYLE_APP_URL : '{{FYLE_APP_URL}}'}`,
   fyle_client_id: `${process.env.FYLE_CLIENT_ID ? process.env.FYLE_CLIENT_ID : '{{FYLE_CLIENT_ID}}'}`,
   callback_uri: `${process.env.CALLBACK_URI ? process.env.CALLBACK_URI : '{{CALLBACK_URI}}'}`,
-  api_url: `${process.env.API_URL ? process.env.API_URL : '{{API_URL}}'}`,
+  cluster_domain_api_url: `${process.env.CLUSTER_DOMAIN_API_URL ? process.env.CLUSTER_DOMAIN_API_URL : '{{CLUSTER_DOMAIN_API_URL}}'}`,
   app_url: `${process.env.APP_URL ? process.env.APP_URL : '{{APP_URL}}'}`,
   sentry_dsn: `${process.env.SENTRY_DSN ? process.env.SENTRY_DSN : '{{SENTRY_DSN}}'}`,
   release: `${process.env.RELEASE ? process.env.RELEASE : '{{RELEASE}}'}`,

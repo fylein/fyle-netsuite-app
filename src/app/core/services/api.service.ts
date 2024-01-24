@@ -7,6 +7,8 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { StorageService } from './storage.service';
+import { WindowReferenceService } from './window.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,14 +16,35 @@ const httpOptions = {
   }),
 };
 
-const API_BASE_URL = environment.api_url;
+const FYLE_URL = environment.fyle_url;
+const FYLE_CLIENT_ID = environment.fyle_client_id;
+const CALLBACK_URI = environment.callback_uri;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  windowReference: Window;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private storageService: StorageService, private windowReferenceService: WindowReferenceService) {
+    this.windowReference = this.windowReferenceService.nativeWindow;
+  }
+
+  private get apiBaseUrl(): string {
+    return this.storageService.get('cluster-domain');
+  }
+
+  private logout(): void {
+    console.log('apiBaseUrl not found, logging off user');
+    this.storageService.clear();
+    this.windowReference.location.href = FYLE_URL +
+    '/app/developers/#/oauth/authorize?' +
+    'client_id=' +
+    FYLE_CLIENT_ID +
+    '&redirect_uri=' +
+    CALLBACK_URI +
+    '&response_type=code';
+  }
 
   private handleError(error: HttpErrorResponse, httpMethod: string) {
     if (error.error instanceof ErrorEvent) {
@@ -40,10 +63,14 @@ export class ApiService {
     return throwError(error);
   }
   // Having any here is ok
-  post(endpoint: string, body: {}): Observable<any> {
+  post(endpoint: string, body: {}, baseUrl?: string): Observable<any> {
+    const apiBaseUrl = baseUrl ? baseUrl : this.apiBaseUrl;
+    if (!apiBaseUrl) {
+      this.logout();
+    }
     return this.http
       .post(
-        API_BASE_URL + endpoint,
+        apiBaseUrl + endpoint,
         body,
         httpOptions
       )
@@ -52,9 +79,12 @@ export class ApiService {
       }));
   }
   patch(endpoint: string, body: {}): Observable<any> {
+    if (!this.apiBaseUrl) {
+      this.logout();
+    }
     return this.http
       .patch(
-        API_BASE_URL + endpoint,
+        this.apiBaseUrl + endpoint,
         body,
         httpOptions
       )
@@ -64,13 +94,16 @@ export class ApiService {
   }
   // Having any here is ok
   get(endpoint: string, apiParams: {}): Observable<any> {
+    if (!this.apiBaseUrl) {
+      this.logout();
+    }
     let params = new HttpParams();
     Object.keys(apiParams).forEach(key => {
       params = params.set(key, apiParams[key]);
     });
 
     return this.http.get(
-        API_BASE_URL + endpoint,
+      this.apiBaseUrl + endpoint,
         {params}
       )
       .pipe(catchError(error => {

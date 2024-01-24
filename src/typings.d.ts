@@ -6,7 +6,7 @@ interface Env {
   FYLE_CLIENT_ID: string;
   CALLBACK_URI: string;
   FYLE_APP_URL: string;
-  API_URL: string;
+  CLUSTER_DOMAIN_API_URL: string;
   APP_URL: string;
   SENTRY_DSN: string;
   RELEASE: string;
