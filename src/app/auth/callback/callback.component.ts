@@ -43,7 +43,7 @@ export class CallbackComponent implements OnInit {
           this.authService.loginWithRefreshToken(clusterDomainWithToken.tokens.refresh_token).subscribe(response => {
             that.storageService.set('email', response.user.email);
             that.storageService.set('access_token', response.access_token);
-            that.storageService.set('refresh_token', response.refresh_token);
+            that.storageService.set('refresh_token', clusterDomainWithToken.tokens.refresh_token);
             const user = {
               employee_email: response.user.email,
               full_name: response.user.full_name,
