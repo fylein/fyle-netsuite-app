@@ -438,6 +438,10 @@ export class ConfigurationComponent implements OnInit {
       netSuiteToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_netsuite_to_fyle_payments' ? true : false;
     }
 
+    if(that.generalSettingsForm.value.reimbursable_expenses_object==='JOURNAL ENTRY') {
+      fyleToNetSuite = false;
+      netSuiteToFyle = false;
+    }
 
     if (that.generalSettingsForm.value.cccExpense && that.generalSettingsForm.value.cccExpense !== 'BILL') {
       that.cardsMapping = true;
