@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Token } from '../models/tokens';
+import { ClusterDomainWithToken, Token } from '../models/tokens';
 
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -21,7 +21,6 @@ const httpOptions = {
   }),
 };
 
-const API_BASE_URL = environment.api_url;
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
 const CALLBACK_URI = environment.callback_uri;
@@ -40,6 +39,18 @@ export class AuthService {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
+  private get apiBaseUrl(): string {
+    return this.storageService.get('cluster-domain');
+  }
+
+  getClusterDomainByCode(code: string): Observable<ClusterDomainWithToken> {
+    return this.apiService.post('/auth/cluster_domain/', { code }, environment.cluster_domain_api_url);
+  }
+
+  loginWithRefreshToken(refreshToken: string): Observable<Token> {
+    return this.apiService.post('/auth/login_with_refresh_token/', { refresh_token: refreshToken });
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
@@ -51,22 +62,10 @@ export class AuthService {
     return throwError(error);
   }
 
-  login(code: string): Observable<Token> {
-    return this.http
-      .post<Token>(
-        API_BASE_URL + '/auth/login/',
-        {
-          code,
-        },
-        httpOptions
-      )
-      .pipe(catchError(this.handleError));
-  }
-
   getAccessToken(refreshToken: string): Observable<Token> {
     return this.http
       .post<Token>(
-        API_BASE_URL + '/auth/refresh/',
+        this.apiBaseUrl + '/auth/refresh/',
         {
           refresh_token: refreshToken,
         },
