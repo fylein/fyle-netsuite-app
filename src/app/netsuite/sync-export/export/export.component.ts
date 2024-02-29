@@ -86,7 +86,6 @@ export class ExportComponent implements OnInit {
       if (that.generalSettings.reimbursable_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'PERSONAL').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.reimbursable_expenses_object));
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
       }
@@ -94,19 +93,13 @@ export class ExportComponent implements OnInit {
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'CCC').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportsService.triggerExports(filteredIds, that.generalSettings.corporate_credit_card_expenses_object));
-
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
       }
 
-      if (promises.length > 0) {
-        forkJoin(
-          promises
-        ).subscribe(() => {
-          that.checkResultsOfExport(allFilteredIds);
-        });
-      }
+      that.exportsService.triggerExports().subscribe(() => {
+        that.checkResultsOfExport(allFilteredIds);
+      });
     });
   }
 

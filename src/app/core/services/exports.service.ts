@@ -10,13 +10,8 @@ export class ExportsService {
     private apiService: ApiService,
     private workspaceService: WorkspaceService) {}
 
-  triggerExports(expenseGroupIds: number[], exportType: string) {
+  triggerExports() {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.post(
-      `/workspaces/${workspaceId}/netsuite/exports/trigger/`, {
-        expense_group_ids: expenseGroupIds,
-        export_type: exportType
-      }
-    );
+    return this.apiService.post(`/workspaces/${workspaceId}/netsuite/exports/trigger/`, {});
   }
 }
