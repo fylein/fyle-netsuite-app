@@ -16,37 +16,7 @@
     </div>
     <form class="general-mappings--form" [formGroup]="form">
       <div fxLayout="column" fxLayoutAlign="start stretch">
-        <div class="mat-body-strong" *ngIf="netsuiteLocations.length">
-          NetSuite Location
-        </div>
-        <mat-form-field floatLabel="always" appearance="outline" *ngIf="netsuiteLocations.length" required>
-          <mat-select class="general-mappings--input" placeholder="Select NetSuite Location"
-            formControlName="netsuiteLocations" data-cy="NS-location">
-            <mat-option [value]="null">
-              None
-            </mat-option>
-            <mat-option *ngFor="let netsuiteLocation of netsuiteLocations; let i = index"
-              [value]="netsuiteLocations[i].destination_id">
-              {{netsuiteLocations[i].value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="mat-body-strong" *ngIf="showLocationLevelOption">
-          Select NetSuite Location Level
-         </div>
-         <mat-form-field floatLabel="always" appearance="outline" *ngIf="showLocationLevelOption" required>
-          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels" data-cy="NS-location-level">
-            <mat-option value="TRANSACTION_BODY">
-               Transaction Body
-             </mat-option>
-             <mat-option value="TRANSACTION_LINE">
-               Transaction Line
-             </mat-option>
-             <mat-option value="ALL">
-               All
-             </mat-option>
-           </mat-select>
-         </mat-form-field>
+
         <div class="mat-body-strong" *ngIf="generalSettings.employee_field_mapping === 'VENDOR' || generalSettings.corporate_credit_card_expenses_object === 'BILL'">
           Vendor Payables Account
           <mandatory-field *ngIf="isFieldMandatory('accountPayableAccounts')"></mandatory-field>
@@ -120,18 +90,38 @@
           </mat-select>
         </mat-form-field>
         <mandatory-error-message listName="payment account" *ngIf="form.controls.vendorPaymentAccounts.touched && !form.controls.vendorPaymentAccounts.valid"></mandatory-error-message>
-
-        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
-          <div class="toggle--toggle-text">Use Employee's NetSuite Department
-            <mat-icon
-              [inline]="true"
-              class="info-icon"
-              matTooltip="Expenses on NetSuite will be coded to the Department assigned to the employee on NetSuite"
-              matTooltipPosition="after">
-                info
-            </mat-icon>
-          </div>
-        </mat-slide-toggle>
+        
+        <div class="mat-body-strong" *ngIf="netsuiteLocations.length">
+          NetSuite Location
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" *ngIf="netsuiteLocations.length" required>
+          <mat-select class="general-mappings--input" placeholder="Select NetSuite Location"
+            formControlName="netsuiteLocations" data-cy="NS-location">
+            <mat-option [value]="null">
+              None
+            </mat-option>
+            <mat-option *ngFor="let netsuiteLocation of netsuiteLocations; let i = index"
+              [value]="netsuiteLocations[i].destination_id">
+              {{netsuiteLocations[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="mat-body-strong" *ngIf="showLocationLevelOption">
+          Select NetSuite Location Level
+         </div>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="showLocationLevelOption" required>
+          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Location Level" formControlName="netsuiteLocationLevels" data-cy="NS-location-level">
+            <mat-option value="TRANSACTION_BODY">
+               Transaction Body
+             </mat-option>
+             <mat-option value="TRANSACTION_LINE">
+               Transaction Line
+             </mat-option>
+             <mat-option value="ALL">
+               All
+             </mat-option>
+           </mat-select>
+         </mat-form-field>
 
         <div class="mat-body-strong" *ngIf="netsuiteDepartments.length">
           NetSuite Department
@@ -166,6 +156,63 @@
            </mat-select>
          </mat-form-field>
 
+         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'">
+          NetSuite Class
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'" required>
+          <mat-select class="general-mappings--input" placeholder="Select NetSuite Class"
+            formControlName="netsuiteClasses" data-cy="NS-class">
+            <mat-option [value]="null">
+              None
+            </mat-option>
+            <mat-option *ngFor="let netsuiteClass of netsuiteClasses; let i = index"
+              [value]="netsuiteClasses[i].destination_id">
+              {{netsuiteClasses[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'">
+          Select NetSuite Class Level
+         </div>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'" required>
+          <mat-select class="general-mappings--input" placeholder="Choose NetSuite Class Level" formControlName="netsuiteClassLevels" data-cy="NS-class-level">
+            <mat-option value="TRANSACTION_BODY">
+               Transaction Body
+             </mat-option>
+             <mat-option value="TRANSACTION_LINE">
+               Transaction Line
+             </mat-option>
+             <mat-option value="ALL">
+               All
+             </mat-option>
+           </mat-select>
+         </mat-form-field>
+
+         <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Location
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Location assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+
+        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
+          <div class="toggle--toggle-text">Use Employee's NetSuite Department
+            <mat-icon
+              [inline]="true"
+              class="info-icon"
+              matTooltip="Expenses on NetSuite will be coded to the Department assigned to the employee on NetSuite"
+              matTooltipPosition="after">
+                info
+            </mat-icon>
+          </div>
+        </mat-slide-toggle>
+
         <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeClass" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
           <div class="toggle--toggle-text">Use Employee's NetSuite Class
             <mat-icon
@@ -178,17 +225,7 @@
           </div>
         </mat-slide-toggle>
 
-        <mat-slide-toggle color="primary" class="toggle" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.employee_field_mapping === 'EMPLOYEE'">
-          <div class="toggle--toggle-text">Use Employee's NetSuite Location
-            <mat-icon
-              [inline]="true"
-              class="info-icon"
-              matTooltip="Expenses on NetSuite will be coded to the Location assigned to the employee on NetSuite"
-              matTooltipPosition="after">
-                info
-            </mat-icon>
-          </div>
-        </mat-slide-toggle>
+        
       </div>
       <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit" data-cy="save-btn">
         Save

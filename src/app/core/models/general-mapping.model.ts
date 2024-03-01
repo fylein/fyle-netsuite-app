@@ -5,6 +5,9 @@ export type GeneralMapping = {
   location_id: string;
   location_name: string;
   location_level: string;
+  class_id: string;
+  class_name: string;
+  class_level: string;
   accounts_payable_id: string;
   accounts_payable_name: string;
   reimbursable_account_id: string;
