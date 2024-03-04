@@ -19,6 +19,7 @@ export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
   netsuiteLocations: MappingDestination[];
+  netsuiteClasses: MappingDestination[];
   netsuiteDepartments: MappingDestination[];
   showLocationLevelOption: boolean;
   netsuiteVendors: MappingDestination[];
@@ -70,8 +71,11 @@ export class GeneralMappingsComponent implements OnInit {
 
     const locationId = formValues ? formValues.netsuiteLocations : this.form.value.netsuiteLocations;
     const netsuiteLocation = this.netsuiteLocations.filter(filteredLocation => filteredLocation.destination_id === locationId)[0];
-
     const netsuiteLocationLevel = formValues ? formValues.netsuiteLocationLevels : this.form.value.netsuiteLocationLevels;
+
+    const classId = formValues ? formValues.netsuiteClasses : this.form.value.netsuiteClasses;
+    const netsuiteClass = this.netsuiteClasses.filter(filteredClass => filteredClass.destination_id === classId)[0];
+    const netsuiteClassLevel = formValues ? formValues.netsuiteClassLevels : this.form.value.netsuiteClassLevels;
 
     const accountPayableAccountId = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.form.value.accountPayableAccounts : '';
     const accountPayableAccount: MappingDestination = (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') ? that.accountPayableAccounts.filter(filteredAccountsPayableAccount => filteredAccountsPayableAccount.destination_id === accountPayableAccountId)[0] : null;
@@ -99,6 +103,9 @@ export class GeneralMappingsComponent implements OnInit {
     const generalMappings: GeneralMapping = {
       location_name: netsuiteLocation ? netsuiteLocation.value : null,
       location_id: netsuiteLocation ? netsuiteLocation.destination_id : null,
+      class_name: netsuiteClass ? netsuiteClass.value : null,
+      class_id: netsuiteClass ? netsuiteClass.destination_id : null,
+      class_level: (netsuiteClass && netsuiteClassLevel) ? netsuiteClassLevel : (netsuiteClass) ? 'ALL'  : null,
       accounts_payable_name: accountPayableAccount ? accountPayableAccount.value : null,
       accounts_payable_id: accountPayableAccount ? accountPayableAccount.destination_id : null,
       reimbursable_account_name: bankAccount ? bankAccount.value : null,
@@ -182,6 +189,8 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [that.generalMappings ? that.generalMappings.location_level : ''],
         netsuiteLocations: [that.generalMappings ? that.generalMappings.location_id : ''],
+        netsuiteClassLevels : [that.generalMappings ? that.generalMappings.class_level : ''],
+        netsuiteClasses: [that.generalMappings ? that.generalMappings.class_id : ''],
         netsuiteDepartments: [that.generalMappings ? that.generalMappings.department_id : ''],
         accountPayableAccounts: [that.generalMappings ? that.generalMappings.accounts_payable_id : ''],
         vendorPaymentAccounts: [that.generalMappings ? that.generalMappings.vendor_payment_account_id : ''],
@@ -197,6 +206,8 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         netsuiteLocationLevels : [null],
         netsuiteLocations: [null],
+        netsuiteClassLevels: [null],
+        netsuiteClasses: [null],
         netsuiteDepartments: [null],
         accountPayableAccounts: [null],
         vendorPaymentAccounts: [null],
@@ -231,7 +242,7 @@ export class GeneralMappingsComponent implements OnInit {
   getAttributesFilteredByConfig() {
     const that = this;
 
-    const attributes = ['LOCATION', 'DEPARTMENT'];
+    const attributes = ['LOCATION', 'DEPARTMENT', 'CLASS'];
     if (that.generalSettings.employee_field_mapping === 'VENDOR' || that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
       attributes.push('ACCOUNTS_PAYABLE');
     }
@@ -270,6 +281,7 @@ export class GeneralMappingsComponent implements OnInit {
       }
       that.accountPayableAccounts = response.ACCOUNTS_PAYABLE;
       that.netsuiteLocations = response.LOCATION;
+      that.netsuiteClasses = response.CLASS;
       that.netsuiteDepartments = response.DEPARTMENT;
       that.netsuiteVendors = response.VENDOR;
       that.vendorPaymentAccounts = response.VENDOR_PAYMENT_ACCOUNT;
