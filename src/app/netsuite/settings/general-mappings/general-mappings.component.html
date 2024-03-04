@@ -156,10 +156,10 @@
            </mat-select>
          </mat-form-field>
 
-         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'">
+         <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object === 'BILL'">
           NetSuite Class
         </div>
-        <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'" required>
+        <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object === 'BILL'" required>
           <mat-select class="general-mappings--input" placeholder="Select NetSuite Class"
             formControlName="netsuiteClasses" data-cy="NS-class">
             <mat-option [value]="null">
@@ -172,10 +172,10 @@
           </mat-select>
         </mat-form-field>
 
-        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'">
+        <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object === 'BILL'">
           Select NetSuite Class Level
          </div>
-         <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object == 'BILL' || generalSettings.corporate_credit_card_expenses_object == 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object == 'BILL'" required>
+         <mat-form-field floatLabel="always" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object === 'BILL' || generalSettings.corporate_credit_card_expenses_object === 'CREDIT CARD CHARGE' || generalSettings.reimbursable_expenses_object === 'BILL'" required>
           <mat-select class="general-mappings--input" placeholder="Choose NetSuite Class Level" formControlName="netsuiteClassLevels" data-cy="NS-class-level">
             <mat-option value="TRANSACTION_BODY">
                Transaction Body
